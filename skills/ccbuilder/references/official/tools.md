@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-02-11 (Claude Code v2.1.39)
+**Last Synced**: 2026-02-11 (Claude Code v2.1.39+)
 
 ---
 

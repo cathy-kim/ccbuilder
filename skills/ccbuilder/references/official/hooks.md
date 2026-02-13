@@ -23,7 +23,7 @@
 | 11 | `TeammateIdle` | 팀메이트 유휴 상태 | exit 2 |
 | 12 | `TaskCompleted` | 태스크 완료 | exit 2 |
 | 13 | `PreCompact` | 컨텍스트 압축 전 | - |
-| 14 | `SessionEnd` | 세션 종료 | - |
+| 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
 
 ## Handler 타입
 

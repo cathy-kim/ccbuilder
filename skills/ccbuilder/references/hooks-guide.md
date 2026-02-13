@@ -2,7 +2,7 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.7.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 **Claude Code Version**: v2.1.39+
 
@@ -257,10 +257,20 @@ exit 0
 
 ---
 
+## Breaking Changes (v2.8-2.9)
+
+| 변경 | 이전 | 이후 |
+|------|------|------|
+| Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
+| NPM 설치 | `npm install` | `claude install` |
+| MCP Transport | SSE | HTTP (streamable-http) |
+
+---
+
 ## 공식 문서
 
 - **Hooks Reference**: https://code.claude.com/docs/en/hooks
 
 ---
 
-*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04)*
+*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.9.0 업데이트 2026-02-11)*

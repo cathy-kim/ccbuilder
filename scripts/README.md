@@ -45,7 +45,37 @@
 
 ---
 
-### 3. init-hook.sh
+### 3. init-ralph.sh
+
+Ralph Loop (자율 개발 루프)를 초기화합니다.
+
+**사용법:**
+```bash
+./scripts/init-ralph.sh <project-name> [method]
+```
+
+**Methods:**
+- `simple` (기본) - Bash loop + TASK.md + PROGRESS.md
+- `hook` - Stop Hook 기반 자동 루프
+- `full` - Simple + Hook + .ralphrc 전체 설정
+
+**예제:**
+```bash
+./scripts/init-ralph.sh my-api              # Simple 방식
+./scripts/init-ralph.sh my-api hook         # Stop Hook 방식
+./scripts/init-ralph.sh my-api full         # 전체 설정
+```
+
+**생성 내용:**
+- `TASK.md` - 목표 정의 (불변, Claude가 읽기만 함)
+- `PROGRESS.md` - 진행 상태 (매 반복 업데이트)
+- `loop.sh` - 루프 실행 스크립트 (simple, full)
+- `.claude/hooks/ralph-stop.sh` - Stop Hook (hook, full)
+- `.ralphrc` - 프로젝트 설정 (full)
+
+---
+
+### 4. init-hook.sh (기존)
 
 새로운 Hook을 초기화합니다.
 
@@ -71,7 +101,7 @@
 
 ---
 
-### 4. test-hook.sh
+### 5. test-hook.sh
 
 Hook을 테스트합니다.
 
@@ -129,6 +159,23 @@ vim .claude/agents/security-auditor.md
 
 # 3. 테스트
 # Claude에게: "security-auditor agent를 사용해서 코드를 검토해줘"
+```
+
+### Ralph Loop 워크플로우
+
+```bash
+# 1. Ralph Loop 초기화
+./scripts/init-ralph.sh my-api full
+
+# 2. TASK.md에 목표 작성
+vim TASK.md
+
+# 3-A. Bash 루프 실행
+./loop.sh 10
+
+# 3-B. 또는 Stop Hook으로 실행
+# settings.json에 Hook 등록 후:
+claude    # Claude가 LOOP_COMPLETE까지 자동 루프
 ```
 
 ### Hook 생성 및 테스트 워크플로우

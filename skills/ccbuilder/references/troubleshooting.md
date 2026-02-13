@@ -2,7 +2,7 @@
 
 > Claude Code 확장 기능 개발 시 자주 발생하는 문제와 해결 방법
 
-**Version**: 2.7.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 
 ---
@@ -359,6 +359,28 @@ chmod +x .claude/hooks/*.ts
 
 ---
 
+## Breaking Changes 문제 (v2.8-2.9)
+
+### `$ARGUMENTS.0` → `$ARGUMENTS[0]` 마이그레이션
+
+**증상**: 스킬에서 인자 접근 시 undefined 반환
+**원인**: v2.8부터 `$ARGUMENTS.0` 문법 deprecated
+**해결**: `$ARGUMENTS[0]` 또는 `$0` 사용
+
+### `npm install` → `claude install` 변경
+
+**증상**: MCP 서버 설치 실패
+**원인**: v2.8부터 `npm install` deprecated
+**해결**: `claude install` 사용
+
+### SSE → HTTP Transport 전환
+
+**증상**: MCP 서버 연결 불안정
+**원인**: SSE transport deprecated
+**해결**: `--transport http` (streamable-http) 사용
+
+---
+
 ## 도움 받기
 
 - **공식 문서**: https://code.claude.com/docs/en/
@@ -367,4 +389,4 @@ chmod +x .claude/hooks/*.ts
 
 ---
 
-*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.7.0 업데이트 2026-02-11)*
+*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.9.0 업데이트 2026-02-11)*

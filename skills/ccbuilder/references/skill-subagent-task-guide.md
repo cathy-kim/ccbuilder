@@ -1,4 +1,4 @@
-# Skill / Subagent / Task 사용 가이드 (v2.1+)
+# Skill / Subagent / Task 사용 가이드 (v2.9)
 
 > **최종 업데이트**: 2026-02-11
 > **Claude Code 버전**: v2.1.39+

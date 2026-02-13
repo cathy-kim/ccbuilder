@@ -2,7 +2,7 @@
 
 > Claude Code 확장 기능 개발을 위한 통합 모범 사례 가이드
 
-**Version**: 2.7.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 
 ---
@@ -310,4 +310,4 @@ done
 
 ---
 
-*통합 문서: best-practices-qa-guide.md + claude-code-best-practices.md + skill-review-guidelines.md (2026-02-04, v2.7.0 업데이트 2026-02-11)*
+*통합 문서: best-practices-qa-guide.md + claude-code-best-practices.md + skill-review-guidelines.md (2026-02-04, v2.9.0 업데이트 2026-02-11)*

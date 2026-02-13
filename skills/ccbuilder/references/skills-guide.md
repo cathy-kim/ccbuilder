@@ -2,7 +2,7 @@
 
 > Claude Code Skills 개발 완전 가이드
 
-**Version**: 2.7.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 **Claude Code Version**: v2.1.39+
 
@@ -236,6 +236,27 @@ my-skill/
 
 ---
 
+## Task Management (v2.9)
+
+| 도구 | 용도 |
+|------|------|
+| `TaskCreate` | 작업 생성 (subject, description, activeForm) |
+| `TaskUpdate` | 상태 변경, 소유자 할당, 의존성 설정 |
+| `TaskList` | 전체 작업 목록 조회 |
+| `TaskGet` | 개별 작업 상세 조회 |
+
+---
+
+## Breaking Changes (v2.8-2.9)
+
+| 변경 | 이전 | 이후 |
+|------|------|------|
+| Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
+| NPM 설치 | `npm install` | `claude install` |
+| MCP Transport | SSE | HTTP (streamable-http) |
+
+---
+
 ## 관련 문서
 
 - [Hooks Guide](hooks-guide.md)
@@ -249,4 +270,4 @@ my-skill/
 
 ---
 
-*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.7.0 업데이트 2026-02-11)*
+*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.9.0 업데이트 2026-02-11)*

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.10.0] - 2026-02-13
+
+### Added
+- **Ralph Loop (자율 개발 루프) 지원**
+  - `references/ralph-loop-guide.md` - Fresh Context Pattern 상세 가이드 (3가지 구현 방법, 종료 감지, 서킷 브레이커, 모범 사례)
+  - `scripts/init-ralph.sh` - Ralph Loop 초기화 스크립트 (simple/hook/full 3가지 방식)
+  - SKILL.md에 `ralph <project-name>` 인자 처리 규칙 추가
+  - 키워드 자동 활성화: ralph, loop, repl, fresh context, autonomous
+  - 시나리오 결정 가이드에 "장시간 자율 개발" 분기 추가
+- **마켓플레이스 매니페스트** (`.claude-plugin/marketplace.json` 신규 생성)
+  - `claude plugin marketplace add` 및 `claude plugin install` 지원
+
+### Fixed
+- `plugin.json`의 skills 경로에 `./` 접두사 누락 → `claude plugin validate` 실패 수정
+- Ralph Loop `loop.sh`의 heredoc 중첩 프롬프트 전달 오류 → 임시파일(mktemp) 방식으로 수정
+- PROGRESS.md 템플릿의 HTML 주석에 `LOOP_COMPLETE` 텍스트 포함 → grep 오탐 수정 (`^LOOP_COMPLETE` 패턴으로 변경)
+
+### Changed
+- 확장 기능 유형: 6개 → 7개 (Ralph Loop 추가)
+- 참조 문서: 32개 → 33개
+- 버전: 2.9.0 → 2.10.0
+
+---
+
 ## [2.9.0] - 2026-02-11
 
 ### Added

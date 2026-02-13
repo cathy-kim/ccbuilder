@@ -2,7 +2,7 @@
 
 > Claude Code의 Memory 시스템과 Modular Rules 완전 가이드
 
-**Version**: 2.8.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 **Claude Code Version**: v2.1.39+
 
@@ -215,6 +215,16 @@ MEMORY.md에서 링크하고, 필요할 때 온디맨드 로드:
 
 ---
 
+## Breaking Changes (v2.8-2.9)
+
+| 변경 | 이전 | 이후 |
+|------|------|------|
+| Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
+| NPM 설치 | `npm install` | `claude install` |
+| MCP Transport | SSE | HTTP (streamable-http) |
+
+---
+
 ## 관련 문서
 
 - [Skills Guide](skills-guide.md) - Skill에서 Memory/Rules 활용
@@ -227,4 +237,4 @@ MEMORY.md에서 링크하고, 필요할 때 온디맨드 로드:
 
 ---
 
-*이 문서는 v2.8.0에서 신규 생성되었습니다 (2026-02-11)*
+*이 문서는 v2.9.0 업데이트 (2026-02-11)*

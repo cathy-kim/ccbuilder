@@ -151,6 +151,27 @@ Claude Agents → Hook 스크립트 → HTTP POST → 서버 → SQLite → WebS
 
 ---
 
+## 11. Agent Teams Workflow (팀 협업)
+
+**출처**: Claude Code v2.7+ Agent Teams
+
+```
+Team Lead → TeamCreate → TaskCreate (의존성 설정) → Task (Teammate 생성) → SendMessage → TeamDelete
+```
+
+| 단계 | 도구 | 설명 |
+|------|------|------|
+| 팀 생성 | `TeamCreate` | 팀 이름, 설명 정의 |
+| 작업 생성 | `TaskCreate` | 공유 Task List에 작업 등록 |
+| 의존성 | `TaskUpdate` | `addBlockedBy`로 실행 순서 제어 |
+| 팀원 생성 | `Task` | `team_name`, `name` 파라미터로 Teammate 생성 |
+| 커뮤니케이션 | `SendMessage` | DM, 브로드캐스트, 종료 요청 |
+| 정리 | `TeamDelete` | 팀 리소스 제거 |
+
+**핵심**: Task Tool 단독 (단발성) vs Agent Teams (지속적 협업, 공유 상태, 커뮤니케이션).
+
+---
+
 ## 패턴 적용 우선순위
 
 ```

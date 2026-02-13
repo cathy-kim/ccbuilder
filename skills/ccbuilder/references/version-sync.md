@@ -3,7 +3,7 @@
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
 **최종 동기화**: 2026-02-11
-**현재 지원 버전**: v2.1.39+
+**현재 지원 버전**: v2.1.39+ (SKILL.md v2.9.0)
 
 ---
 
@@ -100,6 +100,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 - SubagentStart, PostToolUseFailure 이벤트
 - prompt, agent Hook 타입
 - async Hook 지원
+
+---
+
+## v2.9.0 변경 사항 (2026-02-11)
+
+### Breaking Changes
+
+| 변경 | 이전 | 이후 |
+|------|------|------|
+| Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
+| NPM 설치 | `npm install` | `claude install` |
+| MCP Transport | SSE | HTTP (streamable-http) |
+
+### 신규 기능
+
+- **Agent Teams**: TeamCreate, SendMessage, TeamDelete
+- **Task Management**: TaskCreate, TaskUpdate, TaskList, TaskGet
+- **Memory & Modular Rules**: Auto Memory, `.claude/rules/*.md`
+- **Hook 이벤트 추가**: TeammateIdle, Setup (init/init-only/maintenance)
+- **Hook 타입 추가**: prompt, agent, async
+- **Agent Frontmatter**: disallowedTools, permissionMode, skills
 
 ---
 

@@ -2,7 +2,7 @@
 
 > Claude Code Agent Teams 개발 완전 가이드
 
-**Version**: 2.7.0
+**Version**: 2.9.0
 **Last Updated**: 2026-02-11
 **Claude Code Version**: v2.1.39+
 **Status**: Experimental (Research Preview)
@@ -259,4 +259,4 @@ Task A (pending)
 
 ---
 
-*이 문서는 v2.7.0에서 신규 생성되었습니다 (2026-02-11)*
+*이 문서는 v2.9.0 업데이트 (2026-02-11)*

@@ -1,6 +1,6 @@
 {
   "name": "ccbuilder",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams) with comprehensive guides, official docs, and real-world examples.",
   "author": {
     "name": "cathy-kim",
@@ -10,5 +10,5 @@
   "repository": "https://github.com/cathy-kim/ccbuilder",
   "license": "MIT",
   "keywords": ["claude-code", "skills", "hooks", "agents", "agent-teams", "mcp", "plugin"],
-  "skills": ["skills/ccbuilder"]
+  "skills": ["./skills/ccbuilder"]
 }

@@ -1,14 +1,14 @@
 ---
 name: ccbuilder
-description: "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams, slash commands) and answer questions about Claude Code functionality. Use when (1) creating new Claude Code functionality, setting up .claude infrastructure, creating custom hooks (SessionStart, PreToolUse, PermissionRequest, SubagentStart, SubagentStop, PostToolUseFailure, TeammateIdle, Stop), developing specialized agents, implementing skills, or coordinating agent teams, OR (2) asking questions about Claude Code features, agent teams, hook patterns, skill development, memory system, modular rules, MCP integration, .claude directory structure, progressive disclosure, 500-line rule, OR (3) building programmatic LLM systems with Agent SDK. Includes P1 official documentation references and implementation guides."
+description: "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams, ralph loops, slash commands) and answer questions about Claude Code functionality. Use when (1) creating new Claude Code functionality, setting up .claude infrastructure, creating custom hooks (SessionStart, PreToolUse, PermissionRequest, SubagentStart, SubagentStop, PostToolUseFailure, TeammateIdle, Stop), developing specialized agents, implementing skills, coordinating agent teams, or setting up Ralph Loops (autonomous development loops, fresh context pattern), OR (2) asking questions about Claude Code features, agent teams, hook patterns, skill development, memory system, modular rules, MCP integration, ralph loop, agentic loop, fresh context pattern, .claude directory structure, progressive disclosure, 500-line rule, OR (3) building programmatic LLM systems with Agent SDK. Includes P1 official documentation references and implementation guides."
 userInvocable: true
-argument-hint: "[skill|hook|agent|team|question] <name or query>"
+argument-hint: "[skill|hook|agent|team|ralph|question] <name or query>"
 ---
 
 # Claude Code Extension Builder
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
+**Version**: 2.10.0
+**Last Updated**: 2026-02-13
 
 ## 목적
 
@@ -16,40 +16,64 @@ Claude Code 확장 기능(Skills, Agents, Hooks, Agent Teams) 개발 질문 답�
 
 ---
 
-## 인자 없이 호출 시 (Welcome)
+## 인자 처리 규칙
 
 **인자**: `$ARGUMENTS`
 
-인자가 없으면 다음 중 하나를 선택하도록 AskUserQuestion 도구를 사용하세요:
+`$ARGUMENTS`의 첫 번째 토큰으로 행동을 결정합니다.
 
-| 옵션 | 설명 |
-|------|------|
-| **새 Skill 만들기** | Skill 생성 가이드 시작 |
-| **새 Hook 만들기** | Hook 구현 가이드 시작 |
-| **새 Agent 만들기** | Subagent 정의 가이드 시작 |
-| **Agent Team 구성** | 멀티 에이전트 팀 협업 가이드 |
-| **질문하기** | Claude Code 기능에 대해 질문 |
-| **문서 보기** | 참조 문서 목록 표시 |
+### (인자 없음) → Welcome
 
-### 예시 응답 (인자 없을 때)
+AskUserQuestion 도구로 다음 옵션을 제시하세요:
+새 Skill 만들기 / 새 Hook 만들기 / 새 Agent 만들기 / Agent Team 구성 / Ralph Loop 설정 / 질문하기 / 문서 보기
 
-```
-Claude Code Extension Builder에 오신 것을 환영합니다!
+### `skill <name>` → Skill 생성
 
-무엇을 도와드릴까요?
+1. Read [references/skills-guide.md](references/skills-guide.md)
+2. Read [references/official/skills.md](references/official/skills.md)
+3. `<name>`용 SKILL.md 스캐폴딩 + `references/` 디렉토리 생성
+4. 필요 시 `references/github/repos/anthropics-skills/`에서 공식 Skill 예시 검색
 
-1. 새 Skill 만들기 - `/build-extension skill <name>`
-2. 새 Hook 만들기 - `/build-extension hook <event>`
-3. 새 Agent 만들기 - `/build-extension agent <name>`
-4. Agent Team 구성 - `/build-extension team <name>`
-5. 질문하기 - 자유롭게 질문해주세요
-6. 문서 보기 - 참조 문서 목록
+### `hook <event>` → Hook 구현
 
-또는 직접 질문하셔도 됩니다:
-- "Agent Teams으로 병렬 작업하려면?"
-- "Hook 이벤트 종류가 뭐야?"
-- "메모리 시스템이 뭐야?"
-```
+1. Read [references/hooks-guide.md](references/hooks-guide.md)
+2. Read [references/official/hooks.md](references/official/hooks.md)
+3. `<event>`에 맞는 Hook 코드 생성 + settings.json 등록 안내
+4. 필요 시 `references/github/repos/hooks-mastery/`에서 구현 예시 검색
+
+### `agent <name>` → Agent 정의
+
+1. Read [references/subagents-guide.md](references/subagents-guide.md)
+2. Read [references/official/subagents.md](references/official/subagents.md)
+3. `<name>`용 Agent 정의 파일(`.claude/agents/<name>.md`) 생성
+
+### `team <name>` → Agent Team 구성
+
+1. Read [references/agent-teams-guide.md](references/agent-teams-guide.md)
+2. Team 아키텍처 설계 (역할 분담, 태스크 의존성)
+3. TeamCreate → TaskCreate → Task 워크플로우 가이드
+
+### `ralph <project-name>` → Ralph Loop 설정
+
+1. Read [references/ralph-loop-guide.md](references/ralph-loop-guide.md)
+2. 방식 선택 (Simple Bash Loop / Stop Hook / Ralph 프레임워크)
+3. `TASK.md`, `PROGRESS.md`, `loop.sh` 스캐폴딩 생성
+4. 필요 시 `.claude/hooks/ralph-stop.sh` + settings.json Stop Hook 등록
+
+### `question <query>` 또는 자연어 질문 → 답변
+
+1. `<query>`에서 키워드 추출 후 아래 매핑으로 관련 문서 Read:
+   - skills, skill → [references/skills-guide.md](references/skills-guide.md) + [official/skills.md](references/official/skills.md)
+   - hooks, hook, event → [references/hooks-guide.md](references/hooks-guide.md) + [official/hooks.md](references/official/hooks.md)
+   - agent, subagent → [references/subagents-guide.md](references/subagents-guide.md) + [official/subagents.md](references/official/subagents.md)
+   - team, teammate → [references/agent-teams-guide.md](references/agent-teams-guide.md)
+   - mcp, server, transport → [references/mcp-guide.md](references/mcp-guide.md) + [official/mcp.md](references/official/mcp.md)
+   - memory, rules, CLAUDE.md → [references/memory-rules-guide.md](references/memory-rules-guide.md) + [official/memory-rules.md](references/official/memory-rules.md)
+   - tool, tools → [references/official/tools.md](references/official/tools.md)
+   - orchestrator → [references/orchestrator-principles.md](references/orchestrator-principles.md)
+   - ralph, loop, repl, fresh context, autonomous → [references/ralph-loop-guide.md](references/ralph-loop-guide.md)
+2. 키워드가 불명확하면 `references/github/repos/`에서 Grep으로 실제 코드 검색
+3. 문서 내용 기반으로 답변 (추측 금지, 근거 명시)
 
 ---
 
@@ -149,6 +173,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | **Hook** | 워크플로우 제어 | - | `settings.json` |
 | **Memory** | 세션 간 지식 영속 (신규) | 자동 로드 | `~/.claude/projects/*/memory/` |
 | **Rules** | 경로별 규칙 적용 (신규) | 자동 로드 | `.claude/rules/` |
+| **Ralph Loop** | 자율 개발 루프 (신규) | 매 반복 Fresh | `TASK.md` + `loop.sh` |
 
 ---
 
@@ -240,21 +265,39 @@ permissionMode: acceptEdits
 
 ---
 
+### Ralph Loop 핵심 (신규)
+
+```bash
+# Simple: TASK.md + PROGRESS.md + loop.sh
+cat TASK.md PROGRESS.md | claude -p "다음 미완료 작업 수행 후 PROGRESS.md 업데이트. 완료 시 LOOP_COMPLETE 추가"
+# Stop Hook: 종료 차단으로 자동 루프
+# Ralph Framework: ralph --monitor (풀 프레임워크)
+```
+
+**핵심**: 매 반복 Fresh Context(0%) + 파일/Git으로 상태 유지 + 이중 종료 조건
+
+**상세**: [references/ralph-loop-guide.md](references/ralph-loop-guide.md)
+
+---
+
 ## 사용 시나리오 결정 가이드
 
 ```
-Q: 반복적으로 같은 지침이 필요한가?
-├─ Yes → Skill 생성
+Q: 장시간 자율 개발이 필요한가? (30분+, 컨텍스트 열화 방지)
+├─ Yes → Ralph Loop (TASK.md + loop.sh)
 └─ No
-   Q: 여러 에이전트가 병렬로 협업해야 하나?
-   ├─ Yes → Agent Team (TeamCreate + Task + SendMessage)
+   Q: 반복적으로 같은 지침이 필요한가?
+   ├─ Yes → Skill 생성
    └─ No
-      Q: 독립적인 작업 실행이 필요한가?
-      ├─ Yes → Task Tool 사용
-      │  Q: 커스텀 에이전트가 필요한가?
-      │  ├─ Yes → Subagent 정의 후 Task에서 호출
-      │  └─ No → 내장 subagent_type 사용 (Explore, Plan, general-purpose)
-      └─ No → 직접 대화에서 처리
+      Q: 여러 에이전트가 병렬로 협업해야 하나?
+      ├─ Yes → Agent Team (TeamCreate + Task + SendMessage)
+      └─ No
+         Q: 독립적인 작업 실행이 필요한가?
+         ├─ Yes → Task Tool 사용
+         │  Q: 커스텀 에이전트가 필요한가?
+         │  ├─ Yes → Subagent 정의 후 Task에서 호출
+         │  └─ No → 내장 subagent_type 사용 (Explore, Plan, general-purpose)
+         └─ No → 직접 대화에서 처리
 ```
 
 ---
@@ -305,7 +348,8 @@ my-skill/
 | [references/skills-guide.md](references/skills-guide.md) | Skills 상세 가이드 |
 | [references/hooks-guide.md](references/hooks-guide.md) | Hooks 상세 가이드 |
 | [references/subagents-guide.md](references/subagents-guide.md) | Subagents + Plugin 가이드 |
-| [references/agent-teams-guide.md](references/agent-teams-guide.md) | Agent Teams 상세 가이드 (신규) |
+| [references/agent-teams-guide.md](references/agent-teams-guide.md) | Agent Teams 상세 가이드 |
+| [references/ralph-loop-guide.md](references/ralph-loop-guide.md) | Ralph Loop (자율 개발 루프) 가이드 |
 | [references/troubleshooting.md](references/troubleshooting.md) | 트러블슈팅 |
 
 ### Orchestrator Skill 개발
@@ -408,26 +452,9 @@ claude mcp add claude-context \
   -- npx @zilliz/claude-context-mcp@latest
 ```
 
-**Option B: Ollama + 로컬 Milvus** (완전 오프라인)
-```bash
-# 1. Ollama 임베딩 모델 다운로드
-ollama pull nomic-embed-text
-# 2. Milvus Docker 실행
-docker run -d --name milvus -p 19530:19530 milvusdb/milvus:latest
-# 3. MCP 추가
-claude mcp add claude-context \
-  -e EMBEDDING_PROVIDER=Ollama \
-  -e OLLAMA_HOST=http://127.0.0.1:11434 \
-  -e EMBEDDING_MODEL=nomic-embed-text \
-  -e MILVUS_ADDRESS=http://localhost:19530 \
-  -- npx @zilliz/claude-context-mcp@latest
-```
+**Option B: Ollama + 로컬 Milvus** (완전 오프라인) — Ollama(`nomic-embed-text`) + Docker Milvus + `EMBEDDING_PROVIDER=Ollama` 설정
 
-**설치 후 인덱싱**:
-```
-"references/github/repos/ 디렉토리를 인덱싱해줘"
-→ index_codebase → search_code로 자연어 검색 가능
-```
+**설치 후**: `"references/github/repos/ 디렉토리를 인덱싱해줘"` → `index_codebase` → `search_code`로 자연어 검색
 
 ### 기타 참조
 
@@ -449,7 +476,7 @@ claude mcp add claude-context \
 
 ---
 
-**Status**: UPDATED (2026-02-11)
+**Status**: UPDATED (2026-02-13)
 **Claude Code Version**: v2.1.39+
 **Source**: [Official Docs](https://code.claude.com/docs/en/) + [CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)
 
