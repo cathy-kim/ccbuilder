@@ -25,7 +25,7 @@ Claude Code 확장 기능(Skills, Agents, Hooks, Agent Teams) 개발 질문 답�
 ### (인자 없음) → Welcome
 
 AskUserQuestion 도구로 다음 옵션을 제시하세요:
-새 Skill 만들기 / 새 Hook 만들기 / 새 Agent 만들기 / Agent Team 구성 / Ralph Loop 설정 / 질문하기 / 문서 보기
+새 Skill 만들기 / 새 Hook 만들기 / 새 Agent 만들기 / Agent Team 구성 / Ralph Loop 설정 / 뭘 어디에 만들지 도와줘 / 질문하기 / 문서 보기
 
 ### `skill <name>` → Skill 생성
 
@@ -60,6 +60,15 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 3. `TASK.md`, `PROGRESS.md`, `loop.sh` 스캐폴딩 생성
 4. 필요 시 `.claude/hooks/ralph-stop.sh` + settings.json Stop Hook 등록
 
+### 자연어 요구사항 → 컴포넌트 추천
+
+사용자가 "~하고 싶어", "~해줘", "~를 만들어줘" 등 요구사항을 말하면:
+
+1. Read [references/what-goes-where-guide.md](references/what-goes-where-guide.md)
+2. 결정 트리와 매핑 테이블을 참고하여 **어떤 컴포넌트**를 **어디에** 만들어야 하는지 추천
+3. 해당 컴포넌트의 **작성 템플릿**을 보여주고, 사용자 요구사항에 맞게 내용 채움
+4. 컴포넌트가 결정되면 해당 생성 흐름(skill/hook/agent 등)으로 이동
+
 ### `question <query>` 또는 자연어 질문 → 답변
 
 1. `<query>`에서 키워드 추출 후 아래 매핑으로 관련 문서 Read:
@@ -69,6 +78,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
    - team, teammate → [references/agent-teams-guide.md](references/agent-teams-guide.md)
    - mcp, server, transport → [references/mcp-guide.md](references/mcp-guide.md) + [official/mcp.md](references/official/mcp.md)
    - memory, rules, CLAUDE.md → [references/memory-rules-guide.md](references/memory-rules-guide.md) + [official/memory-rules.md](references/official/memory-rules.md)
+   - 어디에, 뭘, 어떻게, 선택, 분류 → [references/what-goes-where-guide.md](references/what-goes-where-guide.md)
    - tool, tools → [references/official/tools.md](references/official/tools.md)
    - orchestrator → [references/orchestrator-principles.md](references/orchestrator-principles.md)
    - ralph, loop, repl, fresh context, autonomous → [references/ralph-loop-guide.md](references/ralph-loop-guide.md)
@@ -373,6 +383,7 @@ my-skill/
 | 문서 | 설명 |
 |------|------|
 | [references/mcp-guide.md](references/mcp-guide.md) | MCP 설정 및 활용 가이드 |
+| [references/what-goes-where-guide.md](references/what-goes-where-guide.md) | 요청사항 → 어디에 뭘 적을지 가이드 |
 | [references/memory-rules-guide.md](references/memory-rules-guide.md) | Memory & Rules 상세 가이드 |
 
 ### 공식 문서 레퍼런스 (official/)
@@ -476,15 +487,4 @@ claude mcp add claude-context \
 
 ---
 
-**Status**: UPDATED (2026-02-13)
-**Claude Code Version**: v2.1.39+
-**Source**: [Official Docs](https://code.claude.com/docs/en/) + [CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)
-
----
-
-## 자동 업데이트 설정
-
-이 스킬은 GitHub Actions를 통해 주기적으로 공식 문서와 동기화됩니다.
-
-- **동기화 체크리스트**: [references/version-sync.md](references/version-sync.md)
-- **자동화 스크립트**: [scripts/check-updates.sh](../../scripts/check-updates.sh)
+**Status**: UPDATED (2026-02-13) | **Claude Code**: v2.1.39+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)

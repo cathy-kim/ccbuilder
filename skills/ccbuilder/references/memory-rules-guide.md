@@ -68,6 +68,81 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
 
 ---
 
+## CLAUDE.md 작성 가이드
+
+### 작성 템플릿
+
+```markdown
+# Project Name
+
+## 기술 스택
+- 언어: [언어]
+- 프레임워크: [프레임워크 + 버전]
+- DB: [데이터베이스]
+- 테스트: [테스트 프레임워크]
+
+## 주요 명령어
+- `npm run dev`: 개발 서버
+- `npm run test`: 테스트 실행
+- `npm run build`: 빌드
+
+## 프로젝트 구조
+- `src/app/`: [설명]
+- `src/lib/`: [설명]
+
+## 코딩 규칙
+- [규칙 1]
+- [규칙 2]
+
+## Git 규칙
+- 커밋 메시지: [형식]
+- PR: [규칙]
+
+## 중요 규칙
+- IMPORTANT: [절대 지켜야 할 규칙]
+- YOU MUST: [필수 수행 사항]
+```
+
+### 작성 원칙
+
+- **간결하게** (100줄 이하 권장) — 매 세션 자동 로드되므로 토큰 절약
+- **"IMPORTANT"/"YOU MUST"** 로 중요 규칙 강조
+- **스캔 가능한 구조** — 제목, 목록, 표 활용
+- **반복 프롬프트로 취급** — `#` 키로 Claude가 자동 업데이트 유도
+
+### CLAUDE.md vs Rules vs CLAUDE.local.md 선택 기준
+
+```
+이 내용을 어디에 적을지?
+
+├─ 팀 전체가 알아야 하고, 프로젝트 전역에 항상 적용?
+│   → CLAUDE.md (Git 커밋)
+│
+├─ 특정 파일/경로에서만 적용? (프론트엔드, 테스트 등)
+│   → .claude/rules/*.md (paths: frontmatter)
+│
+├─ 내 로컬 환경에만 해당? (DB 주소, API 키 위치 등)
+│   → CLAUDE.local.md (자동 gitignore)
+│
+├─ 모든 프로젝트에 공통? (선호 도구, 언어 등)
+│   → ~/.claude/CLAUDE.md (User Memory)
+│
+└─ 상세한 가이드/패턴? (300줄+ 설명)
+    → Skill로 분리 (.claude/skills/)
+```
+
+| 내용 예시 | 적합한 위치 | 이유 |
+|----------|------------|------|
+| "TypeScript 필수" | CLAUDE.md | 프로젝트 전역, 팀 공유 |
+| "프론트엔드는 함수형 컴포넌트만" | `.claude/rules/frontend.md` | 특정 경로만 |
+| "내 DB는 localhost:5432" | CLAUDE.local.md | 개인 환경 |
+| "항상 bun 사용" | `~/.claude/CLAUDE.md` | 모든 프로젝트 |
+| "React 패턴 가이드 300줄" | Skill | 매 세션 로드하면 토큰 낭비 |
+| "커밋 메시지는 conventional commits" | CLAUDE.md | 팀 규칙 |
+| "테스트 파일은 같은 폴더에" | `.claude/rules/testing.md` | `paths: "*.test.*"` |
+
+---
+
 ## 3. Project Rules (.claude/rules/)
 
 ### 기본 사용
@@ -117,6 +192,60 @@ paths:
 │   └── styling-rules.md
 └── backend/
     └── api-rules.md
+```
+
+### Rules 본문 작성 가이드
+
+**작성 원칙**:
+- 규칙은 **명령형** ("사용", "금지", "필수")
+- 대안 제시 ("X 대신 Y 사용")
+- 파일당 **하나의 도메인** (프론트엔드, 백엔드, 테스트 등)
+- 전체 rules/ 합계 **200줄 이하** 권장
+
+**예시: 보안 정책 규칙**
+
+```yaml
+---
+paths:
+  - "src/api/**"
+  - "src/middleware/**"
+---
+
+# Security Rules
+
+## 인증
+- 모든 API 엔드포인트에 인증 미들웨어 적용 필수
+- JWT 토큰 검증은 middleware에서만 수행
+- 토큰 만료 시간: access 15분, refresh 7일
+
+## 입력 검증
+- 사용자 입력은 zod 스키마로 반드시 검증
+- SQL 쿼리에 raw string 직접 삽입 금지 → Prisma parameterized query 사용
+- 파일 업로드: 확장자 화이트리스트 + MIME 타입 검증
+
+## 민감 정보
+- .env 파일 절대 커밋 금지
+- API 키, 비밀번호는 환경변수에서만 참조
+- 로그에 사용자 개인정보 출력 금지
+```
+
+**예시: 테스트 규칙**
+
+```yaml
+---
+paths:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "tests/**"
+---
+
+# Testing Rules
+
+- 테스트 파일은 소스 파일과 같은 디렉토리에 위치
+- 테스트 프레임워크: Vitest (Jest 금지)
+- mock 최소화 → 실제 구현 우선, 외부 의존성만 mock
+- 테스트 이름: "should [expected behavior] when [condition]"
+- 커버리지 80% 이상 유지
 ```
 
 ### Symlink로 규칙 공유

@@ -32,6 +32,20 @@ AGENT_TITLE=$(echo $AGENT_NAME | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=tou
 
 # Agent 파일 생성
 cat > "$AGENT_FILE" << EOF
+---
+name: $AGENT_NAME
+description: "[TODO: 이 agent의 역할과 사용 시점 설명]"
+model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
+permissionMode: default
+---
+
 # $AGENT_TITLE
 
 ## 목적
