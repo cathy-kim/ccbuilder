@@ -1,0 +1,33 @@
+[submodule "skills/ccbuilder/references/github/repos/anthropics-skills"]
+	path = skills/ccbuilder/references/github/repos/anthropics-skills
+	url = https://github.com/anthropics/skills.git
+[submodule "skills/ccbuilder/references/github/repos/obra-superpowers"]
+	path = skills/ccbuilder/references/github/repos/obra-superpowers
+	url = https://github.com/obra/superpowers.git
+[submodule "skills/ccbuilder/references/github/repos/everything-claude-code"]
+	path = skills/ccbuilder/references/github/repos/everything-claude-code
+	url = https://github.com/affaan-m/everything-claude-code.git
+[submodule "skills/ccbuilder/references/github/repos/wshobson-agents"]
+	path = skills/ccbuilder/references/github/repos/wshobson-agents
+	url = https://github.com/wshobson/agents.git
+[submodule "skills/ccbuilder/references/github/repos/awesome-claude-code"]
+	path = skills/ccbuilder/references/github/repos/awesome-claude-code
+	url = https://github.com/hesreallyhim/awesome-claude-code.git
+[submodule "skills/ccbuilder/references/github/repos/awesome-subagents"]
+	path = skills/ccbuilder/references/github/repos/awesome-subagents
+	url = https://github.com/VoltAgent/awesome-claude-code-subagents.git
+[submodule "skills/ccbuilder/references/github/repos/awesome-claude-skills"]
+	path = skills/ccbuilder/references/github/repos/awesome-claude-skills
+	url = https://github.com/travisvn/awesome-claude-skills.git
+[submodule "skills/ccbuilder/references/github/repos/awesome-agent-skills"]
+	path = skills/ccbuilder/references/github/repos/awesome-agent-skills
+	url = https://github.com/VoltAgent/awesome-agent-skills.git
+[submodule "skills/ccbuilder/references/github/repos/hooks-mastery"]
+	path = skills/ccbuilder/references/github/repos/hooks-mastery
+	url = https://github.com/disler/claude-code-hooks-mastery.git
+[submodule "skills/ccbuilder/references/github/repos/claude-code-showcase"]
+	path = skills/ccbuilder/references/github/repos/claude-code-showcase
+	url = https://github.com/ChrisWiles/claude-code-showcase.git
+[submodule "skills/ccbuilder/references/github/repos/claude-code-system-prompts"]
+	path = skills/ccbuilder/references/github/repos/claude-code-system-prompts
+	url = https://github.com/Piebald-AI/claude-code-system-prompts.git

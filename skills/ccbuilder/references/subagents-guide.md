@@ -1,0 +1,240 @@
+# Subagents 상세 가이드
+
+> Claude Code Subagents 및 Plugin System 개발 완전 가이드
+
+**Version**: 2.7.0
+**Last Updated**: 2026-02-11
+
+---
+
+## 내장 Subagent 타입
+
+| subagent_type | 용도 | 특징 |
+|---------------|------|------|
+| `Explore` | 코드베이스 탐색 | 읽기 전용, Haiku 기반, 빠름 |
+| `Plan` | 구현 계획 설계 | 아키텍처 분석 |
+| `general-purpose` | 복잡한 멀티스텝 작업 | 모든 도구 접근 |
+| `Bash` | 명령어 실행 전문 | Bash 도구만 |
+| `claude-code-guide` | Claude Code 문서 조회 | 공식 문서 검색 |
+
+---
+
+## 커스텀 에이전트 정의 (.claude/agents/) - v2.3
+
+```yaml
+---
+name: frontend-developer
+description: "React/Next.js 프론트엔드 개발 전문"
+model: sonnet                     # sonnet | opus | haiku
+
+# 도구 허용 (allowedTools)
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash(npm:*)
+  - Bash(npx:*)
+
+# 도구 차단 (신규 v2.1.30+)
+disallowedTools:
+  - Task                          # 중첩 방지
+  - mcp__dangerous__*             # 위험한 MCP 차단
+
+# 권한 모드 (신규 v2.1.30+)
+permissionMode: acceptEdits       # default | acceptEdits | dontAsk | bypassPermissions | plan
+
+# 스킬 프리로드 (신규 v2.1.30+)
+skills:
+  - frontend-design-system
+  - testing-patterns
+
+# 내장 Hooks
+hooks:
+  - type: PreToolUse
+    tool: Write
+    script: ./hooks/lint-check.sh
+---
+
+# Frontend Developer Agent
+
+## 역할
+React/Next.js 기반 프론트엔드 개발을 담당합니다.
+
+## 규칙
+1. TypeScript 사용 필수
+2. 컴포넌트는 함수형으로 작성
+3. 테스트 코드 함께 작성
+```
+
+---
+
+## Agent Frontmatter 옵션 (v2.3)
+
+| 옵션 | 타입 | 설명 | 기본값 |
+|------|------|------|--------|
+| `name` | string | 에이전트 이름 | **필수** |
+| `description` | string | 설명 | **필수** |
+| `model` | string | 모델 (sonnet/opus/haiku) | sonnet |
+| `allowed-tools` | string[] | 허용된 도구 목록 | 모든 도구 |
+| `disallowedTools` | string[] | 차단된 도구 목록 (신규) | - |
+| `permissionMode` | string | 권한 모드 (신규) | default |
+| `skills` | string[] | 프리로드할 스킬 (신규) | - |
+| `hooks` | object[] | 내장 Hook 정의 | - |
+
+---
+
+## Permission Modes (신규)
+
+| Mode | 설명 |
+|------|------|
+| `default` | 일반 권한 요청 |
+| `acceptEdits` | 파일 편집 자동 승인 |
+| `dontAsk` | 권한 요청 건너뜀 (신뢰 환경) |
+| `bypassPermissions` | 모든 권한 우회 (위험) |
+| `plan` | 계획 모드로 시작 |
+
+---
+
+## Task Tool 사용 (v2.3)
+
+### 1. 코드베이스 탐색 (빠름, 저비용)
+
+```typescript
+Task({
+  description: "Find auth handlers",
+  prompt: "인증 관련 핸들러 파일들을 찾고 구조를 분석해줘",
+  subagent_type: "Explore",
+  model: "haiku"
+})
+```
+
+### 2. 커스텀 에이전트 호출
+
+```typescript
+Task({
+  description: "Build React component",
+  prompt: "대시보드 컴포넌트를 만들어줘",
+  subagent_type: "frontend-developer"  // .claude/agents/frontend-developer.md
+})
+```
+
+### 3. 병렬 실행 (단일 메시지에 여러 Task)
+
+```typescript
+Task({ subagent_type: "frontend", prompt: "UI 작성" })
+Task({ subagent_type: "backend", prompt: "API 작성" })
+Task({ subagent_type: "qa-expert", prompt: "테스트 작성" })
+```
+
+### 4. 백그라운드 실행 (신규)
+
+```typescript
+Task({
+  description: "Long analysis",
+  prompt: "전체 코드베이스 분석",
+  subagent_type: "Explore",
+  run_in_background: true  // 백그라운드에서 실행
+})
+// output_file로 결과 확인
+```
+
+### 5. 에이전트 재개 (신규)
+
+```typescript
+Task({
+  description: "Continue previous work",
+  prompt: "이전 작업을 계속해주세요",
+  resume: "agent-id-from-previous-task"  // 이전 에이전트 ID로 재개
+})
+```
+
+---
+
+## 제약 사항
+
+| 제약 | 값 |
+|------|-----|
+| 최대 동시 Task | 10개 |
+| Task 컨텍스트 | 200k 토큰 |
+| 중첩 | 불가 (Subagent가 다른 Subagent 호출 불가) |
+| Auto-compaction | 서브에이전트 자동 compact 지원 |
+
+---
+
+## Plugin System (신규)
+
+### Plugin Marketplace
+
+```bash
+# 플러그인 검색
+/plugins search supabase
+
+# 플러그인 설치
+/plugins install @supabase/mcp
+
+# 설치된 플러그인 목록
+/plugins list
+```
+
+### MCP 통합
+
+```json
+// .mcp.json
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp@latest"],
+      "oauth": {
+        "provider": "supabase",
+        "scopes": ["database", "storage"]
+      }
+    }
+  }
+}
+```
+
+---
+
+## Orchestrator Skill (병렬 Agent 조율)
+
+병렬 Agent를 조율하는 Orchestrator Skill 생성 시 **반드시** 참조:
+
+| 문서 | 설명 |
+|------|------|
+| [orchestrator-principles.md](orchestrator-principles.md) | 핵심 원칙, Context Injection, AB Test 결과 |
+| [orchestrator-skill-creation-guide.md](orchestrator-skill-creation-guide.md) | 생성 가이드, 템플릿, 체크리스트 |
+
+### 핵심 원칙
+
+1. **YOU ORCHESTRATE, YOU DO NOT EXECUTE** - Orchestrator는 직접 코드 작성 안함
+2. **SUBAGENTS LIE. VERIFY EVERYTHING.** - 파일/빌드/테스트 모두 검증
+3. **BACKWARD COMPATIBILITY IS NON-NEGOTIABLE** - 하위호환 깨짐 = 즉시 RETRY
+
+---
+
+## Agent Teams vs Task Tool
+
+| 기능 | Task Tool (단독) | Agent Teams |
+|------|-----------------|-------------|
+| 에이전트 수명 | 단발성 (작업 끝나면 종료) | 지속적 (팀 해체까지 유지) |
+| 상태 공유 | 없음 | 공유 Task List |
+| 커뮤니케이션 | 결과만 반환 | DM, 브로드캐스트 |
+| 조율 | 호출자가 직접 | Team Lead가 조율 |
+| 비용 | 작업당 과금 | 활성 시간 내내 과금 |
+| 적합한 경우 | 단순 병렬 작업 | 복잡한 협업, 장기 프로젝트 |
+
+**Agent Teams 상세**: [agent-teams-guide.md](agent-teams-guide.md)
+
+---
+
+## 공식 문서
+
+- **Subagents Reference**: https://code.claude.com/docs/en/sub-agents
+- **Agent Teams**: https://code.claude.com/docs/en/agent-teams
+
+---
+
+*이 문서는 SKILL.md에서 분리되었습니다 (2026-02-04, v2.7.0 업데이트 2026-02-11)*

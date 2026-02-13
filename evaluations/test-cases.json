@@ -1,0 +1,155 @@
+{
+  "skill": "ccbuilder",
+  "version": "1.0.0",
+  "description": "Evaluation test cases for ccbuilder skill",
+  "test_cases": [
+    {
+      "id": "TC001-create-simple-skill",
+      "category": "skill-creation",
+      "priority": "P0",
+      "description": "Create a basic skill with minimal configuration",
+      "input": {
+        "prompt": "Create a new skill called 'pdf-analyzer' that helps analyze PDF documents and extract key information. The skill should use PDF parsing tools and provide structured output.",
+        "context": {}
+      },
+      "expected_outputs": {
+        "files_created": [
+          "skills/pdf-analyzer/SKILL.md",
+          "skills/pdf-analyzer/references/"
+        ],
+        "skill_md_requirements": {
+          "has_yaml_frontmatter": true,
+          "has_name_field": true,
+          "has_description_field": true,
+          "line_count_max": 500,
+          "required_sections": [
+            "목적",
+            "사용 시점",
+            "빠른 시작"
+          ]
+        },
+        "yaml_frontmatter": {
+          "name": "pdf-analyzer",
+          "description_contains": ["PDF", "analyze"]
+        }
+      },
+      "success_criteria": {
+        "all_files_exist": true,
+        "yaml_valid": true,
+        "progressive_disclosure": true,
+        "description_relevant": true
+      }
+    },
+    {
+      "id": "TC002-create-agent-with-routing",
+      "category": "agent-creation",
+      "priority": "P0",
+      "description": "Create an agent with routing configuration",
+      "input": {
+        "prompt": "Create a frontend code reviewer agent that reviews React/TypeScript code. When it encounters backend API issues, it should route to the backend-reviewer agent.",
+        "context": {}
+      },
+      "expected_outputs": {
+        "files_created": [
+          "agents/frontend-code-reviewer.md"
+        ],
+        "agent_md_requirements": {
+          "has_role_section": true,
+          "has_responsibilities_section": true,
+          "has_routing_section": true,
+          "routing_target": "backend-reviewer"
+        }
+      },
+      "success_criteria": {
+        "file_exists": true,
+        "has_routing": true,
+        "routing_configured": true
+      }
+    },
+    {
+      "id": "TC003-create-hook-validation",
+      "category": "hook-creation",
+      "priority": "P1",
+      "description": "Create a validation hook that checks input before tool use",
+      "input": {
+        "prompt": "Create a PreToolUse hook that validates file paths before any write operations. It should block writes to sensitive directories like /etc, /usr, and ~/.ssh.",
+        "context": {}
+      },
+      "expected_outputs": {
+        "files_created": [
+          "hooks/path-validation-guard.ts"
+        ],
+        "hook_requirements": {
+          "is_typescript": true,
+          "has_main_function": true,
+          "has_validation_logic": true,
+          "blocks_sensitive_paths": true
+        }
+      },
+      "success_criteria": {
+        "file_exists": true,
+        "is_executable": true,
+        "has_proper_structure": true
+      }
+    },
+    {
+      "id": "TC004-create-slash-command",
+      "category": "command-creation",
+      "priority": "P1",
+      "description": "Create a slash command for common workflow",
+      "input": {
+        "prompt": "Create a /review-pr command that analyzes the current PR, runs tests, checks code quality, and generates a review summary.",
+        "context": {}
+      },
+      "expected_outputs": {
+        "files_created": [
+          "commands/review-pr.md"
+        ],
+        "command_requirements": {
+          "has_description": true,
+          "has_steps": true,
+          "steps_count_min": 3
+        }
+      },
+      "success_criteria": {
+        "file_exists": true,
+        "has_clear_steps": true
+      }
+    },
+    {
+      "id": "TC005-progressive-disclosure-check",
+      "category": "best-practices",
+      "priority": "P0",
+      "description": "Verify that created skill follows progressive disclosure",
+      "input": {
+        "prompt": "Create a comprehensive database migration skill that handles schema changes, data migration, rollback, and verification across PostgreSQL, MySQL, and MongoDB.",
+        "context": {}
+      },
+      "expected_outputs": {
+        "files_created": [
+          "skills/database-migration/SKILL.md",
+          "skills/database-migration/references/"
+        ],
+        "skill_md_requirements": {
+          "line_count_max": 500,
+          "has_references_directory": true,
+          "references_count_min": 2
+        }
+      },
+      "success_criteria": {
+        "main_skill_under_500": true,
+        "detailed_content_in_references": true
+      }
+    }
+  ],
+  "evaluation_metrics": {
+    "pass_threshold": 0.8,
+    "critical_tests": ["TC001", "TC002", "TC005"],
+    "nice_to_have_tests": ["TC003", "TC004"]
+  },
+  "automation": {
+    "can_run_automatically": false,
+    "requires_manual_review": true,
+    "reason": "Requires actual Claude API calls and file system verification"
+  }
+}

@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+evaluations/eval-results/
+*.tmp
+*.log
+*.cache
