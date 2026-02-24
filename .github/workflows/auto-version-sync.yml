@@ -57,10 +57,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@2.1.18
+
       - name: Run Claude Code for version sync
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           show_full_output: true
           prompt: |
             Claude Code의 새 버전이 감지되었습니다.
