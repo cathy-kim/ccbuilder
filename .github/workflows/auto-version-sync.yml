@@ -61,6 +61,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
           prompt: |
             Claude Code의 새 버전이 감지되었습니다.
             - 현재 버전: ${{ needs.check-version.outputs.current_version }}
