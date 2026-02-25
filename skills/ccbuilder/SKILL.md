@@ -8,7 +8,7 @@ argument-hint: "[skill|hook|agent|team|ralph|question] <name or query>"
 # Claude Code Extension Builder
 
 **Version**: 2.10.0
-**Last Updated**: 2026-02-13
+**Last Updated**: 2026-02-25
 
 ## 목적
 
@@ -87,7 +87,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.8.0)
+## 핵심 변경 사항 (v2.1.53)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -487,4 +487,4 @@ claude mcp add claude-context \
 
 ---
 
-**Status**: UPDATED (2026-02-13) | **Claude Code**: v2.1.39+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
+**Status**: UPDATED (2026-02-13) | **Claude Code**: v2.1.53+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
