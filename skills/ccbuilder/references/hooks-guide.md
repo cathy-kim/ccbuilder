@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.11.0
+**Last Updated**: 2026-02-25
+**Claude Code Version**: v2.1.53+
 
 ---
 
-## Hook 이벤트 (v2.7 최신)
+## Hook 이벤트 (v2.11 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -26,10 +26,12 @@
 | **PreCompact** | compact 전 | No | - |
 | **Notification** | 알림 발생 | No | `notification` |
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
+| **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
+| **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
 
 ---
 
-## Hook 타입 (v2.7)
+## Hook 타입 (v2.11)
 
 ### Command Hook (기본)
 

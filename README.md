@@ -6,7 +6,7 @@
 
 Skills, Hooks, Agents, Agent Teams, Ralph Loops, MCP, Memory — one plugin, all covered.
 
-![Version](https://img.shields.io/badge/version-2.10.0-blue)
+![Version](https://img.shields.io/badge/version-2.11.0-blue)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Docs](https://img.shields.io/badge/reference_docs-33-orange)
@@ -199,7 +199,7 @@ Contributions welcome! Here's how you can help:
 
 ## Version
 
-Current: **v2.10.0** (2026-02-13) — See [CHANGELOG.md](CHANGELOG.md) for full history.
+Current: **v2.11.0** (2026-02-25) — See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 ## License
 

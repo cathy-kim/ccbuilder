@@ -24,6 +24,8 @@
 | 12 | `TaskCompleted` | 태스크 완료 | exit 2 |
 | 13 | `PreCompact` | 컨텍스트 압축 전 | - |
 | 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
+| 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50) | - |
+| 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |
 
 ## Handler 타입
 
