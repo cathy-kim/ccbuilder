@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.11.0] - 2026-02-25
+
+### Added
+- **Claude Code v2.1.53 동기화** (v2.1.39 → v2.1.53, 14개 버전 반영)
+  - Hook 이벤트 2개 추가: `WorktreeCreate`, `WorktreeRemove` (총 16개)
+  - Agent 정의 필드 추가: `isolation: worktree`, `background: true`
+  - CLI 명령어 추가: `claude agents`, `claude auth`, `claude remote-control`, `--worktree (-w)`
+  - Plugin 시스템 강화: `settings.json` 동봉, npm 레지스트리, managed settings (plist/Registry)
+  - MCP: claude.ai MCP connectors 지원
+  - 환경변수 5개 추가 (`CLAUDE_CODE_ACCOUNT_UUID` 등)
+- **GitHub Actions 버전 동기화 워크플로우 안정화**
+  - Claude Code Action → shell script 기반으로 전환 (SDK 크래시 해결)
+
+### Changed
+- 모델 변경: Sonnet 4.5 → Sonnet 4.6 (Max plan), Opus 4.6 1M context
+- `references/hooks-guide.md`: 이벤트 테이블 16개로 확장
+- `references/subagents-guide.md`: Agent frontmatter에 isolation/background 추가
+- `references/official/hooks.md`: 이벤트 목록 16개로 확장
+- `references/version-sync.md`: v2.1.53 변경사항 추적 추가
+- 버전: 2.10.0 → 2.11.0
+
+---
+
 ## [2.10.0] - 2026-02-13
 
 ### Added

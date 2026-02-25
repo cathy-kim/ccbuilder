@@ -2,8 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
+**Version**: 2.11.0
+**Last Updated**: 2026-02-25
+**Claude Code Version**: v2.1.53+
 
 ---
 
@@ -49,6 +50,12 @@ permissionMode: acceptEdits       # default | acceptEdits | dontAsk | bypassPerm
 skills:
   - frontend-design-system
   - testing-patterns
+
+# Worktree 격리 (신규 v2.1.50)
+isolation: worktree              # 격리된 git worktree에서 실행
+
+# 백그라운드 실행 (신규 v2.1.49)
+background: true                 # 항상 백그라운드 Task로 실행
 
 # 내장 Hooks
 hooks:

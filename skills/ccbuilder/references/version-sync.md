@@ -2,8 +2,8 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-02-11
-**현재 지원 버전**: v2.1.39+ (SKILL.md v2.9.0)
+**최종 동기화**: 2026-02-25
+**현재 지원 버전**: v2.1.53+ (SKILL.md v2.11.0)
 
 ---
 
@@ -76,6 +76,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.53 (2026-02-25 동기화)
+
+**새로운 기능:**
+- `claude remote-control` 원격 제어 서브커맨드 (v2.1.51)
+- 커스텀 npm 레지스트리 + 버전 핀 Plugin 설치 (v2.1.51)
+- macOS plist / Windows Registry managed settings (v2.1.51)
+- `WorktreeCreate`, `WorktreeRemove` Hook 이벤트 (v2.1.50)
+- `claude agents` CLI 명령 (v2.1.50)
+- `isolation: worktree` Agent 정의 필드 (v2.1.50)
+- Opus 4.6 fast mode 1M context (v2.1.50)
+- `--worktree (-w)` 격리 세션 플래그 (v2.1.49)
+- `background: true` Agent 정의 필드 (v2.1.49)
+- Plugin `settings.json` 동봉 (v2.1.49)
+- Ctrl+F 백그라운드 에이전트 종료 (v2.1.49)
+- claude.ai MCP connectors 지원 (v2.1.46)
+- Claude Sonnet 4.6 모델 지원 (v2.1.45)
+- `claude auth login/status/logout` CLI (v2.1.41)
+- Windows ARM64 지원 (v2.1.41)
+
+**환경변수 추가:**
+- `CLAUDE_CODE_ACCOUNT_UUID`, `CLAUDE_CODE_USER_EMAIL`, `CLAUDE_CODE_ORGANIZATION_UUID`
+- `CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS`, `CLAUDE_CODE_DISABLE_1M_CONTEXT`
+
+**주요 버그 수정:**
+- Agent Teams 메모리 누수 다수 수정 (v2.1.50)
+- `CLAUDE_CODE_SIMPLE` 모드 강화 (v2.1.49-50)
+- Windows 안정성 대폭 개선 (v2.1.47-53)
 
 ### v2.1.39 (2026-02-11 동기화)
 
