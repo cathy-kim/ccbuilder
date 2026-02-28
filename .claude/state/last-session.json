@@ -1,0 +1,25 @@
+{
+  "session_id": "960123b5-36fd-4515-ae36-2e6ff5af2501",
+  "timestamp": "2026-02-27T10:15:51.969Z",
+  "original_request": "여기에서 각 .rules / CLAUDE.md / subagents / skill에 어떻게 어떤 내용을 적어야 하는지 잘 명세되어 있는지 확인해줘 ",
+  "current_goal": "여기에서 각 .rules / CLAUDE.md / subagents / skill에 어떻게 어떤 내용을 적어야 하는지 잘 명세되어 있는지 확인해줘",
+  "constraints": [],
+  "current_task": "Session ended",
+  "recent_changes": [
+    "Session activity"
+  ],
+  "next_steps": [
+    "Continue from where you left off"
+  ],
+  "completion_rate": 100,
+  "tool_stats": {
+    "read": 0,
+    "write": 0,
+    "edit": 0,
+    "bash": 0,
+    "task": 0,
+    "total": 0
+  },
+  "errors": [],
+  "completion_loop": null
+}

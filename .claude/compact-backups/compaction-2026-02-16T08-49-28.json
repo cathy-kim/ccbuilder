@@ -1,0 +1,19 @@
+{
+  "input": {
+    "session_id": "a7f8e4a1-0aa8-44b9-9dc0-6ba99ac0d8b4",
+    "transcript_path": "/Users/sjin/.claude/projects/-Users-sjin-ccbuilder/a7f8e4a1-0aa8-44b9-9dc0-6ba99ac0d8b4.jsonl",
+    "cwd": "/Users/sjin/ccbuilder",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  "state": {
+    "original_request": "여기에서 각 .rules / CLAUDE.md / subagents / skill에 어떻게 어떤 내용을 적어야 하는지 잘 명세되어 있는지 확인해줘 ",
+    "final_goal": "여기에서 각 .rules / CLAUDE.md / subagents / skill에 어떻게 어떤 내용을 적어야 하는지 잘 명세되어 있는지 확인해줘",
+    "completed_work": [],
+    "remaining_work": [],
+    "constraints": [],
+    "timestamp": "2026-02-16T08:49:28.546Z"
+  },
+  "timestamp": "2026-02-16T08:49:28.547Z"
+}
