@@ -163,7 +163,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: '--max-turns 30 --allowedTools "Edit,Write,Read,Glob,Grep,Bash"'
+          claude_args: '--max-turns 50 --allowedTools "Edit,Write,Read,Glob,Grep,Bash"'
           prompt: |
             You are updating the ccbuilder knowledge base to reflect a new Claude Code release.
 
@@ -244,10 +244,25 @@ jobs:
       - name: Re-authenticate git
         run: |
           git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git pull --rebase origin "$(git branch --show-current)" || true
 
-      # ── Step 5: Fallback CHANGELOG (Claude 실패 시) ──
+      # ── Step 5: Check if Claude made content changes ──
+      - name: Check Claude changes
+        id: claude-check
+        run: |
+          # Check if Claude committed content changes (beyond version bump)
+          COMMIT_COUNT=$(git log --oneline origin/main..HEAD | wc -l)
+          if [ "$COMMIT_COUNT" -gt 1 ]; then
+            echo "claude_committed=true" >> "$GITHUB_OUTPUT"
+            echo "Claude made content commits (total $COMMIT_COUNT commits on branch)"
+          else
+            echo "claude_committed=false" >> "$GITHUB_OUTPUT"
+            echo "No content commits from Claude (only version bump)"
+          fi
+
+      # ── Step 6: Fallback CHANGELOG (Claude가 커밋하지 않은 경우만) ──
       - name: Fallback changelog entry
-        if: steps.claude-update.outcome != 'success'
+        if: steps.claude-check.outputs.claude_committed != 'true'
         env:
           NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
           OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
@@ -261,18 +276,18 @@ jobs:
           git commit -m "chore: add fallback changelog for Claude Code v${NEW_CC_VERSION}"
           git push
 
-      # ── Step 6: PR 생성 ──
+      # ── Step 7: PR 생성 ──
       - name: Create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
           NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
           NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
-          CLAUDE_OUTCOME: ${{ steps.claude-update.outcome }}
+          CLAUDE_COMMITTED: ${{ steps.claude-check.outputs.claude_committed }}
           REPO: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
         run: |
-          if [ "$CLAUDE_OUTCOME" = "success" ]; then
+          if [ "$CLAUDE_COMMITTED" = "true" ]; then
             TITLE="feat: sync Claude Code v${NEW_CC_VERSION} (ccbuilder v${NEW_CB_VERSION})"
             AI_STATUS="Claude Code Action으로 콘텐츠 분석 및 문서 업데이트 완료"
           else
@@ -294,7 +309,7 @@ jobs:
             echo "| Phase | Method | Status |"
             echo "|-------|--------|--------|"
             echo "| Version numbers | Shell (sed) | ✅ Done |"
-            if [ "$CLAUDE_OUTCOME" = "success" ]; then
+            if [ "$CLAUDE_COMMITTED" = "true" ]; then
               echo "| Content analysis | Claude Code Action | ✅ Done |"
             else
               echo "| Content analysis | Claude Code Action | ❌ Failed |"
