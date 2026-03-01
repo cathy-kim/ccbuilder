@@ -113,6 +113,7 @@ claude mcp add --scope user <name> -- <command>
 ```bash
 claude mcp add --transport http my-server https://mcp.example.com
 # OAuth 흐름이 자동으로 시작됨
+# 자동 localhost 리디렉트 실패 시 콜백 URL 직접 붙여넣기 가능 (v2.1.63)
 ```
 
 ### 수동 등록 (Pre-configured Credentials)
@@ -192,6 +193,15 @@ claude mcp serve
 # MCP 도구 출력 토큰 제한 (기본: 25,000)
 MAX_MCP_OUTPUT_TOKENS=50000
 ```
+
+---
+
+## 환경 변수 (v2.1.63)
+
+| 변수 | 설명 |
+|------|------|
+| `ENABLE_CLAUDEAI_MCP_SERVERS=false` | claude.ai MCP 서버를 사용 불가 설정 |
+| `MAX_MCP_OUTPUT_TOKENS=N` | MCP 도구 출력 토큰 제한 |
 
 ---
 

@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.12.0] - 2026-03-01
+
+### Added
+- **Claude Code v2.1.63 동기화** (v2.1.53 → v2.1.63, 10개 버전 반영)
+  - HTTP Hook 타입 추가: URL로 JSON POST/응답 수신 (shell 명령 대신 HTTP 엔드포인트 활용)
+  - `ConfigChange` Hook 이벤트: 세션 중 설정 파일 변경 감지, 차단 가능 (v2.1.49에서 누락됨)
+  - `/simplify`, `/batch` 번들 슬래시 명령 추가
+  - `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경 변수로 claude.ai MCP 서버 비활성화
+  - MCP OAuth 인증 시 수동 URL 붙여넣기 폴백 지원
+  - 동일 저장소 git worktree 간 프로젝트 설정 및 auto memory 공유
+  - `/copy` 명령에 "Always copy full response" 옵션 추가
+  - `/model` 명령에 현재 활성 모델 표시
+  - Auto memory 자동 저장 기능 강화 (`/memory`로 관리)
+  - 다수 메모리 누수 수정 (MCP 서버 재연결, git root 감지, JSON 파싱 캐시 등)
+
+### Changed
+- `references/hooks-guide.md`: ConfigChange 이벤트 및 HTTP hook 타입 추가
+- `references/official/hooks.md`: ConfigChange 이벤트 및 HTTP hook 타입 추가
+- `references/mcp-guide.md`: ENABLE_CLAUDEAI_MCP_SERVERS 환경 변수 및 OAuth URL 폴백 추가
+- 버전: 2.11.0 → 2.12.0
+
+---
+
 ## [2.11.0] - 2026-02-25
 
 ### Added

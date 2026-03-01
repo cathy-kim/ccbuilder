@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.63 (2026-03-01 동기화)
+
+**새로운 기능:**
+- HTTP Hook 타입: JSON을 URL로 POST, JSON 응답 수신 (v2.1.63)
+- `/simplify`, `/batch` 번들 슬래시 명령 (v2.1.63)
+- `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경 변수 (v2.1.63)
+- 동일 저장소 git worktree 간 프로젝트 설정 및 auto memory 공유 (v2.1.63)
+- MCP OAuth 인증 수동 URL 붙여넣기 폴백 (v2.1.63)
+- `/copy` "Always copy full response" 옵션 (v2.1.63)
+- `/model` 현재 활성 모델 표시 (v2.1.63)
+- Auto memory 자동 저장 + `/memory` 관리 (v2.1.59)
+- `ConfigChange` Hook 이벤트 (v2.1.49 — 이전 동기화에서 누락됨)
+
+**환경변수 추가:**
+- `ENABLE_CLAUDEAI_MCP_SERVERS` (false로 claude.ai MCP 서버 비활성화)
+
+**주요 버그 수정:**
+- 다수 메모리 누수 수정 (MCP fetch 캐시, git root 감지, JSON 파싱 캐시 등)
+- `/clear` 캐시된 skills 초기화 수정
+- VSCode 원격 세션 대화 기록 표시 수정
+
 ### v2.1.53 (2026-02-25 동기화)
 
 **새로운 기능:**

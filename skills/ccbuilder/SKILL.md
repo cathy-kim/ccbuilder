@@ -87,7 +87,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.11.0)
+## 핵심 변경 사항 (v2.1.63)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -99,6 +99,8 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers) |
 | **claude.ai MCP connectors** | claude.ai의 MCP 커넥터를 Claude Code에서 사용 (v2.1.46) |
+| **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 옵션 (v2.1.63) |
+| **MCP OAuth URL paste** | 자동 리디렉트 실패 시 수동 URL 붙여넣기 폴백 (v2.1.63) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -153,12 +155,29 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `ConfigChange` | 세션 중 설정 파일 변경 감지 (v2.1.49) |
 
-### Agent/CLI/Plugin 강화 (v2.1.41-51)
+### HTTP Hook (신규, v2.1.63)
+
+```json
+{
+  "type": "http",
+  "url": "https://your-server.com/hook",
+  "method": "POST"
+}
+```
+
+JSON을 URL로 POST하고 JSON 응답을 받는 Hook 타입. Shell 명령 대신 HTTP 엔드포인트 활용 가능.
+
+### Agent/CLI/Plugin 강화 (v2.1.41-63)
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
+- **Slash Commands**: `/simplify`, `/batch` 번들 슬래시 명령 추가 (v2.1.63)
+- **Auto Memory**: 동일 저장소의 git worktree 간 프로젝트 설정 및 auto memory 공유 (v2.1.63)
+- **`/copy`**: "Always copy full response" 옵션 추가 — 코드 블록 피커 건너뜀 (v2.1.63)
+- **`/model`**: 현재 활성 모델 슬래시 명령 메뉴에 표시 (v2.1.63)
 
 ### Breaking Changes
 

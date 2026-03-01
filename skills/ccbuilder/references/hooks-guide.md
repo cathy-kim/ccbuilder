@@ -28,10 +28,11 @@
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
+| **ConfigChange** | 세션 중 설정 파일 변경 감지 (v2.1.49) | Yes (block) | `config_path`, `changed_keys` |
 
 ---
 
-## Hook 타입 (v2.11)
+## Hook 타입 (v2.12)
 
 ### Command Hook (기본)
 
@@ -59,6 +60,18 @@
   "agent": "security-reviewer"
 }
 ```
+
+### HTTP Hook (신규, v2.1.63)
+
+```json
+{
+  "type": "http",
+  "url": "https://your-server.com/hook",
+  "method": "POST"
+}
+```
+
+Shell 명령 대신 HTTP 엔드포인트에 JSON을 POST하고 JSON 응답을 수신합니다. 원격 서버나 웹훅 통합에 활용 가능.
 
 ---
 

@@ -26,6 +26,7 @@
 | 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
 | 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50) | - |
 | 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |
+| 17 | `ConfigChange` | 세션 중 설정 파일 변경 감지 (v2.1.49) | block |
 
 ## Handler 타입
 
@@ -34,6 +35,7 @@
 | `type: "command"` | Shell 스크립트. stdin JSON, exit code + JSON 응답 |
 | `type: "prompt"` | 단일 LLM 호출. `{ok: true/false, reason: "..."}` |
 | `type: "agent"` | 서브에이전트 (도구 접근 가능). prompt와 동일 스키마 |
+| `type: "http"` | HTTP POST. JSON → URL, JSON 응답 수신 (v2.1.63) |
 | `async: true` | 백그라운드 실행 (command hook만). 차단 안 함 |
 
 ## Matcher 패턴
