@@ -146,6 +146,9 @@ MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.
 ENABLE_TOOL_SEARCH=auto   # 기본 (10% 이상 시 자동)
 ENABLE_TOOL_SEARCH=true   # 항상 활성화
 ENABLE_TOOL_SEARCH=false  # 비활성화
+
+# claude.ai MCP 서버 비활성화 (v2.1.63)
+ENABLE_CLAUDEAI_MCP_SERVERS=false
 ```
 
 활성화 시 모든 MCP 도구가 즉시 로드되지 않고, 필요할 때 온디맨드로 검색/로드됩니다.

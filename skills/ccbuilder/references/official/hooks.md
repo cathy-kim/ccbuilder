@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-02-11
+**Last Synced**: 2026-03-01
 
 ---
 
@@ -32,6 +32,7 @@
 | 타입 | 설명 |
 |------|------|
 | `type: "command"` | Shell 스크립트. stdin JSON, exit code + JSON 응답 |
+| `type: "http"` | URL로 JSON POST, JSON 응답 수신 (shell 불필요, v2.1.63) |
 | `type: "prompt"` | 단일 LLM 호출. `{ok: true/false, reason: "..."}` |
 | `type: "agent"` | 서브에이전트 (도구 접근 가능). prompt와 동일 스키마 |
 | `async: true` | 백그라운드 실행 (command hook만). 차단 안 함 |
