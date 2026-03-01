@@ -23,9 +23,7 @@ jobs:
   # Job 1: PR 자동 리뷰 (PR 생성/업데이트 시)
   # ─────────────────────────────────────────────
   auto-review:
-    if: >
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.draft == false
+    if: "github.event_name == 'pull_request' && github.event.pull_request.draft == false"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -100,9 +98,7 @@ jobs:
   # Job 2: @claude 멘션 응답 (코멘트에서 트리거)
   # ─────────────────────────────────────────────
   mention-response:
-    if: >
-      (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment') &&
-      contains(github.event.comment.body, '@claude')
+    if: "(github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment') && contains(github.event.comment.body, '@claude')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
