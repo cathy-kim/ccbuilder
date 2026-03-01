@@ -97,6 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       # ── Step 1: Shell - 버전 번호 업데이트 ──
       - name: Update version numbers (shell)
@@ -160,7 +163,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: "--max-turns 30"
+          claude_args: '--max-turns 30 --allowedTools "Edit,Write,Read,Glob,Grep,Bash"'
           prompt: |
             You are updating the ccbuilder knowledge base to reflect a new Claude Code release.
 
@@ -237,7 +240,12 @@ jobs:
             6. If changelog has no changes relevant to a conditional file, SKIP it
             7. After all edits, create a git commit with message "feat: update content for Claude Code v${{ needs.check-version.outputs.latest_version }}" and push to the current branch
 
-      # ── Step 4: Fallback CHANGELOG (Claude 실패 시) ──
+      # ── Step 4: Re-authenticate git (Claude Code Action may revoke token) ──
+      - name: Re-authenticate git
+        run: |
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
+      # ── Step 5: Fallback CHANGELOG (Claude 실패 시) ──
       - name: Fallback changelog entry
         if: steps.claude-update.outcome != 'success'
         env:
@@ -253,7 +261,7 @@ jobs:
           git commit -m "chore: add fallback changelog for Claude Code v${NEW_CC_VERSION}"
           git push
 
-      # ── Step 5: PR 생성 ──
+      # ── Step 6: PR 생성 ──
       - name: Create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
