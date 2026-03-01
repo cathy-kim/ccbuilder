@@ -18,12 +18,16 @@ permissions:
   id-token: write
 
 jobs:
+  # ─────────────────────────────────────────────
+  # Job 1: Check for new Claude Code version
+  # ─────────────────────────────────────────────
   check-version:
     runs-on: ubuntu-latest
     outputs:
       update_needed: ${{ steps.check.outputs.update_needed }}
       latest_version: ${{ steps.check.outputs.latest_version }}
       current_version: ${{ steps.check.outputs.current_version }}
+      changelog_diff: ${{ steps.changelog.outputs.diff }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,8 +39,9 @@ jobs:
           echo "current_version=$CURRENT" >> "$GITHUB_OUTPUT"
 
           # 공식 CHANGELOG에서 최신 버전 추출
-          CHANGELOG=$(curl -s https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md)
-          LATEST=$(echo "$CHANGELOG" | grep -m1 "^## [0-9]" | sed 's/## //' | tr -d ' ')
+          curl -s https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md \
+            -o /tmp/cc-changelog-full.md
+          LATEST=$(grep -m1 "^## [0-9]" /tmp/cc-changelog-full.md | sed 's/## //' | tr -d ' ')
           echo "latest_version=$LATEST" >> "$GITHUB_OUTPUT"
 
           CURRENT_CLEAN=$(echo "$CURRENT" | sed 's/v//')
@@ -44,12 +49,48 @@ jobs:
 
           if [ "$CURRENT_CLEAN" != "$LATEST_CLEAN" ] || [ "${{ github.event.inputs.force }}" = "true" ]; then
             echo "update_needed=true" >> "$GITHUB_OUTPUT"
-            echo "🔄 Update needed: $CURRENT → v$LATEST"
+            echo "Update needed: $CURRENT -> v$LATEST"
           else
             echo "update_needed=false" >> "$GITHUB_OUTPUT"
-            echo "✅ Already up to date: $CURRENT"
+            echo "Already up to date: $CURRENT"
           fi
 
+      - name: Extract changelog diff
+        id: changelog
+        if: steps.check.outputs.update_needed == 'true'
+        env:
+          OLD_VERSION: ${{ steps.check.outputs.current_version }}
+          NEW_VERSION: ${{ steps.check.outputs.latest_version }}
+        run: |
+          OLD_CLEAN=$(echo "$OLD_VERSION" | sed 's/^v//')
+          NEW_CLEAN=$(echo "$NEW_VERSION" | sed 's/^v//')
+
+          # Extract entries between current and latest version
+          awk "/^## ${NEW_CLEAN}/,/^## ${OLD_CLEAN}/" /tmp/cc-changelog-full.md \
+            | head -n -1 > /tmp/cc-changelog-diff.md
+
+          # Fallback: if awk extracted nothing, grab from top to old version
+          if [ ! -s /tmp/cc-changelog-diff.md ]; then
+            awk "1;/^## ${OLD_CLEAN}/{exit}" /tmp/cc-changelog-full.md \
+              > /tmp/cc-changelog-diff.md
+          fi
+
+          # Truncate to 400 lines to fit in GitHub output
+          head -400 /tmp/cc-changelog-diff.md > /tmp/cc-changelog-trimmed.md
+
+          LINES=$(wc -l < /tmp/cc-changelog-trimmed.md)
+          echo "Extracted $LINES lines of changelog diff"
+
+          # Save as multiline output
+          {
+            echo "diff<<CHANGELOG_EOF"
+            cat /tmp/cc-changelog-trimmed.md
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  # ─────────────────────────────────────────────
+  # Job 2: Update version numbers and content
+  # ─────────────────────────────────────────────
   update-version:
     needs: check-version
     if: needs.check-version.outputs.update_needed == 'true'
@@ -57,100 +98,217 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update version references
+      # ── Step 1: Shell - 버전 번호 업데이트 ──
+      - name: Update version numbers (shell)
+        id: bump
         env:
           OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
-          NEW_VERSION: v${{ needs.check-version.outputs.latest_version }}
+          NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
         run: |
           OLD_CLEAN=$(echo "$OLD_VERSION" | sed 's/^v//')
-          NEW_CLEAN=$(echo "$NEW_VERSION" | sed 's/^v//')
+          NEW_CLEAN=$(echo "$NEW_CC_VERSION" | sed 's/^v//')
           TODAY=$(date +%Y-%m-%d)
 
-          # skills/ccbuilder/SKILL.md
-          sed -i "s/\*\*Version\*\*: ${OLD_CLEAN}/**Version**: ${NEW_CLEAN}/" skills/ccbuilder/SKILL.md
+          # ccbuilder 버전 minor bump
+          CURRENT_CB=$(grep -m1 '^\*\*Version\*\*:' skills/ccbuilder/SKILL.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          CB_MAJOR=$(echo "$CURRENT_CB" | cut -d. -f1)
+          CB_MINOR=$(echo "$CURRENT_CB" | cut -d. -f2)
+          NEW_CB="${CB_MAJOR}.$((CB_MINOR + 1)).0"
+          echo "ccbuilder_version=$NEW_CB" >> "$GITHUB_OUTPUT"
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+
+          # skills/ccbuilder/SKILL.md - 버전 헤더
+          sed -i "s/\*\*Version\*\*: ${CURRENT_CB}/**Version**: ${NEW_CB}/" skills/ccbuilder/SKILL.md
           sed -i "s/\*\*Last Updated\*\*: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/**Last Updated**: ${TODAY}/" skills/ccbuilder/SKILL.md
-          sed -i "s/v${OLD_CLEAN}/v${NEW_CLEAN}/g" skills/ccbuilder/SKILL.md
-          # Footer status line
           sed -i "s/| \*\*Claude Code\*\*: v[0-9.]*+/| **Claude Code**: v${NEW_CLEAN}+/" skills/ccbuilder/SKILL.md
-          sed -i "s/| \*\*Sync\*\*: .*/| **Sync**: [version-sync.md](references\/version-sync.md) | [check-updates.sh](..\/..\/scripts\/check-updates.sh)/" skills/ccbuilder/SKILL.md
 
           # .claude-plugin/plugin.json
-          if [ -f .claude-plugin/plugin.json ]; then
-            sed -i "s/\"version\": \"${OLD_CLEAN}\"/\"version\": \"${NEW_CLEAN}\"/" .claude-plugin/plugin.json
-          fi
+          [ -f .claude-plugin/plugin.json ] && \
+            sed -i "s/\"version\": \"${CURRENT_CB}\"/\"version\": \"${NEW_CB}\"/" .claude-plugin/plugin.json
 
           # .claude-plugin/marketplace.json
-          if [ -f .claude-plugin/marketplace.json ]; then
-            sed -i "s/\"version\": \"${OLD_CLEAN}\"/\"version\": \"${NEW_CLEAN}\"/" .claude-plugin/marketplace.json
-          fi
+          [ -f .claude-plugin/marketplace.json ] && \
+            sed -i "s/\"version\": \"${CURRENT_CB}\"/\"version\": \"${NEW_CB}\"/" .claude-plugin/marketplace.json
 
-          # README.md version badge
-          if [ -f README.md ]; then
-            sed -i "s/v${OLD_CLEAN}/v${NEW_CLEAN}/g" README.md
-          fi
+          # README.md
+          [ -f README.md ] && \
+            sed -i "s/v${CURRENT_CB}/v${NEW_CB}/g" README.md
 
-          # CHANGELOG.md - prepend new entry after first heading
-          if [ -f CHANGELOG.md ]; then
-            ENTRY="\n## [${NEW_CLEAN}] - ${TODAY}\n\n### Changed\n- Claude Code compatibility updated to v${NEW_CLEAN}\n"
-            sed -i "0,/^## \[/s/^## \[/${ENTRY}\n## [/" CHANGELOG.md
-          fi
+          echo "Shell version update: ccbuilder ${CURRENT_CB} -> ${NEW_CB}, Claude Code v${OLD_CLEAN} -> v${NEW_CLEAN}"
 
-          echo "✅ Version updated: ${OLD_VERSION} → ${NEW_VERSION}"
-
-      - name: Create PR
+      # ── Step 2: 브랜치 생성 및 초기 커밋 ──
+      - name: Create branch and initial commit
+        id: branch
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
-          NEW_VERSION: v${{ needs.check-version.outputs.latest_version }}
-          REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
+          NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
+          NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
         run: |
-          BRANCH="chore/sync-cc-${NEW_VERSION}"
+          BRANCH="chore/sync-cc-v${NEW_CC_VERSION}"
+          echo "branch_name=$BRANCH" >> "$GITHUB_OUTPUT"
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add -A
-
-          # Capture diff before committing
-          DIFF_STAT=$(git diff --cached --stat)
-          DIFF_DETAIL=$(git diff --cached -- '*.md' '*.json' | head -200)
-
-          git commit -m "chore: sync Claude Code ${NEW_VERSION}"
+          git commit -m "chore: bump version numbers for Claude Code v${NEW_CC_VERSION}"
           git push -u origin "$BRANCH"
 
-          # Write PR body to a temp file to avoid shell quoting issues
+      # ── Step 3: Claude Code Action - 콘텐츠 분석 및 업데이트 ──
+      - name: Update content with Claude Code
+        id: claude-update
+        continue-on-error: true
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: "--max-turns 30"
+          prompt: |
+            You are updating the ccbuilder knowledge base to reflect a new Claude Code release.
+
+            ## Version Info
+            - OLD Claude Code version: ${{ needs.check-version.outputs.current_version }}
+            - NEW Claude Code version: v${{ needs.check-version.outputs.latest_version }}
+            - NEW ccbuilder version: ${{ steps.bump.outputs.ccbuilder_version }}
+            - TODAY: ${{ steps.bump.outputs.today }}
+
+            ## Claude Code CHANGELOG (new versions since last sync)
+
+            ```
+            ${{ needs.check-version.outputs.changelog_diff }}
+            ```
+
+            ## YOUR TASK
+
+            Analyze the changelog above and update ccbuilder documentation. Version numbers are ALREADY updated by shell — do NOT touch version numbers. Focus on CONTENT: new features, breaking changes, deprecations, bug fixes.
+
+            Use Edit tool for all modifications. Read each file before editing.
+
+            ## FILES TO UPDATE (in priority order)
+
+            ### 1. skills/ccbuilder/SKILL.md — "핵심 변경 사항" section
+
+            Read the file first. Find the section starting with `## 핵심 변경 사항`. Update it:
+            - Change the version in the heading to match NEW Claude Code version
+            - Add new features to relevant subsections (MCP, Memory, Agent Teams, Hook 등)
+            - Update "신규 Hook 이벤트" if new hooks were added
+            - Add Breaking Changes if any
+            - CRITICAL: Keep total file under 500 lines. Be concise — use tables.
+
+            ### 2. CHANGELOG.md — Detailed entry
+
+            Read the file first. Add a new entry at the top (after the `---` separator, before the first `## [` entry). Format:
+
+            ```
+            ## [${{ steps.bump.outputs.ccbuilder_version }}] - ${{ steps.bump.outputs.today }}
+
+            ### Added
+            - **Claude Code v${{ needs.check-version.outputs.latest_version }} sync**
+              - [List actual new features from changelog]
+
+            ### Changed
+            - [List what was updated and why]
+            ```
+
+            Include ACTUAL features from the changelog, not just "version updated".
+
+            ### 3. skills/ccbuilder/references/version-sync.md — New version tracking
+
+            Read the file. Find `## 버전별 주요 변경 사항 추적`. Add a NEW subsection for v${{ needs.check-version.outputs.latest_version }} BEFORE existing entries, following the same format as the v2.1.53 entry.
+
+            ### 4-8. Conditional reference file updates
+
+            For each file below, ONLY update if the changelog contains relevant changes. Otherwise SKIP entirely:
+
+            - `skills/ccbuilder/references/hooks-guide.md` — IF new hook events or hook behavior changes
+            - `skills/ccbuilder/references/official/hooks.md` — IF new hook events
+            - `skills/ccbuilder/references/subagents-guide.md` — IF new agent features
+            - `skills/ccbuilder/references/official/subagents.md` — IF new agent features
+            - `skills/ccbuilder/references/mcp-guide.md` — IF MCP changes
+            - `skills/ccbuilder/references/official/mcp.md` — IF MCP changes
+            - `skills/ccbuilder/references/official/tools.md` — IF tool changes
+            - `skills/ccbuilder/references/memory-rules-guide.md` — IF memory/rules changes
+
+            ## RULES
+
+            1. Read BEFORE editing
+            2. Use Edit tool with exact old_string/new_string
+            3. Do NOT change version numbers (already done)
+            4. Do NOT modify files outside this list
+            5. Keep Korean style (matching existing content) except code/technical terms
+            6. If changelog has no changes relevant to a conditional file, SKIP it
+            7. After all edits, create a git commit with message "feat: update content for Claude Code v${{ needs.check-version.outputs.latest_version }}" and push to the current branch
+
+      # ── Step 4: Fallback CHANGELOG (Claude 실패 시) ──
+      - name: Fallback changelog entry
+        if: steps.claude-update.outcome != 'success'
+        env:
+          NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
+          OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
+          NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
+          TODAY: ${{ steps.bump.outputs.today }}
+        run: |
+          ENTRY="\n## [${NEW_CB_VERSION}] - ${TODAY}\n\n### Changed\n- Claude Code compatibility updated: ${OLD_VERSION} -> v${NEW_CC_VERSION}\n- Note: AI content analysis was skipped — manual review recommended\n"
+          sed -i "0,/^## \[/s/^## \[/${ENTRY}\n## [/" CHANGELOG.md
+
+          git add -A
+          git commit -m "chore: add fallback changelog for Claude Code v${NEW_CC_VERSION}"
+          git push
+
+      # ── Step 5: PR 생성 ──
+      - name: Create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
+          NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
+          NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
+          CLAUDE_OUTCOME: ${{ steps.claude-update.outcome }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          if [ "$CLAUDE_OUTCOME" = "success" ]; then
+            TITLE="feat: sync Claude Code v${NEW_CC_VERSION} (ccbuilder v${NEW_CB_VERSION})"
+            AI_STATUS="Claude Code Action으로 콘텐츠 분석 및 문서 업데이트 완료"
+          else
+            TITLE="chore: sync Claude Code v${NEW_CC_VERSION} (version-only)"
+            AI_STATUS="Claude Code Action 실패 — 버전 번호만 업데이트됨 (수동 콘텐츠 리뷰 필요)"
+          fi
+
+          DIFF_STAT=$(git diff --stat main...HEAD)
+
           {
             echo "## Summary"
             echo ""
-            echo "Claude Code 호환 버전을 **${OLD_VERSION}** → **${NEW_VERSION}** 으로 업데이트합니다."
+            echo "Claude Code 호환 버전: **${OLD_VERSION}** → **v${NEW_CC_VERSION}** (ccbuilder v${NEW_CB_VERSION})"
             echo ""
             echo "> Auto-generated by [version sync workflow](https://github.com/${REPO}/actions/runs/${RUN_ID})"
             echo ""
-            echo "## Changes"
+            echo "## Update Method"
             echo ""
-            echo "### Version Update: \`${OLD_VERSION}\` → \`${NEW_VERSION}\`"
+            echo "| Phase | Method | Status |"
+            echo "|-------|--------|--------|"
+            echo "| Version numbers | Shell (sed) | ✅ Done |"
+            if [ "$CLAUDE_OUTCOME" = "success" ]; then
+              echo "| Content analysis | Claude Code Action | ✅ Done |"
+            else
+              echo "| Content analysis | Claude Code Action | ❌ Failed |"
+            fi
             echo ""
-            echo "| File | Description |"
-            echo "|------|-------------|"
-            echo "| \`skills/ccbuilder/SKILL.md\` | Version, Last Updated, compatibility range |"
-            echo "| \`.claude-plugin/plugin.json\` | Plugin version field |"
-            echo "| \`.claude-plugin/marketplace.json\` | Marketplace version field |"
-            echo "| \`README.md\` | Version badge / references |"
-            echo "| \`CHANGELOG.md\` | New changelog entry added |"
+            echo "${AI_STATUS}"
             echo ""
-            echo "### Changed Files"
+            echo "## Changed Files"
             echo ""
             echo '```'
             echo "${DIFF_STAT}"
             echo '```'
             echo ""
-            echo "### Diff Detail"
+            echo "## Review Checklist"
             echo ""
-            echo '```diff'
-            echo "${DIFF_DETAIL}"
-            echo '```'
+            echo "- [ ] SKILL.md 500줄 미만 확인"
+            echo "- [ ] CHANGELOG.md에 실제 기능 목록 포함"
+            echo "- [ ] 새 기능 문서화 정확성 확인"
+            echo "- [ ] Breaking Changes 문서화 확인"
+            echo "- [ ] version-sync.md에 새 버전 추적 엔트리 추가됨"
           } > /tmp/pr-body.md
 
           gh pr create \
-            --title "chore: sync Claude Code ${NEW_VERSION}" \
+            --title "$TITLE" \
             --body-file /tmp/pr-body.md
