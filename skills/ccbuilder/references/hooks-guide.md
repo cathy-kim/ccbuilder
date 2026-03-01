@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.11.0
-**Last Updated**: 2026-02-25
-**Claude Code Version**: v2.1.53+
+**Version**: 2.12.0
+**Last Updated**: 2026-03-01
+**Claude Code Version**: v2.1.63+
 
 ---
 
-## Hook 이벤트 (v2.11 최신)
+## Hook 이벤트 (v2.12 최신, 총 17개)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -19,15 +19,17 @@
 | **PostToolUse** | 도구 호출 후 | No | `tool_name`, `tool_result` |
 | **PostToolUseFailure** | 도구 호출 실패 후 | No | `tool_name`, `error` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
-| **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason` |
+| **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason`, `last_assistant_message` |
 | **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
-| **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path` |
+| **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `last_assistant_message` |
 | **TeammateIdle** | 팀메이트 유휴 상태 (v2.7 신규) | No | `teammate_name`, `agent_id` |
+| **TaskCompleted** | 태스크 완료 (v2.1.33) | No | - |
 | **PreCompact** | compact 전 | No | - |
 | **Notification** | 알림 발생 | No | `notification` |
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
+| **ConfigChange** | 설정 파일 변경 감지 (v2.1.49) | Yes (block) | `config_file`, `changes` |
 
 ---
 
@@ -59,6 +61,18 @@
   "agent": "security-reviewer"
 }
 ```
+
+### HTTP Hook (v2.1.63 신규)
+
+```json
+{
+  "type": "http",
+  "url": "https://my-server.com/hook",
+  "timeout": 30000
+}
+```
+
+JSON을 URL로 POST하고 JSON 응답을 받음. Shell 없이 원격 서버와 통신 가능.
 
 ---
 

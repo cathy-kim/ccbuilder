@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.12.0] - 2026-03-01
+
+### Added
+- **Claude Code v2.1.63 sync** (v2.1.54 → v2.1.63 반영)
+  - HTTP hooks 추가: URL로 JSON POST/수신 방식의 새로운 Hook 타입 (v2.1.63)
+  - `/simplify`, `/batch` 번들 슬래시 명령 추가 (v2.1.63)
+  - `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경변수로 claude.ai MCP 서버 비활성화 (v2.1.63)
+  - `/copy` 명령: 코드블록 인터랙티브 피커 + "Always copy full response" 옵션 (v2.1.59/63)
+  - `/model` 명령에 현재 활성 모델 표시 (v2.1.63)
+  - Auto memory 자동 기록 기능 (v2.1.59) - Claude가 유용한 컨텍스트를 자동 저장
+  - `ConfigChange` Hook 이벤트: 설정 파일 변경 감지 및 차단 (v2.1.49, 이번 동기화에 반영)
+  - git worktree 간 프로젝트 설정 & auto memory 공유 (v2.1.63)
+  - VSCode: 세션 이름 변경/제거 액션 (v2.1.63)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 버전 헤딩 v2.11.0 → v2.1.63
+- `SKILL.md`: HTTP Hook 타입, ConfigChange 이벤트, 신규 슬래시 명령, worktree memory 공유 추가
+- `references/hooks-guide.md`: ConfigChange 이벤트, HTTP Hook 타입 추가 (총 17개 이벤트)
+- `references/official/hooks.md`: ConfigChange 이벤트, HTTP Hook 핸들러 타입 추가
+- `references/version-sync.md`: v2.1.63 변경사항 추적 섹션 추가
+- 버전: 2.11.0 → 2.12.0
+
+---
+
 ## [2.11.0] - 2026-02-25
 
 ### Added

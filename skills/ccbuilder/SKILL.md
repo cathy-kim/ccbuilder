@@ -87,7 +87,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.11.0)
+## 핵심 변경 사항 (v2.1.63)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -99,6 +99,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers) |
 | **claude.ai MCP connectors** | claude.ai의 MCP 커넥터를 Claude Code에서 사용 (v2.1.46) |
+| **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 환경변수 (v2.1.63) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -139,9 +140,10 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 | 기능 | 설명 |
 |------|------|
-| **Auto Memory** | `~/.claude/projects/<project>/memory/` 영구 저장 |
+| **Auto Memory** | `~/.claude/projects/<project>/memory/` 영구 저장, Claude가 자동 기록 (v2.1.59) |
 | **MEMORY.md** | 매 세션 자동 로드 (200줄 제한) |
 | **Modular Rules** | `.claude/rules/*.md` + `paths:` frontmatter로 경로별 규칙 |
+| **Worktree 공유** | git worktree 간 프로젝트 설정 및 auto memory 공유 (v2.1.63) |
 
 ### 신규 Hook 이벤트
 
@@ -153,12 +155,18 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `ConfigChange` | 설정 파일 변경 시 - 보안 감사/차단 가능 (v2.1.49) |
 
-### Agent/CLI/Plugin 강화 (v2.1.41-51)
+### HTTP Hook (신규, v2.1.63)
+
+`type: "http"` — JSON을 URL로 POST, JSON 응답 수신. 자세한 설정은 [hooks-guide.md](references/hooks-guide.md) 참조.
+
+### Agent/CLI/Plugin 강화 (v2.1.41-63)
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
+- **Slash Commands**: `/simplify`, `/batch` 번들 명령 추가 (v2.1.63); `/copy` 코드블록 피커 (v2.1.59); `/model` 현재 모델 표시 (v2.1.63)
 
 ### Breaking Changes
 

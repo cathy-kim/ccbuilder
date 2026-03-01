@@ -2,8 +2,8 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-02-25
-**현재 지원 버전**: v2.1.53+ (SKILL.md v2.11.0)
+**최종 동기화**: 2026-03-01
+**현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
 
@@ -76,6 +76,26 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.63 (2026-03-01 동기화)
+
+**새로운 기능:**
+- HTTP hooks: URL로 JSON POST/수신 방식 (`type: "http"`) (v2.1.63)
+- `/simplify`, `/batch` 번들 슬래시 명령 (v2.1.63)
+- `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경변수 (v2.1.63)
+- git worktree 간 프로젝트 설정 & auto memory 공유 (v2.1.63)
+- `/model` 명령에 현재 활성 모델 표시 (v2.1.63)
+- `/copy` 명령: 코드블록 피커 + "Always copy full response" 옵션 (v2.1.59/63)
+- Auto memory 자동 기록 (Claude가 유용한 컨텍스트 자동 저장) (v2.1.59)
+- `ConfigChange` Hook 이벤트: 설정 파일 변경 감지/차단, 엔터프라이즈 보안 감사 (v2.1.49)
+- VSCode: 세션 이름 변경/제거 액션 (v2.1.63)
+- VSCode: 원격 세션 대화 이력 표시 수정 (v2.1.63)
+
+**주요 버그 수정 (v2.1.55-63):**
+- `/clear` 명령이 캐시된 스킬을 리셋하지 않던 문제 수정 (v2.1.63)
+- 메모리 누수 다수 수정 (MCP 캐시, git root 감지, JSON 파싱 캐시 등) (v2.1.63)
+- Windows 설정 파일 동시 쓰기 손상 문제 수정 (v2.1.61)
+- BashTool Windows EINVAL 오류 수정 (v2.1.55)
 
 ### v2.1.53 (2026-02-25 동기화)
 
