@@ -199,7 +199,7 @@ Contributions welcome! Here's how you can help:
 
 ## Version
 
-Current: **v2.11.0** (2026-02-25) — See [CHANGELOG.md](CHANGELOG.md) for full history.
+Current: **v2.12.0** (2026-02-25) — See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 ## License
 
