@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.12.0
+**Last Updated**: 2026-03-01
+**Claude Code Version**: v2.1.63+
 
 ---
 
@@ -195,6 +195,18 @@ MAX_MCP_OUTPUT_TOKENS=50000
 
 ---
 
+## claude.ai MCP 서버 제어
+
+```bash
+# claude.ai MCP 커넥터를 Claude Code에서 사용 (기본: 활성화)
+# 비활성화하려면:
+ENABLE_CLAUDEAI_MCP_SERVERS=false
+```
+
+claude.ai에 설정된 MCP 커넥터를 Claude Code에서도 자동으로 사용 가능 (v2.1.46~). `ENABLE_CLAUDEAI_MCP_SERVERS=false` 설정 시 opt-out (v2.1.63).
+
+---
+
 ## Managed MCP (조직 관리)
 
 ### managed-mcp.json
@@ -299,4 +311,4 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
-*이 문서는 v2.9.0 업데이트 (2026-02-11)*
+*이 문서는 v2.12.0 업데이트 (2026-03-01)*

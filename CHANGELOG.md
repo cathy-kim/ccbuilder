@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+
+## [2.12.0] - 2026-03-01
+
+### Changed
+- Claude Code compatibility updated: v2.11.0 -> v2.1.63
+- Note: AI content analysis was skipped — manual review recommended
+
+## [2.12.0] - 2026-03-01
+
+### Added
+- **Claude Code v2.1.63 동기화** (v2.1.53 → v2.1.63, 10개 버전 반영)
+  - **HTTP Hooks**: `"type": "http"` 훅 타입 추가 — URL로 JSON POST/수신 (shell 없이 웹훅 연동)
+  - **번들 Slash Commands**: `/simplify`, `/batch` 내장 슬래시 명령 추가
+  - **Auto Memory 강화**: Claude가 자동으로 유용한 컨텍스트를 auto-memory에 저장; `/memory` 명령으로 관리 (v2.1.59)
+  - **`/copy` 명령**: 코드 블록 인터랙티브 선택 복사; "전체 응답 복사" 옵션 추가 (v2.1.59)
+  - **Worktree 공유**: 같은 repo의 git worktree 간 project configs & auto memory 공유 (v2.1.63)
+  - **`ENABLE_CLAUDEAI_MCP_SERVERS=false`**: claude.ai MCP 서버 비활성화 환경변수 (v2.1.63)
+  - `/model` 명령 개선: 슬래시 명령 메뉴에서 현재 활성 모델 표시
+  - VSCode: 세션 목록에서 rename/remove 동작 추가; 대화 기록에 remote sessions 표시
+  - `/clear` 명령이 캐시된 스킬 초기화 버그 수정
+  - 다수의 메모리 누수 수정 (MCP, WebSocket, git, JSON 파싱 캐시 등)
+
+### Changed
+- `SKILL.md`: `핵심 변경 사항` 섹션 v2.11.0 → v2.1.63으로 업데이트
+  - MCP 섹션: `ENABLE_CLAUDEAI_MCP_SERVERS=false` 추가
+  - Memory 섹션: Auto Memory 자동 저장, Worktree 공유, `/memory` 명령 추가
+  - Hook 섹션: HTTP Hooks 신규 타입 추가
+  - 신규 Slash Commands 섹션: `/simplify`, `/batch`, `/copy` 추가
+- `references/hooks-guide.md`: HTTP hook 타입 추가
+- `references/official/hooks.md`: Handler 타입 테이블 HTTP 추가
+- `references/mcp-guide.md`: `ENABLE_CLAUDEAI_MCP_SERVERS=false` 추가
+- `references/memory-rules-guide.md`: Worktree 공유 기능 추가
+- `references/version-sync.md`: v2.1.63 변경사항 추적 추가
+- 버전: 2.11.0 → 2.12.0
+
+---
+
 ## [2.11.0] - 2026-02-25
 
 ### Added

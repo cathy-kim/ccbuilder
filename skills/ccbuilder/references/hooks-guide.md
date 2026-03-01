@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.11.0
-**Last Updated**: 2026-02-25
-**Claude Code Version**: v2.1.53+
+**Version**: 2.12.0
+**Last Updated**: 2026-03-01
+**Claude Code Version**: v2.1.63+
 
 ---
 
-## Hook 이벤트 (v2.11 최신)
+## Hook 이벤트 (v2.12 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -31,7 +31,7 @@
 
 ---
 
-## Hook 타입 (v2.11)
+## Hook 타입 (v2.12)
 
 ### Command Hook (기본)
 
@@ -42,7 +42,18 @@
 }
 ```
 
-### Prompt Hook (신규)
+### HTTP Hook (신규, v2.1.63)
+
+```json
+{
+  "type": "http",
+  "url": "https://example.com/webhook"
+}
+```
+
+POST로 JSON 페이로드 전송, JSON 응답 수신. shell 환경 없이 웹훅/외부 서비스 연동에 활용.
+
+### Prompt Hook
 
 ```json
 {
@@ -51,7 +62,7 @@
 }
 ```
 
-### Agent Hook (신규)
+### Agent Hook
 
 ```json
 {
