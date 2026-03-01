@@ -87,7 +87,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.11.0)
+## 핵심 변경 사항 (v2.1.63)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -99,6 +99,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers) |
 | **claude.ai MCP connectors** | claude.ai의 MCP 커넥터를 Claude Code에서 사용 (v2.1.46) |
+| **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 옵션 (v2.1.63) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -142,6 +143,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | **Auto Memory** | `~/.claude/projects/<project>/memory/` 영구 저장 |
 | **MEMORY.md** | 매 세션 자동 로드 (200줄 제한) |
 | **Modular Rules** | `.claude/rules/*.md` + `paths:` frontmatter로 경로별 규칙 |
+| **Worktree 공유** | 같은 레포의 git worktree 간 Project config/Auto memory 공유 (v2.1.63) |
 
 ### 신규 Hook 이벤트
 
@@ -153,6 +155,8 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+
+**신규 Hook 타입 (v2.1.63)**: `type: "http"` — URL로 JSON POST, JSON 응답 수신 (shell 불필요)
 
 ### Agent/CLI/Plugin 강화 (v2.1.41-51)
 

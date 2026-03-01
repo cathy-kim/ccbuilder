@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.11.0
-**Last Updated**: 2026-02-25
-**Claude Code Version**: v2.1.53+
+**Version**: 2.12.0
+**Last Updated**: 2026-03-01
+**Claude Code Version**: v2.1.63+
 
 ---
 
@@ -31,7 +31,7 @@
 
 ---
 
-## Hook 타입 (v2.11)
+## Hook 타입 (v2.12)
 
 ### Command Hook (기본)
 
@@ -41,6 +41,20 @@
   "command": "./hooks/my-hook.sh"
 }
 ```
+
+### HTTP Hook (신규 v2.1.63)
+
+Shell 없이 URL로 JSON POST, JSON 응답 수신:
+
+```json
+{
+  "type": "http",
+  "url": "https://my-server.example.com/hooks/pre-tool",
+  "timeout": 5000
+}
+```
+
+입력/출력 스키마는 command hook과 동일 (decision, reason 등). 인증이 필요한 경우 `headers` 필드 사용 가능.
 
 ### Prompt Hook (신규)
 

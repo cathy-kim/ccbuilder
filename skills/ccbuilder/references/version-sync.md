@@ -77,6 +77,26 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.63 (2026-03-01 동기화)
+
+**새로운 기능:**
+- HTTP Hooks: `type: "http"` — shell 없이 URL로 JSON POST/수신 (v2.1.63)
+- `/simplify`, `/batch` 번들 슬래시 명령 추가 (v2.1.63)
+- `/copy` 명령 (코드 블록 선택 또는 전체 응답 복사) (v2.1.59)
+- Auto Memory 자동 저장 + `/memory` 명령으로 관리 (v2.1.59)
+- Project config & Auto memory를 같은 레포의 git worktree 간 공유 (v2.1.63)
+- `/copy` "Always copy full response" 옵션 (v2.1.63)
+- VSCode: 세션 이름 변경/삭제 액션 (v2.1.63)
+
+**환경변수 추가:**
+- `ENABLE_CLAUDEAI_MCP_SERVERS=false` — claude.ai MCP 서버 비활성화 (v2.1.63)
+
+**주요 버그 수정:**
+- 메모리 누수 다수 수정: git root cache, JSON parsing cache, MCP server fetch cache, bash prefix cache 등 (v2.1.63)
+- `/clear` 후 캐시된 skill 초기화 수정 (v2.1.63)
+- Windows 설정 파일 동시 쓰기 손상 수정 (v2.1.61)
+- REPL bridge 메시지 순서 경쟁 조건 수정 (v2.1.63)
+
 ### v2.1.53 (2026-02-25 동기화)
 
 **새로운 기능:**

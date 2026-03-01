@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.12.0] - 2026-03-01
+
+### Added
+- **Claude Code v2.1.63 동기화** (v2.1.54 → v2.1.63 반영)
+  - **HTTP Hooks**: `type: "http"` — URL로 JSON POST/수신 (shell 불필요, v2.1.63)
+  - **`/simplify`, `/batch`** 번들 슬래시 명령 추가 (v2.1.63)
+  - **`/copy`, `/memory`** 명령 추가 (v2.1.59)
+  - **Auto Memory 자동 저장**: Claude가 유용한 컨텍스트를 자동 저장, `/memory`로 관리 (v2.1.59)
+  - Project config & Auto memory를 같은 레포의 git worktree 간 공유 (v2.1.63)
+  - `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경변수로 claude.ai MCP 서버 비활성화 (v2.1.63)
+  - 다수 메모리 누수 수정 (git root cache, JSON parsing cache, MCP server cache 등) (v2.1.63)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.11.0 → v2.1.63 업데이트
+  - MCP 테이블: `ENABLE_CLAUDEAI_MCP_SERVERS=false` 추가
+  - Memory 테이블: Worktree 간 공유 항목 추가
+  - 신규 Hook 타입 (`type: "http"`) 명시
+- `references/hooks-guide.md`: HTTP hook 타입 추가, 버전 v2.12.0 업데이트
+- `references/official/hooks.md`: Handler 타입 테이블에 http 추가
+- `references/mcp-guide.md`: `ENABLE_CLAUDEAI_MCP_SERVERS=false` 환경변수 추가
+- `references/memory-rules-guide.md`: Auto Memory worktree 공유 내용 추가
+- `references/version-sync.md`: v2.1.63 변경사항 추적 추가
+- 버전: 2.11.0 → 2.12.0
+
+---
+
 ## [2.11.0] - 2026-02-25
 
 ### Added

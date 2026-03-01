@@ -305,6 +305,10 @@ Git에 커밋하지 않을 개인 설정:
 └── api-conventions.md
 ```
 
+> **v2.1.63**: Project config와 Auto memory가 **같은 레포의 git worktree 간 공유**됩니다. 워크트리에서 작업해도 메인 레포의 memory/가 동일하게 적용됩니다.
+
+`/memory` 명령으로 Auto Memory를 관리할 수 있습니다 (v2.1.59+).
+
 ### MEMORY.md 작성 원칙
 
 **저장할 내용:**
