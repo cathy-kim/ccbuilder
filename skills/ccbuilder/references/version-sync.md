@@ -11,11 +11,11 @@
 
 ### GitHub Actions (권장)
 
-`.github/workflows/sync-claude-code-docs.yml` 워크플로우가 매일 자동 실행됩니다:
+`.github/workflows/auto-version-sync.yml` 워크플로우가 매일 자동 실행됩니다:
 
 - **스케줄**: 매일 오전 9시 (UTC) = 한국시간 오후 6시
-- **동작**: 새 버전 감지 시 GitHub Issue 자동 생성
-- **수동 트리거**: Actions 탭에서 "Run workflow" 가능
+- **동작**: 새 버전 감지 시 SKILL 백업 → 버전 업데이트 → Claude Code Action 콘텐츠 분석 → PR 자동 생성
+- **수동 트리거**: Actions 탭에서 "Run workflow" 가능 (force 옵션)
 
 ### 알림 받기
 

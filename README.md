@@ -9,7 +9,7 @@ Skills, Hooks, Agents, Agent Teams, Ralph Loops, MCP, Memory — one plugin, all
 ![Version](https://img.shields.io/badge/version-2.12.0-blue)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-v2.1.63+-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Docs](https://img.shields.io/badge/reference_docs-33-orange)
+![Docs](https://img.shields.io/badge/reference_docs-28-orange)
 ![Extensions](https://img.shields.io/badge/extension_types-7-brightgreen)
 
 <!-- TODO: Replace with actual demo GIF
@@ -29,7 +29,7 @@ Building Claude Code extensions today means:
 - No validation until you actually try running it
 - Zero reference to what the community has already built
 
-**ccbuilder** gives you one command to scaffold any Claude Code extension — backed by 33 reference guides, 6 official doc summaries, and the entire ecosystem knowledge base from 11 curated community repos.
+**ccbuilder** gives you one command to scaffold any Claude Code extension — backed by 28 reference docs (17 guides + 6 official + 5 ecosystem), and the entire ecosystem knowledge base from 11 curated community repos.
 
 ## Quick Start
 
@@ -58,7 +58,7 @@ Or just ask naturally — ccbuilder activates automatically when you mention ski
 
 **One-Command Scaffolding** — Generate complete, validated extension structures with a single slash command. YAML frontmatter, directory layout, reference templates — all handled.
 
-**32 Built-in Reference Guides** — Every Claude Code extension type documented with examples, patterns, and best practices. No more tab-switching between docs.
+**28 Built-in Reference Docs** — Every Claude Code extension type documented with examples, patterns, and best practices. No more tab-switching between docs.
 
 **7 Extension Types Supported** — Skills, Hooks, Agents, Agent Teams, Ralph Loops, Memory, and Rules. All supported out of the box with type-specific scaffolding.
 
@@ -83,7 +83,7 @@ Or just ask naturally — ccbuilder activates automatically when you mention ski
 ## Documentation
 
 <details>
-<summary><strong>Reference Guides (22 files)</strong></summary>
+<summary><strong>Reference Guides (17 files)</strong></summary>
 
 | Guide | Description |
 |-------|-------------|
@@ -103,6 +103,7 @@ Or just ask naturally — ccbuilder activates automatically when you mention ski
 | [orchestrator-skill-creation-guide.md](skills/ccbuilder/references/orchestrator-skill-creation-guide.md) | Orchestrator creation guide |
 | [external-resources.md](skills/ccbuilder/references/external-resources.md) | Community resources & links |
 | [version-sync.md](skills/ccbuilder/references/version-sync.md) | Version sync checklist |
+| [what-goes-where-guide.md](skills/ccbuilder/references/what-goes-where-guide.md) | What-goes-where decision guide |
 
 </details>
 
@@ -142,7 +143,7 @@ For code-level reference, 11 community repos are bundled as git submodules:
 | Repo | Highlights |
 |------|------------|
 | [anthropics/skills](https://github.com/anthropics/skills) | Official skill implementations (DOCX, PDF, etc.) |
-| [obra/superpowers](https://github.com/nichochar/superpowers) | TDD, debugging, subagent workflows |
+| [obra/superpowers](https://github.com/obra/superpowers) | TDD, debugging, subagent workflows |
 | [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | 15 agents, 30+ skills, hooks |
 | [wshobson/agents](https://github.com/wshobson/agents) | 112 agents, 16 orchestrators |
 | [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | Ecosystem directory |

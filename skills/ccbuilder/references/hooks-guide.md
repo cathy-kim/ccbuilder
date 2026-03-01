@@ -13,7 +13,7 @@
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
 | **SessionStart** | 세션 시작/재개 | No | `session_id`, `agent_type` |
-| **SessionEnd** | 세션 종료 | No | `session_id` |
+| **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 | No | `tool_name`, `tool_result` |
