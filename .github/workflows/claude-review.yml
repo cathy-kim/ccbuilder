@@ -35,7 +35,9 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: '--max-turns 15 --allowedTools "Read,Glob,Grep,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Bash(git log:*),Bash(git diff:*),Bash(wc:*),mcp__github_inline_comment__create_inline_comment"'
           prompt: |
-            You are a code reviewer for the ccbuilder project — a Claude Code extension/skill builder.
+            You are a code reviewer for the ccbuilder project.
+
+            **IMPORTANT**: Read `CLAUDE.md` first — it contains project structure, version management rules, and review criteria.
 
             ## PR Info
             - Repository: ${{ github.repository }}
@@ -43,56 +45,32 @@ jobs:
             - Author: ${{ github.event.pull_request.user.login }}
             - Base: ${{ github.event.pull_request.base.ref }} ← ${{ github.event.pull_request.head.ref }}
 
-            ## Review Instructions
+            ## Review Steps
 
-            1. Run `gh pr diff ${{ github.event.pull_request.number }}` to see all changes
-            2. Review the code focusing on:
-
-            ### Code Quality
-            - Clean, readable code with meaningful names
-            - No commented-out code or debug statements
-            - DRY principle — no unnecessary duplication
-
-            ### Correctness
-            - Logic errors or edge cases
-            - Missing error handling
-            - Incorrect regex or string manipulation
-
-            ### Security
-            - Hardcoded secrets or credentials
-            - Command injection in shell scripts
-            - Unsafe file operations
-
-            ### Project-Specific (ccbuilder)
-            - SKILL.md must stay under 500 lines
-            - Version format follows Semantic Versioning
-            - Korean content style consistency
-            - CHANGELOG.md follows Keep a Changelog format
-            - releases/ directory has proper backup naming (v{VERSION}_{DATE}_SKILL.md)
-
-            ## Output Format
-
-            Use `mcp__github_inline_comment__create_inline_comment` for line-specific issues.
-            After reviewing all files, post a summary comment using `gh pr comment` with:
+            1. Read `CLAUDE.md` for project context and review criteria
+            2. Run `gh pr diff ${{ github.event.pull_request.number }}` to see all changes
+            3. Review focusing on:
+               - **Code Quality**: clean code, no debug statements, DRY
+               - **Correctness**: logic errors, edge cases, regex issues
+               - **Security**: hardcoded secrets, command injection, unsafe file ops
+               - **Project Rules** (from CLAUDE.md): SKILL.md 500줄 제한, Semantic Versioning, CHANGELOG 형식, releases/ 백업, 파일 간 버전/이벤트 수 일관성
+            4. Use `mcp__github_inline_comment__create_inline_comment` for line-specific issues
+            5. Post summary via `gh pr comment` with this format:
 
             ```
             ## 🔍 Claude Code Review
 
             ### Summary
-            [1-2 sentence overall assessment]
+            [1-2 sentence assessment]
 
             ### Findings
             | Severity | File | Issue |
             |----------|------|-------|
-            | 🔴 Critical | ... | ... |
-            | 🟡 Warning | ... | ... |
-            | 🔵 Suggestion | ... | ... |
+            | 🔴 Critical / 🟡 Warning / 🔵 Suggestion | file | description |
 
             ### Verdict
             ✅ LGTM / ⚠️ Changes Requested / 🔴 Blocking Issues
             ```
-
-            If everything looks good with no issues, keep the summary brief.
 
   # ─────────────────────────────────────────────
   # Job 2: @claude 멘션 응답 (코멘트에서 트리거)

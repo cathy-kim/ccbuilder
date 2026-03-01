@@ -410,7 +410,7 @@ my-skill/
 | 문서 | 설명 |
 |------|------|
 | [references/official/skills.md](references/official/skills.md) | Skills 공식 문서 요약 |
-| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (14 events) |
+| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (16 events) |
 | [references/official/subagents.md](references/official/subagents.md) | Sub-agents 공식 문서 요약 |
 | [references/official/mcp.md](references/official/mcp.md) | MCP 공식 문서 요약 |
 | [references/official/memory-rules.md](references/official/memory-rules.md) | Memory & Rules 공식 문서 요약 |

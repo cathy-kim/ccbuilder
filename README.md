@@ -6,8 +6,8 @@
 
 Skills, Hooks, Agents, Agent Teams, Ralph Loops, MCP, Memory — one plugin, all covered.
 
-![Version](https://img.shields.io/badge/version-2.11.0-blue)
-![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blueviolet)
+![Version](https://img.shields.io/badge/version-2.12.0-blue)
+![Claude Code](https://img.shields.io/badge/Claude_Code-v2.1.63+-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Docs](https://img.shields.io/badge/reference_docs-33-orange)
 ![Extensions](https://img.shields.io/badge/extension_types-7-brightgreen)
@@ -75,7 +75,7 @@ Or just ask naturally — ccbuilder activates automatically when you mention ski
 | **Skill** | Knowledge injection + slash commands | `.claude/skills/` |
 | **Subagent** | Independent agent definitions | `.claude/agents/` |
 | **Agent Team** | Multi-agent team collaboration | `~/.claude/teams/` |
-| **Hook** | Workflow control (14 lifecycle events) | `settings.json` |
+| **Hook** | Workflow control (16 lifecycle events) | `settings.json` |
 | **Memory** | Cross-session knowledge persistence | `~/.claude/projects/*/memory/` |
 | **Rules** | Path-scoped modular rules | `.claude/rules/` |
 | **Ralph Loop** | Autonomous development loop (fresh context) | `TASK.md` + `loop.sh` |
@@ -88,7 +88,7 @@ Or just ask naturally — ccbuilder activates automatically when you mention ski
 | Guide | Description |
 |-------|-------------|
 | [skills-guide.md](skills/ccbuilder/references/skills-guide.md) | Skills development guide |
-| [hooks-guide.md](skills/ccbuilder/references/hooks-guide.md) | Hooks implementation guide (14 events) |
+| [hooks-guide.md](skills/ccbuilder/references/hooks-guide.md) | Hooks implementation guide (16 events) |
 | [subagents-guide.md](skills/ccbuilder/references/subagents-guide.md) | Subagents + Plugin guide |
 | [agent-teams-guide.md](skills/ccbuilder/references/agent-teams-guide.md) | Agent Teams collaboration guide |
 | [ralph-loop-guide.md](skills/ccbuilder/references/ralph-loop-guide.md) | Ralph Loop (autonomous dev loop) guide |
@@ -114,7 +114,7 @@ Built-in summaries of Claude Code official docs — so Claude always has the lat
 | Doc | Description |
 |-----|-------------|
 | [official/skills.md](skills/ccbuilder/references/official/skills.md) | Skills official docs |
-| [official/hooks.md](skills/ccbuilder/references/official/hooks.md) | Hooks official docs (14 events) |
+| [official/hooks.md](skills/ccbuilder/references/official/hooks.md) | Hooks official docs (16 events) |
 | [official/subagents.md](skills/ccbuilder/references/official/subagents.md) | Sub-agents official docs |
 | [official/mcp.md](skills/ccbuilder/references/official/mcp.md) | MCP official docs |
 | [official/memory-rules.md](skills/ccbuilder/references/official/memory-rules.md) | Memory & Rules official docs |
@@ -199,7 +199,7 @@ Contributions welcome! Here's how you can help:
 
 ## Version
 
-Current: **v2.12.0** (2026-02-25) — See [CHANGELOG.md](CHANGELOG.md) for full history.
+Current: **v2.12.0** (2026-03-01) — Claude Code v2.1.63+ compatible. See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 ## License
 
