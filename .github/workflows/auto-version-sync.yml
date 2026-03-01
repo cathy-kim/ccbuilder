@@ -101,6 +101,25 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
+      # ── Step 0: SKILL.md 릴리스 백업 (버전 변경 전) ──
+      - name: Backup current SKILL.md to releases
+        id: backup
+        run: |
+          CURRENT_CB=$(grep -m1 '^\*\*Version\*\*:' skills/ccbuilder/SKILL.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          TODAY=$(date +%Y%m%d)
+          BACKUP_FILE="releases/v${CURRENT_CB}_${TODAY}_SKILL.md"
+
+          # 동일 버전 백업이 없는 경우에만 생성
+          if ! ls releases/v${CURRENT_CB}_*_SKILL.md 1>/dev/null 2>&1; then
+            cp skills/ccbuilder/SKILL.md "$BACKUP_FILE"
+            echo "backup_created=true" >> "$GITHUB_OUTPUT"
+            echo "backup_file=$BACKUP_FILE" >> "$GITHUB_OUTPUT"
+            echo "Backup created: $BACKUP_FILE"
+          else
+            echo "backup_created=false" >> "$GITHUB_OUTPUT"
+            echo "Backup already exists for v${CURRENT_CB}, skipping"
+          fi
+
       # ── Step 1: Shell - 버전 번호 업데이트 ──
       - name: Update version numbers (shell)
         id: bump
@@ -236,14 +255,19 @@ jobs:
             2. Use Edit tool with exact old_string/new_string
             3. Do NOT change version numbers (already done)
             4. Do NOT modify files outside this list
-            5. Keep Korean style (matching existing content) except code/technical terms
-            6. If changelog has no changes relevant to a conditional file, SKIP it
-            7. After all edits, create a git commit with message "feat: update content for Claude Code v${{ needs.check-version.outputs.latest_version }}" and push to the current branch
+            5. Do NOT touch the releases/ directory (release backup is handled by shell)
+            6. Keep Korean style (matching existing content) except code/technical terms
+            7. If changelog has no changes relevant to a conditional file, SKIP it
+            8. After all edits, create a git commit with message "feat: update content for Claude Code v${{ needs.check-version.outputs.latest_version }}" and push to the current branch
 
       # ── Step 4: Re-authenticate git (Claude Code Action may revoke token) ──
       - name: Re-authenticate git
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          # Claude Code Action이 git credential을 변경할 수 있으므로 강제 재설정
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git fetch origin
           git pull --rebase origin "$(git branch --show-current)" || true
 
       # ── Step 5: Check if Claude made content changes ──
@@ -296,6 +320,8 @@ jobs:
           fi
 
           DIFF_STAT=$(git diff --stat main...HEAD)
+          BACKUP_FILE="${{ steps.backup.outputs.backup_file }}"
+          BACKUP_CREATED="${{ steps.backup.outputs.backup_created }}"
 
           {
             echo "## Summary"
@@ -309,6 +335,11 @@ jobs:
             echo "| Phase | Method | Status |"
             echo "|-------|--------|--------|"
             echo "| Version numbers | Shell (sed) | ✅ Done |"
+            if [ "$BACKUP_CREATED" = "true" ]; then
+              echo "| SKILL release backup | Shell (cp) | ✅ \`${BACKUP_FILE}\` |"
+            else
+              echo "| SKILL release backup | Shell (cp) | ⏭️ Already exists |"
+            fi
             if [ "$CLAUDE_COMMITTED" = "true" ]; then
               echo "| Content analysis | Claude Code Action | ✅ Done |"
             else
@@ -326,6 +357,7 @@ jobs:
             echo "## Review Checklist"
             echo ""
             echo "- [ ] SKILL.md 500줄 미만 확인"
+            echo "- [ ] releases/ 에 이전 버전 SKILL.md 백업 존재"
             echo "- [ ] CHANGELOG.md에 실제 기능 목록 포함"
             echo "- [ ] 새 기능 문서화 정확성 확인"
             echo "- [ ] Breaking Changes 문서화 확인"
