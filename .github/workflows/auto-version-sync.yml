@@ -270,23 +270,35 @@ jobs:
           git fetch origin
           git pull --rebase origin "$(git branch --show-current)" || true
 
-      # ── Step 5: Check if Claude made content changes ──
-      - name: Check Claude changes
+      # ── Step 5: Commit Claude changes (committed or uncommitted) ──
+      - name: Commit and push Claude changes
         id: claude-check
+        env:
+          NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
         run: |
-          # Check if Claude committed content changes (beyond version bump)
-          COMMIT_COUNT=$(git log --oneline origin/main..HEAD | wc -l)
+          # Case 1: Claude committed and pushed — check commit count
+          COMMIT_COUNT=$(git log --oneline origin/main..HEAD | wc -l | tr -d ' ')
+
+          # Case 2: Claude edited files but didn't commit — check uncommitted changes
+          UNCOMMITTED=$(git status --porcelain | wc -l | tr -d ' ')
+
           if [ "$COMMIT_COUNT" -gt 1 ]; then
-            echo "claude_committed=true" >> "$GITHUB_OUTPUT"
-            echo "Claude made content commits (total $COMMIT_COUNT commits on branch)"
+            echo "claude_updated=true" >> "$GITHUB_OUTPUT"
+            echo "Claude committed content changes ($COMMIT_COUNT commits on branch)"
+          elif [ "$UNCOMMITTED" -gt 0 ]; then
+            echo "Claude left uncommitted changes ($UNCOMMITTED files) — committing now"
+            git add -A
+            git commit -m "feat: update content for Claude Code v${NEW_CC_VERSION}"
+            git push
+            echo "claude_updated=true" >> "$GITHUB_OUTPUT"
           else
-            echo "claude_committed=false" >> "$GITHUB_OUTPUT"
-            echo "No content commits from Claude (only version bump)"
+            echo "claude_updated=false" >> "$GITHUB_OUTPUT"
+            echo "No content changes from Claude"
           fi
 
-      # ── Step 6: Fallback CHANGELOG (Claude가 커밋하지 않은 경우만) ──
+      # ── Step 6: Fallback CHANGELOG (Claude가 콘텐츠를 변경하지 않은 경우만) ──
       - name: Fallback changelog entry
-        if: steps.claude-check.outputs.claude_committed != 'true'
+        if: steps.claude-check.outputs.claude_updated != 'true'
         env:
           NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
           OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
@@ -307,11 +319,11 @@ jobs:
           OLD_VERSION: ${{ needs.check-version.outputs.current_version }}
           NEW_CC_VERSION: ${{ needs.check-version.outputs.latest_version }}
           NEW_CB_VERSION: ${{ steps.bump.outputs.ccbuilder_version }}
-          CLAUDE_COMMITTED: ${{ steps.claude-check.outputs.claude_committed }}
+          CLAUDE_UPDATED: ${{ steps.claude-check.outputs.claude_updated }}
           REPO: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
         run: |
-          if [ "$CLAUDE_COMMITTED" = "true" ]; then
+          if [ "$CLAUDE_UPDATED" = "true" ]; then
             TITLE="feat: sync Claude Code v${NEW_CC_VERSION} (ccbuilder v${NEW_CB_VERSION})"
             AI_STATUS="Claude Code Action으로 콘텐츠 분석 및 문서 업데이트 완료"
           else
@@ -340,7 +352,7 @@ jobs:
             else
               echo "| SKILL release backup | Shell (cp) | ⏭️ Already exists |"
             fi
-            if [ "$CLAUDE_COMMITTED" = "true" ]; then
+            if [ "$CLAUDE_UPDATED" = "true" ]; then
               echo "| Content analysis | Claude Code Action | ✅ Done |"
             else
               echo "| Content analysis | Claude Code Action | ❌ Failed |"
