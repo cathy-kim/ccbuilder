@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.12.1] - 2026-03-03
+
+### Added
+- **Skill + Agent Teams 통합 패턴 가이드** (`references/skill-agent-teams-integration-guide.md`)
+  - 기존 스킬에 Agent Teams 모드를 추가하는 실전 패턴 가이드
+  - 3가지 Archetype: Phase-wave, Batch-parallel, Sequential-chain
+  - 태스크 분해 패턴, Context Injection 템플릿, Evaluation + Shutdown 워크플로우
+  - Before/After 예시 (CMO, VEO)
+- SKILL.md 키워드 매핑: `통합, integration, skill team` → 통합 패턴 가이드
+
+---
+
 ## [2.12.0] - 2026-03-01
 
 ### Added

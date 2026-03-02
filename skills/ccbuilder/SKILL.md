@@ -7,8 +7,8 @@ argument-hint: "[skill|hook|agent|team|ralph|question] <name or query>"
 
 # Claude Code Extension Builder
 
-**Version**: 2.12.0
-**Last Updated**: 2026-03-01
+**Version**: 2.12.1
+**Last Updated**: 2026-03-03
 
 ## 목적
 
@@ -76,6 +76,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
    - hooks, hook, event → [references/hooks-guide.md](references/hooks-guide.md) + [official/hooks.md](references/official/hooks.md)
    - agent, subagent → [references/subagents-guide.md](references/subagents-guide.md) + [official/subagents.md](references/official/subagents.md)
    - team, teammate → [references/agent-teams-guide.md](references/agent-teams-guide.md)
+   - 통합, integration, skill team → [references/skill-agent-teams-integration-guide.md](references/skill-agent-teams-integration-guide.md)
    - mcp, server, transport → [references/mcp-guide.md](references/mcp-guide.md) + [official/mcp.md](references/official/mcp.md)
    - memory, rules, CLAUDE.md → [references/memory-rules-guide.md](references/memory-rules-guide.md) + [official/memory-rules.md](references/official/memory-rules.md)
    - 어디에, 뭘, 어떻게, 선택, 분류 → [references/what-goes-where-guide.md](references/what-goes-where-guide.md)

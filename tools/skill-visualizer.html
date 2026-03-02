@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKILL.md Node Visualizer</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --green: #3fb950;
+    --purple: #bc8cff;
+    --orange: #d29922;
+    --red: #f85149;
+    --pink: #f778ba;
+    --cyan: #39d2c0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  header .meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .controls button, .controls label {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .controls button:hover, .controls label:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .controls button.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+  .controls input[type="file"] { display: none; }
+  .controls .sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  /* Main layout */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Landing */
+  .landing {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+  }
+  .landing h2 { font-size: 20px; color: var(--text-muted); }
+  .landing .drop-zone {
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .landing .drop-zone:hover, .landing .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(88, 166, 255, 0.05);
+  }
+  .landing .drop-zone p { color: var(--text-muted); font-size: 14px; }
+  .landing textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    resize: vertical;
+  }
+  .landing textarea:focus { outline: none; border-color: var(--accent); }
+  .landing .or { color: var(--text-muted); font-size: 13px; }
+  .landing .parse-btn {
+    padding: 8px 24px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .landing .parse-btn:hover { background: var(--accent-hover); }
+
+  /* Canvas area */
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: none;
+  }
+  .canvas-wrap svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Detail Panel */
+  .detail-panel {
+    width: 320px;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+    overflow-y: auto;
+    padding: 16px;
+    display: none;
+    flex-shrink: 0;
+  }
+  .detail-panel h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .detail-panel .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .detail-panel pre {
+    background: var(--bg);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    overflow-x: auto;
+    margin: 8px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+  .detail-panel .refs {
+    margin-top: 12px;
+  }
+  .detail-panel .refs a {
+    display: block;
+    color: var(--accent);
+    font-size: 12px;
+    text-decoration: none;
+    padding: 3px 0;
+  }
+  .detail-panel .refs a:hover { text-decoration: underline; }
+  .detail-panel .section {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-panel .section:last-child { border-bottom: none; }
+  .detail-panel p {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .detail-panel .children-list {
+    list-style: none;
+    padding: 0;
+  }
+  .detail-panel .children-list li {
+    font-size: 12px;
+    padding: 3px 0;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+  .detail-panel .children-list li:hover { color: var(--accent); }
+
+  /* Minimap */
+  .minimap {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 180px;
+    height: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0.8;
+  }
+  .minimap:hover { opacity: 1; }
+
+  /* Stats bar */
+  .stats {
+    padding: 4px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  /* Node styles */
+  .node { cursor: pointer; }
+  .node rect {
+    rx: 8;
+    ry: 8;
+    stroke-width: 1.5;
+    transition: all 0.15s;
+  }
+  .node:hover rect {
+    filter: brightness(1.2);
+    stroke-width: 2.5;
+  }
+  .node.selected rect {
+    stroke-width: 3;
+    filter: brightness(1.3);
+  }
+  .node text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    fill: var(--text);
+    font-size: 12px;
+    pointer-events: none;
+  }
+  .node .type-icon {
+    font-size: 14px;
+  }
+
+  .link {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1.5;
+    opacity: 0.6;
+  }
+  .link.ref-link {
+    stroke: var(--purple);
+    stroke-dasharray: 5 3;
+    opacity: 0.4;
+  }
+  .link.highlighted {
+    stroke: var(--accent);
+    opacity: 1;
+    stroke-width: 2.5;
+  }
+
+  /* Zoom controls */
+  .zoom-controls {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .zoom-controls button {
+    width: 32px;
+    height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .zoom-controls button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    max-width: 300px;
+    z-index: 10;
+  }
+  .tooltip.show { opacity: 1; }
+
+  /* Legend */
+  .legend {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  /* Search */
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .search-box input {
+    width: 160px;
+    padding: 4px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SKILL.md Node Visualizer</h1>
+  <span class="meta" id="fileInfo"></span>
+</header>
+
+<div class="controls" id="toolbar" style="display:none">
+  <label for="fileInput2">Open File</label>
+  <input type="file" id="fileInput2" accept=".md">
+  <div class="sep"></div>
+  <button id="viewTree" class="active" data-view="tree">Tree</button>
+  <button id="viewGraph" data-view="graph">Graph</button>
+  <button id="viewRadial" data-view="radial">Radial</button>
+  <div class="sep"></div>
+  <button id="expandAll">Expand All</button>
+  <button id="collapseAll">Collapse</button>
+  <button id="fitView">Fit View</button>
+  <div class="sep"></div>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search nodes...">
+  </div>
+  <div class="sep"></div>
+  <button id="exportSVG">Export SVG</button>
+  <button id="exportPNG">Export PNG</button>
+</div>
+
+<!-- Landing page -->
+<div class="main" id="landingPage">
+  <div class="landing">
+    <h2>SKILL.md / Plugin Visualizer</h2>
+    <div class="drop-zone" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="12" y1="18" x2="12" y2="12"></line>
+        <line x1="9" y1="15" x2="12" y2="12"></line>
+        <line x1="15" y1="15" x2="12" y2="12"></line>
+      </svg>
+      <p>Drop SKILL.md here or click to browse</p>
+      <p style="font-size:12px">Supports any .md skill file, plugin manifest, or agent definition</p>
+    </div>
+    <input type="file" id="fileInput" accept=".md,.json" style="display:none">
+    <div class="or">or paste content below</div>
+    <textarea id="pasteArea" placeholder="Paste your SKILL.md content here..."></textarea>
+    <button class="parse-btn" id="parseBtn">Visualize</button>
+  </div>
+</div>
+
+<!-- Visualization -->
+<div class="main" id="vizPage" style="display:none">
+  <div class="canvas-wrap" id="canvasWrap" style="display:flex">
+    <svg id="mainSvg"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="zoom-controls">
+      <button id="zoomIn" title="Zoom In">+</button>
+      <button id="zoomOut" title="Zoom Out">-</button>
+      <button id="zoomReset" title="Reset">R</button>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+  <div class="detail-panel" id="detailPanel"></div>
+</div>
+
+<div class="stats" id="statsBar">
+  <span id="statNodes">Nodes: 0</span>
+  <span id="statEdges">Edges: 0</span>
+  <span id="statDepth">Depth: 0</span>
+  <span id="statRefs">Refs: 0</span>
+</div>
+
+<script>
+// ─── PARSER ───────────────────────────────────────────
+class SkillParser {
+  parse(content) {
+    const lines = content.split('\n');
+    const result = {
+      frontmatter: null,
+      tree: null,
+      references: [],
+      codeBlocks: [],
+      tables: [],
+      decisionTrees: [],
+    };
+
+    let i = 0;
+
+    // Parse frontmatter
+    if (lines[0] && lines[0].trim() === '---') {
+      i = 1;
+      const fmLines = [];
+      while (i < lines.length && lines[i].trim() !== '---') {
+        fmLines.push(lines[i]);
+        i++;
+      }
+      i++; // skip closing ---
+      result.frontmatter = this._parseFrontmatter(fmLines);
+    }
+
+    // Build heading tree
+    const root = {
+      id: 'root',
+      type: 'root',
+      title: result.frontmatter?.name || 'SKILL',
+      level: 0,
+      children: [],
+      content: [],
+      references: [],
+      tables: [],
+      codeBlocks: [],
+      decisionTree: null,
+      lineStart: 0,
+    };
+
+    const stack = [root];
+    let currentNode = root;
+    let inCodeBlock = false;
+    let codeBlockLang = '';
+    let codeBlockLines = [];
+    let inTable = false;
+    let tableLines = [];
+    let dtLines = [];
+    let inDT = false;
+
+    for (; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Code blocks
+      if (line.trim().startsWith('```')) {
+        if (inCodeBlock) {
+          const block = { lang: codeBlockLang, code: codeBlockLines.join('\n'), line: i };
+          currentNode.codeBlocks.push(block);
+          result.codeBlocks.push(block);
+          inCodeBlock = false;
+          codeBlockLines = [];
+          continue;
+        } else {
+          inCodeBlock = true;
+          codeBlockLang = line.trim().slice(3).trim();
+          codeBlockLines = [];
+          continue;
+        }
+      }
+      if (inCodeBlock) {
+        codeBlockLines.push(line);
+        // Detect decision tree inside code block
+        if (line.match(/[├└│─]/)) {
+          if (!inDT) { inDT = true; dtLines = []; }
+          dtLines.push(line);
+        } else if (inDT && line.trim() === '') {
+          // end of DT segment
+        }
+        continue;
+      }
+
+      // Tables
+      if (line.trim().startsWith('|')) {
+        if (!inTable) { inTable = true; tableLines = []; }
+        tableLines.push(line);
+        continue;
+      } else if (inTable) {
+        inTable = false;
+        const table = this._parseTable(tableLines);
+        if (table) {
+          currentNode.tables.push(table);
+          result.tables.push(table);
+        }
+        tableLines = [];
+      }
+
+      // Decision tree (in raw text)
+      if (line.match(/[├└│]\s*[─]/) || (line.match(/^\s*Q:/) && !inCodeBlock)) {
+        if (!inDT) { inDT = true; dtLines = []; }
+        dtLines.push(line);
+        continue;
+      } else if (inDT) {
+        inDT = false;
+        if (dtLines.length > 1) {
+          const dt = this._parseDecisionTree(dtLines);
+          currentNode.decisionTree = dt;
+          result.decisionTrees.push(dt);
+        }
+        dtLines = [];
+      }
+
+      // Headings
+      const headingMatch = line.match(/^(#{1,6})\s+(.+)/);
+      if (headingMatch) {
+        const level = headingMatch[1].length;
+        const title = headingMatch[2].replace(/[*`]/g, '').trim();
+
+        const node = {
+          id: `node-${i}`,
+          type: 'heading',
+          title,
+          level,
+          children: [],
+          content: [],
+          references: [],
+          tables: [],
+          codeBlocks: [],
+          decisionTree: null,
+          lineStart: i,
+        };
+
+        // Find parent
+        while (stack.length > 1 && stack[stack.length - 1].level >= level) {
+          stack.pop();
+        }
+        const parent = stack[stack.length - 1];
+        parent.children.push(node);
+        stack.push(node);
+        currentNode = node;
+        continue;
+      }
+
+      // Extract references from line
+      const refPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+      let refMatch;
+      while ((refMatch = refPattern.exec(line)) !== null) {
+        const ref = { text: refMatch[1], path: refMatch[2], line: i };
+        currentNode.references.push(ref);
+        result.references.push({ ...ref, from: currentNode.id });
+      }
+
+      // Content
+      if (line.trim()) {
+        currentNode.content.push(line.trim());
+      }
+    }
+
+    // Handle remaining DT
+    if (inDT && dtLines.length > 1) {
+      const dt = this._parseDecisionTree(dtLines);
+      currentNode.decisionTree = dt;
+      result.decisionTrees.push(dt);
+    }
+
+    result.tree = root;
+    return result;
+  }
+
+  _parseFrontmatter(lines) {
+    const fm = {};
+    for (const line of lines) {
+      const m = line.match(/^(\w[\w-]*)\s*:\s*(.+)/);
+      if (m) {
+        let val = m[2].trim();
+        if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+        if (val.startsWith('[') && val.endsWith(']')) {
+          val = val.slice(1, -1).split(',').map(s => s.trim().replace(/"/g, ''));
+        }
+        fm[m[1]] = val;
+      }
+    }
+    return fm;
+  }
+
+  _parseTable(lines) {
+    if (lines.length < 2) return null;
+    const parse = row => row.split('|').map(c => c.trim()).filter(c => c);
+    const headers = parse(lines[0]);
+    // skip separator line
+    const rows = [];
+    for (let i = 2; i < lines.length; i++) {
+      rows.push(parse(lines[i]));
+    }
+    return { headers, rows };
+  }
+
+  _parseDecisionTree(lines) {
+    const nodes = [];
+    for (const line of lines) {
+      const cleaned = line.replace(/^\s*/, '');
+      const depth = (line.length - cleaned.length);
+      nodes.push({ text: cleaned.replace(/[├└│─\s]+/, '').trim(), depth, raw: line });
+    }
+    return nodes;
+  }
+}
+
+// ─── VISUALIZER ───────────────────────────────────────
+class Visualizer {
+  constructor(svgEl) {
+    this.svg = svgEl;
+    this.data = null;
+    this.flatNodes = [];
+    this.edges = [];
+    this.currentView = 'tree';
+    this.transform = { x: 0, y: 0, k: 1 };
+    this.selectedNode = null;
+    this.expandedSet = new Set();
+    this.nodeW = 200;
+    this.nodeH = 40;
+    this.gapX = 60;
+    this.gapY = 20;
+
+    this._initInteraction();
+  }
+
+  setData(parsed) {
+    this.data = parsed;
+    this.flatNodes = [];
+    this.edges = [];
+    this.expandedSet.clear();
+    this._flatten(parsed.tree, null, 0);
+    this._buildRefEdges();
+    // Auto-expand first 2 levels
+    this.flatNodes.forEach(n => {
+      if (n.depth < 2) this.expandedSet.add(n.id);
+    });
+    this.render();
+    this._updateStats();
+    requestAnimationFrame(() => this.fitView());
+  }
+
+  _flatten(node, parentId, depth) {
+    const flat = {
+      id: node.id,
+      title: node.title,
+      type: node.type,
+      level: node.level,
+      depth,
+      parentId,
+      childIds: node.children.map(c => c.id),
+      hasChildren: node.children.length > 0,
+      references: node.references,
+      content: node.content,
+      tables: node.tables,
+      codeBlocks: node.codeBlocks,
+      decisionTree: node.decisionTree,
+      x: 0, y: 0,
+    };
+    this.flatNodes.push(flat);
+    if (parentId) {
+      this.edges.push({ source: parentId, target: node.id, type: 'child' });
+    }
+    for (const child of node.children) {
+      this._flatten(child, node.id, depth + 1);
+    }
+  }
+
+  _buildRefEdges() {
+    const nodeMap = new Map(this.flatNodes.map(n => [n.id, n]));
+    for (const ref of (this.data.references || [])) {
+      // Try to match ref path to a node title
+      const pathName = ref.path.replace(/.*\//, '').replace(/\.md$/, '').replace(/-/g, ' ');
+      for (const n of this.flatNodes) {
+        if (n.title.toLowerCase().includes(pathName.toLowerCase()) && ref.from !== n.id) {
+          this.edges.push({ source: ref.from, target: n.id, type: 'ref', label: ref.text });
+          break;
+        }
+      }
+    }
+  }
+
+  _getVisibleNodes() {
+    const visible = [];
+    const hidden = new Set();
+    for (const node of this.flatNodes) {
+      if (hidden.has(node.id)) continue;
+      visible.push(node);
+      if (!this.expandedSet.has(node.id)) {
+        // Hide all descendants
+        const hideDescendants = (id) => {
+          const children = this.flatNodes.filter(n => n.parentId === id);
+          for (const c of children) {
+            hidden.add(c.id);
+            hideDescendants(c.id);
+          }
+        };
+        hideDescendants(node.id);
+      }
+    }
+    return visible;
+  }
+
+  render() {
+    switch (this.currentView) {
+      case 'tree': this._renderTree(); break;
+      case 'graph': this._renderForce(); break;
+      case 'radial': this._renderRadial(); break;
+    }
+  }
+
+  _renderTree() {
+    const visible = this._getVisibleNodes();
+    this._layoutTree(visible);
+    this._draw(visible);
+  }
+
+  _layoutTree(nodes) {
+    // Group by depth, stack vertically
+    const depthGroups = new Map();
+    const childIndex = new Map();
+
+    // Track Y position per depth
+    const yCounter = {};
+
+    // Sort by parent order
+    const ordered = [];
+    const place = (parentId, depth) => {
+      const children = nodes.filter(n => n.parentId === parentId);
+      for (const child of children) {
+        ordered.push(child);
+        place(child.id, depth + 1);
+      }
+    };
+
+    // Root first
+    const root = nodes.find(n => n.type === 'root');
+    if (root) {
+      ordered.push(root);
+      place(root.id, 0);
+    }
+
+    let y = 0;
+    for (const node of ordered) {
+      const x = node.depth * (this.nodeW + this.gapX);
+      node.x = x;
+      node.y = y;
+      y += this.nodeH + this.gapY;
+    }
+  }
+
+  _renderForce() {
+    const visible = this._getVisibleNodes();
+    // Simple force layout
+    const nodeMap = new Map(visible.map(n => [n.id, n]));
+    const center = { x: this.svg.clientWidth / 2, y: this.svg.clientHeight / 2 };
+
+    // Initialize positions
+    visible.forEach((n, i) => {
+      if (!n._fx) {
+        const angle = (i / visible.length) * Math.PI * 2;
+        const radius = 100 + n.depth * 80;
+        n.x = center.x + Math.cos(angle) * radius;
+        n.y = center.y + Math.sin(angle) * radius;
+        n._fx = n.x;
+        n._fy = n.y;
+      }
+    });
+
+    // Simple force simulation (few iterations)
+    const visibleEdges = this.edges.filter(e => nodeMap.has(e.source) && nodeMap.has(e.target));
+
+    for (let iter = 0; iter < 50; iter++) {
+      // Repulsion
+      for (let i = 0; i < visible.length; i++) {
+        for (let j = i + 1; j < visible.length; j++) {
+          const a = visible[i], b = visible[j];
+          let dx = a.x - b.x, dy = a.y - b.y;
+          let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const force = 5000 / (dist * dist);
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+          a.x += fx; a.y += fy;
+          b.x -= fx; b.y -= fy;
+        }
+      }
+      // Attraction (edges)
+      for (const e of visibleEdges) {
+        const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
+        if (!a || !b) continue;
+        let dx = b.x - a.x, dy = b.y - a.y;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const force = (dist - 150) * 0.01;
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+        a.x += fx; a.y += fy;
+        b.x -= fx; b.y -= fy;
+      }
+      // Center gravity
+      for (const n of visible) {
+        n.x += (center.x - n.x) * 0.01;
+        n.y += (center.y - n.y) * 0.01;
+      }
+    }
+
+    this._draw(visible);
+  }
+
+  _renderRadial() {
+    const visible = this._getVisibleNodes();
+    const cx = this.svg.clientWidth / 2;
+    const cy = this.svg.clientHeight / 2;
+
+    // Group by depth
+    const maxDepth = Math.max(...visible.map(n => n.depth), 0);
+    const depthGroups = new Map();
+    for (const n of visible) {
+      if (!depthGroups.has(n.depth)) depthGroups.set(n.depth, []);
+      depthGroups.get(n.depth).push(n);
+    }
+
+    for (const [depth, nodes] of depthGroups) {
+      const radius = depth === 0 ? 0 : depth * 120;
+      nodes.forEach((n, i) => {
+        const angle = (i / nodes.length) * Math.PI * 2 - Math.PI / 2;
+        n.x = cx + Math.cos(angle) * radius;
+        n.y = cy + Math.sin(angle) * radius;
+      });
+    }
+
+    this._draw(visible);
+  }
+
+  _draw(visible) {
+    const nodeMap = new Map(visible.map(n => [n.id, n]));
+    const visibleEdges = this.edges.filter(e => nodeMap.has(e.source) && nodeMap.has(e.target));
+
+    // Build SVG content
+    let svg = `<g id="zoomGroup" transform="translate(${this.transform.x},${this.transform.y}) scale(${this.transform.k})">`;
+
+    // Draw edges
+    for (const edge of visibleEdges) {
+      const s = nodeMap.get(edge.source);
+      const t = nodeMap.get(edge.target);
+      if (!s || !t) continue;
+
+      const sx = s.x + this.nodeW / 2;
+      const sy = s.y + this.nodeH / 2;
+      const tx = t.x + this.nodeW / 2;
+      const ty = t.y + this.nodeH / 2;
+
+      const cls = edge.type === 'ref' ? 'link ref-link' : 'link';
+      const hl = (this.selectedNode && (edge.source === this.selectedNode || edge.target === this.selectedNode)) ? ' highlighted' : '';
+
+      if (this.currentView === 'tree') {
+        const midX = (sx + tx) / 2;
+        svg += `<path class="${cls}${hl}" d="M${s.x + this.nodeW},${sy} C${midX},${sy} ${midX},${ty} ${t.x},${ty}"/>`;
+      } else {
+        svg += `<line class="${cls}${hl}" x1="${sx}" y1="${sy}" x2="${tx}" y2="${ty}"/>`;
+      }
+    }
+
+    // Draw nodes
+    for (const node of visible) {
+      const color = this._nodeColor(node);
+      const selected = this.selectedNode === node.id ? ' selected' : '';
+      const icon = this._nodeIcon(node);
+      const truncTitle = node.title.length > 22 ? node.title.slice(0, 20) + '...' : node.title;
+      const expandIndicator = node.hasChildren
+        ? (this.expandedSet.has(node.id) ? ' [-]' : ` [+${node.childIds.length}]`)
+        : '';
+
+      svg += `<g class="node${selected}" data-id="${node.id}" transform="translate(${node.x},${node.y})">`;
+      svg += `<rect width="${this.nodeW}" height="${this.nodeH}" fill="${color}22" stroke="${color}" />`;
+      svg += `<text class="type-icon" x="10" y="26">${icon}</text>`;
+      svg += `<text x="30" y="24" font-weight="500">${this._escHtml(truncTitle)}</text>`;
+      if (expandIndicator) {
+        svg += `<text x="${this.nodeW - 8}" y="24" text-anchor="end" fill="${this._cssVar('--text-muted')}" font-size="10">${expandIndicator}</text>`;
+      }
+      svg += `</g>`;
+    }
+
+    svg += `</g>`;
+    this.svg.innerHTML = svg;
+
+    // Attach click handlers
+    this.svg.querySelectorAll('.node').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const id = el.dataset.id;
+        if (e.detail === 2) {
+          // Double-click: toggle expand
+          this.toggleExpand(id);
+        } else {
+          this.selectNode(id);
+        }
+      });
+      el.addEventListener('mouseenter', (e) => {
+        const id = el.dataset.id;
+        const node = this.flatNodes.find(n => n.id === id);
+        if (node) this._showTooltip(e, node);
+      });
+      el.addEventListener('mouseleave', () => this._hideTooltip());
+    });
+  }
+
+  _nodeColor(node) {
+    if (node.type === 'root') return this._cssVar('--accent');
+    const title = node.title.toLowerCase();
+    if (title.includes('hook')) return this._cssVar('--orange');
+    if (title.includes('skill')) return this._cssVar('--green');
+    if (title.includes('agent') || title.includes('subagent')) return this._cssVar('--purple');
+    if (title.includes('team')) return this._cssVar('--pink');
+    if (title.includes('ralph') || title.includes('loop')) return this._cssVar('--red');
+    if (title.includes('mcp') || title.includes('memory') || title.includes('rules')) return this._cssVar('--cyan');
+    if (title.includes('reference') || title.includes('문서') || title.includes('guide')) return this._cssVar('--text-muted');
+    // By heading level
+    const levelColors = ['', this._cssVar('--accent'), this._cssVar('--green'), this._cssVar('--purple'), this._cssVar('--orange'), this._cssVar('--cyan'), this._cssVar('--text-muted')];
+    return levelColors[node.level] || this._cssVar('--text-muted');
+  }
+
+  _nodeIcon(node) {
+    if (node.type === 'root') return '&#9673;';
+    const t = node.title.toLowerCase();
+    if (t.includes('hook')) return '&#9889;';
+    if (t.includes('skill')) return '&#9881;';
+    if (t.includes('agent') || t.includes('subagent')) return '&#9670;';
+    if (t.includes('team')) return '&#9734;';
+    if (t.includes('ralph') || t.includes('loop')) return '&#8634;';
+    if (t.includes('mcp')) return '&#9729;';
+    if (t.includes('reference') || t.includes('문서')) return '&#9782;';
+    if (t.includes('quick') || t.includes('핵심')) return '&#9889;';
+    if (node.decisionTree) return '&#9783;';
+    if (node.tables.length) return '&#9638;';
+    return '&#9679;';
+  }
+
+  _cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  _escHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ─── Interaction ─────────────────────────────────────
+  _initInteraction() {
+    let isPanning = false;
+    let startX, startY;
+
+    this.svg.addEventListener('mousedown', (e) => {
+      if (e.target === this.svg || e.target.tagName === 'svg') {
+        isPanning = true;
+        startX = e.clientX - this.transform.x;
+        startY = e.clientY - this.transform.y;
+        this.svg.style.cursor = 'grabbing';
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isPanning) return;
+      this.transform.x = e.clientX - startX;
+      this.transform.y = e.clientY - startY;
+      const g = this.svg.querySelector('#zoomGroup');
+      if (g) g.setAttribute('transform', `translate(${this.transform.x},${this.transform.y}) scale(${this.transform.k})`);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isPanning = false;
+      this.svg.style.cursor = 'default';
+    });
+
+    this.svg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newK = Math.max(0.1, Math.min(5, this.transform.k * delta));
+
+      // Zoom toward mouse
+      const rect = this.svg.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      this.transform.x = mx - (mx - this.transform.x) * (newK / this.transform.k);
+      this.transform.y = my - (my - this.transform.y) * (newK / this.transform.k);
+      this.transform.k = newK;
+
+      const g = this.svg.querySelector('#zoomGroup');
+      if (g) g.setAttribute('transform', `translate(${this.transform.x},${this.transform.y}) scale(${this.transform.k})`);
+    }, { passive: false });
+  }
+
+  selectNode(id) {
+    this.selectedNode = id;
+    this.render();
+    this._showDetail(id);
+  }
+
+  toggleExpand(id) {
+    if (this.expandedSet.has(id)) {
+      this.expandedSet.delete(id);
+    } else {
+      this.expandedSet.add(id);
+    }
+    this.render();
+    requestAnimationFrame(() => this.fitView());
+  }
+
+  expandAll() {
+    this.flatNodes.forEach(n => { if (n.hasChildren) this.expandedSet.add(n.id); });
+    this.render();
+    requestAnimationFrame(() => this.fitView());
+  }
+
+  collapseAll() {
+    this.expandedSet.clear();
+    // Keep root expanded
+    const root = this.flatNodes.find(n => n.type === 'root');
+    if (root) this.expandedSet.add(root.id);
+    this.render();
+    requestAnimationFrame(() => this.fitView());
+  }
+
+  fitView() {
+    const visible = this._getVisibleNodes();
+    if (visible.length === 0) return;
+    const minX = Math.min(...visible.map(n => n.x));
+    const maxX = Math.max(...visible.map(n => n.x + this.nodeW));
+    const minY = Math.min(...visible.map(n => n.y));
+    const maxY = Math.max(...visible.map(n => n.y + this.nodeH));
+
+    const padding = 60;
+    const w = this.svg.clientWidth;
+    const h = this.svg.clientHeight;
+    const contentW = maxX - minX + padding * 2;
+    const contentH = maxY - minY + padding * 2;
+
+    const k = Math.min(w / contentW, h / contentH, 1.5);
+    const tx = (w - contentW * k) / 2 - minX * k + padding * k;
+    const ty = (h - contentH * k) / 2 - minY * k + padding * k;
+
+    this.transform = { x: tx, y: ty, k };
+    const g = this.svg.querySelector('#zoomGroup');
+    if (g) g.setAttribute('transform', `translate(${tx},${ty}) scale(${k})`);
+  }
+
+  zoomIn() { this._zoom(1.2); }
+  zoomOut() { this._zoom(0.8); }
+  zoomReset() { this.transform = { x: 0, y: 0, k: 1 }; this.fitView(); }
+
+  _zoom(factor) {
+    const w = this.svg.clientWidth / 2;
+    const h = this.svg.clientHeight / 2;
+    const newK = Math.max(0.1, Math.min(5, this.transform.k * factor));
+    this.transform.x = w - (w - this.transform.x) * (newK / this.transform.k);
+    this.transform.y = h - (h - this.transform.y) * (newK / this.transform.k);
+    this.transform.k = newK;
+    const g = this.svg.querySelector('#zoomGroup');
+    if (g) g.setAttribute('transform', `translate(${this.transform.x},${this.transform.y}) scale(${this.transform.k})`);
+  }
+
+  setView(view) {
+    this.currentView = view;
+    this.flatNodes.forEach(n => { n._fx = 0; n._fy = 0; });
+    this.render();
+    requestAnimationFrame(() => this.fitView());
+  }
+
+  search(query) {
+    if (!query) {
+      this.selectedNode = null;
+      this.render();
+      return;
+    }
+    const q = query.toLowerCase();
+    const match = this.flatNodes.find(n => n.title.toLowerCase().includes(q));
+    if (match) {
+      // Expand parents
+      let cur = match;
+      while (cur.parentId) {
+        this.expandedSet.add(cur.parentId);
+        cur = this.flatNodes.find(n => n.id === cur.parentId);
+      }
+      this.selectNode(match.id);
+      // Center on node
+      const cx = this.svg.clientWidth / 2;
+      const cy = this.svg.clientHeight / 2;
+      this.transform.x = cx - match.x * this.transform.k - this.nodeW / 2 * this.transform.k;
+      this.transform.y = cy - match.y * this.transform.k - this.nodeH / 2 * this.transform.k;
+      this.render();
+      const g = this.svg.querySelector('#zoomGroup');
+      if (g) g.setAttribute('transform', `translate(${this.transform.x},${this.transform.y}) scale(${this.transform.k})`);
+    }
+  }
+
+  _showDetail(id) {
+    const panel = document.getElementById('detailPanel');
+    const node = this.flatNodes.find(n => n.id === id);
+    if (!node) { panel.style.display = 'none'; return; }
+
+    panel.style.display = 'block';
+    const color = this._nodeColor(node);
+
+    let html = '';
+    html += `<div class="section">`;
+    html += `<h3>${this._escHtml(node.title)}</h3>`;
+    html += `<span class="badge" style="background:${color}33;color:${color}">`;
+    html += `${node.type === 'root' ? 'Root' : `H${node.level}`} &middot; Depth ${node.depth}`;
+    html += `</span>`;
+    html += `</div>`;
+
+    // Content
+    if (node.content.length) {
+      html += `<div class="section">`;
+      html += `<h3>Content</h3>`;
+      html += `<p>${node.content.slice(0, 10).map(c => this._escHtml(c)).join('<br>')}</p>`;
+      if (node.content.length > 10) html += `<p style="color:var(--text-muted)">...and ${node.content.length - 10} more lines</p>`;
+      html += `</div>`;
+    }
+
+    // Tables
+    if (node.tables.length) {
+      html += `<div class="section"><h3>Tables (${node.tables.length})</h3>`;
+      for (const t of node.tables) {
+        html += `<pre>${t.headers.join(' | ')}\n${'─'.repeat(30)}\n${t.rows.map(r => r.join(' | ')).join('\n')}</pre>`;
+      }
+      html += `</div>`;
+    }
+
+    // Code blocks
+    if (node.codeBlocks.length) {
+      html += `<div class="section"><h3>Code Blocks (${node.codeBlocks.length})</h3>`;
+      for (const cb of node.codeBlocks) {
+        html += `<pre>${cb.lang ? `[${cb.lang}]\n` : ''}${this._escHtml(cb.code.slice(0, 500))}</pre>`;
+      }
+      html += `</div>`;
+    }
+
+    // References
+    if (node.references.length) {
+      html += `<div class="section"><h3>References (${node.references.length})</h3><div class="refs">`;
+      for (const r of node.references) {
+        html += `<a href="#">${this._escHtml(r.text)} &rarr; ${this._escHtml(r.path)}</a>`;
+      }
+      html += `</div></div>`;
+    }
+
+    // Decision tree
+    if (node.decisionTree) {
+      html += `<div class="section"><h3>Decision Tree</h3>`;
+      html += `<pre>${node.decisionTree.map(d => d.raw).join('\n')}</pre>`;
+      html += `</div>`;
+    }
+
+    // Children
+    if (node.childIds.length) {
+      html += `<div class="section"><h3>Children (${node.childIds.length})</h3><ul class="children-list">`;
+      for (const cid of node.childIds) {
+        const child = this.flatNodes.find(n => n.id === cid);
+        if (child) {
+          html += `<li data-id="${cid}">${this._nodeIcon(child)} ${this._escHtml(child.title)}</li>`;
+        }
+      }
+      html += `</ul></div>`;
+    }
+
+    panel.innerHTML = html;
+
+    // Children click
+    panel.querySelectorAll('.children-list li').forEach(li => {
+      li.addEventListener('click', () => {
+        const cid = li.dataset.id;
+        this.expandedSet.add(id);
+        this.selectNode(cid);
+        this.render();
+      });
+    });
+  }
+
+  _showTooltip(e, node) {
+    const tip = document.getElementById('tooltip');
+    const refs = node.references.length ? ` | ${node.references.length} refs` : '';
+    const children = node.childIds.length ? ` | ${node.childIds.length} children` : '';
+    tip.innerHTML = `<b>${this._escHtml(node.title)}</b><br><span style="color:var(--text-muted)">${node.type === 'root' ? 'Root' : `H${node.level}`}${refs}${children}</span>`;
+    tip.style.left = (e.clientX + 12) + 'px';
+    tip.style.top = (e.clientY + 12) + 'px';
+    tip.classList.add('show');
+  }
+
+  _hideTooltip() {
+    document.getElementById('tooltip').classList.remove('show');
+  }
+
+  _updateStats() {
+    document.getElementById('statNodes').textContent = `Nodes: ${this.flatNodes.length}`;
+    document.getElementById('statEdges').textContent = `Edges: ${this.edges.length}`;
+    document.getElementById('statDepth').textContent = `Depth: ${Math.max(...this.flatNodes.map(n => n.depth), 0)}`;
+    document.getElementById('statRefs').textContent = `Refs: ${this.data.references.length}`;
+  }
+
+  exportSVG() {
+    const svgClone = this.svg.cloneNode(true);
+    const blob = new Blob([svgClone.outerHTML], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'skill-visualizer.svg'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  exportPNG() {
+    const svgData = new XMLSerializer().serializeToString(this.svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    img.onload = () => {
+      canvas.width = this.svg.clientWidth * 2;
+      canvas.height = this.svg.clientHeight * 2;
+      ctx.scale(2, 2);
+      ctx.fillStyle = '#0d1117';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'skill-visualizer.png';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }
+
+  renderLegend() {
+    const items = [
+      { color: this._cssVar('--accent'), label: 'Root / H1' },
+      { color: this._cssVar('--green'), label: 'Skill' },
+      { color: this._cssVar('--orange'), label: 'Hook' },
+      { color: this._cssVar('--purple'), label: 'Agent' },
+      { color: this._cssVar('--pink'), label: 'Team' },
+      { color: this._cssVar('--red'), label: 'Ralph / Loop' },
+      { color: this._cssVar('--cyan'), label: 'MCP / Memory' },
+    ];
+    const legend = document.getElementById('legend');
+    legend.innerHTML = items.map(i =>
+      `<div class="legend-item"><div class="legend-dot" style="background:${i.color}"></div>${i.label}</div>`
+    ).join('');
+  }
+}
+
+// ─── APP ──────────────────────────────────────────────
+const parser = new SkillParser();
+const svg = document.getElementById('mainSvg');
+const viz = new Visualizer(svg);
+
+// File input
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => loadContent(e.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function loadContent(content, name = 'pasted content') {
+  const parsed = parser.parse(content);
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('vizPage').style.display = 'flex';
+  document.getElementById('toolbar').style.display = 'flex';
+  document.getElementById('canvasWrap').style.display = 'block';
+  document.getElementById('fileInfo').textContent = `${name} | ${content.split('\n').length} lines`;
+
+  viz.setData(parsed);
+  viz.renderLegend();
+}
+
+// Landing page interactions
+document.getElementById('dropZone').addEventListener('click', () => document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+document.getElementById('fileInput2').addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+document.getElementById('parseBtn').addEventListener('click', () => {
+  const text = document.getElementById('pasteArea').value.trim();
+  if (text) loadContent(text);
+});
+
+// Drag & drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+// Global drag & drop (on viz page too)
+document.body.addEventListener('dragover', (e) => e.preventDefault());
+document.body.addEventListener('drop', (e) => {
+  e.preventDefault();
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+// Toolbar
+document.getElementById('viewTree').addEventListener('click', () => setActiveView('tree'));
+document.getElementById('viewGraph').addEventListener('click', () => setActiveView('graph'));
+document.getElementById('viewRadial').addEventListener('click', () => setActiveView('radial'));
+document.getElementById('expandAll').addEventListener('click', () => viz.expandAll());
+document.getElementById('collapseAll').addEventListener('click', () => viz.collapseAll());
+document.getElementById('fitView').addEventListener('click', () => viz.fitView());
+document.getElementById('zoomIn').addEventListener('click', () => viz.zoomIn());
+document.getElementById('zoomOut').addEventListener('click', () => viz.zoomOut());
+document.getElementById('zoomReset').addEventListener('click', () => viz.zoomReset());
+document.getElementById('exportSVG').addEventListener('click', () => viz.exportSVG());
+document.getElementById('exportPNG').addEventListener('click', () => viz.exportPNG());
+
+document.getElementById('searchInput').addEventListener('input', (e) => viz.search(e.target.value));
+
+function setActiveView(view) {
+  document.querySelectorAll('.controls button[data-view]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-view="${view}"]`).classList.add('active');
+  viz.setView(view);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === '1') setActiveView('tree');
+  if (e.key === '2') setActiveView('graph');
+  if (e.key === '3') setActiveView('radial');
+  if (e.key === 'f' || e.key === 'F') viz.fitView();
+  if (e.key === 'e' || e.key === 'E') viz.expandAll();
+  if (e.key === 'c' || e.key === 'C') viz.collapseAll();
+  if (e.key === '/') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+  if (e.key === 'Escape') { document.getElementById('searchInput').blur(); viz.selectedNode = null; viz.render(); document.getElementById('detailPanel').style.display = 'none'; }
+  if (e.key === '+' || e.key === '=') viz.zoomIn();
+  if (e.key === '-') viz.zoomOut();
+});
+
+// Resize
+window.addEventListener('resize', () => { if (viz.data) viz.render(); });
+</script>
+</body>
+</html>
