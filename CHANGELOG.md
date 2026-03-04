@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.13.0] - 2026-03-04
+
+### Added
+- **Claude Code v2.1.66 동기화**
+  - 불필요한 오류 로그 감소 (spurious error logging 제거)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.63 → v2.1.66 업데이트
+- `references/version-sync.md`: v2.1.66 변경사항 추적 추가
+- 버전: 2.12.1 → 2.13.0
+
+---
+
 ## [2.12.1] - 2026-03-03
 
 ### Added
