@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.13.0] - 2026-03-05
+
+### Added
+- **Claude Code v2.1.69 동기화**
+  - **`InstructionsLoaded` Hook 이벤트**: CLAUDE.md 또는 `.claude/rules/*.md` 로드 시 트리거 (총 17 이벤트)
+  - **Hook 이벤트 필드 확장**: `agent_id`, `agent_type` (서브에이전트 및 `--agent`), `worktree` 필드 추가
+  - **`${CLAUDE_SKILL_DIR}` 변수**: 스킬이 자신의 디렉토리를 참조하는 변수 (portable 경로)
+  - **`/reload-plugins`** 명령어: 재시작 없이 플러그인 변경 사항 즉시 활성화
+  - **`includeGitInstructions` 설정** (`CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 환경변수): 내장 Git 커밋/PR 지침 시스템 프롬프트에서 제거 가능
+  - **`sandbox.enableWeakerNetworkIsolation`** (macOS): MITM 프록시 환경에서 Go 프로그램 TLS 검증 허용
+  - **`oauth.authServerMetadataUrl`**: MCP 서버용 커스텀 OAuth 메타데이터 URL 설정
+  - **MCP 바이너리 콘텐츠 개선**: PDF/Office/오디오 도구 응답을 base64 대신 올바른 확장자로 디스크에 저장
+  - **`/remote-control` 이름 옵션**: `--name "My Project"`로 세션 제목 커스터마이징
+  - **Voice STT 언어 확장**: 10개 신규 언어 추가 (총 20개) — 러시아어, 폴란드어, 터키어, 네덜란드어 등
+  - **Plugin 소스 타입 `git-subdir`**: git 레포 내 서브디렉토리 지정 가능
+  - **`/claude-api` 스킬**: Claude API 및 Anthropic SDK로 애플리케이션 개발 지원
+  - **모델 자동 마이그레이션**: Pro/Max/Team Premium Sonnet 4.5 사용자 → Sonnet 4.6 자동 이전
+  - 다수 메모리 누수 수정 (React Compiler memoCache, REPL render scope, hook event accumulation 등)
+  - 보안 수정: gitignored 디렉토리(`node_modules`)에서 중첩 스킬 로드 방지, symlink를 통한 디렉토리 탈출 방지
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.63 → v2.1.69 업데이트
+  - MCP 테이블: `oauth.authServerMetadataUrl` 및 바이너리 콘텐츠 개선 추가
+  - Memory 테이블: `includeGitInstructions` 설정 추가
+  - 신규 Hook 이벤트: `InstructionsLoaded` 추가, Hook 필드 확장 명시
+  - CLI: `/reload-plugins`, `/remote-control --name` 추가
+  - Skills Quick Reference: `${CLAUDE_SKILL_DIR}` 변수 예시 추가
+  - 공식 Hook 문서 레퍼런스: 16 → 17 events
+- `references/hooks-guide.md`: `InstructionsLoaded` 이벤트 추가, agent/worktree 필드 추가, 버전 업데이트
+- `references/official/hooks.md`: 이벤트 목록 17개로 확장
+- `references/version-sync.md`: v2.1.69 변경사항 추적 추가
+- 버전: 2.12.1 → 2.13.0
+
+---
+
 ## [2.12.1] - 2026-03-03
 
 ### Added

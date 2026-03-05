@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.12.0
-**Last Updated**: 2026-03-01
-**Claude Code Version**: v2.1.63+
+**Version**: 2.13.0
+**Last Updated**: 2026-03-05
+**Claude Code Version**: v2.1.69+
 
 ---
 
-## Hook 이벤트 (v2.11 최신)
+## Hook 이벤트 (v2.13 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -28,6 +28,9 @@
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
+| **InstructionsLoaded** | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | No | `path`, `content` |
+
+> **공통 신규 필드 (v2.1.69)**: `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트 및 `--agent` 타입), `worktree` (worktree 세션의 name/path/branch/repo 정보)
 
 ---
 
@@ -231,6 +234,7 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 - **Stop hook**: `block` decision 반환 시 Claude가 계속 작업 (reason 필수)
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
+- **TeammateIdle / TaskCompleted**: `{"continue": false, "stopReason": "..."}` 반환으로 팀메이트 중단 가능 (v2.1.69, Stop hook 동작과 일치)
 
 ---
 

@@ -77,6 +77,36 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.69 (2026-03-05 동기화)
+
+**새로운 기능:**
+- `InstructionsLoaded` Hook 이벤트: CLAUDE.md / `.claude/rules/*.md` 로드 시 트리거 (총 17개)
+- Hook 이벤트에 `agent_id`, `agent_type` 필드 추가 (서브에이전트 및 `--agent`)
+- Hook 이벤트에 `worktree` 필드 추가 (worktree 세션 정보 포함)
+- `TeammateIdle`, `TaskCompleted` 훅: `{"continue": false, "stopReason": "..."}` 지원
+- `${CLAUDE_SKILL_DIR}` 변수: 스킬이 자신의 디렉토리를 참조하는 portable 경로 변수
+- `/reload-plugins` 명령어: 재시작 없이 플러그인 변경 즉시 활성화
+- `includeGitInstructions` 설정 + `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 환경변수
+- `sandbox.enableWeakerNetworkIsolation` (macOS): MITM 프록시 TLS 검증 허용
+- `oauth.authServerMetadataUrl` MCP 옵션: 커스텀 OAuth 메타데이터 URL
+- MCP 바이너리 콘텐츠 개선: PDF/Office/오디오 → 올바른 확장자로 디스크 저장
+- Plugin 소스 타입 `git-subdir` 추가
+- `/remote-control --name "My Project"` 세션 제목 커스터마이징
+- `/claude-api` 스킬 번들 추가
+- Voice STT 언어 20개 (러시아어, 폴란드어, 터키어, 네덜란드어 등 10개 추가)
+- Sonnet 4.5 사용자 → Sonnet 4.6 자동 마이그레이션 (Pro/Max/Team Premium)
+
+**보안 수정:**
+- `node_modules` 등 gitignored 디렉토리에서 중첩 스킬 로드 방지
+- symlink 경유 디렉토리 탈출(`acceptEdits` 모드) 방지
+
+**주요 버그 수정:**
+- 다수 메모리 누수 수정: React Compiler memoCache, REPL render scope (~35MB/1000 turns), hook event accumulation
+- `WorktreeCreate`, `WorktreeRemove` 플러그인 훅 무시 버그 수정
+- 스킬 description에 콜론 포함 시 frontmatter 로드 실패 수정
+- `description:` 없는 프로젝트 스킬이 목록에 미표시되는 버그 수정
+- `/stats` 크래시 (malformed timestamps), `/compact` summary user bubble 렌더링 오류 수정
+
 ### v2.1.63 (2026-03-01 동기화)
 
 **새로운 기능:**

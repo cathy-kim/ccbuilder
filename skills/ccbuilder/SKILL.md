@@ -88,7 +88,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.63)
+## 핵심 변경 사항 (v2.1.69)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -101,6 +101,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers) |
 | **claude.ai MCP connectors** | claude.ai의 MCP 커넥터를 Claude Code에서 사용 (v2.1.46) |
 | **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 옵션 (v2.1.63) |
+| **oauth.authServerMetadataUrl** | MCP 서버 커스텀 OAuth 메타데이터 URL; PDF/Office/오디오 도구 응답은 파일로 저장 (v2.1.69) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -145,6 +146,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | **MEMORY.md** | 매 세션 자동 로드 (200줄 제한) |
 | **Modular Rules** | `.claude/rules/*.md` + `paths:` frontmatter로 경로별 규칙 |
 | **Worktree 공유** | 같은 레포의 git worktree 간 Project config/Auto memory 공유 (v2.1.63) |
+| **includeGitInstructions** | `false`로 설정 시 내장 Git 커밋/PR 지침 제거 (`CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 환경변수도 지원) (v2.1.69) |
 
 ### 신규 Hook 이벤트
 
@@ -156,13 +158,16 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
+
+**신규 Hook 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (worktree 세션 정보)
 
 **신규 Hook 타입 (v2.1.63)**: `type: "http"` — URL로 JSON POST, JSON 응답 수신 (shell 불필요)
 
 ### Agent/CLI/Plugin 강화 (v2.1.41-51)
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드)
-- **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
+- **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control [--name "My Project"]`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `/reload-plugins` (재시작 없이 플러그인 활성화)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
 
 ### Breaking Changes
@@ -222,7 +227,7 @@ allowed-tools: [Read, Grep, Glob]
 스킬의 목적
 
 ## 지침
-상세 내용은 references/ 참조
+상세 내용은 ${CLAUDE_SKILL_DIR}/references/ 참조
 ```
 
 **상세**: [references/skills-guide.md](references/skills-guide.md)
@@ -411,7 +416,7 @@ my-skill/
 | 문서 | 설명 |
 |------|------|
 | [references/official/skills.md](references/official/skills.md) | Skills 공식 문서 요약 |
-| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (16 events) |
+| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (17 events) |
 | [references/official/subagents.md](references/official/subagents.md) | Sub-agents 공식 문서 요약 |
 | [references/official/mcp.md](references/official/mcp.md) | MCP 공식 문서 요약 |
 | [references/official/memory-rules.md](references/official/memory-rules.md) | Memory & Rules 공식 문서 요약 |
