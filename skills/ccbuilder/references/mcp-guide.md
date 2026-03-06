@@ -128,7 +128,8 @@ claude mcp add --transport http my-server https://mcp.example.com
         "clientSecret": "your-client-secret",
         "authorizationUrl": "https://auth.example.com/authorize",
         "tokenUrl": "https://auth.example.com/token",
-        "scopes": ["read", "write"]
+        "scopes": ["read", "write"],
+        "authServerMetadataUrl": "https://auth.example.com/.well-known/oauth-authorization-server"
       }
     }
   }

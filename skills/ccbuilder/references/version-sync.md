@@ -77,6 +77,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.70 (2026-03-06 동기화)
+
+**새로운 기능:**
+- `InstructionsLoaded` Hook 이벤트: CLAUDE.md 또는 `.claude/rules/*.md` 로드 시 발생 (v2.1.69) — Hook 이벤트 총 17개
+- `${CLAUDE_SKILL_DIR}` 변수: Skill이 SKILL.md 내에서 자신의 디렉토리를 참조 (v2.1.69)
+- Hook 이벤트에 `agent_id`, `agent_type` 필드 추가 (v2.1.69)
+- Status line hook 커맨드에 `worktree` 필드 추가 (name, path, branch, original repo directory) (v2.1.69)
+- `oauth.authServerMetadataUrl`: MCP OAuth 메타데이터 발견 URL 커스텀 설정 (v2.1.69)
+- `includeGitInstructions` 설정 + `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 환경변수 (v2.1.69)
+- `/reload-plugins` 커맨드: 재시작 없이 플러그인 활성화 (v2.1.69)
+- `sandbox.enableWeakerNetworkIsolation` 설정 (macOS, Go 프로그램 TLS 인증 지원) (v2.1.69)
+- Opus 4.6 Medium Effort 기본값 (Max/Team 구독자) (v2.1.68)
+- "ultrathink" 키워드 복원 → 다음 턴 high effort (v2.1.68)
+- VSCode: 네이티브 MCP 서버 관리 다이얼로그 (`/mcp`) (v2.1.70)
+- VSCode: 스파크 아이콘 activity bar에 모든 Claude Code 세션 표시 (v2.1.70)
+
+**Breaking Changes (v2.1.68):**
+- Opus 4 및 Opus 4.1 Claude Code 1차 API에서 제거 → Opus 4.6으로 자동 전환
+
+**주요 버그 수정:**
+- `ANTHROPIC_BASE_URL` 프록시 사용 시 API 400 오류 수정 (tool_reference 블록 감지) (v2.1.70)
+- ToolSearch 직후 빈 모델 응답 수정 (v2.1.70)
+- `/resume` 시 skill listing 재주입 수정 (~600 토큰 절약) (v2.1.70)
+- 조건부 `.claude/rules/*.md` 파일이 print 모드에서 로드되지 않는 문제 수정 (v2.1.69)
+- Skill 설명에 콜론 포함 시 SKILL.md frontmatter 로드 실패 수정 (v2.1.69)
+- `description:` frontmatter 없는 프로젝트 스킬이 목록에 표시 안 되는 문제 수정 (v2.1.69)
+- TeammateIdle/TaskCompleted hook에서 `{"continue": false, "stopReason": "..."}` 지원 (v2.1.69)
+- macOS 키체인 손상 (다중 OAuth MCP 서버) 수정 (v2.1.69)
+
 ### v2.1.63 (2026-03-01 동기화)
 
 **새로운 기능:**

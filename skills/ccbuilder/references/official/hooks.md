@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-03-01
+**Last Synced**: 2026-03-06
 
 ---
 
@@ -26,6 +26,7 @@
 | 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
 | 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50) | - |
 | 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |
+| 17 | `InstructionsLoaded` | CLAUDE.md/.claude/rules/*.md 로드 시 (v2.1.69) | - |
 
 ## Handler 타입
 

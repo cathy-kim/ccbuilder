@@ -88,7 +88,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.63)
+## 핵심 변경 사항 (v2.1.70)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -156,6 +156,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `InstructionsLoaded` | CLAUDE.md/.claude/rules/*.md 로드 시 (v2.1.69) |
 
 **신규 Hook 타입 (v2.1.63)**: `type: "http"` — URL로 JSON POST, JSON 응답 수신 (shell 불필요)
 
@@ -173,6 +174,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 | 기본 모델 | Sonnet 4.5 | Sonnet 4.6 (Max plan) |
+| Opus 4/4.1 | 지원 | 제거됨 (Opus 4.6으로 자동 전환, v2.1.68) |
 
 ---
 
@@ -224,6 +226,8 @@ allowed-tools: [Read, Grep, Glob]
 ## 지침
 상세 내용은 references/ 참조
 ```
+
+**변수**: `$ARGUMENTS`, `${CLAUDE_SESSION_ID}`, `${CLAUDE_SKILL_DIR}` (v2.1.69)
 
 **상세**: [references/skills-guide.md](references/skills-guide.md)
 
@@ -411,7 +415,7 @@ my-skill/
 | 문서 | 설명 |
 |------|------|
 | [references/official/skills.md](references/official/skills.md) | Skills 공식 문서 요약 |
-| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (16 events) |
+| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (17 events) |
 | [references/official/subagents.md](references/official/subagents.md) | Sub-agents 공식 문서 요약 |
 | [references/official/mcp.md](references/official/mcp.md) | MCP 공식 문서 요약 |
 | [references/official/memory-rules.md](references/official/memory-rules.md) | Memory & Rules 공식 문서 요약 |

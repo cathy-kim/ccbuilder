@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.13.0] - 2026-03-06
+
+### Added
+- **Claude Code v2.1.70 동기화** (v2.1.64 → v2.1.70 반영)
+  - **`InstructionsLoaded` Hook 이벤트**: CLAUDE.md 또는 `.claude/rules/*.md` 파일 로드 시 발생 (v2.1.69)
+  - **`${CLAUDE_SKILL_DIR}` 변수**: Skill이 자신의 디렉토리를 참조할 수 있는 변수 (v2.1.69)
+  - **Hook 이벤트 메타데이터 확장**: `agent_id`, `agent_type` 필드 모든 hook 이벤트에 추가 (v2.1.69)
+  - **`worktree` 필드**: status line hook 커맨드에 worktree 정보 (name, path, branch) 추가 (v2.1.69)
+  - **`oauth.authServerMetadataUrl`**: MCP 서버 OAuth 메타데이터 발견 URL 커스텀 설정 (v2.1.69)
+  - **`includeGitInstructions` 설정**: 빌트인 commit/PR 워크플로우 지침을 시스템 프롬프트에서 제거 옵션 (v2.1.69)
+  - **`/reload-plugins` 커맨드**: 재시작 없이 플러그인 변경 사항 활성화 (v2.1.69)
+  - **VSCode 네이티브 MCP 관리 다이얼로그**: `/mcp` 명령으로 서버 활성화/비활성화, OAuth 관리 (v2.1.70)
+  - **Opus 4.6 기본 Medium Effort**: Max/Team 구독자 기본값 (v2.1.68)
+  - **"ultrathink" 키워드 복원**: 다음 턴 high effort 활성화 (v2.1.68)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.63 → v2.1.70 업데이트
+  - 신규 Hook 이벤트 `InstructionsLoaded` 추가 (17번째 Hook 이벤트)
+  - Breaking Changes에 Opus 4/4.1 제거 항목 추가
+  - Skills 핵심에 `${CLAUDE_SKILL_DIR}` 변수 명시
+  - 공식 hooks.md 참조 "(16 events)" → "(17 events)" 업데이트
+- `references/hooks-guide.md`: `InstructionsLoaded` 이벤트 추가, v2.13.0 업데이트
+- `references/official/hooks.md`: `InstructionsLoaded` 이벤트 #17 추가
+- `references/version-sync.md`: v2.1.70 변경사항 추적 추가
+- 버전: 2.12.1 → 2.13.0
+
+### Breaking Changes (v2.1.68)
+- Opus 4 및 Opus 4.1 Claude Code 1차 API에서 제거 — 해당 모델 사용자는 Opus 4.6으로 자동 전환됨
+
+---
+
 ## [2.12.1] - 2026-03-03
 
 ### Added

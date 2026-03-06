@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.12.0
-**Last Updated**: 2026-03-01
-**Claude Code Version**: v2.1.63+
+**Version**: 2.13.0
+**Last Updated**: 2026-03-06
+**Claude Code Version**: v2.1.70+
 
 ---
 
-## Hook 이벤트 (v2.11 최신)
+## Hook 이벤트 (v2.13 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -20,7 +20,7 @@
 | **PostToolUseFailure** | 도구 호출 실패 후 | No | `tool_name`, `error` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
 | **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason` |
-| **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
+| **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt`, `agent_id`, `agent_type` |
 | **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path` |
 | **TeammateIdle** | 팀메이트 유휴 상태 (v2.7 신규) | No | `teammate_name`, `agent_id` |
 | **PreCompact** | compact 전 | No | - |
@@ -28,10 +28,11 @@
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
+| **InstructionsLoaded** | CLAUDE.md/.claude/rules/*.md 로드 시 (v2.1.69) | No | `file_path`, `agent_type` |
 
 ---
 
-## Hook 타입 (v2.12)
+## Hook 타입 (v2.13)
 
 ### Command Hook (기본)
 
