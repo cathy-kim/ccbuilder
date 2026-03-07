@@ -77,6 +77,36 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.71 (2026-03-07 동기화)
+
+**새로운 기능:**
+- `/loop <interval> <prompt>` 명령 — 반복 인터벌 실행 (v2.1.71)
+- `InstructionsLoaded` Hook 이벤트 — CLAUDE.md / `.claude/rules/*.md` 로드 시 트리거 (v2.1.69)
+- Hook 이벤트 신규 필드: `agent_id` (서브에이전트), `agent_type`, `worktree` (v2.1.69)
+- `TeammateIdle`, `TaskCompleted` Hook에서 `{"continue": false}` 지원 (v2.1.71)
+- `${CLAUDE_SKILL_DIR}` Skill 변수 (v2.1.69)
+- `/reload-plugins` 명령 (v2.1.69)
+- MCP `oauth.authServerMetadataUrl` 설정 옵션 (v2.1.69)
+- Plugin source type `git-subdir` (v2.1.69)
+- Plugin MCP 서버 중복 제거 (v2.1.71)
+- `includeGitInstructions` 설정 + `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` (v2.1.69)
+- Bash 자동 허용: `fmt`, `comm`, `cmp`, `numfmt`, `expr`, `test`, `printf`, `getconf`, `seq`, `tsort`, `pr` (v2.1.71)
+- Opus 4.6 기본 medium effort (Max/Team), "ultrathink" 키워드 high effort 재도입 (v2.1.68)
+- `/claude-api` 내장 스킬 (v2.1.69)
+
+**주요 버그 수정:**
+- 중첩 Skill 발견 시 gitignore 디렉토리(`node_modules` 등) 로드 보안 수정 (v2.1.69)
+- `.mcp.json` 서버 최초 실행 시 자동 전체 활성화 버그 수정 (v2.1.69)
+- `/fork` 대화가 같은 plan 파일 공유하는 버그 수정 (v2.1.71)
+- `WorktreeCreate`, `WorktreeRemove` 플러그인 Hook 무시 버그 수정 (v2.1.71)
+- `--print` 모드에서 팀 에이전트 설정 시 무한 대기 수정 (v2.1.71)
+
+**Breaking Changes:**
+- Opus 4, Opus 4.1 Claude Code 1st-party API에서 제거 (v2.1.68)
+- `/plugin uninstall`이 `.claude/settings.local.json` 수정으로 변경 (v2.1.71)
+
+---
+
 ### v2.1.66 (2026-03-04 동기화)
 
 **주요 버그 수정:**

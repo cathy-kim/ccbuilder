@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.14.0
+**Last Updated**: 2026-03-07
+**Claude Code Version**: v2.1.71+
 
 ---
 
@@ -128,7 +128,8 @@ claude mcp add --transport http my-server https://mcp.example.com
         "clientSecret": "your-client-secret",
         "authorizationUrl": "https://auth.example.com/authorize",
         "tokenUrl": "https://auth.example.com/token",
-        "scopes": ["read", "write"]
+        "scopes": ["read", "write"],
+        "authServerMetadataUrl": "https://auth.example.com/.well-known/oauth-authorization-server"
       }
     }
   }

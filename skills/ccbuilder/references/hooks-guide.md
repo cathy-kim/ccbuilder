@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.12.0
-**Last Updated**: 2026-03-01
-**Claude Code Version**: v2.1.63+
+**Version**: 2.14.0
+**Last Updated**: 2026-03-07
+**Claude Code Version**: v2.1.71+
 
 ---
 
-## Hook 이벤트 (v2.11 최신)
+## Hook 이벤트 (v2.14 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -28,6 +28,11 @@
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
+| **InstructionsLoaded** | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | No | `file_path` |
+
+**신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
+
+**TeammateIdle · TaskCompleted (v2.1.71)**: `{"continue": false, "stopReason": "..."}` 응답으로 팀메이트 중단 가능 (Stop Hook과 동일 방식)
 
 ---
 

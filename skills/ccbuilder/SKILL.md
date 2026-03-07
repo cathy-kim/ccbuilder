@@ -88,7 +88,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.66)
+## 핵심 변경 사항 (v2.1.71)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -101,6 +101,8 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers) |
 | **claude.ai MCP connectors** | claude.ai의 MCP 커넥터를 Claude Code에서 사용 (v2.1.46) |
 | **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 옵션 (v2.1.63) |
+| **oauth.authServerMetadataUrl** | MCP OAuth 커스텀 메타데이터 URL 지정 (v2.1.69) |
+| **플러그인 MCP 중복 제거** | 동일 command/URL 서버 자동 병합 (`/plugin` 메뉴에 표시) (v2.1.71) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -156,14 +158,17 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
 
-**신규 Hook 타입 (v2.1.63)**: `type: "http"` — URL로 JSON POST, JSON 응답 수신 (shell 불필요)
+**신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
 
-### Agent/CLI/Plugin 강화 (v2.1.41-51)
+### Agent/CLI/Plugin 강화
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
+- **신규 명령**: `/loop <interval> <prompt>` 반복 실행 (v2.1.71), `/reload-plugins` 재시작 없이 활성화 (v2.1.69)
+- **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
 
 ### Breaking Changes
 
@@ -173,6 +178,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 | 기본 모델 | Sonnet 4.5 | Sonnet 4.6 (Max plan) |
+| Opus 4/4.1 | 사용 가능 | 1st-party API 제거 → Opus 4.6 자동 이전 (v2.1.68) |
 
 ---
 
@@ -249,7 +255,7 @@ allowed-tools: [Read, Grep, Glob]
 }
 ```
 
-**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle
+**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded (17개)
 
 **상세**: [references/hooks-guide.md](references/hooks-guide.md)
 
@@ -491,5 +497,4 @@ Task(Explore, "repos/obra-superpowers에서 TDD 워크플로우 구조 분석해
 - **Settings**: https://code.claude.com/docs/en/settings
 
 ---
-
-**Status**: UPDATED (2026-03-01) | **Claude Code**: v2.1.71+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
+**Status**: UPDATED (2026-03-07) | **Claude Code**: v2.1.71+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
