@@ -101,7 +101,33 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
-      # ── Step 0: SKILL.md 릴리스 백업 (버전 변경 전) ──
+      # ── Step 0a: 기존 auto-sync PR 정리 ──
+      - name: Close stale sync PRs and delete branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Searching for existing sync PRs..."
+          OPEN_PRS=$(gh pr list --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("chore/sync-cc-")) | .number')
+
+          if [ -n "$OPEN_PRS" ]; then
+            for PR_NUM in $OPEN_PRS; do
+              BRANCH=$(gh pr view "$PR_NUM" --json headRefName --jq '.headRefName')
+              echo "Closing PR #${PR_NUM} (${BRANCH}) — superseded by this run"
+              gh pr close "$PR_NUM" --comment "Superseded by newer sync run. Latest PR covers all accumulated changes."
+              git push origin --delete "$BRANCH" 2>/dev/null || true
+            done
+          else
+            echo "No stale sync PRs found"
+          fi
+
+          # Also clean up orphaned sync branches without PRs
+          for BRANCH in $(git branch -r | grep "origin/chore/sync-cc-" | sed 's|origin/||'); do
+            echo "Deleting orphaned branch: $BRANCH"
+            git push origin --delete "$BRANCH" 2>/dev/null || true
+          done
+
+      # ── Step 0b: SKILL.md 릴리스 백업 (버전 변경 전) ──
       - name: Backup current SKILL.md to releases
         id: backup
         run: |
