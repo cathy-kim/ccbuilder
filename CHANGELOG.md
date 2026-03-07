@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.14.0] - 2026-03-07
+
+### Added
+- **Claude Code v2.1.71 동기화** (v2.1.67–v2.1.71 반영)
+  - `/loop <interval> <prompt>` 명령 — 반복 인터벌 실행 (e.g. `/loop 5m check the deploy`) (v2.1.71)
+  - 세션 내 반복 프롬프트용 cron 스케줄링 도구 (v2.1.71)
+  - `InstructionsLoaded` Hook 이벤트 — CLAUDE.md / `.claude/rules/*.md` 로드 시 트리거 (v2.1.69)
+  - Hook 이벤트에 `agent_id`, `agent_type`, `worktree` 필드 추가 (v2.1.69)
+  - `TeammateIdle`, `TaskCompleted` Hook: `{"continue": false, "stopReason": "..."}` 지원 (v2.1.71)
+  - `${CLAUDE_SKILL_DIR}` Skill 변수 — Skill이 자신의 디렉토리 참조 (v2.1.69)
+  - `/reload-plugins` 명령 — 재시작 없이 플러그인 변경 사항 활성화 (v2.1.69)
+  - MCP OAuth `oauth.authServerMetadataUrl` 설정 옵션 (v2.1.69)
+  - Plugin source type `git-subdir` — git 레포 서브디렉토리 지원 (v2.1.69)
+  - Plugin MCP 서버 중복 제거 — 동일 command/URL 서버 자동 스킵 (v2.1.71)
+  - `includeGitInstructions` 설정 + `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 환경변수 (v2.1.69)
+  - `sandbox.enableWeakerNetworkIsolation` 설정 (macOS, MITM 프록시 환경) (v2.1.69)
+  - Voice STT 10개 언어 추가 (총 20개: Russian, Polish, Turkish, Dutch, Ukrainian 등) (v2.1.69)
+  - `voice:pushToTalk` 키바인딩 재설정 가능 (기본: space, v2.1.71)
+  - Bash 자동 허용 목록에 `fmt`, `comm`, `cmp`, `numfmt`, `expr`, `test`, `printf`, `getconf`, `seq`, `tsort`, `pr` 추가 (v2.1.71)
+  - Opus 4.6 Max/Team 기본 노력 수준: medium effort (v2.1.68)
+  - "ultrathink" 키워드로 high effort 활성화 (v2.1.68)
+  - `/claude-api` 내장 스킬 추가 (v2.1.69)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.66 → v2.1.71 업데이트
+  - 신규 Hook 이벤트 `InstructionsLoaded` 추가 (총 17개)
+  - Hook 이벤트 신규 필드 (`agent_id`, `agent_type`, `worktree`) 명시
+  - MCP 테이블에 `oauth.authServerMetadataUrl`, 플러그인 MCP 중복 제거 추가
+  - 신규 슬래시 명령 (`/loop`, `/reload-plugins`) 추가
+  - Skill 변수 `${CLAUDE_SKILL_DIR}` 추가
+  - Breaking Change에 Opus 4/4.1 제거 추가
+- `references/hooks-guide.md`: `InstructionsLoaded` 이벤트, 신규 Hook 필드 추가
+- `references/official/hooks.md`: `InstructionsLoaded` 이벤트 (17번째) 추가
+- `references/mcp-guide.md`: `oauth.authServerMetadataUrl` 옵션 추가
+- `references/version-sync.md`: v2.1.71 변경사항 추적 추가
+- 버전: 2.13.0 → 2.14.0
+
+### Breaking Changes
+- Opus 4, Opus 4.1 Claude Code 1st-party API에서 제거 — Opus 4.6으로 자동 이전 (v2.1.68)
+- `/plugin uninstall`이 `.claude/settings.local.json` 수정으로 변경 (`.claude/settings.json` 비수정, v2.1.71)
+
+---
+
 ## [2.13.0] - 2026-03-04
 
 ### Added
