@@ -1,0 +1,84 @@
+{
+  "skill_name": "ccbuilder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a new skill called 'pdf-analyzer' that helps analyze PDF documents and extract key information. The skill should use PDF parsing tools and provide structured output.",
+      "expected_output": "A complete skill directory at skills/pdf-analyzer/ with SKILL.md under 500 lines, valid YAML frontmatter (name: pdf-analyzer), required sections (목적, 사용 시점, 빠른 시작), and a references/ subdirectory.",
+      "files": [],
+      "expectations": [
+        "The output includes a skills/pdf-analyzer/SKILL.md file",
+        "SKILL.md has valid YAML frontmatter delimited by ---",
+        "The frontmatter contains a name field with value pdf-analyzer",
+        "The frontmatter contains a description field mentioning PDF and analysis",
+        "SKILL.md is 500 lines or fewer",
+        "SKILL.md contains a 목적 section",
+        "SKILL.md contains a 사용 시점 section",
+        "SKILL.md contains a 빠른 시작 section",
+        "A skills/pdf-analyzer/references/ directory is created"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a frontend code reviewer agent that reviews React/TypeScript code. When it encounters backend API issues, it should route to the backend-reviewer agent.",
+      "expected_output": "An agent definition file at agents/frontend-code-reviewer.md with Role, Responsibilities, and Routing sections, with backend-reviewer configured as a routing target.",
+      "files": [],
+      "expectations": [
+        "The output includes an agents/frontend-code-reviewer.md file",
+        "The agent file contains a Role section",
+        "The agent file contains a Responsibilities section",
+        "The agent file contains a Routing section",
+        "The Routing section references backend-reviewer as a routing target",
+        "The file describes React and TypeScript review capabilities"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Create a PreToolUse hook that validates file paths before any write operations. It should block writes to sensitive directories like /etc, /usr, and ~/.ssh.",
+      "expected_output": "A TypeScript hook file at hooks/path-validation-guard.ts that exports a main function, validates file paths in PreToolUse events, and returns a block decision for sensitive directories.",
+      "files": [],
+      "expectations": [
+        "The output includes a hooks/path-validation-guard.ts file",
+        "The file is valid TypeScript with proper syntax",
+        "The file contains a main function or default export",
+        "The hook handles PreToolUse events",
+        "The validation logic checks for /etc directory",
+        "The validation logic checks for /usr directory",
+        "The validation logic checks for ~/.ssh or /home/*/\\.ssh path patterns",
+        "The hook returns a decision that blocks writes to sensitive paths"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Create a /review-pr command that analyzes the current PR, runs tests, checks code quality, and generates a review summary.",
+      "expected_output": "A slash command file at commands/review-pr.md with a description and at least 3 ordered steps covering PR analysis, test execution, code quality check, and summary generation.",
+      "files": [],
+      "expectations": [
+        "The output includes a commands/review-pr.md file",
+        "The command file contains a description of what the command does",
+        "The command file contains step-by-step instructions",
+        "The steps include PR analysis or diff review",
+        "The steps include test execution",
+        "The steps include code quality checking",
+        "The steps include summary or report generation",
+        "There are at least 3 distinct steps"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a comprehensive database migration skill that handles schema changes, data migration, rollback, and verification across PostgreSQL, MySQL, and MongoDB.",
+      "expected_output": "A skill at skills/database-migration/SKILL.md under 500 lines following progressive disclosure, with detailed content offloaded to a references/ subdirectory containing at least 2 reference files.",
+      "files": [],
+      "expectations": [
+        "The output includes a skills/database-migration/SKILL.md file",
+        "SKILL.md is 500 lines or fewer",
+        "SKILL.md has valid YAML frontmatter",
+        "A skills/database-migration/references/ directory is created",
+        "The references/ directory contains at least 2 files",
+        "Detailed schema migration instructions are in references/ not in SKILL.md",
+        "SKILL.md mentions PostgreSQL, MySQL, or MongoDB",
+        "SKILL.md contains a rollback or recovery section or references a rollback guide"
+      ]
+    }
+  ]
+}

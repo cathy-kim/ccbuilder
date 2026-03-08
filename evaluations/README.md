@@ -1,5 +1,20 @@
 # Claude Code Extension Builder - Evaluation System
 
+> **[DEPRECATED]** 이 디렉토리의 평가 시스템은 더 이상 사용되지 않습니다.
+>
+> 공식 skill-creator eval 패턴을 따르는 새 평가 시스템으로 마이그레이션되었습니다.
+>
+> **새 위치**: [`skills/ccbuilder/evals/`](../skills/ccbuilder/evals/)
+>
+> - 테스트 케이스: `skills/ccbuilder/evals/evals.json`
+> - 그레이딩 기준: `skills/ccbuilder/agents/grader.md`
+> - 검증 스크립트: `skills/ccbuilder/scripts/quick_validate.py`
+> - 벤치마크 집계: `skills/ccbuilder/scripts/aggregate_benchmark.py`
+>
+> 이 디렉토리의 파일들은 참조용으로 보존됩니다.
+
+---
+
 ## 목적
 
 ccbuilder 스킬의 품질과 정확성을 검증하기 위한 자동화된 평가 시스템입니다.

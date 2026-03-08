@@ -25,7 +25,7 @@ Claude Code 확장 기능(Skills, Agents, Hooks, Agent Teams) 개발 질문 답�
 ### (인자 없음) → Welcome
 
 AskUserQuestion 도구로 다음 옵션을 제시하세요:
-새 Skill 만들기 / 새 Hook 만들기 / 새 Agent 만들기 / Agent Team 구성 / Ralph Loop 설정 / 뭘 어디에 만들지 도와줘 / 질문하기 / 문서 보기
+새 Skill 만들기 / 새 Hook 만들기 / 새 Agent 만들기 / Agent Team 구성 / Ralph Loop 설정 / Skill 평가/벤치마크 / 뭘 어디에 만들지 도와줘 / 질문하기 / 문서 보기
 
 ### `skill <name>` → Skill 생성
 
@@ -69,6 +69,21 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 3. 해당 컴포넌트의 **작성 템플릿**을 보여주고, 사용자 요구사항에 맞게 내용 채움
 4. 컴포넌트가 결정되면 해당 생성 흐름(skill/hook/agent 등)으로 이동
 
+### `eval <skill-path>` → Skill 평가
+
+1. Read [references/eval-guide.md](references/eval-guide.md)
+2. `<skill-path>` 스킬의 eval 워크플로우 실행 (테스트 → 채점 → 리뷰)
+
+### `improve <skill-path>` → Skill 개선
+
+1. Read [references/eval-guide.md](references/eval-guide.md)
+2. eval 피드백 기반 스킬 개선 → 재평가 루프
+
+### `benchmark <skill-path>` → 벤치마크 집계
+
+1. Read [references/eval-guide.md](references/eval-guide.md)
+2. 다수 eval 실행 결과 집계 → pass_rate, 토큰, 시간 통계
+
 ### `question <query>` 또는 자연어 질문 → 답변
 
 1. `<query>`에서 키워드 추출 후 아래 매핑으로 관련 문서 Read:
@@ -83,6 +98,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
    - tool, tools → [references/official/tools.md](references/official/tools.md)
    - orchestrator → [references/orchestrator-principles.md](references/orchestrator-principles.md)
    - ralph, loop, repl, fresh context, autonomous → [references/ralph-loop-guide.md](references/ralph-loop-guide.md)
+   - eval, evaluation, 평가, 벤치마크, benchmark → [references/eval-guide.md](references/eval-guide.md)
 2. 키워드가 불명확하면 `references/github/repos/`에서 Grep으로 실제 코드 검색
 3. 문서 내용 기반으로 답변 (추측 금지, 근거 명시)
 
@@ -316,25 +332,16 @@ cat TASK.md PROGRESS.md | claude -p "다음 미완료 작업 수행 후 PROGRESS
 
 ---
 
-## 사용 시나리오 결정 가이드
+## 시나리오 결정 가이드
 
-```
-Q: 장시간 자율 개발이 필요한가? (30분+, 컨텍스트 열화 방지)
-├─ Yes → Ralph Loop (TASK.md + loop.sh)
-└─ No
-   Q: 반복적으로 같은 지침이 필요한가?
-   ├─ Yes → Skill 생성
-   └─ No
-      Q: 여러 에이전트가 병렬로 협업해야 하나?
-      ├─ Yes → Agent Team (TeamCreate + Task + SendMessage)
-      └─ No
-         Q: 독립적인 작업 실행이 필요한가?
-         ├─ Yes → Task Tool 사용
-         │  Q: 커스텀 에이전트가 필요한가?
-         │  ├─ Yes → Subagent 정의 후 Task에서 호출
-         │  └─ No → 내장 subagent_type 사용 (Explore, Plan, general-purpose)
-         └─ No → 직접 대화에서 처리
-```
+| 조건 | 선택 |
+|------|------|
+| 장시간 자율 개발 (30분+, 컨텍스트 열화 방지) | **Ralph Loop** |
+| 반복적으로 같은 지침 필요 | **Skill** |
+| 여러 에이전트 병렬 협업 | **Agent Team** |
+| 독립적 작업 실행 + 커스텀 에이전트 | **Subagent** → Task |
+| 독립적 작업 실행 + 내장 타입 | **Task** (Explore, Plan 등) |
+| 그 외 | 직접 대화에서 처리 |
 
 ---
 
@@ -342,18 +349,9 @@ Q: 장시간 자율 개발이 필요한가? (30분+, 컨텍스트 열화 방지)
 
 ```
 .claude/
-├── skills/
-│   └── react-patterns/
-│       ├── SKILL.md              # < 500줄
-│       ├── CHANGELOG.md
-│       ├── releases/
-│       └── references/
-│           ├── hooks.md
-│           └── state-management.md
-├── agents/
-│   └── react-developer.md
-├── rules/
-│   └── coding-rules.md
+├── skills/<name>/ ─ SKILL.md (<500줄) + CHANGELOG.md + releases/ + references/
+├── agents/<name>.md
+├── rules/*.md
 └── settings.json
 ```
 
@@ -403,6 +401,7 @@ my-skill/
 | [references/review-system.md](references/review-system.md) | 스킬 리뷰/검증 시스템 |
 | [references/skill-subagent-task-guide.md](references/skill-subagent-task-guide.md) | Skill/Subagent/Task 상세 비교 |
 | [references/best-practices.md](references/best-practices.md) | 모범 사례 |
+| [references/eval-guide.md](references/eval-guide.md) | Skill 평가, 벤치마크, 개선 루프 가이드 |
 
 ### 시스템 가이드
 
