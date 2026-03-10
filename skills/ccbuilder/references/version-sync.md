@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.72 (2026-03-10 동기화)
+
+**새로운 기능:**
+- `ExitWorktree` 도구 — `EnterWorktree` 세션 종료
+- `model` 파라미터 Agent 도구에 복원 (per-invocation 모델 오버라이드)
+- `/plan <description>` — 플랜 모드 즉시 진입 + 실행
+- `/copy` `w` 키 — 파일로 직접 쓰기 (SSH 환경)
+- `CLAUDE_CODE_DISABLE_CRON` 환경변수 — 크론 작업 즉시 중지
+- Bash 자동 허용 추가: `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind`
+- Effort 간소화: low/medium/high (max 제거), 심볼 ○ ◐ ●, `/effort auto`
+- CLAUDE.md HTML 주석(`<!-- -->`) 자동 주입 시 Claude에게 숨김 (Read 도구로는 표시)
+- 팀 에이전트 리더 모델 자동 상속
+- VSCode `vscode://anthropic.claude-code/open` URI 핸들러
+- 마켓플레이스 `.git` 없는 git URL 지원 (Azure DevOps, AWS CodeCommit)
+- SDK `query()` 프롬프트 캐시 수정 — 입력 토큰 최대 12x 절감
+- Bash 파싱 native 모듈 전환 — 빠른 초기화, 메모리 누수 제거, 번들 ~510KB 감소
+
+**주요 버그 수정:**
+- 워크트리: Task 재개 시 cwd 미복원, 백그라운드 태스크 알림 worktreePath/worktreeBranch 누락
+- 훅: `transcript_path` 잘못된 디렉토리, agent `prompt` 매 settings 쓰기마다 삭제, async 훅 stdin 미수신, validation 예시 오류
+- 플러그인: Windows OneDrive EEXIST 오류, project-scope user-scope 설치 차단, `CLAUDE_CODE_PLUGIN_CACHE_DIR` 리터럴 `~`
+- `/clear` 백그라운드 에이전트 종료 방지 (포그라운드만)
+- 샌드박스 권한 오류, 병렬 도구 실패 시 형제 취소 → Bash만 연쇄
+- VSCode: Shift+Enter 신규 줄 대신 제출, 통합 터미널 스크롤 속도
+
+---
+
 ### v2.1.71 (2026-03-07 동기화)
 
 **새로운 기능:**

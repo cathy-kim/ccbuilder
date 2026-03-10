@@ -109,6 +109,7 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
 - **"IMPORTANT"/"YOU MUST"** 로 중요 규칙 강조
 - **스캔 가능한 구조** — 제목, 목록, 표 활용
 - **반복 프롬프트로 취급** — `#` 키로 Claude가 자동 업데이트 유도
+- **HTML 주석 활용** (v2.1.72) — `<!-- 이 내용은 Claude에게 숨겨짐 -->` 자동 주입 시 클로드에게 보이지 않음; 사람이 읽는 메모에 사용 가능. Read 도구로 파일 직접 읽을 때는 표시됨.
 
 ### CLAUDE.md vs Rules vs CLAUDE.local.md 선택 기준
 

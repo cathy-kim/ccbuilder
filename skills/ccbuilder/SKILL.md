@@ -104,7 +104,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.71)
+## 핵심 변경 사항 (v2.1.72)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -131,12 +131,13 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Project Rules** | `.claude/rules/*.md` + paths: + subdirs + symlinks |
 | **User Memory** | `~/.claude/CLAUDE.md` + `~/.claude/rules/` |
 | **Project Local** | `CLAUDE.local.md` (자동 gitignore) |
+| **HTML 주석** | `<!-- -->` 자동 주입 시 Claude에게 숨김, Read 도구로는 표시 (v2.1.72) |
 
 **상세**: [references/memory-rules-guide.md](references/memory-rules-guide.md)
 
 ### Agent Teams (실험적)
 
-멀티 에이전트 팀 협업 시스템. Team Lead가 Teammate들을 조율하여 병렬 작업 수행.
+멀티 에이전트 팀 협업 시스템. Team Lead가 Teammate들을 조율하여 병렬 작업 수행. **v2.1.72**: 팀 에이전트 리더 모델 자동 상속.
 
 ```
 TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
@@ -180,11 +181,12 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 ### Agent/CLI/Plugin 강화
 
-- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드)
+- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
-- **신규 명령**: `/loop <interval> <prompt>` 반복 실행 (v2.1.71), `/reload-plugins` 재시작 없이 활성화 (v2.1.69)
+- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72)
 - **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
+- **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), Bash 허용 추가: `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind` (v2.1.72)
 
 ### Breaking Changes
 
@@ -195,6 +197,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | MCP Transport | SSE | HTTP (streamable-http) |
 | 기본 모델 | Sonnet 4.5 | Sonnet 4.6 (Max plan) |
 | Opus 4/4.1 | 사용 가능 | 1st-party API 제거 → Opus 4.6 자동 이전 (v2.1.68) |
+| Effort 레벨 | low/medium/high/max | low/medium/high (max 제거, 심볼 ○ ◐ ●, `/effort auto` 재설정, v2.1.72) |
 
 ---
 
@@ -320,10 +323,7 @@ background: true               # 항상 백그라운드 실행 (v2.1.49)
 ### Ralph Loop 핵심 (신규)
 
 ```bash
-# Simple: TASK.md + PROGRESS.md + loop.sh
 cat TASK.md PROGRESS.md | claude -p "다음 미완료 작업 수행 후 PROGRESS.md 업데이트. 완료 시 LOOP_COMPLETE 추가"
-# Stop Hook: 종료 차단으로 자동 루프
-# Ralph Framework: ralph --monitor (풀 프레임워크)
 ```
 
 **핵심**: 매 반복 Fresh Context(0%) + 파일/Git으로 상태 유지 + 이중 종료 조건
@@ -367,8 +367,6 @@ my-skill/
 ├── CHANGELOG.md      # 변경 이력
 ├── releases/         # 버전별 스냅샷
 └── references/       # 상세 가이드
-    ├── topic-1.md
-    └── topic-2.md
 ```
 
 ---
