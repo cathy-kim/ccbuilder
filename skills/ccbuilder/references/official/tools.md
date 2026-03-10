@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-02-11 (Claude Code v2.1.39+)
+**Last Synced**: 2026-03-10 (Claude Code v2.1.72+)
 
 ---
 
@@ -41,6 +41,8 @@
 |------|--------|------|--------|
 | `EnterPlanMode` | 878 | Plan 모드 진입 | 낮음 |
 | `ExitPlanMode` | 417 | Plan 모드 종료/승인 요청 | 낮음 |
+| `EnterWorktree` | - | 격리된 git worktree 세션 진입 | 낮음 |
+| `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
 

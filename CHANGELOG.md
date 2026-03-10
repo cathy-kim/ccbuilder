@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.15.0] - 2026-03-10
+
+### Added
+- **Claude Code v2.1.72 동기화**
+  - `ExitWorktree` 도구 — `EnterWorktree` 세션을 종료하는 새 도구
+  - `model` 파라미터 Agent 도구에 복원 — per-invocation 모델 오버라이드
+  - `/plan <description>` 인자 지원 — 플랜 모드 진입과 동시에 즉시 실행 (e.g. `/plan fix the auth bug`)
+  - `/copy` 에서 `w` 키 — 파일로 직접 쓰기 (SSH 환경에서 클립보드 우회)
+  - `CLAUDE_CODE_DISABLE_CRON` 환경변수 — 세션 중 예약된 cron 작업 즉시 중지
+  - Bash 자동 허용 목록 추가: `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind`
+  - Effort 레벨 간소화 — low/medium/high (max 제거), 새 심볼 ○ ◐ ●, `/effort auto` 로 초기화
+  - CLAUDE.md HTML 주석(`<!-- -->`) 자동 주입 시 Claude에게 숨김 처리 (Read 도구로는 표시)
+  - 팀 에이전트가 리더 모델 자동 상속
+  - VSCode `vscode://anthropic.claude-code/open` URI 핸들러 — 새 탭 프로그래밍 방식 열기
+  - 마켓플레이스 `.git` 접미사 없는 git URL 지원 (Azure DevOps, AWS CodeCommit)
+  - SDK `query()` 프롬프트 캐시 수정 — 입력 토큰 비용 최대 12x 절감
+  - Bash 명령 파싱 native 모듈 전환 — 초기화 속도 향상, 메모리 누수 제거, 번들 크기 ~510KB 감소
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.71 → v2.1.72 업데이트
+  - Agent/CLI 섹션에 `ExitWorktree`, `model` param, `/plan <description>`, `CLAUDE_CODE_DISABLE_CRON`, Bash 허용 추가 반영
+  - Memory 계층 테이블에 CLAUDE.md HTML 주석 항목 추가
+  - Breaking Changes에 Effort 레벨 max 제거 항목 추가
+  - Agent Teams 설명에 리더 모델 상속 추가
+- `references/version-sync.md`: v2.1.72 변경사항 추적 추가
+- 버전: 2.14.0 → 2.15.0
+
+### Fixed (Claude Code v2.1.72)
+- 워크트리 격리 이슈: Task 도구 재개 시 cwd 미복원, 백그라운드 태스크 알림에 `worktreePath`/`worktreeBranch` 누락
+- 훅 이슈: `transcript_path` 잘못된 디렉토리, agent `prompt` settings.json 매 쓰기마다 삭제, async 훅 bash `read -r` stdin 미수신
+- 플러그인 이슈: Windows EEXIST 오류, project-scope가 user-scope 설치 차단, `CLAUDE_CODE_PLUGIN_CACHE_DIR` 리터럴 `~` 디렉토리 생성
+- `/clear` 시 백그라운드 에이전트/태스크 종료 방지 (포그라운드 태스크만 정리)
+- 샌드박스 권한 이슈: 파일 쓰기 오류 허용, `/tmp/claude/` 리디렉션 불필요 프롬프트
+- 병렬 도구 호출에서 실패한 Read/WebFetch/Glob이 형제 취소 — Bash 오류만 연쇄
+
+---
+
 ## [2.14.0] - 2026-03-07
 
 ### Added

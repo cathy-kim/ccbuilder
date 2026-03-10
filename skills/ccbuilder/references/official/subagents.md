@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-02-11
+**Last Synced**: 2026-03-10 (v2.1.72)
 
 ---
 
@@ -55,6 +55,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - `name`: 팀 내 표시 이름
 - `team_name`: Agent Team 소속
 - `run_in_background`: 백그라운드 실행
+- `model`: per-invocation 모델 오버라이드 (v2.1.72 복원, e.g. `"claude-opus-4-6"`)
 
 ## 고급 기능
 
@@ -64,3 +65,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **Skill 프리로드**: `skills` 필드로 Skill 전체 내용을 agent에 주입
 - **Resume**: 이전 agent 작업 이어서 실행
 - **병렬 실행**: 독립적인 리서치는 여러 agent 동시 실행
+- **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
+- **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
