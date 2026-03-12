@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.16.0] - 2026-03-13
+## [2.17.0] - 2026-03-14
 
 ### Added
+- **Graph Schema v2** — Shared State + Node Autonomy + Multi-route Decision 지원
+  - `state` (workspace + raw_vault): 노드 간 context 단절 해결, 누적 문서 + 원본 보존
+  - `reads/writes`: 노드→공유 상태 접근 선언
+  - `artifacts`: 원본 데이터 파일 보존 (lossy compression 방지)
+  - `autonomy`: subagent 자율 탐색 허용 (Skill 수준의 유연성)
+  - `route_criteria`: multi-route decision (이진→다중 분기)
+- **Ralph-Graph Loop** — Graph를 Ralph Loop로 반복 실행하여 SCAR 목표 달성까지 자율 개선
+  - `ralph` 필드: `{enabled, target, max_iterations, evolve, feedback_file}`
+  - Fresh Context 매 반복 + `evolve: true`로 graph.json 자체 개선 가능
+  - 실행 프로토콜, 피드백 파일 구조, SCAR 현실 가이드 포함
+- **Research Team v3 템플릿** (`references/graph-templates/research-team-v3.json`)
+  - 4개 병렬 검색 전략 + adversarial verification + triangulation
+  - Multi-route quality gate (complete/has_gaps/low_quality)
 - **Claude Code v2.1.74 동기화**
   - `/context` 명령 개선 — 컨텍스트 과다 도구, 메모리 팽창, 용량 경고에 대한 실행 가능한 최적화 제안
   - `autoMemoryDirectory` 설정 — Auto Memory 저장 디렉토리 커스텀 경로 지정
@@ -20,13 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - SSL 인증서 오류 시 (기업 프록시, `NODE_EXTRA_CA_CERTS`) 실행 가능한 안내 메시지 (v2.1.73)
 
 ### Changed
+- `graph-schema.json`: v1→v2 업그레이드 (state, reads/writes, artifacts, autonomy, ralph 추가)
+- `graph-workflow-guide.md`: v2.0.0 전면 개정 (Shared State 원칙, v2 노드 필드, Ralph-Graph Loop Phase 2.5)
+- SKILL.md graph 섹션: v2 스키마 + Ralph Loop 반영 (500줄 유지)
 - `SKILL.md`: 핵심 변경 사항 섹션 v2.1.72 → v2.1.74 업데이트
-  - MCP 테이블: OAuth 콜백 포트 충돌 + 리프레시 토큰 만료 수정 추가
-  - Memory 테이블: `autoMemoryDirectory` 설정 항목 추가
-  - Agent/CLI 섹션: 전체 모델 ID 지원, `modelOverrides`, `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`, `--plugin-dir` 변경 반영
-  - Deprecated 테이블: `/output-style` → `/config` 추가
 - `references/version-sync.md`: v2.1.74 변경사항 추적 추가
-- 버전: 2.15.0 → 2.16.0
 
 ### Fixed (Claude Code v2.1.74)
 - 스트리밍 API 응답 버퍼 미해제로 인한 메모리 누수 (Node.js/npm 경로 RSS 무한 증가) 수정
@@ -37,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SessionEnd` 훅이 `hook.timeout` 무시하고 1.5초 후 강제 종료되던 버그 수정
 - `/plugin install` REPL 내부 실행 실패 수정
 - 마켓플레이스 업데이트 시 git 서브모듈 미동기화 수정
-- 알 수 없는 슬래시 명령에 인자 포함 시 입력 묵살 → 경고 메시지 표시로 변경
 - Windows Terminal / conhost / VS Code에서 히브리어·아랍어 등 RTL 텍스트 렌더링 수정
 - Windows LSP 서버 malformed file URI 수정
 
@@ -51,6 +61,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - `/output-style` 명령 → `/config` 사용 권장 (출력 스타일 세션 시작 시 고정으로 변경, v2.1.74)
+
+---
+
+## [2.16.0] - 2026-03-12
+
+### Added
+- **Graph Workflow System** — 자연어 → 구조화된 실행 계획(Graph) 변환 시스템
+  - `references/graph-workflow-guide.md` — 메인 가이드 (스키마, NL→Graph 변환 패턴, 실행 프로토콜, 로깅, 개선 루프)
+  - `references/graph-schema.json` — JSON Schema draft-07 Graph 정의 검증 (12개 테스트 통과)
+  - `references/graph-templates/` — 3개 템플릿 (eval-pipeline, team-implementation, autonomous-loop)
+- SKILL.md에 `graph <name>` 인자 처리 규칙 추가
+- 키워드 자동 활성화: graph, workflow, 그래프, DAG, 파이프라인
+- 시나리오 결정 가이드에 "복잡한 멀티스텝 워크플로우" 분기 추가
+- 확장 기능 유형에 Graph Workflow 추가 (총 8개)
+
+### Changed
+- SKILL.md description에 graph workflow 키워드 추가
+- `argument-hint`에 `graph` 옵션 추가
+- Breaking Changes / Deprecated 섹션 압축 (500줄 제한 준수)
 
 ---
 

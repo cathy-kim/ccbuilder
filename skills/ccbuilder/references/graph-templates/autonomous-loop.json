@@ -1,0 +1,16 @@
+{
+  "id": "autonomous-completion",
+  "goal": "모든 작업이 완료될 때까지 자율 반복 실행",
+  "nodes": [
+    { "id": "assess", "do": "agent:explore", "with": "현재 상태 파악: 완료된 작업, 남은 작업, 블로커 식별", "output": "status (completed_tasks, remaining_tasks, blockers)" },
+    { "id": "execute", "do": "agent:executor", "with": "status.next_task 실행 (가장 우선순위 높은 남은 작업)", "output": "result (변경된 파일, 실행 결과)" },
+    { "id": "verify", "do": "agent:verifier", "with": "result 검증: 빌드 성공, 테스트 통과, 타입 체크 통과", "output": "verification (all_pass, failures)" },
+    { "id": "decide", "do": "decision", "check": "verify.all_pass == true AND status.remaining_tasks == 0", "routes": { "pass": "END", "fail": "assess" } }
+  ],
+  "flow": [
+    "assess → execute → verify → decide",
+    "decide.pass → END",
+    "decide.fail → assess"
+  ],
+  "limits": { "max_cycles": 10, "timeout": "30m" }
+}

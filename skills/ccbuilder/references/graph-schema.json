@@ -1,0 +1,257 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ccbuilder/schemas/graph-workflow",
+  "title": "CCBuilder Graph Workflow Schema v2",
+  "description": "ccbuilder 그래프 워크플로우 정의를 검증하는 JSON Schema. v2: state, reads/writes, artifacts, autonomy, multi-route decision 지원",
+  "type": "object",
+  "required": ["id", "goal", "nodes", "flow"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "워크플로우 식별자",
+      "description": "kebab-case 형식의 고유 워크플로우 ID",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "examples": ["explore-and-plan", "research-team-v3"]
+    },
+    "goal": {
+      "title": "워크플로우 목표",
+      "description": "이 워크플로우가 달성하려는 목표를 자연어로 설명",
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "title": "공유 상태",
+      "description": "전체 노드가 읽고 쓸 수 있는 공유 상태. workspace는 누적 문서, raw_vault는 원본 데이터 저장소",
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "title": "공유 워크스페이스 경로",
+          "description": "전체 노드가 점진적으로 작성하는 글로벌 문서 경로",
+          "type": "string",
+          "default": ".omc/state/graph/{id}/workspace.md"
+        },
+        "raw_vault": {
+          "title": "원본 데이터 저장소 경로",
+          "description": "노드가 수집한 원본 데이터를 저장하는 디렉토리 경로",
+          "type": "string",
+          "default": ".omc/state/graph/{id}/raw/"
+        }
+      }
+    },
+    "nodes": {
+      "title": "노드 목록",
+      "description": "워크플로우를 구성하는 노드 배열. 최소 1개, 최대 20개",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/definitions/node"
+      }
+    },
+    "flow": {
+      "title": "실행 흐름",
+      "description": "워크플로우 실행 순서를 사람이 읽을 수 있는 표기법으로 기술. 예: 'A → [B, C] → D'",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limits": {
+      "title": "실행 제한",
+      "description": "워크플로우 실행 시 적용할 제한 설정",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_cycles": {
+          "title": "최대 사이클 수",
+          "description": "루프 실행 최대 반복 횟수. 기본값 3, 최대 10",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 3
+        },
+        "timeout": {
+          "title": "타임아웃",
+          "description": "워크플로우 전체 타임아웃. '10m', '30m' 형식. 최대 30분",
+          "type": "string",
+          "pattern": "^([1-9]|[12][0-9]|30)m$",
+          "examples": ["10m", "30m"]
+        }
+      }
+    },
+    "ralph": {
+      "title": "Ralph Loop 통합",
+      "description": "Graph를 Ralph Loop로 반복 실행. 매 반복마다 Fresh Context로 Graph 자체를 개선하며 target 달성까지 자율 반복",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "title": "Ralph 모드 활성화",
+          "description": "true면 Graph를 Ralph Loop로 실행. 매 반복 Fresh Context + Graph 자기 개선",
+          "type": "boolean",
+          "default": false
+        },
+        "target": {
+          "title": "목표 조건",
+          "description": "자연어 목표 조건. 달성 시 LOOP_COMPLETE. 예: 'SCAR >= 95', 'all tests pass'",
+          "type": "string",
+          "minLength": 1
+        },
+        "max_iterations": {
+          "title": "최대 반복 횟수",
+          "description": "Ralph Loop 최대 반복 횟수. 기본 5, 최대 10",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 5
+        },
+        "evolve": {
+          "title": "Graph 자기 개선 허용",
+          "description": "true면 매 반복 후 graph.json 자체를 개선(노드 추가/수정/삭제) 가능",
+          "type": "boolean",
+          "default": true
+        },
+        "feedback_file": {
+          "title": "피드백 파일 경로",
+          "description": "매 반복 후 개선 포인트를 기록하는 파일",
+          "type": "string",
+          "default": ".omc/state/graph/{id}/feedback.md"
+        }
+      },
+      "required": ["enabled", "target"]
+    }
+  },
+  "definitions": {
+    "node": {
+      "title": "워크플로우 노드",
+      "description": "워크플로우의 단일 실행 단위. v2: reads/writes로 공유 상태 접근, artifacts로 원본 보존, autonomy로 자율 탐색 허용",
+      "type": "object",
+      "required": ["id", "do"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "노드 식별자",
+          "description": "그래프 내에서 고유한 노드 ID. 소문자와 숫자, 언더스코어만 허용",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "do": {
+          "title": "실행 유형",
+          "description": "노드가 수행할 작업 유형. 'type:name' 형식 또는 'decision'. 예: agent:explore, skill:eval, tool:bash, subgraph:my-id, decision",
+          "type": "string",
+          "pattern": "^(agent|skill|decision|tool|subgraph):([\\w-]+)$|^decision$"
+        },
+        "with": {
+          "title": "입력 컨텍스트",
+          "description": "이 노드에 전달할 입력 및 컨텍스트를 자연어로 설명",
+          "type": "string",
+          "minLength": 1
+        },
+        "output": {
+          "title": "출력 설명",
+          "description": "이 노드가 생성하는 결과물에 대한 설명",
+          "type": "string",
+          "minLength": 1
+        },
+        "reads": {
+          "title": "읽기 참조",
+          "description": "이 노드가 읽을 이전 노드 출력 또는 상태. 'state.workspace', 'node_id', 'node_id.artifacts.raw' 형식",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "writes": {
+          "title": "쓰기 대상",
+          "description": "이 노드가 결과를 기록할 상태. 'state.workspace' 형식",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "artifacts": {
+          "title": "아티팩트 정의",
+          "description": "노드가 생성하는 영구 파일. raw는 원본 데이터 저장 경로",
+          "type": "object",
+          "properties": {
+            "raw": {
+              "title": "원본 데이터 경로",
+              "description": "raw_vault 내 원본 데이터 저장 파일명/경로",
+              "type": "string"
+            }
+          }
+        },
+        "autonomy": {
+          "title": "자율 탐색 허용",
+          "description": "true일 경우 subagent가 추가 검색/파일 읽기 등 자율 행동 가능. Skill의 유연성을 노드에 부여",
+          "type": "boolean",
+          "default": false
+        },
+        "context_files": {
+          "title": "컨텍스트 파일 목록",
+          "description": "노드 실행 시 주입할 정적 파일 경로 목록",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "on_error": {
+          "title": "오류 처리",
+          "description": "노드 실행 실패 시 동작. 'retry:N' (N회 재시도), 'fallback:node_id' (대체 노드), 'abort' (중단)",
+          "type": "string",
+          "pattern": "^retry:[1-9][0-9]*$|^fallback:[a-z][a-z0-9_]*$|^abort$",
+          "examples": ["retry:3", "fallback:handle_error", "abort"]
+        },
+        "check": {
+          "title": "분기 조건",
+          "description": "decision 노드에서만 사용. 사람이 읽을 수 있는 조건 설명",
+          "type": "string",
+          "minLength": 1
+        },
+        "routes": {
+          "title": "분기 경로",
+          "description": "decision 노드에서 사용. pass/fail (v1 호환) 또는 다중 경로 (v2). route_criteria 존재 시 multi-route 모드",
+          "type": "object",
+          "minProperties": 2,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$|^END$"
+          }
+        },
+        "route_criteria": {
+          "title": "경로별 조건",
+          "description": "routes의 각 키에 대응하는 자연어 조건. multi-route 사용 시 필수. 조건은 MECE(상호배타적/전체포괄적) 권장",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "do": {
+            "pattern": "^decision$|^decision:[\\w-]+$"
+          }
+        }
+      },
+      "then": {
+        "required": ["id", "do", "check", "routes"],
+        "properties": {
+          "with": {
+            "description": "decision 노드에서 선택적으로 사용 가능한 컨텍스트"
+          }
+        }
+      },
+      "else": {
+        "required": ["id", "do", "with"]
+      }
+    }
+  }
+}

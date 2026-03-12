@@ -1,0 +1,20 @@
+{
+  "id": "team-feature-impl",
+  "goal": "요구사항을 분석하고 팀으로 구현하여 검증 완료",
+  "nodes": [
+    { "id": "analyze", "do": "agent:analyst", "with": "사용자 요구사항 분석, 수락 기준 정의, 기술적 제약 파악", "output": "requirements (수락 기준 목록)" },
+    { "id": "plan", "do": "agent:planner", "with": "requirements 기반 구현 계획 수립, 작업 분배", "output": "plan (frontend/backend/test 분리된 작업 목록)" },
+    { "id": "impl_front", "do": "agent:executor", "with": "plan.frontend 작업 구현", "output": "frontend_code" },
+    { "id": "impl_back", "do": "agent:executor", "with": "plan.backend 작업 구현", "output": "backend_code" },
+    { "id": "impl_test", "do": "agent:test-engineer", "with": "plan.test_strategy에 따라 테스트 작성", "output": "test_code" },
+    { "id": "verify", "do": "agent:verifier", "with": "전체 코드 빌드, 테스트 실행, lint 검사", "output": "verification (pass/fail + details)" },
+    { "id": "decide", "do": "decision", "check": "verify.all_pass == true", "routes": { "pass": "END", "fail": "fix" } },
+    { "id": "fix", "do": "agent:build-fixer", "with": "verification.failures 항목 수정", "output": "fixes" }
+  ],
+  "flow": [
+    "analyze → plan → [impl_front, impl_back, impl_test] → verify → decide",
+    "decide.pass → END",
+    "decide.fail → fix → verify"
+  ],
+  "limits": { "max_cycles": 3, "timeout": "15m" }
+}

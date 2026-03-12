@@ -1,0 +1,18 @@
+{
+  "id": "skill-eval-pipeline",
+  "goal": "스킬을 A/B 평가하고 점수 90 이상까지 개선",
+  "nodes": [
+    { "id": "explore", "do": "agent:explore", "with": "스킬 디렉토리 구조와 eval 파일 파악", "output": "file_map과 eval 설정" },
+    { "id": "eval_skill", "do": "agent:executor", "with": "스킬을 적용하여 eval prompt 실행", "output": "skill_result (출력물 + timing)" },
+    { "id": "eval_baseline", "do": "agent:executor", "with": "스킬 없이 동일 eval prompt 실행", "output": "baseline_result (출력물 + timing)" },
+    { "id": "grade", "do": "agent:grader", "with": "skill_result와 baseline_result를 expectations 기준으로 비교 채점", "output": "grading (score, pass/fail per expectation)" },
+    { "id": "decide", "do": "decision", "check": "grade.score >= 90", "routes": { "pass": "END", "fail": "improve" } },
+    { "id": "improve", "do": "agent:analyzer", "with": "grading 실패 항목 분석 후 스킬 개선안 도출 및 적용", "output": "improved_skill" }
+  ],
+  "flow": [
+    "explore → [eval_skill, eval_baseline] → grade → decide",
+    "decide.pass → END",
+    "decide.fail → improve → eval_skill"
+  ],
+  "limits": { "max_cycles": 3, "timeout": "10m" }
+}

@@ -11,8 +11,8 @@
     {
       "name": "ccbuilder",
       "source": "./",
-      "description": "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams) with comprehensive guides, official docs, and real-world examples.",
-      "version": "2.12.0",
+      "description": "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams, graph workflows) with comprehensive guides, official docs, and real-world examples.",
+      "version": "2.17.0",
       "author": {
         "name": "cathy-kim",
         "url": "https://github.com/cathy-kim"
