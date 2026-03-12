@@ -18,7 +18,6 @@
       "do": "agent:researcher",
       "with": "공식 웹사이트, About 페이지, IR 자료, 공식 블로그만 집중 탐색. 원본 텍스트 전문을 raw_vault에 저장. 각 소스의 URL/접근일자/신뢰등급(P1-P4) 기록",
       "reads": ["keywords"],
-      "writes": ["state.workspace"],
       "artifacts": {"raw": "raw_vault/official.json"},
       "output": "공식 소스 목록"
     },
@@ -27,7 +26,6 @@
       "do": "agent:researcher",
       "with": "뉴스 기사, 인터뷰, 보도자료만 집중 탐색. 날짜/기자/매체 반드시 기록. 원본 전문 raw_vault에 저장",
       "reads": ["keywords"],
-      "writes": ["state.workspace"],
       "artifacts": {"raw": "raw_vault/news.json"},
       "output": "뉴스 소스 목록"
     },
@@ -36,7 +34,6 @@
       "do": "agent:researcher",
       "with": "LinkedIn, Instagram, Twitter, 나무위키, 커뮤니티만 탐색. 비공식 정보는 [unverified] 태그 필수. 원본 raw_vault에 저장",
       "reads": ["keywords"],
-      "writes": ["state.workspace"],
       "artifacts": {"raw": "raw_vault/social.json"},
       "output": "소셜/커뮤니티 소스 목록"
     },
@@ -45,7 +42,6 @@
       "do": "agent:researcher",
       "with": "THE VC, DART, 사업자등록정보, 특허DB, 투자DB 등 정량 데이터 위주 검색. 숫자/날짜/금액 정확히 기록",
       "reads": ["keywords"],
-      "writes": ["state.workspace"],
       "artifacts": {"raw": "raw_vault/db.json"},
       "output": "DB/정량 데이터"
     },
@@ -119,5 +115,9 @@
     "max_iterations": 5,
     "evolve": true,
     "feedback_file": ".omc/state/graph/{id}/feedback.md"
+  },
+  "checkpoint": {
+    "enabled": true,
+    "resume_strategy": "retry_failed"
   }
 }

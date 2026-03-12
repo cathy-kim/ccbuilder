@@ -122,6 +122,27 @@
         }
       },
       "required": ["enabled", "target"]
+    },
+    "checkpoint": {
+      "title": "체크포인트 설정",
+      "description": "중간 실패 시 재개를 위한 체크포인트. 각 노드 완료 시 execution.json에 상태 저장, 재개 시 완료 노드 건너뛰기",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "title": "체크포인트 활성화",
+          "description": "true면 각 노드 완료 시 자동으로 체크포인트 저장",
+          "type": "boolean",
+          "default": true
+        },
+        "resume_strategy": {
+          "title": "재개 전략",
+          "description": "실패 노드 처리 방식. retry_failed: 실패 노드 재실행, skip_failed: 건너뛰기, restart_phase: 해당 phase 처음부터",
+          "type": "string",
+          "enum": ["retry_failed", "skip_failed", "restart_phase"],
+          "default": "retry_failed"
+        }
+      }
     }
   },
   "definitions": {
@@ -203,10 +224,10 @@
         },
         "on_error": {
           "title": "오류 처리",
-          "description": "노드 실행 실패 시 동작. 'retry:N' (N회 재시도), 'fallback:node_id' (대체 노드), 'abort' (중단)",
+          "description": "노드 실행 실패 시 동작. 'retry:N' (N회 재시도), 'fallback:node_id' (대체 노드), 'abort' (중단), 'checkpoint' (현재 상태 저장 후 중단)",
           "type": "string",
-          "pattern": "^retry:[1-9][0-9]*$|^fallback:[a-z][a-z0-9_]*$|^abort$",
-          "examples": ["retry:3", "fallback:handle_error", "abort"]
+          "pattern": "^retry:[1-9][0-9]*$|^fallback:[a-z][a-z0-9_]*$|^abort$|^checkpoint$",
+          "examples": ["retry:3", "fallback:handle_error", "abort", "checkpoint"]
         },
         "check": {
           "title": "분기 조건",

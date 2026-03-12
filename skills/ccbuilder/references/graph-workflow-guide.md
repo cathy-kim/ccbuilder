@@ -274,6 +274,8 @@ Decision 노드는 agent를 spawn하지 않는다. LLM 자체가 조건을 평�
 | multi-route + route_criteria | 3개 이상 분기 | **필수** |
 | adversarial verification | 리서치/분석 Graph | **필수** |
 | ralph | 반복 개선 필요 시 | 권장 |
+| 병렬 노드 writes 금지 | 병렬 그룹 노드 | **필수** |
+| checkpoint | 5+ 노드 Graph | 권장 |
 
 ### Phase 2: Graph 실행
 
@@ -291,7 +293,7 @@ Decision 노드는 agent를 spawn하지 않는다. LLM 자체가 조건을 평�
    - **tool 노드**: 직접 도구 호출
    - **skill 노드**: Skill() 호출
    - **subgraph 노드**: 참조된 graph를 재귀적으로 실행
-5. **writes 처리** (v2): `writes`에 명시된 상태에 결과 기록 (예: workspace.md에 append)
+5. **writes 처리** (v2): `writes`에 명시된 상태에 결과 기록 (예: workspace.md에 append). **병렬 노드 주의**: 아래 병렬 쓰기 규칙 참조
 6. **artifacts 저장** (v2): `artifacts.raw`에 명시된 경로에 원본 데이터 저장
 7. 결과를 `.omc/state/graph/{id}/{node_id}.output.json`에 저장
 8. 노드 로그를 `.omc/logs/graphs/{id}/{node_id}.log.json`에 저장
@@ -306,6 +308,60 @@ Decision 노드는 agent를 spawn하지 않는다. LLM 자체가 조건을 평�
 - **artifacts.raw**: 원본 데이터를 raw_vault에 파일로 저장. 다른 노드가 `reads: ["node_id.artifacts.raw"]`로 참조 가능
 - **autonomy**: `true`인 노드의 subagent에게 WebSearch, WebFetch, Read 등 도구 사용 권한을 추가 부여. 단, writes 범위 밖의 파일 수정은 금지
 - **Lazy Loading**: reads 대상이 50KB 초과 시, 요약 + 파일 경로를 전달하고 "원본 확인이 필요하면 Read 도구를 사용하라"고 지시
+  - 요약 생성: orchestrator LLM이 reads 주입 시점에 200토큰 이내로 요약 + 파일 경로 포함
+  - **adversarial/검증 노드는 Lazy Loading 예외** — 원본 대조가 핵심이므로 전문 주입 유지
+
+### 병렬 쓰기 규칙 (Phase 1)
+
+**병렬 노드(`[A, B, C]`)는 동시에 `state.workspace`에 쓰면 안 된다.** 파일 시스템 수준에서 write conflict가 발생하여 데이터 손실 가능.
+
+**규칙**:
+1. 병렬 노드는 `writes: ["state.workspace"]`를 선언하지 **않는다**
+2. 대신 `artifacts.raw`에 각자의 결과를 독립 파일로 저장
+3. 병렬 그룹 뒤의 **merge/통합 노드**가 artifacts를 reads하여 workspace에 통합 기록
+4. 순차 노드는 기존대로 `writes: ["state.workspace"]` 사용 가능
+
+**예시** (research-team-v3):
+```
+[official_search, news_search, social_search, deep_search]  ← writes 없음, artifacts만
+    → merge  ← reads: [4개 artifacts.raw] + writes: ["state.workspace"]
+```
+
+### Checkpoint/Resume 프로토콜 (Phase 1)
+
+Graph에 `checkpoint.enabled: true`가 설정되면, 중간 실패 시 완료 노드를 건너뛰고 실패 지점부터 재개할 수 있다.
+
+**저장**: 각 노드 완료 시 execution.json에 자동 업데이트:
+```json
+{
+  "checkpoint": {
+    "last_completed": "adversarial",
+    "saved_at": "2026-03-12T10:05:00Z",
+    "completed_outputs": {
+      "keywords": "{id}/keywords.output.json",
+      "official_search": "{id}/official_search.output.json"
+    },
+    "workspace_hash": "sha256:abc123..."
+  }
+}
+```
+
+**재개 프로토콜**:
+1. Graph 실행 시작 시 execution.json이 이미 존재하면 **resume 모드** 진입
+2. `completed_outputs`의 파일이 모두 존재하는지 검증
+3. 존재하면 해당 노드 실행을 **건너뛰고** output 재사용
+4. `resume_strategy`에 따라 실패 노드 처리:
+   - `retry_failed`: 실패 노드부터 재실행
+   - `skip_failed`: 실패 노드 건너뛰고 다음으로
+   - `restart_phase`: 실패 노드가 속한 병렬 그룹 전체 재실행
+5. 실패 노드가 workspace에 남긴 불완전 데이터 정리: 해당 노드의 `## Step` 섹션 삭제 후 재실행
+
+**병렬 그룹 부분 실패**:
+- `[A, B, C, D]` 중 B만 실패한 경우
+- `retry_failed`/`skip_failed`: B만 재실행/건너뛰기 (A, C, D 결과 보존)
+- `restart_phase`: 4개 전부 재실행 (가장 안전하지만 비용 높음)
+
+**on_error: "checkpoint"**: 노드 실패 시 현재 상태를 저장하고 graph 실행 중단. 사용자가 나중에 resume 가능.
 
 ### Phase 3: 완료
 
@@ -360,6 +416,7 @@ v2에서 `confidence` 블록이 추가되어 다음 노드가 "어디가 부족�
   "completed_at": "2026-03-12T10:01:12Z",
   "duration_ms": 12000,
   "tokens_used": 4200,
+  "reads_total_bytes": 45200,
   "status": "completed",
   "input_summary": "eval_a output (85), eval_b output (62)",
   "output_summary": "quality_score: 78, 3 improvements identified",
