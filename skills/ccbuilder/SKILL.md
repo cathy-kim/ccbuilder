@@ -62,15 +62,15 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ### `graph <name>` → Graph Workflow 설계/실행
 
-자연어 → Graph 변환 시 **v2 설계 체크리스트 필수 적용** (guide 참조). 3단계 이상 + 분기/병렬/반복이 있을 때 사용.
+자연어 → Graph 생성 → 실행까지 일괄 처리. 3단계 이상 + 분기/병렬/반복이 있을 때 사용.
+1. Read [references/graph-workflow-guide.md](references/graph-workflow-guide.md) (스키마, 변환 패턴, **v2 설계 체크리스트**)
+2. 요청 분석 → Graph JSON 생성 (v2 체크리스트 필수: state, reads/writes, artifacts, autonomy, adversarial verification)
+3. Graph를 사용자에게 보여주고 확인 → `.omc/state/graph/{id}/` 초기화
+4. flow 순서대로 노드 실행: reads 주입→Task()/LLM평가→writes append→artifacts 저장. `[A,B]`은 병렬, decision은 route_criteria 순서 평가
+5. ralph.enabled면 SCAR 목표까지 Fresh Context 반복 + graph.json 자기 개선
+6. 최종 결과 반환
 
-**Schema v2**: `{id, goal, state:{workspace, raw_vault}, nodes:[{id, do, with, reads, writes, artifacts, autonomy}], flow, limits, ralph}`
-**Shared State**: `state.workspace`(누적 문서) + `raw_vault`(원본 보존) — context 단절 해결
-**reads/writes**: 노드→공유 상태 접근. **artifacts**: 원본 파일 보존. **autonomy**: subagent 자율 탐색 허용
-**Multi-route Decision**: `routes:{complete,has_gaps,low}` + `route_criteria` (이진→다중 분기)
-**NL→Graph**: `A하고 B해줘`→A→B, `동시에`→[A,B], `결과 보고 판단`→Decision, `될 때까지`→Loop
-**do 타입**: `agent:<name>`, `decision`, `tool:<name>`, `skill:<name>`, `subgraph:<id>`
-**Ralph Loop**: `ralph:{enabled, target, max_iterations, evolve}` — SCAR 목표 달성까지 Fresh Context 반복 + Graph 자기 개선
+**스키마**: `{id, goal, state, nodes:[{id, do, with, reads, writes, artifacts, autonomy}], flow, limits, ralph}`
 **상세**: [references/graph-workflow-guide.md](references/graph-workflow-guide.md) | 템플릿: `references/graph-templates/`
 
 ### 자연어 요구사항 → 컴포넌트 추천
