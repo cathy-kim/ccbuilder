@@ -104,7 +104,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.72)
+## 핵심 변경 사항 (v2.1.74)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -132,6 +132,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **User Memory** | `~/.claude/CLAUDE.md` + `~/.claude/rules/` |
 | **Project Local** | `CLAUDE.local.md` (자동 gitignore) |
 | **HTML 주석** | `<!-- -->` 자동 주입 시 Claude에게 숨김, Read 도구로는 표시 (v2.1.72) |
+| **autoMemoryDirectory** | Auto Memory 저장 디렉토리 커스텀 설정 (v2.1.74) |
 
 **상세**: [references/memory-rules-guide.md](references/memory-rules-guide.md)
 
@@ -177,14 +178,14 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
 
-**신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
+**신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST | **SessionEnd 타임아웃 (v2.1.74)**: `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 설정 가능
 
 ### Agent/CLI/Plugin 강화
 
-- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72)
+- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72) — 전체 모델 ID (`claude-opus-4-5` 등)도 지원 (v2.1.74)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
-- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 복사본이 동일 이름 마켓플레이스 플러그인보다 우선 적용 (v2.1.74)
+- **신규 명령 · 설정**: `/loop` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` (v2.1.72), `/context` 최적화 제안 (v2.1.74); `modelOverrides` — 모델 피커를 커스텀 provider ID에 매핑 (Bedrock ARN 등, v2.1.73)
 - **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
 - **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), Bash 허용 추가: `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind` (v2.1.72)
 
@@ -205,6 +206,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 | Deprecated | 대체 방법 |
 |------------|-----------|
+| `/output-style` 명령 | `/config` 사용 (v2.1.74) |
 | `output styles` | `--system-prompt-file` 또는 `plugins` 사용 |
 | `legacy SDK entrypoint` | `@anthropic-ai/claude-agent-sdk`로 마이그레이션 |
 | `includeCoAuthoredBy` 설정 | 새 `attribution` 설정 사용 |

@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.74 (2026-03-12 동기화)
+
+**새로운 기능:**
+- `/context` 명령 실행 가능 제안 — 컨텍스트 과다 도구, Memory bloat, 용량 경고 식별 및 최적화 팁
+- `autoMemoryDirectory` 설정 — Auto Memory 저장 디렉토리 커스텀 지정
+- `modelOverrides` 설정 — 모델 피커를 커스텀 provider ID에 매핑 (Bedrock ARN 등, v2.1.73)
+- Agent frontmatter/`--agents` JSON에서 전체 모델 ID (`claude-opus-4-5` 등) 지원
+- `--plugin-dir` 로컬 개발 복사본이 동일 이름 마켓플레이스 플러그인보다 우선 적용
+- `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` — `SessionEnd` Hook 타임아웃 설정 가능
+
+**주요 버그 수정:**
+- 스트리밍 API 응답 버퍼 미해제로 인한 메모리 누수 (Node.js/npm RSS 무제한 증가)
+- Managed policy `ask` 규칙이 user `allow` 규칙 또는 skill `allowed-tools`에 의해 우회
+- MCP OAuth 콜백 포트 사용 중 인증 중단, refresh token 만료 후 재인증 미요청
+- `SessionEnd` Hook이 `hook.timeout` 무시하고 1.5초 후 강제 종료
+- `/plugin install` REPL 내 마켓플레이스 로컬 소스 실패, 업데이트 시 git submodule 미동기화
+- Hebrew/Arabic 등 RTL 텍스트 Windows Terminal/VS Code 렌더링 오류
+- Windows LSP 서버 비정상 URI 형식
+- macOS native binary voice mode 마이크 권한 (audio-input entitlement)
+- subagents `model: opus/sonnet/haiku` Bedrock/Vertex/Foundry에서 구버전 강등 (v2.1.73)
+- Bash 명령 파싱/CPU 100% 루프, 대규모 skill 변경 시 데드락 (v2.1.73)
+
+**Deprecated:**
+- `/output-style` 명령 → `/config` 사용 권장
+
+---
+
 ### v2.1.72 (2026-03-10 동기화)
 
 **새로운 기능:**

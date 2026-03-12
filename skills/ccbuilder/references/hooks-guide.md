@@ -233,6 +233,7 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 ## 주의사항
 
 - **SessionStart/SessionEnd/Notification**: TypeScript SDK에서만 지원 (Python SDK 미지원)
+- **SessionEnd 타임아웃**: 기본값은 `hook.timeout` 설정을 따름 (v2.1.74 이전: 1.5초 하드코딩). `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 최대 대기 시간 별도 설정 가능
 - **Stop hook**: `block` decision 반환 시 Claude가 계속 작업 (reason 필수)
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함

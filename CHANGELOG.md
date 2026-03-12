@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.16.0] - 2026-03-12
+
+### Added
+- **Claude Code v2.1.74 동기화**
+  - `/context` 명령 실행 가능 제안 추가 — 컨텍스트 과다 도구, Memory bloat, 용량 경고 식별 및 최적화 팁 제공
+  - `autoMemoryDirectory` 설정 — Auto Memory 저장 디렉토리 커스텀 지정 지원
+  - `modelOverrides` 설정 — 모델 피커 항목을 커스텀 provider ID에 매핑 (Bedrock ARN 등, v2.1.73)
+  - 전체 모델 ID (`claude-opus-4-5` 등) Agent frontmatter `model:` 필드 및 `--agents` JSON config 지원 (v2.1.74)
+  - `--plugin-dir` 로컬 개발 복사본이 동일 이름 마켓플레이스 플러그인보다 우선 적용 (managed 설정 제외)
+  - `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수 — `SessionEnd` Hook 타임아웃 설정 (기존 1.5초 하드코딩 해소)
+  - SSL 인증서 오류(`NODE_EXTRA_CA_CERTS`, 기업 프록시) 시 실행 가능 가이드 제공 (v2.1.73)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.72 → v2.1.74 업데이트
+  - Memory 테이블에 `autoMemoryDirectory` 추가
+  - Hook 섹션에 `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 추가
+  - Agent/CLI/Plugin 섹션에 전체 모델 ID 지원, `modelOverrides`, `/context` 제안, `--plugin-dir` 우선순위, `settings.json` 항목 추가
+  - Deprecated 테이블에 `/output-style` → `/config` 추가
+- `references/memory-rules-guide.md`: `autoMemoryDirectory` 설정 옵션 추가
+- `references/subagents-guide.md`: 전체 모델 ID 지원 주석 추가
+- `references/hooks-guide.md`: `SessionEnd` 타임아웃 환경변수 추가
+- `references/version-sync.md`: v2.1.74 변경사항 추적 추가
+- 버전: 2.15.0 → 2.16.0
+
+### Fixed (Claude Code v2.1.74)
+- 스트리밍 API 응답 버퍼 미해제로 인한 메모리 누수 수정 (Node.js/npm 경로 RSS 무제한 증가)
+- Managed policy `ask` 규칙이 user `allow` 규칙 또는 skill `allowed-tools`에 의해 우회되는 버그 수정
+- Agent frontmatter `model:` 필드에서 전체 모델 ID 무시 버그 수정
+- `SessionEnd` Hook이 `hook.timeout` 무시하고 1.5초 후 강제 종료되는 버그 수정
+- `/plugin install` REPL 내 마켓플레이스 플러그인 설치 실패 수정
+- 마켓플레이스 업데이트 시 git submodule 미동기화 수정
+- 알 수 없는 슬래시 명령에 인자 전달 시 입력 무시 → 경고 표시로 변경
+- Hebrew, Arabic 등 RTL 텍스트 렌더링 오류 수정 (Windows Terminal, VS Code)
+- Windows LSP 서버 비정상 URI 형식 수정
+- MCP OAuth 콜백 포트 사용 중 시 인증 중단 수정
+- MCP OAuth refresh token 만료 후 재인증 미요청 수정 (HTTP 200으로 오류 반환하는 서버)
+- macOS native 바이너리 voice mode 마이크 권한 누락 수정 (audio-input entitlement 추가)
+- subagents `model: opus`/`sonnet`/`haiku` 사용 시 Bedrock/Vertex/Foundry에서 구버전으로 강등되는 버그 수정 (v2.1.73)
+
+### Breaking Changes (Claude Code v2.1.74)
+- `/output-style` 명령 deprecated → `/config` 사용 권장
+
+---
+
 ## [2.15.0] - 2026-03-10
 
 ### Added
