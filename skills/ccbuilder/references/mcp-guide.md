@@ -136,6 +136,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 }
 ```
 
+> **v2.1.74 수정**: OAuth 콜백 포트가 이미 사용 중일 때 인증이 hang되는 버그 수정. 리프레시 토큰 만료 후 HTTP 200으로 오류를 반환하는 OAuth 서버(예: Slack)에서 재인증 프롬프트가 나타나지 않던 버그 수정.
+
 ---
 
 ## Tool Search

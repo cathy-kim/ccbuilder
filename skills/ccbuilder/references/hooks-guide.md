@@ -236,6 +236,7 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 - **Stop hook**: `block` decision 반환 시 Claude가 계속 작업 (reason 필수)
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
+- **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
 
 ---
 

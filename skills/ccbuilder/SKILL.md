@@ -104,7 +104,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.72)
+## 핵심 변경 사항 (v2.1.74)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -119,6 +119,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **ENABLE_CLAUDEAI_MCP_SERVERS=false** | claude.ai MCP 서버 비활성화 옵션 (v2.1.63) |
 | **oauth.authServerMetadataUrl** | MCP OAuth 커스텀 메타데이터 URL 지정 (v2.1.69) |
 | **플러그인 MCP 중복 제거** | 동일 command/URL 서버 자동 병합 (`/plugin` 메뉴에 표시) (v2.1.71) |
+| **OAuth 수정** | 콜백 포트 충돌 hang + HTTP 200 오류 시 재인증 프롬프트 복원 (v2.1.74) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -132,6 +133,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **User Memory** | `~/.claude/CLAUDE.md` + `~/.claude/rules/` |
 | **Project Local** | `CLAUDE.local.md` (자동 gitignore) |
 | **HTML 주석** | `<!-- -->` 자동 주입 시 Claude에게 숨김, Read 도구로는 표시 (v2.1.72) |
+| **autoMemoryDirectory** | Auto Memory 저장 디렉토리 커스텀 경로 지정 (v2.1.74) |
 
 **상세**: [references/memory-rules-guide.md](references/memory-rules-guide.md)
 
@@ -181,12 +183,12 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 ### Agent/CLI/Plugin 강화
 
-- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72)
+- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72)
 - **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
-- **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), Bash 허용 추가: `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind` (v2.1.72)
+- **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (SessionEnd 훅 타임아웃 설정, v2.1.74), `modelOverrides` 설정 (모델 픽커 → 커스텀 provider ID 매핑, v2.1.73)
 
 ### Breaking Changes
 
@@ -205,7 +207,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 | Deprecated | 대체 방법 |
 |------------|-----------|
-| `output styles` | `--system-prompt-file` 또는 `plugins` 사용 |
+| `/output-style` 명령 | `/config` 사용 (v2.1.74); 또는 `--system-prompt-file` / `plugins` |
 | `legacy SDK entrypoint` | `@anthropic-ai/claude-agent-sdk`로 마이그레이션 |
 | `includeCoAuthoredBy` 설정 | 새 `attribution` 설정 사용 |
 | `$ARGUMENTS.0` 문법 | `$ARGUMENTS[0]` 사용 |

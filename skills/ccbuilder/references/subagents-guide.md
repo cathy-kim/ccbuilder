@@ -26,7 +26,7 @@
 ---
 name: frontend-developer
 description: "React/Next.js 프론트엔드 개발 전문"
-model: sonnet                     # sonnet | opus | haiku
+model: sonnet                     # sonnet | opus | haiku (또는 전체 모델 ID, v2.1.74+)
 
 # 도구 허용 (allowedTools)
 allowed-tools:
