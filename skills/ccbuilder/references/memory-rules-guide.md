@@ -308,6 +308,8 @@ Git에 커밋하지 않을 개인 설정:
 
 > **v2.1.63**: Project config와 Auto memory가 **같은 레포의 git worktree 간 공유**됩니다. 워크트리에서 작업해도 메인 레포의 memory/가 동일하게 적용됩니다.
 
+> **v2.1.74**: `autoMemoryDirectory` 설정으로 Auto Memory 저장 디렉토리를 커스텀 경로로 지정할 수 있습니다. 기본값은 `~/.claude/projects/<project-path>/memory/`.
+
 `/memory` 명령으로 Auto Memory를 관리할 수 있습니다 (v2.1.59+).
 
 ### MEMORY.md 작성 원칙

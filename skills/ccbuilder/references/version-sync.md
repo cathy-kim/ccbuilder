@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-03-10
+**최종 동기화**: 2026-03-13
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.74 (2026-03-13 동기화)
+
+**새로운 기능:**
+- `/context` 명령 개선 — 컨텍스트 과다 도구·메모리 팽창·용량 경고에 실행 가능한 최적화 제안
+- `autoMemoryDirectory` 설정 — Auto Memory 저장 디렉토리 커스텀 경로 지정
+- `modelOverrides` 설정 (v2.1.73) — 모델 픽커 항목을 커스텀 provider 모델 ID로 매핑 (Bedrock ARN 등)
+- `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` — SessionEnd 훅 타임아웃 가변 설정 (기존 1.5초 고정)
+- Agent frontmatter `model:` 및 `--agents` JSON에서 전체 모델 ID 수용 (`--model`과 동일한 값)
+- `--plugin-dir` 변경 — 로컬 개발 사본이 동명 마켓플레이스 플러그인 오버라이드
+
+**주요 버그 수정:**
+- 스트리밍 API 응답 버퍼 미해제 메모리 누수 (Node.js/npm RSS 무한 증가)
+- Managed policy `ask` 규칙이 user `allow` 또는 skill `allowed-tools`에 우회되던 버그
+- MCP OAuth: 콜백 포트 충돌 hang, HTTP 200 오류 시 리프레시 토큰 만료 후 재인증 미프롬프트
+- macOS 네이티브 바이너리 voice mode 마이크 권한 silent fail (`audio-input` 엔타이틀먼트)
+- 복잡한 bash 권한 프롬프트에서 100% CPU 루프·freeze (v2.1.73)
+- `.claude/skills/` 대량 변경 시 데드락 freeze (v2.1.73)
+- 다중 세션 동시 실행 시 Bash 출력 유실 (v2.1.73)
+- `model: opus`/`sonnet`/`haiku` 서브에이전트 Bedrock/Vertex/Foundry 다운그레이드 (v2.1.73)
+- `SessionStart` 훅 `--resume`/`--continue` 시 두 번 실행 (v2.1.73)
+- Windows RTL 텍스트 렌더링, LSP 서버 malformed URI
+
+**Deprecated:**
+- `/output-style` 명령 → `/config` 사용 (출력 스타일 세션 시작 시 고정)
+
+---
 
 ### v2.1.72 (2026-03-10 동기화)
 

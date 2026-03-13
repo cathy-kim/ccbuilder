@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.16.0] - 2026-03-13
+
+### Added
+- **Claude Code v2.1.74 동기화**
+  - `/context` 명령 개선 — 컨텍스트 과다 도구, 메모리 팽창, 용량 경고에 대한 실행 가능한 최적화 제안
+  - `autoMemoryDirectory` 설정 — Auto Memory 저장 디렉토리 커스텀 경로 지정
+  - `modelOverrides` 설정 (v2.1.73) — 모델 픽커 항목을 커스텀 provider 모델 ID로 매핑 (Bedrock inference profile ARN 등)
+  - `--plugin-dir` 동작 변경 — 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (managed settings 강제 활성화 제외)
+  - `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수 — `SessionEnd` 훅 타임아웃 설정 (기존 1.5초 고정 → 가변, v2.1.74)
+  - Agent frontmatter `model:` 필드에서 전체 모델 ID (`claude-opus-4-5` 등) 수용 — `--model` 과 동일한 값 허용 (v2.1.74)
+  - SSL 인증서 오류 시 (기업 프록시, `NODE_EXTRA_CA_CERTS`) 실행 가능한 안내 메시지 (v2.1.73)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.72 → v2.1.74 업데이트
+  - MCP 테이블: OAuth 콜백 포트 충돌 + 리프레시 토큰 만료 수정 추가
+  - Memory 테이블: `autoMemoryDirectory` 설정 항목 추가
+  - Agent/CLI 섹션: 전체 모델 ID 지원, `modelOverrides`, `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`, `--plugin-dir` 변경 반영
+  - Deprecated 테이블: `/output-style` → `/config` 추가
+- `references/version-sync.md`: v2.1.74 변경사항 추적 추가
+- 버전: 2.15.0 → 2.16.0
+
+### Fixed (Claude Code v2.1.74)
+- 스트리밍 API 응답 버퍼 미해제로 인한 메모리 누수 (Node.js/npm 경로 RSS 무한 증가) 수정
+- Managed policy `ask` 규칙이 user `allow` 규칙 또는 skill `allowed-tools`에 의해 우회되던 버그 수정
+- MCP OAuth 콜백 포트 충돌 시 hang 수정
+- MCP OAuth 리프레시 토큰 만료 후 HTTP 200 오류 응답 시 재인증 미프롬프트 수정
+- macOS 네이티브 바이너리 voice mode 마이크 권한 silent fail 수정 (`audio-input` 엔타이틀먼트 추가)
+- `SessionEnd` 훅이 `hook.timeout` 무시하고 1.5초 후 강제 종료되던 버그 수정
+- `/plugin install` REPL 내부 실행 실패 수정
+- 마켓플레이스 업데이트 시 git 서브모듈 미동기화 수정
+- 알 수 없는 슬래시 명령에 인자 포함 시 입력 묵살 → 경고 메시지 표시로 변경
+- Windows Terminal / conhost / VS Code에서 히브리어·아랍어 등 RTL 텍스트 렌더링 수정
+- Windows LSP 서버 malformed file URI 수정
+
+### Fixed (Claude Code v2.1.73)
+- 복잡한 bash 명령 권한 프롬프트에서 100% CPU 루프 및 freeze 수정
+- `.claude/skills/` 디렉토리 대량 변경 시 (e.g. `git pull`) 데드락 freeze 수정
+- 같은 프로젝트 디렉토리에서 다중 세션 실행 시 Bash 도구 출력 유실 수정
+- `model: opus`/`sonnet`/`haiku` 서브에이전트가 Bedrock/Vertex/Foundry에서 구형 버전으로 다운그레이드되던 버그 수정
+- 서브에이전트 종료 시 백그라운드 bash 프로세스 미정리 수정
+- `SessionStart` 훅이 `--resume`/`--continue` 재개 시 두 번 실행되던 버그 수정
+
+### Deprecated
+- `/output-style` 명령 → `/config` 사용 권장 (출력 스타일 세션 시작 시 고정으로 변경, v2.1.74)
+
+---
+
 ## [2.15.0] - 2026-03-10
 
 ### Added
