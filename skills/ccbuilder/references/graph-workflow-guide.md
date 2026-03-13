@@ -1,6 +1,6 @@
 # Graph Workflow System Guide
 
-> Version: 2.0.0 | Last Updated: 2026-03-12 | ccbuilder v2.17.0+
+> Version: 3.0.0 | Last Updated: 2026-03-13 | ccbuilder v2.17.0+
 
 ## 개요
 
@@ -15,6 +15,9 @@ Graph Workflow는 사용자의 자연어 요청을 구조화된 실행 계획(Gr
 - **Adversarial Verification**: 찾는 에이전트와 검증하는 에이전트를 분리하여 품질 보장
 - **Multi-strategy Parallel**: 동일 목표를 다른 전략으로 병렬 검색하여 소스 다양성 확보
 - 로그 축적 → 패턴 분석 → Graph 개선
+- **Micro-Loop**: 노드 내 자가 반복으로 Skill의 적응적 탐색을 구조적으로 구현
+- **Reflection Output**: decision 노드가 "왜 부족한가 + 다음에 어떻게 다르게 할 것인가"를 명시적으로 출력
+- **Confidence-Weighted Merge**: 소스 신뢰등급 가중 + 자동 모순 탐지로 merge 품질 향상
 
 ## Graph Schema
 
@@ -56,7 +59,9 @@ Graph Workflow는 사용자의 자연어 요청을 구조화된 실행 계획(Gr
   "artifacts": { "raw": "optional — raw_vault 내 원본 데이터 저장 경로" },
   "autonomy": false,
   "context_files": ["optional — 노드 컨텍스트에 주입할 정적 파일 경로"],
-  "on_error": "optional — retry:2 | fallback:node_id | abort"
+  "on_error": "optional — retry:2 | fallback:node_id | abort",
+  "micro_loop": { "optional — 노드 내 반복 설정. max_iterations, continue_condition, strategy_hint, token_limit" },
+  "token_limit": "optional — 노드 단위 토큰 상한 (micro_loop 사용 시 전체 반복 합산)"
 }
 ```
 
@@ -68,6 +73,123 @@ Graph Workflow는 사용자의 자연어 요청을 구조화된 실행 계획(Gr
 | `writes` | `string[]` | 이 노드가 결과를 기록할 공유 상태. `"state.workspace"` 형식 |
 | `artifacts` | `object` | 노드가 생성하는 영구 파일. `raw`: raw_vault 내 원본 데이터 경로 |
 | `autonomy` | `boolean` | `true`면 subagent가 추가 웹 검색, 파일 읽기 등 자율 행동 가능. Skill의 유연성을 노드에 부여 |
+
+### v3 신규 필드 상세
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `micro_loop` | `object` | 노드 내 반복 설정. `max_iterations`(최대 반복 횟수, 1-5), `continue_condition`(반복 조건, 자연어), `strategy_hint`(재시도 전략), `token_limit`(반복 전체 토큰 상한) |
+| `micro_loop.continue_condition` | `string` | 자연어 조건. true이면 재시도. 예: `"결과 3개 미만"`, `"uncertain 비율 20% 초과"` |
+| `token_limit` | `integer` | 노드 단위 토큰 상한 (5000-100000). micro_loop 사용 시 전체 반복 합산. 초과 시 현재까지 결과로 진행 |
+| `reflection_output` | `object` | decision 노드 전용. non-complete 경로 선택 시 gap_analysis, failure_reasons, strategy_modifications 출력 의무화 |
+
+#### Micro-Loop 사용 예시
+
+검색 노드가 결과 부족 시 키워드를 변형하여 자동 재시도:
+
+```json
+{
+  "id": "official_search",
+  "do": "agent:researcher",
+  "with": "공식 소스 집중 탐색",
+  "micro_loop": {
+    "max_iterations": 3,
+    "continue_condition": "결과가 3개 미만이거나 필수 확인 항목 체크리스트 50% 미달",
+    "strategy_hint": "키워드 변형, 검색 범위 확장, 하위 페이지 직접 탐색",
+    "token_limit": 25000
+  }
+}
+```
+
+adversarial 노드가 uncertain 항목이 많을 때 추가 검증 반복:
+
+```json
+{
+  "id": "adversarial",
+  "do": "agent:verifier",
+  "with": "모든 사실에 대해 반박 시도",
+  "micro_loop": {
+    "max_iterations": 2,
+    "continue_condition": "uncertain 항목이 전체의 20% 초과",
+    "strategy_hint": "uncertain 항목만 대상으로 키워드 변형하여 추가 소스 확보 후 재판정"
+  },
+  "autonomy": true
+}
+```
+
+#### Reflection Output 사용 예시
+
+decision 노드가 has_gaps 분기 시 다음 노드에 전략 수정 지시:
+
+```json
+{
+  "id": "quality_gate",
+  "do": "decision",
+  "check": "avg SCAR >= 85 AND gaps 없음",
+  "routes": { "complete": "synthesize", "has_gaps": "fill_gaps" },
+  "reflection_output": {
+    "required": true,
+    "schema": ["gap_analysis", "failure_reasons", "strategy_modifications"]
+  }
+}
+```
+
+출력 예시:
+```json
+{
+  "gap_analysis": ["F20 신지식 경력: 나무위키 단독 소스", "Instagram 공식 계정 미확인"],
+  "failure_reasons": ["'신지식 매쉬업엔젤스' 키워드로 동명이인 노이즈 과다", "Instagram 검색이 소셜 노드에서 누락"],
+  "strategy_modifications": ["romanceip.xyz/about 하위 페이지 직접 크롤링", "Instagram 검색어를 '낭만투자파트너스' + 'romanceip'로 변형"]
+}
+```
+
+#### Confidence-Weighted Merge 패턴
+
+merge 노드의 `with`에서 구현하는 패턴 (스키마 변경 불필요):
+
+```
+각 fact에 confidence_weight 부여:
+- P1 (공식/정부): 1.0
+- P2 (LinkedIn/신뢰 매체): 0.7
+- P3 (나무위키/커뮤니티): 0.4
+- P4 (미확인/비공식): 0.2
+
+모순 자동 탐지:
+- 2+ 소스에서 모순되는 사실은 conflicts[] 배열로 구조화
+- conflict: {fact_ids, description, sources_for, sources_against}
+```
+
+#### SCAR Scoring v2 — Gap Fact 분리
+
+리서치 대상의 구조적 특성에 따라 존재할 수 없는 정보(비법인 커뮤니티의 사업자등록, AUM 등)가 있다. 이런 항목이 SCAR 평균을 왜곡하는 문제를 해결하기 위해 triangulate 노드에서 사실을 두 카테고리로 분류한다:
+
+```
+분류 기준:
+- scored_facts[] — 실제 발견된 사실 (인물, 조직, 이벤트, 재무 데이터 등)
+- gap_facts[] — 구조적으로 존재하지 않는 정보 ("구조적 부재" 태그)
+
+SCAR 계산:
+- Core SCAR = scored_facts의 평균 SCAR (gap_facts 제외)
+- quality_gate는 Core SCAR로 판정
+- gap_facts는 보고서의 '정보 부재' 섹션에 기록 (왜 없는지 설명 포함)
+
+예시:
+- 40개 scored_facts (avg SCAR 86.8) + 6개 gap_facts (avg 38)
+- 전체 평균: 76.6 (왜곡됨) → Core SCAR: 86.8 (실제 품질 반영)
+```
+
+#### Inference 노드 패턴
+
+merge 직후에 inference 노드를 배치하여 entity resolution + cross-reference detection을 수행한다:
+
+```
+수행 작업:
+1. Entity Resolution — 동일 대상의 다른 표기 통합 (예: 장투준 = Zoon Chang)
+2. Cross-Reference — 사실 간 논리적 관계 추론
+3. Anomaly Detection — 패턴 이상 탐지 (학력/경력 뒤바뀜 등)
+
+Flow 위치: merge → inference → adversarial
+```
 
 ### Node Types
 
@@ -629,15 +751,16 @@ SCAR 100은 이론적 상한이다. 각 차원의 만점 조건:
     {"id": "news_search", "do": "agent:researcher", "with": "뉴스/인터뷰/보도자료만", "reads": ["keywords"], "writes": ["state.workspace"], "artifacts": {"raw": "raw_vault/news.json"}},
     {"id": "social_search", "do": "agent:researcher", "with": "LinkedIn/SNS/커뮤니티만", "reads": ["keywords"], "writes": ["state.workspace"], "artifacts": {"raw": "raw_vault/social.json"}},
     {"id": "deep_search", "do": "agent:researcher", "with": "DB/정량 데이터만", "reads": ["keywords"], "writes": ["state.workspace"], "artifacts": {"raw": "raw_vault/db.json"}},
-    {"id": "merge", "do": "agent:scientist", "with": "4개 결과 통합, 중복 제거, 사실별 소스 매핑", "reads": ["state.workspace", "official_search.artifacts.raw", "news_search.artifacts.raw", "social_search.artifacts.raw", "deep_search.artifacts.raw"], "writes": ["state.workspace"]},
-    {"id": "adversarial", "do": "agent:verifier", "with": "모든 사실 반박 시도. 인물명/날짜는 2+소스 교차확인", "reads": ["state.workspace"], "writes": ["state.workspace"], "autonomy": true},
-    {"id": "triangulate", "do": "agent:scientist", "with": "verified만 남기고 SCAR 채점. 1소스만이면 confidence:low", "reads": ["state.workspace"], "writes": ["state.workspace"]},
-    {"id": "quality_gate", "do": "decision", "check": "SCAR >= 85 AND low_confidence 0개", "routes": {"complete": "synthesize", "has_gaps": "fill_gaps", "low_quality": "official_search"}, "route_criteria": {"complete": "SCAR>=85, 2+소스 검증, gaps 없음", "has_gaps": "SCAR>=70, gaps 존재", "low_quality": "SCAR<70"}},
+    {"id": "merge", "do": "agent:scientist", "with": "4개 결과 통합, 중복 제거, confidence_weight 부여, conflicts[] 자동 구조화", "reads": ["state.workspace", "official_search.artifacts.raw", "news_search.artifacts.raw", "social_search.artifacts.raw", "deep_search.artifacts.raw"], "writes": ["state.workspace"]},
+    {"id": "inference", "do": "agent:scientist", "with": "entity resolution + cross-reference + anomaly detection", "reads": ["state.workspace"], "writes": ["state.workspace"]},
+    {"id": "adversarial", "do": "agent:verifier", "with": "적극적 반증 시도. conflicts[] 최우선 검증. 인물명/날짜 2+소스 교차확인", "reads": ["state.workspace"], "writes": ["state.workspace"], "autonomy": true},
+    {"id": "triangulate", "do": "agent:scientist", "with": "scored_facts vs gap_facts 분류. Core SCAR = scored_facts만 채점", "reads": ["state.workspace"], "writes": ["state.workspace"]},
+    {"id": "quality_gate", "do": "decision", "check": "Core SCAR >= 85 AND low_confidence 0개", "routes": {"complete": "synthesize", "has_gaps": "fill_gaps", "low_quality": "official_search"}, "route_criteria": {"complete": "Core SCAR>=85, 2+소스 검증, gaps 없음", "has_gaps": "Core SCAR>=70, gaps 존재", "low_quality": "Core SCAR<70"}},
     {"id": "fill_gaps", "do": "agent:researcher", "with": "gaps만 타겟 추가 검색", "reads": ["state.workspace"], "writes": ["state.workspace"], "autonomy": true},
     {"id": "synthesize", "do": "agent:writer", "with": "verified 사실만으로 최종 보고서. 모든 사실에 출처 URL 필수", "reads": ["state.workspace"]}
   ],
   "flow": [
-    "keywords → [official_search, news_search, social_search, deep_search] → merge → adversarial → triangulate → quality_gate",
+    "keywords → [official_search, news_search, social_search, deep_search] → merge → inference → adversarial → triangulate → quality_gate",
     "quality_gate.complete → synthesize → END",
     "quality_gate.has_gaps → fill_gaps → triangulate",
     "quality_gate.low_quality → official_search"
@@ -652,6 +775,8 @@ SCAR 100은 이론적 상한이다. 각 차원의 만점 조건:
 - **삼각검증 강제**: 2+ 독립 소스 확인 구조적 보장
 - **망각 없음**: 파일 기반 workspace (Skill은 200K 넘으면 초반 정보 손실)
 - **Multi-route**: 부분 성공(has_gaps) 처리 가능 (Skill은 이진 판단만)
+- **Inference**: entity resolution으로 동일 대상 다른 표기 통합, 논리적 관계 추론
+- **SCAR v2**: gap_facts 분리로 구조적 부재가 점수를 왜곡하지 않음
 
 ### 예제 1: 스킬 평가
 

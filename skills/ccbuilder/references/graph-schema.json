@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://ccbuilder/schemas/graph-workflow",
-  "title": "CCBuilder Graph Workflow Schema v2",
-  "description": "ccbuilder 그래프 워크플로우 정의를 검증하는 JSON Schema. v2: state, reads/writes, artifacts, autonomy, multi-route decision 지원",
+  "title": "CCBuilder Graph Workflow Schema v3",
+  "description": "ccbuilder 그래프 워크플로우 정의를 검증하는 JSON Schema. v3: micro_loop, reflection_output, token_limit 추가",
   "type": "object",
   "required": ["id", "goal", "nodes", "flow"],
   "additionalProperties": false,
@@ -213,6 +213,42 @@
           "type": "boolean",
           "default": false
         },
+        "micro_loop": {
+          "title": "노드 내 반복",
+          "description": "노드 실행 결과가 continue_condition을 충족하면 max_iterations까지 자동 재시도. Skill의 적응적 탐색을 노드 수준에서 구현",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "max_iterations": {
+              "title": "최대 반복 횟수",
+              "description": "노드 내 최대 반복 횟수. 기본 3, 최대 5",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5,
+              "default": 3
+            },
+            "continue_condition": {
+              "title": "반복 조건",
+              "description": "자연어 조건. 이 조건이 true이면 재시도. 예: '결과 3개 미만', 'uncertain 비율 20% 초과'",
+              "type": "string",
+              "minLength": 1
+            },
+            "strategy_hint": {
+              "title": "재시도 전략 힌트",
+              "description": "반복 시 에이전트에게 전달할 전략 변경 힌트",
+              "type": "string"
+            },
+            "token_limit": {
+              "title": "노드당 토큰 상한",
+              "description": "이 노드의 전체 반복에 허용되는 최대 토큰 수. 기본 30000",
+              "type": "integer",
+              "minimum": 5000,
+              "maximum": 100000,
+              "default": 30000
+            }
+          },
+          "required": ["max_iterations", "continue_condition"]
+        },
         "context_files": {
           "title": "컨텍스트 파일 목록",
           "description": "노드 실행 시 주입할 정적 파일 경로 목록",
@@ -228,6 +264,13 @@
           "type": "string",
           "pattern": "^retry:[1-9][0-9]*$|^fallback:[a-z][a-z0-9_]*$|^abort$|^checkpoint$",
           "examples": ["retry:3", "fallback:handle_error", "abort", "checkpoint"]
+        },
+        "token_limit": {
+          "title": "노드 토큰 상한",
+          "description": "이 노드 실행에 허용되는 최대 토큰 수. micro_loop 사용 시 전체 반복 합산. 초과 시 현재까지 결과로 진행",
+          "type": "integer",
+          "minimum": 5000,
+          "maximum": 100000
         },
         "check": {
           "title": "분기 조건",
@@ -252,6 +295,30 @@
           "additionalProperties": {
             "type": "string",
             "minLength": 1
+          }
+        },
+        "reflection_output": {
+          "title": "반성 출력",
+          "description": "decision 노드가 non-complete 경로 선택 시 필수로 출력해야 하는 구조화된 분석. gap_analysis(부족한 점), failure_reasons(왜 부족한가), strategy_modifications(다음에 어떻게 다르게 할 것인가)를 포함. 다음 노드의 reads에 자동 포함됨",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required": {
+              "title": "반성 출력 필수 여부",
+              "description": "true면 complete 이외 경로 선택 시 반성 출력 의무",
+              "type": "boolean",
+              "default": true
+            },
+            "schema": {
+              "title": "출력 스키마",
+              "description": "반성 출력에 포함될 섹션 목록",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["gap_analysis", "failure_reasons", "strategy_modifications", "priority_reorder"]
+              },
+              "default": ["gap_analysis", "failure_reasons", "strategy_modifications"]
+            }
           }
         }
       },

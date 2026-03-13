@@ -16,7 +16,7 @@
     {
       "id": "official_search",
       "do": "agent:researcher",
-      "with": "공식 웹사이트, About 페이지, IR 자료, 공식 블로그만 집중 탐색. 원본 텍스트 전문을 raw_vault에 저장. 각 소스의 URL/접근일자/신뢰등급(P1-P4) 기록",
+      "with": "공식 웹사이트, About 페이지, IR 자료, 공식 블로그만 집중 탐색. 원본 텍스트 전문을 raw_vault에 저장. 각 소스의 URL/접근일자/신뢰등급(P1-P4) 기록. 검색 결과가 3개 미만이거나 keywords의 필수 확인 항목 체크리스트 대비 50% 미달인 경우, 키워드를 변형/확장하여 최대 3회까지 추가 검색을 시도하라",
       "reads": ["keywords"],
       "artifacts": {"raw": "raw_vault/official.json"},
       "output": "공식 소스 목록"
@@ -24,7 +24,7 @@
     {
       "id": "news_search",
       "do": "agent:researcher",
-      "with": "뉴스 기사, 인터뷰, 보도자료만 집중 탐색. 날짜/기자/매체 반드시 기록. 원본 전문 raw_vault에 저장",
+      "with": "뉴스 기사, 인터뷰, 보도자료만 집중 탐색. 날짜/기자/매체 반드시 기록. 원본 전문 raw_vault에 저장. 검색 결과가 3개 미만이거나 keywords의 필수 확인 항목 체크리스트 대비 50% 미달인 경우, 키워드를 변형/확장하여 최대 3회까지 추가 검색을 시도하라",
       "reads": ["keywords"],
       "artifacts": {"raw": "raw_vault/news.json"},
       "output": "뉴스 소스 목록"
@@ -32,7 +32,7 @@
     {
       "id": "social_search",
       "do": "agent:researcher",
-      "with": "LinkedIn, Instagram, Twitter, 나무위키, 커뮤니티만 탐색. 비공식 정보는 [unverified] 태그 필수. 원본 raw_vault에 저장",
+      "with": "LinkedIn, Instagram, Twitter, 나무위키, 커뮤니티만 탐색. 비공식 정보는 [unverified] 태그 필수. 원본 raw_vault에 저장. 검색 결과가 3개 미만이거나 keywords의 필수 확인 항목 체크리스트 대비 50% 미달인 경우, 키워드를 변형/확장하여 최대 3회까지 추가 검색을 시도하라",
       "reads": ["keywords"],
       "artifacts": {"raw": "raw_vault/social.json"},
       "output": "소셜/커뮤니티 소스 목록"
@@ -40,7 +40,7 @@
     {
       "id": "deep_search",
       "do": "agent:researcher",
-      "with": "THE VC, DART, 사업자등록정보, 특허DB, 투자DB 등 정량 데이터 위주 검색. 숫자/날짜/금액 정확히 기록",
+      "with": "THE VC, DART, 사업자등록정보, 특허DB, 투자DB 등 정량 데이터 위주 검색. 숫자/날짜/금액 정확히 기록. 검색 결과가 3개 미만이거나 keywords의 필수 확인 항목 체크리스트 대비 50% 미달인 경우, 키워드를 변형/확장하여 최대 3회까지 추가 검색을 시도하라",
       "reads": ["keywords"],
       "artifacts": {"raw": "raw_vault/db.json"},
       "output": "DB/정량 데이터"
@@ -48,24 +48,38 @@
     {
       "id": "merge",
       "do": "agent:scientist",
-      "with": "4개 검색 결과를 workspace에 통합. 중복 제거, 사실별 소스 매핑(어떤 소스가 어떤 사실을 뒷받침하는지). 사실 목록을 facts[], 각 fact에 sources[] 연결",
+      "with": "4개 검색 결과를 workspace에 통합. 각 사실(fact)에 다음을 수행: (1) 중복 제거 후 고유 사실 목록 facts[] 생성, (2) 각 fact에 sources[] + confidence_weight(P1=1.0, P2=0.7, P3=0.4, P4=0.2) 연결, (3) 2+ 소스에서 모순되는 사실은 conflicts[] 배열로 별도 구조화 — conflict마다 {fact_ids, description, sources_for, sources_against} 기록, (4) 단일 소스만 뒷받침하는 사실은 needs_verification:true 플래그",
       "reads": ["state.workspace", "official_search.artifacts.raw", "news_search.artifacts.raw", "social_search.artifacts.raw", "deep_search.artifacts.raw"],
       "writes": ["state.workspace"],
-      "output": "통합 사실 목록 + 소스 매핑"
+      "output": "통합 사실 목록 + 소스 매핑 + conflicts[]"
+    },
+    {
+      "id": "inference",
+      "do": "agent:scientist",
+      "with": "merge 결과에 대해 entity resolution + cross-reference detection 수행: (1) 동일 조직을 가리키는 다른 이름 통합 (예: Schmidt = DSC인베 자회사), (2) 동일 인물의 다른 표기 통합 (예: 장투준 = 장원준 = Zoon Chang), (3) 사실 간 논리적 관계 추론 — 'A가 B 소속'이고 'C가 B 팀장'이면 'A와 C는 같은 조직', (4) 패턴 이상 탐지 — 두 인물의 학력/경력이 뒤바뀐 것 같은 패턴. 발견한 entity mappings, cross-references, anomalies를 workspace에 추가",
+      "reads": ["state.workspace"],
+      "writes": ["state.workspace"],
+      "output": "entity resolution + cross-reference + anomaly 목록"
     },
     {
       "id": "adversarial",
       "do": "agent:verifier",
-      "with": "merge 결과의 모든 사실(fact)에 대해 반박을 시도하라. 인물명/직책/날짜는 2+ 독립소스로 교차확인 필수. 반박 성공한 항목은 status:disproven + 이유, 반박 실패한 항목은 status:verified. 모호한 항목은 status:uncertain + 추가 필요 정보 명시",
+      "with": "merge+inference 결과를 5개씩 배치로 검증하라. 각 배치에서: (1) conflicts[] 항목을 최우선으로 검증 — 독립 소스로 어느 쪽이 맞는지 판정, (2) needs_verification:true 항목은 2+ 독립소스 교차확인 필수, (3) 인물명/직책/날짜는 반드시 공식소스(P1)와 대조, (4) inference의 entity_mappings를 적극 활용하여 동일 인물/조직의 다른 표기가 별개 사실로 중복 등록되지 않았는지 확인, (5) 각 사실에 대해 적극적으로 반증을 시도하라 — '이 사실이 틀렸다면 어떤 증거가 있을까?'를 기본 자세로 검색. 판정: verified(2+ 소스 일치)/disproven(반증 확보, 구체적 반증 근거와 출처 기재)/uncertain(추가 정보 필요, 구체적으로 어떤 소스가 필요한지 명시). 배치 완료 후 uncertain 항목이 전체의 20% 초과 시, 키워드를 변형하여 추가 검색 후 재판정 시도(최대 2회 반복)",
       "reads": ["state.workspace"],
       "writes": ["state.workspace"],
       "autonomy": true,
+      "micro_loop": {
+        "max_iterations": 2,
+        "continue_condition": "uncertain 항목이 전체의 20% 초과",
+        "strategy_hint": "uncertain 항목만 대상으로 키워드 변형하여 추가 소스 확보 후 재판정",
+        "token_limit": 30000
+      },
       "output": "검증 결과 (verified/disproven/uncertain 분류)"
     },
     {
       "id": "triangulate",
       "do": "agent:scientist",
-      "with": "verified 사실만 최종 포함. 각 사실에 SCAR 채점(S:25 C:35 A:25 R:15). 1개 소스만 뒷받침하는 사실은 confidence:low. uncertain 항목은 gaps[]에 기록",
+      "with": "verified 사실을 두 카테고리로 분류: (A) scored_facts[] — 실제 발견된 사실(인물, 조직, 이벤트 등), (B) gap_facts[] — 구조적으로 존재하지 않는 정보(비법인 커뮤니티의 사업자등록, AUM 등). scored_facts만 SCAR 채점(S:25 C:35 A:25 R:15). gap_facts는 SCAR 평균에서 제외하되 '구조적 부재' 태그와 함께 보고서에 포함. 1개 소스만 뒷받침하는 scored_fact는 confidence:low. uncertain 항목은 gaps[]에 기록. Core SCAR = scored_facts의 평균 SCAR (gap_facts 제외)",
       "reads": ["state.workspace"],
       "writes": ["state.workspace"],
       "output": "삼각검증 결과 + SCAR 채점 + gaps 목록"
@@ -73,16 +87,20 @@
     {
       "id": "quality_gate",
       "do": "decision",
-      "check": "avg SCAR >= 85 AND confidence:low 항목 0개 AND gaps 비어있음",
+      "check": "Core SCAR (scored_facts only, excluding gap_facts) >= 85 AND confidence:low 항목 0개 AND gaps 비어있음",
       "routes": {
         "complete": "synthesize",
         "has_gaps": "fill_gaps",
         "low_quality": "official_search"
       },
       "route_criteria": {
-        "complete": "SCAR >= 85, 모든 사실 2+ 소스 검증, gaps 없음",
-        "has_gaps": "SCAR >= 70, gaps 또는 low_confidence 존재",
-        "low_quality": "SCAR < 70 또는 verified 사실이 전체의 50% 미만"
+        "complete": "Core SCAR >= 85, 모든 scored_facts 2+ 소스 검증, gaps 없음, gap_facts는 평가 제외",
+        "has_gaps": "Core SCAR >= 70, gaps 또는 low_confidence 존재",
+        "low_quality": "Core SCAR < 70 또는 verified 사실이 전체의 50% 미만"
+      },
+      "reflection_output": {
+        "required": true,
+        "schema": ["gap_analysis", "failure_reasons", "strategy_modifications"]
       }
     },
     {
@@ -103,7 +121,7 @@
     }
   ],
   "flow": [
-    "keywords → [official_search, news_search, social_search, deep_search] → merge → adversarial → triangulate → quality_gate",
+    "keywords → [official_search, news_search, social_search, deep_search] → merge → inference → adversarial → triangulate → quality_gate",
     "quality_gate.complete → synthesize → END",
     "quality_gate.has_gaps → fill_gaps → triangulate",
     "quality_gate.low_quality → official_search"
@@ -111,7 +129,7 @@
   "limits": {"max_cycles": 3, "timeout": "15m"},
   "ralph": {
     "enabled": true,
-    "target": "avg SCAR >= 95 AND all facts verified by 2+ sources",
+    "target": "Core SCAR (scored_facts only) >= 95 AND all scored_facts verified by 2+ sources",
     "max_iterations": 5,
     "evolve": true,
     "feedback_file": ".omc/state/graph/{id}/feedback.md"
