@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.76 (2026-03-14 동기화)
+
+**새로운 기능:**
+- MCP Elicitation 지원 — MCP 서버가 태스크 중 구조화된 입력 요청 (폼 필드/브라우저 URL)
+- `Elicitation`, `ElicitationResult` Hook — MCP elicitation 요청/응답 인터셉트·오버라이드
+- `PostCompact` Hook — compaction 완료 후 트리거
+- `-n` / `--name <name>` CLI 플래그 — 세션 시작 시 표시 이름 설정
+- `worktree.sparsePaths` 설정 — `--worktree` 대규모 모노레포 sparse-checkout 지원
+- `/effort` 슬래시 명령 — 모델 effort 레벨 설정
+- `feedbackSurveyRate` 설정 — 세션 품질 설문 샘플 비율 (엔터프라이즈)
+- 백그라운드 에이전트 종료 시 부분 결과 대화 컨텍스트에 보존
+- Opus 4.6 1M 컨텍스트 Max/Team/Enterprise 기본 제공 (v2.1.75)
+- 메모리 파일 last-modified 타임스탬프 (v2.1.75)
+- Hook 권한 프롬프트에 훅 소스(settings/plugin/skill) 표시 (v2.1.75)
+
+**주요 버그 수정:**
+- ToolSearch deferred 도구 스키마 compaction 후 소실 → type error 수정
+- `Bash(cmd:*)` 권한 규칙 인용 인수 `#` 매칭 버그 수정
+- auto-compaction 무한 재시도 → 3회 circuit breaker
+- Remote Control 세션 유휴 소멸·메시지 큐·JWT refresh 수정
+- tmux over SSH 클립보드 복사 수정
+
+**Breaking Changes:**
+- `--plugin-dir` 단일 경로만 허용 (v2.1.76)
+- Windows `C:\ProgramData\ClaudeCode\managed-settings.json` fallback 제거 (v2.1.75)
+
+---
+
 ### v2.1.74 (2026-03-13 동기화)
 
 **새로운 기능:**

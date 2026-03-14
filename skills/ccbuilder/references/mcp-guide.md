@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-03-07
-**Claude Code Version**: v2.1.71+
+**Version**: 2.18.0
+**Last Updated**: 2026-03-14
+**Claude Code Version**: v2.1.76+
 
 ---
 
@@ -177,6 +177,19 @@ MCP 서버의 프롬프트가 슬래시 명령으로 노출됩니다:
 /mcp__supabase__query
 /mcp__github__create-issue
 ```
+
+---
+
+## MCP Elicitation (v2.1.76)
+
+MCP 서버가 태스크 실행 중 사용자에게 구조화된 입력을 요청하는 기능:
+
+- **폼 필드**: 서버가 정의한 스키마로 대화형 입력 다이얼로그 표시
+- **브라우저 URL**: 외부 브라우저로 인증 또는 추가 정보 수집
+
+Hook으로 인터셉트 가능:
+- `Elicitation`: 요청을 가로채어 자동 응답 또는 차단
+- `ElicitationResult`: 사용자 응답 전송 전 수정/오버라이드
 
 ---
 

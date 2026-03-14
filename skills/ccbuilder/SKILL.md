@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.74)
+## 핵심 변경 사항 (v2.1.76)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -134,6 +134,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **oauth.authServerMetadataUrl** | MCP OAuth 커스텀 메타데이터 URL 지정 (v2.1.69) |
 | **플러그인 MCP 중복 제거** | 동일 command/URL 서버 자동 병합 (`/plugin` 메뉴에 표시) (v2.1.71) |
 | **OAuth 수정** | 콜백 포트 충돌 hang + HTTP 200 오류 시 재인증 프롬프트 복원 (v2.1.74) |
+| **MCP Elicitation** | MCP 서버가 태스크 중 구조화된 입력 요청 (폼 필드/브라우저 URL) (v2.1.76) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -148,6 +149,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Project Local** | `CLAUDE.local.md` (자동 gitignore) |
 | **HTML 주석** | `<!-- -->` 자동 주입 시 Claude에게 숨김, Read 도구로는 표시 (v2.1.72) |
 | **autoMemoryDirectory** | Auto Memory 저장 디렉토리 커스텀 경로 지정 (v2.1.74) |
+| **메모리 타임스탬프** | 메모리 파일에 last-modified 시각 추가 — 최신/오래된 메모리 판별 (v2.1.75) |
 
 **상세**: [references/memory-rules-guide.md](references/memory-rules-guide.md)
 
@@ -192,21 +194,24 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
+| `PostCompact` | compaction 완료 후 (v2.1.76) |
+| `Elicitation` | MCP elicitation 요청 인터셉트 (v2.1.76) |
+| `ElicitationResult` | MCP elicitation 응답 인터셉트/오버라이드 (v2.1.76) |
 
 **신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
 
 ### Agent/CLI/Plugin 강화
 
-- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
-- **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74)
-- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72)
+- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74); 백그라운드 에이전트 종료 시 부분 결과 보존 (v2.1.76)
+- **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, `-n/--name <name>` (세션 이름, v2.1.76), `worktree.sparsePaths` (sparse-checkout, v2.1.76), Ctrl+F (에이전트 종료)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 단일 경로만 허용 (복수는 반복 사용, v2.1.76)
+- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/effort` 모델 effort 레벨 설정 (v2.1.76)
 - **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
 - **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (SessionEnd 훅 타임아웃 설정, v2.1.74), `modelOverrides` 설정 (모델 픽커 → 커스텀 provider ID 매핑, v2.1.73)
 
 ### Breaking Changes
 
-`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●)
+`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), `--plugin-dir` 단일 경로만 허용 (v2.1.76), Windows `C:\ProgramData\ClaudeCode\managed-settings.json` 제거 → `C:\Program Files\ClaudeCode` 사용 (v2.1.75)
 
 ---
 
@@ -214,12 +219,9 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 | Deprecated | 대체 방법 |
 |------------|-----------|
-| `/output-style` 명령 | `/config` 사용 (v2.1.74); 또는 `--system-prompt-file` / `plugins` |
+| `/output-style` 명령 | `/config` 사용 (v2.1.74) |
 | `legacy SDK entrypoint` | `@anthropic-ai/claude-agent-sdk`로 마이그레이션 |
 | `includeCoAuthoredBy` 설정 | 새 `attribution` 설정 사용 |
-| `$ARGUMENTS.0` 문법 | `$ARGUMENTS[0]` 사용 |
-| SSE MCP transport | HTTP (streamable-http) 사용 |
-| Sonnet 4.5 (1M context) | Sonnet 4.6 사용 (Max plan) |
 
 ---
 
@@ -284,7 +286,7 @@ allowed-tools: [Read, Grep, Glob]
 }
 ```
 
-**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded (17개)
+**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult (20개)
 
 **상세**: [references/hooks-guide.md](references/hooks-guide.md)
 
@@ -394,13 +396,8 @@ my-skill/
 | [references/agent-teams-guide.md](references/agent-teams-guide.md) | Agent Teams 상세 가이드 |
 | [references/ralph-loop-guide.md](references/ralph-loop-guide.md) | Ralph Loop (자율 개발 루프) 가이드 |
 | [references/troubleshooting.md](references/troubleshooting.md) | 트러블슈팅 |
-
-### Orchestrator Skill 개발
-
-| 문서 | 설명 |
-|------|------|
-| [references/orchestrator-principles.md](references/orchestrator-principles.md) | 핵심 원칙, Context Injection |
-| [references/orchestrator-skill-creation-guide.md](references/orchestrator-skill-creation-guide.md) | 생성 가이드, 체크리스트 |
+| [references/orchestrator-principles.md](references/orchestrator-principles.md) | Orchestrator 핵심 원칙, Context Injection |
+| [references/orchestrator-skill-creation-guide.md](references/orchestrator-skill-creation-guide.md) | Orchestrator 생성 가이드, 체크리스트 |
 
 ### 구현 및 품질
 
@@ -426,7 +423,7 @@ my-skill/
 | 문서 | 설명 |
 |------|------|
 | [references/official/skills.md](references/official/skills.md) | Skills 공식 문서 요약 |
-| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (16 events) |
+| [references/official/hooks.md](references/official/hooks.md) | Hooks 공식 문서 요약 (20 events) |
 | [references/official/subagents.md](references/official/subagents.md) | Sub-agents 공식 문서 요약 |
 | [references/official/mcp.md](references/official/mcp.md) | MCP 공식 문서 요약 |
 | [references/official/memory-rules.md](references/official/memory-rules.md) | Memory & Rules 공식 문서 요약 |
@@ -483,15 +480,7 @@ Task(Explore, "repos/obra-superpowers에서 TDD 워크플로우 구조 분석해
 "Hook에서 보안 필터링하는 패턴 찾아줘"
 ```
 
-#### claude-context MCP 설치 (선택)
-
-시맨틱 코드 검색 — 설정: `claude mcp add claude-context` (Gemini+Zilliz 또는 Ollama+Milvus)
-
-### 기타 참조
-
-| 문서 | 설명 |
-|------|------|
-| [references/external-resources.md](references/external-resources.md) | 커뮤니티, 포럼, 블로그 링크 |
+시맨틱 검색: `claude mcp add claude-context` (선택, Gemini+Zilliz 또는 Ollama+Milvus)
 
 ---
 

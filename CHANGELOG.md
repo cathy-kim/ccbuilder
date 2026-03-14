@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.18.0] - 2026-03-14
+
+### Added
+- **Claude Code v2.1.76 동기화**
+  - MCP Elicitation 지원 — MCP 서버가 태스크 중 구조화된 입력 요청 (폼 필드/브라우저 URL)
+  - `Elicitation`, `ElicitationResult` Hook 이벤트 — MCP elicitation 요청/응답 인터셉트 (v2.1.76)
+  - `PostCompact` Hook 이벤트 — compaction 완료 후 트리거 (v2.1.76)
+  - `-n` / `--name <name>` CLI 플래그 — 세션 시작 시 표시 이름 설정 (v2.1.76)
+  - `worktree.sparsePaths` 설정 — `--worktree` 대규모 모노레포 sparse-checkout 지원 (v2.1.76)
+  - `/effort` 슬래시 명령 — 모델 effort 레벨 설정 (v2.1.76)
+  - `feedbackSurveyRate` 엔터프라이즈 설정 — 세션 품질 설문 샘플 비율 (v2.1.76)
+  - 백그라운드 에이전트 종료 시 부분 결과 대화 컨텍스트에 보존 (v2.1.76)
+- **Claude Code v2.1.75 동기화**
+  - Opus 4.6 1M 컨텍스트 Max/Team/Enterprise 기본 제공 (추가 사용 크레딧 불필요)
+  - `/color` 명령 — 세션 프롬프트 바 색상 설정 (전체 사용자)
+  - 세션 이름 프롬프트 바 표시 (`/rename` 연동)
+  - 메모리 파일 last-modified 타임스탬프 추가 — 최신/오래된 메모리 판별 지원 (v2.1.75)
+  - Hook 권한 프롬프트에 훅 소스(settings/plugin/skill) 표시 (v2.1.75)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.74 → v2.1.76 업데이트
+  - 신규 Hook 이벤트 3개 추가 (PostCompact, Elicitation, ElicitationResult, 총 20개)
+  - MCP 테이블에 Elicitation 지원 추가
+  - Memory 테이블에 last-modified 타임스탬프 추가
+  - Agent/CLI 섹션 업데이트 (worktree.sparsePaths, -n/--name, /effort, 백그라운드 에이전트 보존)
+  - Breaking Changes 업데이트
+- `references/version-sync.md`: v2.1.76 변경사항 추적 추가
+- `references/hooks-guide.md`: PostCompact, Elicitation, ElicitationResult 이벤트 추가
+- `references/official/hooks.md`: 이벤트 목록 20개로 확장
+- `references/mcp-guide.md`: MCP Elicitation 지원 추가
+
+### Breaking Changes (Claude Code v2.1.76)
+- `--plugin-dir` 단일 경로만 허용 — 복수 디렉토리는 `--plugin-dir` 반복 사용
+
+### Breaking Changes (Claude Code v2.1.75)
+- Windows managed settings `C:\ProgramData\ClaudeCode\managed-settings.json` fallback 제거 → `C:\Program Files\ClaudeCode\managed-settings.json` 사용
+
+### Fixed (Claude Code v2.1.76)
+- ToolSearch로 로드된 deferred 도구 스키마가 대화 compaction 후 소실되어 배열·숫자 파라미터 type error 수정
+- 슬래시 명령 "Unknown skill" 오류 수정
+- 플랜 모드 승인 후 재승인 요구 버그 수정
+- `Bash(cmd:*)` 권한 규칙이 인용 인수의 `#` 포함 명령에 매칭 안 되던 버그 수정
+- auto-compaction 무한 재시도 → 3회 후 circuit breaker 중단
+- `/export` 파일 경로 대신 파일명만 표시하던 버그 수정
+- Remote Control 세션 장시간 유휴 소멸, 빠른 메시지 큐 지연, JWT refresh 후 재전달 수정
+- tmux over SSH 클립보드 복사 수정
+
+---
+
 ## [2.17.0] - 2026-03-14
 
 ### Added
