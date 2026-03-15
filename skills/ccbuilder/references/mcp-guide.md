@@ -2,15 +2,22 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-03-07
-**Claude Code Version**: v2.1.71+
+**Version**: 2.18.0
+**Last Updated**: 2026-03-15
+**Claude Code Version**: v2.1.76+
 
 ---
 
 ## 개요
 
 MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연결할 수 있습니다.
+
+### Elicitation (v2.1.76 신규)
+
+MCP 서버가 작업 중 구조화된 입력을 요청하는 기능. 인터랙티브 다이얼로그(폼 필드 또는 브라우저 URL)로 사용자에게 정보를 요청합니다.
+
+- **`Elicitation` Hook** — 서버의 입력 요청을 인터셉트하여 내용 확인/수정 또는 자동 응답 설정
+- **`ElicitationResult` Hook** — 사용자 입력 결과를 인터셉트하여 서버로 전송 전 오버라이드
 
 ---
 

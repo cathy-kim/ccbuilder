@@ -77,6 +77,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.76 (2026-03-15 동기화)
+
+**새로운 기능:**
+- MCP Elicitation — MCP 서버가 작업 중 구조화된 입력(폼 필드/브라우저 URL) 요청 가능
+- `Elicitation` + `ElicitationResult` Hook — MCP 서버 입력 요청/결과 인터셉트 및 오버라이드
+- `PostCompact` Hook — 컨텍스트 압축 완료 후 실행 (총 Hook 이벤트 20개)
+- `-n`/`--name <name>` CLI 플래그 — 시작 시 세션 표시 이름 설정
+- `worktree.sparsePaths` 설정 — `--worktree` 대용량 모노레포 스파스 체크아웃 경로 목록
+- `/effort` 슬래시 명령 — 모델 effort 레벨 세션 내 설정
+- `feedbackSurveyRate` 설정 — 엔터프라이즈 세션 품질 설문 샘플 비율
+- Opus 4.6 1M 컨텍스트 Max/Team/Enterprise 기본 제공 (v2.1.75)
+- `/color` 명령 — 세션 프롬프트바 색상 설정 (v2.1.75)
+- 메모리 파일 최종 수정 타임스탬프 추가 — 최신/오래된 메모리 구분 (v2.1.75)
+- 훅 소스 표시 (settings/plugin/skill) 권한 프롬프트에서 출처 식별 (v2.1.75)
+
+**주요 버그 수정:**
+- 대화 압축 후 지연 로딩 도구(ToolSearch) 입력 스키마 소실 → 배열/숫자 파라미터 타입 오류
+- 슬래시 명령 "Unknown skill" 표시 버그
+- `Bash(cmd:*)` 권한 규칙이 `#` 포함 인용 인자와 미매칭
+- 자동 압축 실패 시 무한 재시도 → 3회 서킷 브레이커 작동
+- Remote Control: 세션 자동 종료, 빠른 메시지 일괄 처리, JWT 갱신 후 작업 재전달
+- 백그라운드 에이전트 종료 시 부분 결과 대화 컨텍스트에 보존 (v2.1.76)
+
+**Breaking Changes:**
+- Windows managed settings 구 경로(`C:\ProgramData\ClaudeCode\managed-settings.json`) 제거 → `C:\Program Files\ClaudeCode\managed-settings.json` (v2.1.75)
+- `--plugin-dir` 단일 경로만 허용 (복수 디렉토리는 반복 플래그 사용)
+
+---
+
 ### v2.1.74 (2026-03-13 동기화)
 
 **새로운 기능:**

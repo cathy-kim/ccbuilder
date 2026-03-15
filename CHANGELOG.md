@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.18.0] - 2026-03-15
+
+### Added
+- **Claude Code v2.1.76 동기화**
+  - **MCP Elicitation** — MCP 서버가 작업 중 구조화된 입력(폼 필드/브라우저 URL)을 요청할 수 있는 인터랙티브 다이얼로그 지원
+  - `Elicitation` Hook — MCP 서버의 입력 요청을 인터셉트/오버라이드
+  - `ElicitationResult` Hook — MCP 서버 입력 결과를 인터셉트/오버라이드 (Hook 이벤트 총 20개)
+  - `PostCompact` Hook — 컨텍스트 압축 완료 후 실행
+  - `-n`/`--name <name>` CLI 플래그 — 세션 시작 시 표시 이름 설정
+  - `worktree.sparsePaths` 설정 — `--worktree` 대용량 모노레포에서 필요한 디렉토리만 스파스 체크아웃
+  - `/effort` 슬래시 명령 — 모델 effort 레벨 설정
+  - `feedbackSurveyRate` 설정 — 엔터프라이즈 세션 품질 설문 샘플 비율 설정
+- **Claude Code v2.1.75 동기화**
+  - Opus 4.6 1M 컨텍스트 창 Max/Team/Enterprise 기본 제공 (추가 사용량 불필요)
+  - `/color` 명령 — 세션 프롬프트바 색상 설정
+  - `/rename` 사용 시 프롬프트 바에 세션 이름 표시
+  - 메모리 파일 최종 수정 타임스탬프 — 최신/오래된 메모리 구분 가능
+  - 훅 소스 표시 (settings/plugin/skill) — 확인 프롬프트에서 훅 출처 식별
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.74 → v2.1.76 업데이트
+  - MCP 테이블에 Elicitation 항목 추가
+  - Memory 테이블에 메모리 파일 타임스탬프 항목 추가
+  - 신규 Hook 이벤트 (`PostCompact`, `Elicitation`, `ElicitationResult`) 추가 (총 20개)
+  - CLI 섹션에 `-n`/`--name` 플래그, `/effort`, `/color` 명령 추가
+  - `worktree.sparsePaths` 설정 추가
+  - Breaking Changes에 Windows managed settings 구 경로 제거 항목 추가
+- `references/hooks-guide.md`: 3개 신규 Hook 이벤트 추가 (PostCompact, Elicitation, ElicitationResult)
+- `references/official/hooks.md`: 신규 Hook 이벤트 3개 추가 (총 20개)
+- `references/mcp-guide.md`: MCP Elicitation 지원 내용 추가
+- `references/memory-rules-guide.md`: 메모리 파일 타임스탬프 기능 추가
+- `references/version-sync.md`: v2.1.76 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.76)
+- 대화 압축(compaction) 후 지연 로딩 도구(ToolSearch)의 입력 스키마 소실 → 배열/숫자 파라미터 타입 오류 수정
+- 슬래시 명령 "Unknown skill" 표시 버그 수정
+- 플랜 모드 재승인 요청 버그 (이미 승인된 플랜에서) 수정
+- `Bash(cmd:*)` 권한 규칙이 `#` 포함 인용 인자와 매칭 안 되던 버그 수정
+- 자동 압축 실패 시 무한 재시도 → 3회 시도 후 서킷 브레이커 작동
+- Remote Control: 세션 자동 종료, 빠른 메시지 일괄 처리, JWT 갱신 후 작업 재전달 수정
+- `--plugin-dir` 단일 경로만 허용 (복수 디렉토리는 반복 플래그 사용)
+
+### Breaking Changes (Claude Code v2.1.75)
+- Windows managed settings 구 경로(`C:\ProgramData\ClaudeCode\managed-settings.json`) 제거 → `C:\Program Files\ClaudeCode\managed-settings.json` 사용
+
+---
+
 ## [2.17.0] - 2026-03-14
 
 ### Added

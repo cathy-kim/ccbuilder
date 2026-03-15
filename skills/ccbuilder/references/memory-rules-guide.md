@@ -310,6 +310,8 @@ Git에 커밋하지 않을 개인 설정:
 
 > **v2.1.74**: `autoMemoryDirectory` 설정으로 Auto Memory 저장 디렉토리를 커스텀 경로로 지정할 수 있습니다. 기본값은 `~/.claude/projects/<project-path>/memory/`.
 
+> **v2.1.75**: 메모리 파일에 **최종 수정 타임스탬프**가 자동 기록됩니다. Claude가 어떤 메모리가 최신인지, 오래된 것인지 추론할 수 있어 더 정확한 컨텍스트 판단이 가능합니다.
+
 `/memory` 명령으로 Auto Memory를 관리할 수 있습니다 (v2.1.59+).
 
 ### MEMORY.md 작성 원칙

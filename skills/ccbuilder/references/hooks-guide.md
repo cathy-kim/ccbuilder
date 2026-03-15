@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-03-07
-**Claude Code Version**: v2.1.71+
+**Version**: 2.18.0
+**Last Updated**: 2026-03-15
+**Claude Code Version**: v2.1.76+
 
 ---
 
-## Hook 이벤트 (v2.14 최신)
+## Hook 이벤트 (v2.18 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -29,6 +29,9 @@
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
 | **InstructionsLoaded** | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | No | `file_path` |
+| **PostCompact** | 컨텍스트 압축 완료 후 (v2.1.76) | No | - |
+| **Elicitation** | MCP 서버 입력 요청 인터셉트 (v2.1.76) | Yes (override) | `server_name`, `prompt`, `schema` |
+| **ElicitationResult** | MCP 서버 입력 결과 인터셉트/오버라이드 (v2.1.76) | Yes (override) | `server_name`, `result` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
