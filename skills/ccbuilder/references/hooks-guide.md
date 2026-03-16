@@ -29,6 +29,9 @@
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
 | **WorktreeRemove** | git worktree 제거 (v2.1.50) | No | `worktree_path` |
 | **InstructionsLoaded** | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | No | `file_path` |
+| **PostCompact** | compaction 완료 후 (v2.1.76) | No | - |
+| **Elicitation** | MCP elicitation 요청 가로채기 (v2.1.76) | Yes (override) | `request_id`, `message`, `input_schema` |
+| **ElicitationResult** | MCP elicitation 응답 전 가로채기 (v2.1.76) | Yes (override) | `request_id`, `result` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 

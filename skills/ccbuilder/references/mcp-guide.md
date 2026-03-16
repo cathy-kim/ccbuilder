@@ -299,10 +299,40 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
+## MCP Elicitation (v2.1.76 신규)
+
+MCP 서버가 작업 중 사용자로부터 구조화된 입력을 요청하는 기능.
+
+### 동작 방식
+
+1. MCP 서버가 `elicitation` 요청 전송 (폼 필드 정의 또는 브라우저 URL)
+2. Claude Code가 인터랙티브 다이얼로그 표시
+3. 사용자 입력 → MCP 서버로 반환
+
+### Hook으로 가로채기
+
+```json
+{
+  "hooks": {
+    "Elicitation": [{
+      "hooks": [{ "type": "command", "command": "./hooks/elicitation-handler.sh" }]
+    }],
+    "ElicitationResult": [{
+      "hooks": [{ "type": "command", "command": "./hooks/elicitation-result.sh" }]
+    }]
+  }
+}
+```
+
+- `Elicitation`: 요청 가로채기 — 응답 오버라이드 가능 (`request_id`, `message`, `input_schema`)
+- `ElicitationResult`: 응답 전송 전 가로채기 — 결과 오버라이드 가능 (`request_id`, `result`)
+
+---
+
 ## 공식 문서
 
 - **MCP Reference**: https://code.claude.com/docs/en/mcp
 
 ---
 
-*이 문서는 v2.9.0 업데이트 (2026-02-11)*
+*이 문서는 v2.18.0 업데이트 (2026-03-16)*

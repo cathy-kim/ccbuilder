@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.76 (2026-03-16 동기화)
+
+**새로운 기능:**
+- MCP Elicitation — MCP 서버가 작업 중 구조화된 입력 요청 (폼 필드 또는 브라우저 URL)
+- `Elicitation` / `ElicitationResult` Hook 이벤트 — MCP elicitation 요청·응답 가로채기 및 오버라이드
+- `PostCompact` Hook 이벤트 — compaction 완료 후 트리거 (총 Hook 이벤트 20개)
+- `-n` / `--name <name>` CLI 플래그 — 세션 시작 시 표시명 지정
+- `worktree.sparsePaths` 설정 — `claude --worktree` 대규모 모노레포 sparse-checkout
+- `/effort` 슬래시 명령 — 세션 내 모델 노력 레벨 설정
+- `feedbackSurveyRate` 설정 — 엔터프라이즈 세션 품질 조사 샘플링 비율
+- (v2.1.75) Opus 4.6 1M 컨텍스트 Max/Team/Enterprise 기본 제공
+- (v2.1.75) `/color` 명령 — 프롬프트 바 세션 색상 설정
+- (v2.1.75) 메모리 파일 마지막 수정 시간 자동 기록
+
+**주요 버그 수정:**
+- Compaction 후 deferred tools 입력 스키마 소실 (ToolSearch) 수정
+- 슬래시 명령 "Unknown skill" 오류 수정
+- `Bash(cmd:*)` 권한 규칙이 `#` 포함 인용 인자 미매칭 수정
+- 자동 compaction 연속 실패 시 무한 재시도 → circuit breaker (3회) 추가
+- Remote Control: idle 환경 reap 시 세션 silent 종료, 급속 메시지 큐 지연, JWT 갱신 후 작업 재전달 수정
+
+**Breaking Changes:**
+- `--plugin-dir` 단일 경로만 허용 (다중 디렉토리는 `--plugin-dir` 반복 사용)
+- (v2.1.75) Windows managed settings 레거시 경로 제거: `C:\ProgramData\ClaudeCode\managed-settings.json` → `C:\Program Files\ClaudeCode\managed-settings.json`
+
+---
+
 ### v2.1.74 (2026-03-13 동기화)
 
 **새로운 기능:**

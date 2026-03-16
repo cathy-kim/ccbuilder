@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.18.0] - 2026-03-16
+
+### Added
+- **Claude Code v2.1.76 동기화**
+  - MCP Elicitation 지원 — MCP 서버가 작업 중 구조화된 입력 요청 (폼 필드 또는 브라우저 URL)
+  - `Elicitation` · `ElicitationResult` Hook 이벤트 — MCP elicitation 요청/응답 가로채기 및 오버라이드
+  - `PostCompact` Hook 이벤트 — compaction 완료 후 트리거
+  - `-n` / `--name <name>` CLI 플래그 — 세션 시작 시 표시명 지정
+  - `worktree.sparsePaths` 설정 — `claude --worktree` 대규모 모노레포에서 필요한 디렉토리만 sparse-checkout
+  - `/effort` 슬래시 명령 — 세션 내 모델 노력 레벨 설정
+  - `feedbackSurveyRate` 설정 — 엔터프라이즈 세션 품질 조사 샘플링 비율
+- **Claude Code v2.1.75 동기화**
+  - Opus 4.6 1M 컨텍스트 Max/Team/Enterprise 기본 제공 (기존 추가 사용량 불필요)
+  - `/color` 명령 — 프롬프트 바 세션 색상 설정
+  - 세션 이름 프롬프트 바 표시 (`/rename` 사용 시)
+  - 메모리 파일 마지막 수정 시간 자동 기록 — 최신·오래된 메모리 구분 용이
+  - 권한 프롬프트에 Hook 출처 표시 (settings/plugin/skill)
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 v2.1.74 → v2.1.76 업데이트
+  - MCP 테이블에 `MCP Elicitation` 항목 추가
+  - Memory 테이블에 메모리 파일 타임스탬프 항목 추가
+  - 신규 Hook 이벤트 `PostCompact`, `Elicitation`, `ElicitationResult` 추가 (총 20개)
+  - 신규 슬래시 명령 `/color`, `/effort`, `-n/--name` 추가
+  - Breaking Changes에 `--plugin-dir` 단일 경로 제한, Windows managed settings 경로 변경 추가
+  - Quick Reference 훅 이벤트 수 17 → 20 업데이트
+- `references/hooks-guide.md`: 신규 Hook 이벤트 3개 추가
+- `references/official/hooks.md`: 신규 Hook 이벤트 3개 추가 (총 20개)
+- `references/mcp-guide.md`: MCP Elicitation 섹션 추가
+- `references/memory-rules-guide.md`: 메모리 파일 타임스탬프 항목 추가
+- `references/version-sync.md`: v2.1.76 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.76)
+- 대화 compaction 후 deferred tools (ToolSearch로 로드) 입력 스키마 소실 수정
+- 슬래시 명령 "Unknown skill" 오류 수정
+- Plan mode 승인 후 재승인 요청 버그 수정
+- 자동 compaction이 연속 실패 후 무한 재시도하던 버그 수정 (3회 후 circuit breaker 작동)
+- `Bash(cmd:*)` 권한 규칙이 인용 인자에 `#` 포함 시 매칭 안 되던 버그 수정
+- `/export` 성공 메시지에 파일명만 표시되던 버그 수정 (전체 경로 표시로 수정)
+
+### Breaking Changes (Claude Code v2.1.76)
+- `--plugin-dir` 단일 경로만 허용 (다중 디렉토리는 `--plugin-dir` 반복 사용)
+
+### Breaking Changes (Claude Code v2.1.75)
+- Windows managed settings 레거시 경로 제거: `C:\ProgramData\ClaudeCode\managed-settings.json` → `C:\Program Files\ClaudeCode\managed-settings.json` 사용
+
+---
+
 ## [2.17.0] - 2026-03-14
 
 ### Added

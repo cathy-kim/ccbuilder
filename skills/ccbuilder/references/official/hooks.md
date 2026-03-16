@@ -27,6 +27,9 @@
 | 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50) | - |
 | 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |
 | 17 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | - |
+| 18 | `PostCompact` | compaction 완료 후 (v2.1.76) | - |
+| 19 | `Elicitation` | MCP elicitation 요청 가로채기 (v2.1.76) | override |
+| 20 | `ElicitationResult` | MCP elicitation 응답 전 가로채기 (v2.1.76) | override |
 
 ## Handler 타입
 
