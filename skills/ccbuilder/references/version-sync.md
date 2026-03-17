@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.77 (2026-03-17 동기화)
+
+**새로운 기능:**
+- 토큰 한도 확대: Opus 4.6 기본 출력 64k, Opus 4.6/Sonnet 4.6 상한 128k
+- `allowRead` sandbox filesystem 설정 — `denyRead` 영역 내 읽기 재허용
+- `/copy N` — N번째 최근 응답 복사
+- MCP Elicitation 지원 — MCP 서버가 세션 중 구조화된 입력 요청 (v2.1.76)
+- 신규 Hook 이벤트: `PostCompact` (압축 완료 후), `Elicitation`, `ElicitationResult` (v2.1.76)
+- `/effort` 슬래시 명령 — 모델 effort 레벨 설정 (v2.1.76)
+- `-n`/`--name` CLI 플래그 — 세션 시작 시 표시 이름 지정 (v2.1.76)
+- `worktree.sparsePaths` — `--worktree` 필요 디렉토리만 checkout (v2.1.76)
+- 메모리 파일 최종 수정 타임스탬프 자동 기록 — Claude가 신선도 판단 가능 (v2.1.75)
+- `/color` 명령 — 세션 프롬프트 바 색상 설정 (v2.1.75)
+- Opus 4.6 1M context 기본 지원 (Max/Team/Enterprise, v2.1.75)
+- `/branch` 명령 (기존 `/fork` 리네이밍, `/fork` alias 유지)
+- `SendMessage` — 중단된 에이전트 자동 백그라운드 재개
+
+**주요 버그 수정:**
+- PreToolUse hook `"allow"` 반환 시 `deny` 규칙 및 enterprise managed settings 우회 보안 수정
+- Write tool CRLF 파일 덮어쓰기 시 줄 끝 무음 변환 수정
+- `--resume` 대화 히스토리 무음 truncation (메모리 추출 race condition) 수정
+- 장시간 세션 메모리 누수 (progress message compaction 후 생존) 수정
+- 컨텍스트 압축 후 deferred tool 스키마 손실 수정 (v2.1.76)
+- 슬래시 명령 "Unknown skill" 수정 (v2.1.76)
+- 토큰 추정 과잉 계산 (thinking/tool_use 블록) 수정 (v2.1.75)
+
+**Breaking Changes:**
+- Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용
+- Windows managed settings 레거시 경로 제거 (`C:\ProgramData\...` → `C:\Program Files\...`) (v2.1.75)
+
+---
+
 ### v2.1.74 (2026-03-13 동기화)
 
 **새로운 기능:**

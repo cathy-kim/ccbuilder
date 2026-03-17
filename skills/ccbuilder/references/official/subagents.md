@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-03-10 (v2.1.72)
+**Last Synced**: 2026-03-17 (v2.1.77)
 
 ---
 
@@ -63,7 +63,8 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Tool Search**: MCP 도구가 컨텍스트 10% 초과 시 자동 활성화
 - **Skill 프리로드**: `skills` 필드로 Skill 전체 내용을 agent에 주입
-- **Resume**: 이전 agent 작업 이어서 실행
+- **Resume (v2.1.77 제거)**: Agent tool `resume` 파라미터 제거됨 → `SendMessage({to: agentId})` 로 대체
 - **병렬 실행**: 독립적인 리서치는 여러 agent 동시 실행
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
+- **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)

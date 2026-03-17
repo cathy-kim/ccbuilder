@@ -147,14 +147,18 @@ Task({
 // output_file로 결과 확인
 ```
 
-### 5. 에이전트 재개 (신규)
+### 5. 에이전트 재개
+
+> ⚠️ **v2.1.77 Breaking Change**: Agent tool의 `resume` 파라미터가 제거되었습니다.
+> 이전 에이전트 재개 시 `SendMessage({to: agentId})` 를 사용하세요.
+> `SendMessage`는 중단된 에이전트를 자동으로 백그라운드에서 재개합니다.
 
 ```typescript
-Task({
-  description: "Continue previous work",
-  prompt: "이전 작업을 계속해주세요",
-  resume: "agent-id-from-previous-task"  // 이전 에이전트 ID로 재개
-})
+// 기존 방식 (제거됨)
+// Task({ resume: "agent-id" })
+
+// 신규 방식 (v2.1.77+)
+SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
 ---

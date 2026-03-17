@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.74)
+## 핵심 변경 사항 (v2.1.77)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -134,6 +134,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **oauth.authServerMetadataUrl** | MCP OAuth 커스텀 메타데이터 URL 지정 (v2.1.69) |
 | **플러그인 MCP 중복 제거** | 동일 command/URL 서버 자동 병합 (`/plugin` 메뉴에 표시) (v2.1.71) |
 | **OAuth 수정** | 콜백 포트 충돌 hang + HTTP 200 오류 시 재인증 프롬프트 복원 (v2.1.74) |
+| **MCP Elicitation** | MCP 서버가 세션 중 구조화된 입력 요청 (폼 필드·URL) (v2.1.76) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -148,6 +149,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Project Local** | `CLAUDE.local.md` (자동 gitignore) |
 | **HTML 주석** | `<!-- -->` 자동 주입 시 Claude에게 숨김, Read 도구로는 표시 (v2.1.72) |
 | **autoMemoryDirectory** | Auto Memory 저장 디렉토리 커스텀 경로 지정 (v2.1.74) |
+| **메모리 타임스탬프** | 메모리 파일 최종 수정 시각 자동 기록 — 신선도 판단 지원 (v2.1.75) |
 
 **상세**: [references/memory-rules-guide.md](references/memory-rules-guide.md)
 
@@ -192,6 +194,9 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
 | `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
+| `PostCompact` | 컨텍스트 압축 완료 후 (v2.1.76) |
+| `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) |
+| `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) |
 
 **신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
 
@@ -200,13 +205,13 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
 - **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74)
-- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72)
-- **Skill 변수 · Plugin 개선**: `${CLAUDE_SKILL_DIR}` (v2.1.69), `/plugin uninstall` → `.claude/settings.local.json` 수정 (v2.1.71)
-- **신규 도구 · env**: `ExitWorktree` (EnterWorktree 세션 종료, v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (크론 즉시 중지, v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (SessionEnd 훅 타임아웃 설정, v2.1.74), `modelOverrides` 설정 (모델 픽커 → 커스텀 provider ID 매핑, v2.1.73)
+- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77)
+- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77)
+- **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
 
 ### Breaking Changes
 
-`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●)
+`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), **Agent tool `resume` 파라미터 제거** → `SendMessage({to: agentId})` 사용 (v2.1.77), Windows managed settings 레거시 경로 제거 (v2.1.75)
 
 ---
 
@@ -284,7 +289,7 @@ allowed-tools: [Read, Grep, Glob]
 }
 ```
 
-**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded (17개)
+**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult (20개)
 
 **상세**: [references/hooks-guide.md](references/hooks-guide.md)
 
@@ -469,23 +474,7 @@ Skill, Subagent, Hook 구현 시 아래 로컬 레포에서 **실제 코드를 �
 | 깊은 분석 | `Task(Explore)` | 멀티 라운드 탐색 + 관계 파악 |
 | 시맨틱 검색 | `claude-context MCP` | 자연어 코드 검색 (설치 필요) |
 
-```
-# Grep: 키워드 검색
-Grep "PreToolUse" in references/github/repos/hooks-mastery/
-
-# Glob: Skill 파일 찾기
-Glob "**/SKILL.md" in references/github/repos/anthropics-skills/
-
-# Task(Explore): 깊은 분석
-Task(Explore, "repos/obra-superpowers에서 TDD 워크플로우 구조 분석해줘")
-
-# claude-context MCP: 시맨틱 검색 (설치 후)
-"Hook에서 보안 필터링하는 패턴 찾아줘"
-```
-
-#### claude-context MCP 설치 (선택)
-
-시맨틱 코드 검색 — 설정: `claude mcp add claude-context` (Gemini+Zilliz 또는 Ollama+Milvus)
+시맨틱 코드 검색 설치 (선택): `claude mcp add claude-context` (Gemini+Zilliz 또는 Ollama+Milvus)
 
 ### 기타 참조
 
@@ -506,4 +495,4 @@ Task(Explore, "repos/obra-superpowers에서 TDD 워크플로우 구조 분석해
 - **Settings**: https://code.claude.com/docs/en/settings
 
 ---
-**Status**: UPDATED (2026-03-07) | **Claude Code**: v2.1.77+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
+**Status**: UPDATED (2026-03-17) | **Claude Code**: v2.1.77+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
