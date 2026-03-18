@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-03-07
-**Claude Code Version**: v2.1.71+
+**Version**: 2.18.0
+**Last Updated**: 2026-03-17
+**Claude Code Version**: v2.1.77+
 
 ---
 
@@ -137,6 +137,27 @@ claude mcp add --transport http my-server https://mcp.example.com
 ```
 
 > **v2.1.74 수정**: OAuth 콜백 포트가 이미 사용 중일 때 인증이 hang되는 버그 수정. 리프레시 토큰 만료 후 HTTP 200으로 오류를 반환하는 OAuth 서버(예: Slack)에서 재인증 프롬프트가 나타나지 않던 버그 수정.
+
+---
+
+## MCP Elicitation (v2.1.76 신규)
+
+MCP 서버가 세션 실행 중 사용자에게 구조화된 입력을 요청할 수 있습니다. 대화형 폼 필드 또는 브라우저 URL로 표시됩니다.
+
+Hook으로 인터셉트 가능:
+- `Elicitation`: 요청이 표시되기 전에 인터셉트 (응답 오버라이드)
+- `ElicitationResult`: 응답이 서버로 전송되기 전에 오버라이드
+
+```json
+{
+  "hooks": {
+    "Elicitation": [{
+      "matcher": "my-server",
+      "hooks": [{ "type": "command", "command": "./hooks/handle-elicitation.sh" }]
+    }]
+  }
+}
+```
 
 ---
 

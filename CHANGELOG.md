@@ -7,6 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.18.0] - 2026-03-17
+
+### Added
+- **Claude Code v2.1.77 sync**
+  - 토큰 한도 확대: Opus 4.6 기본 출력 64k, Opus 4.6/Sonnet 4.6 상한 128k
+  - `allowRead` sandbox filesystem 설정 — `denyRead` 영역 내 읽기 재허용
+  - `/copy N` — N번째 최근 응답 복사 (인덱스 선택)
+  - `SendMessage` — 중단된 에이전트 자동 백그라운드 재개 (에러 대신)
+  - `/branch` 명령 (기존 `/fork` 리네이밍, `/fork` alias 유지)
+  - Background bash 작업 출력 5GB 초과 시 자동 종료 (디스크 보호)
+  - 플랜 수락 시 플랜 내용으로 세션 자동 이름 지정
+  - `claude plugin validate` 개선 — skill/agent/command frontmatter + `hooks/hooks.json` 검증
+  - `apiKeyHelper` 10초 이상 소요 시 경고 알림 (메인 루프 블로킹 방지)
+- **Claude Code v2.1.76 sync**
+  - MCP Elicitation 지원 — MCP 서버가 세션 중 구조화된 입력 요청 (폼 필드·URL)
+  - `Elicitation`, `ElicitationResult` Hook 이벤트 — MCP 요청 인터셉트/오버라이드
+  - `PostCompact` Hook 이벤트 — 컨텍스트 압축 완료 후 실행
+  - `/effort` 슬래시 명령 — 모델 effort 레벨 세션 내 설정
+  - `-n`/`--name <name>` CLI 플래그 — 세션 시작 시 표시 이름 설정
+  - `worktree.sparsePaths` — `--worktree` 시 필요한 디렉토리만 sparse checkout
+  - `feedbackSurveyRate` 설정 — 세션 품질 설문 샘플링 비율 (enterprise)
+- **Claude Code v2.1.75 sync**
+  - Opus 4.6 1M context window 기본 지원 (Max, Team, Enterprise plans)
+  - 메모리 파일 최종 수정 타임스탬프 자동 기록 — Claude가 신선도 판단 가능
+  - `/color` 명령 — 세션 프롬프트 바 색상 설정
+  - Hook source 표시 (settings/plugin/skill) — 권한 프롬프트에서 출처 확인
+  - 세션 이름 프롬프트 바 표시 (`/rename` 사용 시)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.74 → v2.1.77 업데이트
+  - MCP 테이블: MCP Elicitation 항목 추가
+  - Memory 테이블: 메모리 타임스탬프 항목 추가
+  - 신규 Hook 이벤트: PostCompact, Elicitation, ElicitationResult 추가 (17→20개)
+  - Agent/CLI: /branch, /effort, /copy N, allowRead, 토큰 한도, SendMessage 변경 반영
+  - Breaking Changes: Agent tool resume 파라미터 제거, Windows managed settings 경로 추가
+- `references/hooks-guide.md`: PostCompact, Elicitation, ElicitationResult 이벤트 추가
+- `references/official/hooks.md`: 신규 Hook 이벤트 3개 추가 (17→20개)
+- `references/mcp-guide.md`: MCP Elicitation 지원 추가
+- `references/official/mcp.md`: MCP Elicitation 기능 추가
+- `references/subagents-guide.md`: Agent tool resume 파라미터 제거 안내 추가
+- `references/official/subagents.md`: Agent tool 변경 사항 업데이트
+- `references/version-sync.md`: v2.1.77 변경사항 추적 추가
+
+### Breaking Changes
+- Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
+- Windows managed settings 레거시 경로 제거: `C:\ProgramData\ClaudeCode\managed-settings.json` → `C:\Program Files\ClaudeCode\managed-settings.json` (v2.1.75)
+
+### Fixed (Claude Code v2.1.77)
+- PreToolUse hook `"allow"` 반환 시 `deny` 권한 규칙 및 enterprise managed settings 우회 보안 버그 수정
+- Write tool CRLF 파일/디렉토리 덮어쓰기 시 줄 끝 무음 변환 수정
+- `--resume` 메모리 추출 쓰기와 주 트랜스크립트 간 race condition으로 인한 대화 히스토리 무음 truncation 수정
+- 장시간 세션 메모리 누수 (progress message가 compaction 후 생존) 수정
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` beta tool-schema 필드 미제거로 프록시 게이트웨이 요청 거부 수정
+- Bash 도구: 시스템 temp 경로에 공백 포함 시 성공 명령에 오류 보고 수정
+- API 비스트리밍 폴백 시 비용·토큰 미집계 수정
+- Claude Desktop 세션이 terminal CLI API 키 사용 (OAuth 대신) 수정
+- `git-subdir` 플러그인 동일 모노레포 서브디렉토리 간 플러그인 캐시 충돌 수정
+- stale worktree 정리가 직전 재개된 에이전트 worktree 삭제 race condition 수정
+
+### Fixed (Claude Code v2.1.76)
+- 컨텍스트 압축 후 deferred tool 입력 스키마 손실로 array/number 파라미터 타입 오류 수정
+- 슬래시 명령 "Unknown skill" 표시 수정
+- 자동 압축 연속 실패 시 무한 재시도 (circuit breaker: 3회 후 중단)
+
+### Fixed (Claude Code v2.1.75)
+- 토큰 추정 과잉 계산 (thinking/tool_use 블록) — 조기 컨텍스트 압축 방지
+- 음성 모드 신규 설치 시 `/voice` 두 번 토글 없이 정상 활성화
+
+---
+
 ## [2.17.0] - 2026-03-14
 
 ### Added

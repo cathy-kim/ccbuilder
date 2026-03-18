@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-02-11
+**Last Synced**: 2026-03-17
 
 ---
 
@@ -52,6 +52,7 @@
 | **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
+| **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
 
 ## Managed MCP (조직 관리)
 
