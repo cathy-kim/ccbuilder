@@ -85,10 +85,12 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `description` | string | 설명 | **필수** |
 | `model` | string | 모델 (sonnet/opus/haiku) | sonnet |
 | `allowed-tools` | string[] | 허용된 도구 목록 | 모든 도구 |
-| `disallowedTools` | string[] | 차단된 도구 목록 (신규) | - |
-| `permissionMode` | string | 권한 모드 (신규) | default |
-| `skills` | string[] | 프리로드할 스킬 (신규) | - |
+| `disallowedTools` | string[] | 차단된 도구 목록 | - |
+| `permissionMode` | string | 권한 모드 | default |
+| `skills` | string[] | 프리로드할 스킬 | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
+| `effort` | string | 모델 effort 레벨 (low/medium/high) — plugin-shipped agents 지원 (v2.1.78) | - |
+| `maxTurns` | number | 최대 에이전트 턴 수 — plugin-shipped agents 지원 (v2.1.78) | - |
 
 ---
 

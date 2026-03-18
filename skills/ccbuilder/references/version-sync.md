@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.78 (2026-03-18 동기화)
+
+**새로운 기능:**
+- `StopFailure` Hook 이벤트 — API 오류(레이트 리밋, 인증 실패 등)로 턴 종료 시 트리거
+- `${CLAUDE_PLUGIN_DATA}` 변수 — 플러그인 업데이트 후에도 유지되는 persistent state 디렉토리
+- `/plugin uninstall` 시 plugin data 삭제 전 확인 프롬프트
+- Plugin-shipped agent frontmatter에서 `effort`, `maxTurns`, `disallowedTools` 지원
+- tmux passthrough로 iTerm2/Kitty/Ghostty 터미널 알림이 외부 터미널에 전달 (`set -g allow-passthrough on`)
+- 응답 텍스트 줄 단위 스트리밍 (생성 즉시 라인별 표시)
+- `ANTHROPIC_CUSTOM_MODEL_OPTION` 환경변수 — `/model` 픽커에 커스텀 항목 추가
+
+**주요 버그 수정:**
+- `git log HEAD` sandboxed Bash에서 "ambiguous argument" 오류 및 stub 파일 git status 오염
+- 대규모 세션(>5MB) `cc log`·`--resume` 대화 히스토리 무음 truncation
+- API 오류 → Stop Hook → 무한 루프 수정
+- `deny: ["mcp__servername"]` 규칙이 MCP 도구를 모델에 노출하던 버그
+- `sandbox.filesystem.allowWrite` 절대 경로 미작동
+- **Security:** 샌드박스 의존성 누락 시 무음 비활성화 → 시작 시 경고 표시
+- `bypassPermissions` 모드에서 보호 디렉토리(.git, .claude) 무음 쓰기
+- `--worktree` 플래그 시 worktree의 skills·hooks 미로드
+- `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` / `includeGitInstructions` 설정 미작동
+- `ANTHROPIC_BETAS` 환경변수 Haiku 모델에서 무음 무시
+
+---
+
 ### v2.1.77 (2026-03-17 동기화)
 
 **새로운 기능:**

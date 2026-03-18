@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.19.0] - 2026-03-18
+
+### Added
+- **Claude Code v2.1.78 sync**
+  - `StopFailure` Hook 이벤트 — API 오류(레이트 리밋, 인증 실패 등)로 턴 종료 시 트리거
+  - `${CLAUDE_PLUGIN_DATA}` 변수 — 플러그인 업데이트 후에도 유지되는 persistent state 디렉토리; `/plugin uninstall` 시 삭제 전 확인 프롬프트
+  - Plugin-shipped agent frontmatter에서 `effort`, `maxTurns`, `disallowedTools` 지원
+  - tmux `set -g allow-passthrough on` 설정 시 iTerm2/Kitty/Ghostty 터미널 알림이 외부 터미널에 전달
+  - 응답 텍스트 줄 단위 스트리밍 (생성 즉시 라인별 표시)
+  - `ANTHROPIC_CUSTOM_MODEL_OPTION` 환경변수 — `/model` 픽커에 커스텀 모델 항목 추가 (`_NAME`, `_DESCRIPTION` 접미사 변수 지원)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.77 → v2.1.78 업데이트
+  - 신규 Hook 이벤트: `StopFailure` 추가 (20→21개)
+  - Agent/CLI 섹션: `${CLAUDE_PLUGIN_DATA}`, plugin-shipped agent frontmatter, `ANTHROPIC_CUSTOM_MODEL_OPTION` 추가
+- `references/hooks-guide.md`: `StopFailure` 이벤트 추가 (20→21개)
+- `references/official/hooks.md`: `StopFailure` 이벤트 추가 (21번째)
+- `references/subagents-guide.md`: plugin-shipped agent frontmatter 업데이트
+- `references/version-sync.md`: v2.1.78 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.78)
+- `git log HEAD` sandboxed Bash에서 "ambiguous argument" 오류, stub 파일이 `git status` 오염
+- `cc log` 및 `--resume` 대규모 세션(>5MB) 대화 히스토리 무음 truncation
+- API 오류 시 Stop Hook이 블로킹 오류를 재피드백하는 무한 루프
+- `deny: ["mcp__servername"]` 권한 규칙이 MCP 도구를 모델에 노출하던 버그
+- `sandbox.filesystem.allowWrite` 절대 경로 미작동 (기존 `//` 접두사 필요)
+- **Security:** `sandbox.enabled: true`이지만 의존성 누락 시 샌드박스 무음 비활성화 → 시작 시 경고 표시로 변경
+- `bypassPermissions` 모드에서 `.git`, `.claude` 등 보호 디렉토리가 프롬프트 없이 쓰기 가능
+- `--worktree` 플래그 사용 시 worktree 디렉토리에서 skills·hooks 미로드
+- `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS` 및 `includeGitInstructions` 설정이 git status 섹션 미억제
+- Bash 도구가 Dock/Spotlight에서 실행된 VS Code에서 Homebrew 등 PATH 의존 바이너리 미검색
+- `ANTHROPIC_BETAS` 환경변수가 Haiku 모델 사용 시 무음 무시
+- [VSCode] 사이드바 열기 시 로그인 화면 잠깐 표시
+- [VSCode] Opus 선택 시 "API Error: Rate limit reached" (1M context 변형 제거)
+
+---
+
 ## [2.18.0] - 2026-03-17
 
 ### Added
