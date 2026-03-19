@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-03-17
+**Last Synced**: 2026-03-19
 
 ---
 
@@ -30,6 +30,7 @@
 | 18 | `PostCompact` | 컨텍스트 압축 완료 후 (v2.1.76) | - |
 | 19 | `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) | override |
 | 20 | `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) | override |
+| 21 | `StopFailure` | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | - |
 
 ## Handler 타입
 

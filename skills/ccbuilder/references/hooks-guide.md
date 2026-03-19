@@ -2,13 +2,13 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.18.0
-**Last Updated**: 2026-03-17
-**Claude Code Version**: v2.1.77+
+**Version**: 2.19.0
+**Last Updated**: 2026-03-19
+**Claude Code Version**: v2.1.79+
 
 ---
 
-## Hook 이벤트 (v2.18 최신)
+## Hook 이벤트 (v2.19 최신)
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
@@ -32,6 +32,7 @@
 | **PostCompact** | 컨텍스트 압축 완료 후 (v2.1.76) | No | - |
 | **Elicitation** | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) | Yes (override) | `request`, `server` |
 | **ElicitationResult** | Elicitation 응답 전송 전 오버라이드 (v2.1.76) | Yes (override) | `result`, `server` |
+| **StopFailure** | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | No | `stop_reason`, `error` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 

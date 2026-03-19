@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.19.0] - 2026-03-19
+
+### Added
+- **Claude Code v2.1.79 sync**
+  - `--console` 플래그 — `claude auth login --console` Anthropic Console(API 결제) 인증
+  - `/config` 메뉴에 "Show turn duration" 토글 추가
+  - `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows)
+  - [VSCode] `/remote-control` — 브라우저/폰(claude.ai/code)에서 세션 이어받기
+  - [VSCode] 첫 메시지 기반 세션 탭 AI 제목 자동 생성
+- **Claude Code v2.1.78 sync**
+  - `StopFailure` Hook 이벤트 — rate limit·인증 실패 등 API 오류로 턴 종료 시 발동
+  - `${CLAUDE_PLUGIN_DATA}` 변수 — 플러그인 업데이트 후에도 유지되는 영속 상태 저장소
+  - 플러그인 배포 에이전트 frontmatter에 `effort`, `maxTurns`, `disallowedTools` 지원
+  - tmux `set -g allow-passthrough on` 시 터미널 알림(iTerm2/Kitty/Ghostty)이 외부 터미널에 도달
+  - 응답 텍스트 생성 중 줄 단위 스트리밍
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.77 → v2.1.79 업데이트
+  - 신규 Hook 이벤트: `StopFailure` 추가 (20→21개)
+  - CLI 섹션: `--console` 플래그 반영
+  - Plugin 섹션: `${CLAUDE_PLUGIN_DATA}`, `CLAUDE_CODE_PLUGIN_SEED_DIR` 추가
+- `references/hooks-guide.md`: `StopFailure` 이벤트 추가 (21번째)
+- `references/official/hooks.md`: `StopFailure` 이벤트 추가 (21번째)
+- `references/official/subagents.md`: 플러그인 에이전트 frontmatter `effort` 필드 추가
+- `references/version-sync.md`: v2.1.79 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.79)
+- `claude -p` 명시적 stdin 없이 subprocess로 실행 시 hang 수정 (Python `subprocess.run` 등)
+- `-p` (print) 모드에서 Ctrl+C 동작 않는 버그 수정
+- `/btw` 스트리밍 중 트리거 시 메인 에이전트 출력 반환 문제 수정
+- `voiceEnabled: true` 설정 시 음성 모드 시작 활성화 오류 수정
+- `SessionEnd` 훅이 대화형 `/resume`으로 세션 전환 시 미발동 수정
+- 비스트리밍 API 폴백에 2분 per-attempt 타임아웃 추가 (무한 hang 방지)
+- 시작 시 메모리 사용량 ~18MB 개선
+
+### Fixed (Claude Code v2.1.78)
+- **Security**: `sandbox.enabled: true`이지만 의존성 없을 때 샌드박스 묵시적 비활성화 → 시작 시 경고 표시로 수정
+- `deny: ["mcp__servername"]` 권한 규칙이 모델에 차단 도구를 노출하던 버그 수정
+- `sandbox.filesystem.allowWrite` 절대 경로 미작동 수정
+- `.git`, `.claude` 등 보호 디렉토리가 `bypassPermissions` 모드에서 프롬프트 없이 쓰기 가능하던 버그 수정
+- `cc log`, `--resume` 대형 세션(>5MB) 대화 히스토리 무음 truncation 수정
+
+---
+
 ## [2.18.0] - 2026-03-17
 
 ### Added

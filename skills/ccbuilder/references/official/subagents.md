@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-03-17 (v2.1.77)
+**Last Synced**: 2026-03-19 (v2.1.79)
 
 ---
 
@@ -28,6 +28,7 @@
 | `model` | `sonnet`, `opus`, `haiku`, `inherit` |
 | `permissionMode` | `default`, `acceptEdits`, `delegate`, `dontAsk`, `bypassPermissions`, `plan` |
 | `maxTurns` | 최대 에이전트 턴 수 |
+| `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78) |
 | `skills` | 프리로드할 Skill (전체 내용 주입) |
 | `mcpServers` | 사용 가능 MCP 서버 |
 | `hooks` | Agent 스코프 라이프사이클 훅 |
