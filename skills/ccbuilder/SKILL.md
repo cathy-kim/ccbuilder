@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.77)
+## 핵심 변경 사항 (v2.1.79)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -197,14 +197,14 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `PostCompact` | 컨텍스트 압축 완료 후 (v2.1.76) |
 | `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) |
 | `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) |
-
+| `StopFailure` | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) |
 **신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
 
 ### Agent/CLI/Plugin 강화
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
-- **CLI**: `claude agents`, `claude auth login/status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74)
+- **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77)
 - **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
@@ -289,7 +289,7 @@ allowed-tools: [Read, Grep, Glob]
 }
 ```
 
-**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult (20개)
+**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, StopFailure, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult (21개)
 
 **상세**: [references/hooks-guide.md](references/hooks-guide.md)
 

@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.79 (2026-03-19 동기화)
+
+**새로운 기능:**
+- `--console` 플래그 — `claude auth login --console` Anthropic Console(API 결제) 인증
+- `/config` 메뉴 "Show turn duration" 토글
+- `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows)
+- `StopFailure` Hook 이벤트 — rate limit·인증 실패 등 API 오류로 턴 종료 시 발동 (v2.1.78)
+- `${CLAUDE_PLUGIN_DATA}` 변수 — 플러그인 영속 상태 저장소, 업데이트 후에도 유지 (v2.1.78)
+- 플러그인 배포 에이전트 frontmatter에 `effort`, `maxTurns`, `disallowedTools` 지원 (v2.1.78)
+- tmux `set -g allow-passthrough on` 시 터미널 알림이 외부 터미널에 도달 (v2.1.78)
+- [VSCode] `/remote-control` — claude.ai/code에서 세션 이어받기
+- [VSCode] 첫 메시지 기반 세션 탭 AI 제목 자동 생성
+
+**주요 버그 수정:**
+- `claude -p` subprocess hang 수정 (Python `subprocess.run` 등), Ctrl+C `-p` 모드 수정
+- `SessionEnd` 훅이 대화형 `/resume` 시 미발동 수정
+- 비스트리밍 API 폴백 2분 per-attempt 타임아웃 (무한 hang 방지)
+- **Security (v2.1.78)**: `sandbox.enabled: true`이지만 의존성 없을 때 묵시적 비활성화 → 시작 경고로 수정
+- `.git`, `.claude` 보호 디렉토리 `bypassPermissions`에서 프롬프트 없이 쓰기 가능하던 버그 수정 (v2.1.78)
+- `deny: ["mcp__servername"]` 규칙이 모델에 차단 도구를 노출하던 버그 수정 (v2.1.78)
+- 시작 메모리 사용량 ~18MB 개선
+
+---
+
 ### v2.1.77 (2026-03-17 동기화)
 
 **새로운 기능:**
