@@ -53,6 +53,7 @@
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
+| **--channels** | MCP 서버가 세션에 메시지 직접 푸시 (research preview, v2.1.80) |
 
 ## Managed MCP (조직 관리)
 

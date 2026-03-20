@@ -161,6 +161,18 @@ Hook으로 인터셉트 가능:
 
 ---
 
+## MCP Channels (v2.1.80, Research Preview)
+
+`--channels` 플래그를 사용하면 MCP 서버가 세션에 메시지를 직접 푸시할 수 있습니다. 서버 주도 알림·이벤트 전달에 활용됩니다.
+
+```bash
+claude --channels
+```
+
+> **주의**: Research Preview 기능으로, 향후 API가 변경될 수 있습니다.
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.

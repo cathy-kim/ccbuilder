@@ -77,6 +77,26 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.80 (2026-03-20 동기화)
+
+**새로운 기능:**
+- `effort` frontmatter — Skills·슬래시 명령 호출 시 모델 effort 레벨 오버라이드
+- `--channels` (research preview) — MCP 서버가 세션에 메시지 직접 푸시
+- `rate_limits` 필드 — statusline 스크립트에서 Claude.ai rate limit 사용량 표시 (5시간·7일 창, `used_percentage`, `resets_at`)
+- `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json에 플러그인 엔트리 인라인 선언
+- 플러그인 팁에 CLI 도구 사용량 감지 추가 (파일 패턴 매칭 외)
+
+**주요 버그 수정:**
+- `--resume` 병렬 도구 결과 유실 수정 — 병렬 tool_use/tool_result 쌍 모두 복원 (`[Tool result missing]` placeholders 제거)
+- 음성 모드 WebSocket 실패 — Cloudflare 봇 감지로 인한 비-브라우저 TLS 핑거프린트 문제 수정
+- fine-grained tool streaming으로 API 프록시·Bedrock·Vertex 사용 시 400 오류 수정
+- 게이트웨이·서드파티 배포에서 `/remote-control` 비표시 수정
+- `/sandbox` 탭 전환 Tab·화살표 키 미응답 수정
+- 시작 시 managed settings(`enabledPlugins`, `permissions.defaultMode`, policy env vars) 미적용 수정 (remote-settings.json 캐시 문제)
+- 시작 시 메모리 사용량 ~80MB 감소 (250k 파일 레포)
+
+---
+
 ### v2.1.79 (2026-03-19 동기화)
 
 **새로운 기능:**
