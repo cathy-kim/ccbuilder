@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.81 (2026-03-21 동기화)
+
+**새로운 기능:**
+- `--bare` 플래그 — scripted `-p` 경량 모드 (hooks/LSP/plugin sync/skill walk 스킵, ANTHROPIC_API_KEY 또는 `--settings` apiKeyHelper 필수, auto-memory 비활성화)
+- `--channels` permission relay — permission capability 선언 채널 서버가 폰으로 도구 승인 프롬프트 포워딩
+- MCP OAuth CIMD (SEP-991) — Dynamic Client Registration 없는 서버를 위한 Client ID Metadata Document 지원
+- MCP read/search 도구 호출 "Queried {server}" 1줄 접힘 (Ctrl+O 확장)
+- ref-tracked 플러그인 매 로드 시 re-clone — 최신 upstream 반영
+- `showClearContextOnPlanAccept: true` 설정으로 플랜 수락 "clear context" 옵션 복원 (기본 숨김)
+- Remote Control 세션 제목 세 번째 메시지 후 자동 갱신
+
+**v2.1.80 새로운 기능:**
+- `rate_limits` statusline 필드 — Claude.ai 사용량 표시 (5시간·7일 창, `used_percentage`, `resets_at`)
+- `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json 인라인 선언
+- `effort` frontmatter — skills/slash commands에서 모델 effort 레벨 오버라이드
+- CLI 도구 사용 감지 플러그인 팁 (파일 패턴 매칭 외 추가)
+- 시작 메모리 ~80MB 절감 (250k-file 레포)
+
+**주요 버그 수정:**
+- 다중 동시 세션 OAuth 토큰 갱신 시 반복 재인증 요구 수정
+- Voice mode: 재시도 실패·WebSocket 조용한 단절 오디오 미복구 수정
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` structured-outputs beta 헤더 미억제 (Vertex/Bedrock 프록시 400 오류)
+- Node.js 18 크래시, dash 포함 Bash 명령 불필요한 권한 프롬프트 수정
+- `--resume` 병렬 도구 결과 누락 (`[Tool result missing]`) 수정 (v2.1.80)
+- worktree 세션 재개 시 해당 worktree 자동 전환
+
+---
+
 ### v2.1.79 (2026-03-19 동기화)
 
 **새로운 기능:**

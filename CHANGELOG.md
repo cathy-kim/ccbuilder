@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.20.0] - 2026-03-21
+
+### Added
+- **Claude Code v2.1.81 sync**
+  - `--bare` 플래그 — scripted `-p` 호출용 경량 모드 (hooks/LSP/plugin sync/skill walk 스킵, ANTHROPIC_API_KEY 또는 `--settings` apiKeyHelper 필수, auto-memory 비활성화)
+  - `--channels` permission relay — permission capability 선언한 채널 서버가 폰으로 도구 승인 프롬프트 포워딩
+  - MCP OAuth Client ID Metadata Document (CIMD / SEP-991) 지원 — Dynamic Client Registration 없는 서버 대응
+  - MCP read/search 도구 호출이 "Queried {server}" 1줄로 접힘 (Ctrl+O로 확장)
+  - `!` bash 모드 발견성 개선 — 대화형 명령 필요 시 Claude가 자동 제안
+  - ref-tracked 플러그인 매 로드 시 re-clone — 최신 upstream 변경사항 반영
+  - Remote Control 세션 제목 세 번째 메시지 후 자동 갱신
+  - `showClearContextOnPlanAccept: true` 설정으로 플랜 수락 시 "clear context" 옵션 복원 (기본 숨김으로 변경)
+- **Claude Code v2.1.80 sync**
+  - `rate_limits` 필드 — statusline 스크립트에서 Claude.ai 사용량 표시 (5시간·7일 창, `used_percentage`, `resets_at`)
+  - `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json에 플러그인 엔트리 인라인 선언
+  - `effort` frontmatter 지원 — skills/slash commands에서 모델 effort 레벨 오버라이드
+  - `--channels` (research preview) — MCP 서버가 세션으로 메시지 푸시
+  - CLI 도구 사용 감지로 플러그인 팁 자동 표시 (파일 패턴 매칭 외 추가)
+  - 시작 메모리 사용량 ~80MB 절감 (250k-file 레포 기준)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.79 → v2.1.81 업데이트
+  - MCP 테이블: `--channels 릴레이`, `MCP OAuth CIMD` 추가 (이전 v2.1.46/v2.1.63 항목 통합)
+  - CLI 섹션: `--bare` 플래그 추가
+  - Plugin 섹션: `source: 'settings'`, `effort` frontmatter 추가
+- `references/version-sync.md`: v2.1.81 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.81)
+- 다중 동시 Claude Code 세션에서 OAuth 토큰 갱신 시 반복 재인증 요구 수정
+- Voice mode: 재시도 실패 시 실제 오류 대신 "check your network" 오류 메시지 표시 수정
+- Voice mode: 서버가 WebSocket 연결을 조용히 끊을 때 오디오 미복구 수정
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` structured-outputs beta 헤더 미억제 → Vertex/Bedrock 프록시 400 오류 수정
+- Node.js 18 크래시 수정
+- 문자열 내 dash 포함 Bash 명령에 불필요한 권한 프롬프트 수정
+- 플러그인 디렉토리 세션 중 삭제 시 hook이 프롬프트 제출 차단 수정
+- 백그라운드 에이전트 태스크 출력이 완료-폴링 인터벌 사이 race condition으로 무한 hang 수정
+- worktree 세션 재개 시 해당 worktree로 자동 전환
+
+### Fixed (Claude Code v2.1.80)
+- `--resume` 병렬 도구 결과 누락 (`[Tool result missing]` 플레이스홀더) 수정
+- Voice mode WebSocket 실패 (Cloudflare bot detection TLS 핑거프린트) 수정
+- API 프록시/Bedrock/Vertex 경유 fine-grained tool streaming 400 오류 수정
+- `/remote-control` 게이트웨이·서드파티 provider 환경에서 표시 수정
+- managed settings (`remote-settings.json` 캐시 시 미적용) 수정
+
+---
+
 ## [2.19.0] - 2026-03-19
 
 ### Added
