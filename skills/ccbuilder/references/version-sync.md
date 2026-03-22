@@ -77,6 +77,26 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.81 (2026-03-22 동기화)
+
+**새로운 기능:**
+- `--bare` 플래그 — 스크립트 `-p` 호출 시 hooks·LSP·플러그인 동기화·스킬 탐색 스킵; `ANTHROPIC_API_KEY` 또는 `apiKeyHelper` 필수, OAuth/키체인·auto-memory 비활성
+- `--channels` 권한 릴레이 — permission 기능 선언 채널 서버가 도구 승인 프롬프트를 폰으로 전달 (research preview)
+- MCP OAuth CIMD (SEP-991) 지원 — Dynamic Client Registration 없는 MCP 서버 OAuth 호환
+- `rate_limits` 상태바 스크립트 필드 — Claude.ai 5시간·7일 사용량 (`used_percentage`, `resets_at`)
+- `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json 인라인 플러그인 항목 선언 (v2.1.80)
+- Skill/슬래시 커맨드 frontmatter `effort` 필드 — 호출 시 모델 effort 레벨 오버라이드 (v2.1.80)
+- ref-tracked 플러그인 매 로드 시 재클론 (v2.1.81), CLI 도구 사용 감지 기반 플러그인 팁 (v2.1.80)
+
+**주요 버그 수정:**
+- 동시 세션 OAuth 토큰 갱신 시 반복 재인증 요구 수정
+- 음성 모드 WebSocket 실패·오디오 미복구, `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` 미작동 수정
+- Node.js 18 크래시, 백그라운드 에이전트 태스크 무한 hang, 워크트리 세션 재개 버그 수정
+- `--resume` 병렬 도구 결과 누락, managed settings 시작 시 미적용 수정 (v2.1.80)
+- [VSCode] Git Bash Windows PATH 상속 오류 (v2.1.78 회귀) 수정
+
+---
+
 ### v2.1.79 (2026-03-19 동기화)
 
 **새로운 기능:**

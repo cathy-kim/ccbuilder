@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.18.0
-**Last Updated**: 2026-03-17
-**Claude Code Version**: v2.1.77+
+**Version**: 2.20.0
+**Last Updated**: 2026-03-22
+**Claude Code Version**: v2.1.81+
 
 ---
 
@@ -136,6 +136,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 }
 ```
 
+> **v2.1.81**: MCP OAuth CIMD (Client ID Metadata Document / SEP-991) 지원 — Dynamic Client Registration이 없는 서버에서도 OAuth 인증 가능.
+
 > **v2.1.74 수정**: OAuth 콜백 포트가 이미 사용 중일 때 인증이 hang되는 버그 수정. 리프레시 토큰 만료 후 HTTP 200으로 오류를 반환하는 OAuth 서버(예: Slack)에서 재인증 프롬프트가 나타나지 않던 버그 수정.
 
 ---
@@ -198,6 +200,19 @@ MCP 서버의 프롬프트가 슬래시 명령으로 노출됩니다:
 /mcp__supabase__query
 /mcp__github__create-issue
 ```
+
+---
+
+## --channels (v2.1.80 Research Preview)
+
+MCP 서버가 `permission` capability를 선언하면 도구 승인 프롬프트를 폰으로 전달할 수 있습니다.
+
+```bash
+# 채널 서버와 함께 사용
+claude --channels
+```
+
+> **주의**: Research preview 기능입니다.
 
 ---
 

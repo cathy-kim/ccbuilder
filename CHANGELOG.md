@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.20.0] - 2026-03-22
+
+### Added
+- **Claude Code v2.1.81 sync**
+  - `--bare` 플래그 — 스크립트 `-p` 호출 시 hooks·LSP·플러그인 동기화·스킬 탐색 스킵; `ANTHROPIC_API_KEY` 또는 `apiKeyHelper`(`--settings`) 필수, OAuth/키체인 비활성, auto-memory 완전 비활성
+  - `--channels` 권한 릴레이 — permission 기능을 선언한 채널 서버가 도구 승인 프롬프트를 폰으로 전달 (research preview, v2.1.80)
+  - MCP OAuth CIMD (Client ID Metadata Document / SEP-991) 지원 — Dynamic Client Registration 없는 서버 호환
+  - `rate_limits` 상태바 스크립트 필드 — Claude.ai 5시간·7일 윈도우 사용량 표시 (`used_percentage`, `resets_at`)
+  - `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json 인라인 플러그인 항목 선언 (v2.1.80)
+  - Skill/슬래시 커맨드 frontmatter `effort` 필드 — 호출 시 모델 effort 레벨 오버라이드 (v2.1.80)
+  - ref-tracked 플러그인 매 로드 시 재클론 — 업스트림 변경 자동 반영
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.79 → v2.1.81 업데이트
+  - MCP 섹션: `--channels` 권한 릴레이, MCP OAuth CIMD 추가
+  - Agent/CLI/Plugin 섹션: `--bare` 플래그, `rate_limits` 상태바 필드, `source: 'settings'`, `effort` frontmatter, ref-tracked 플러그인 재클론 추가
+- `references/version-sync.md`: v2.1.81 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.81)
+- 동시 여러 Claude Code 세션에서 하나가 OAuth 토큰 갱신 시 나머지가 재인증 요구하는 버그
+- 음성 모드 재시도 실패 묵음·오해 메시지, WebSocket 연결 무음 드롭 후 오디오 미복구
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`가 structured-outputs 베타 헤더 미억제 → Vertex/Bedrock 프록시 400 오류
+- Node.js 18 크래시, 문자열 내 대시 포함 Bash 명령 불필요 권한 프롬프트
+- 플러그인 디렉토리 세션 중 삭제 시 플러그인 훅이 프롬프트 제출 차단
+- 백그라운드 에이전트 태스크 완료·폴링 사이 race condition으로 무한 hang
+- 워크트리 세션 재개 시 해당 워크트리로 자동 복귀, `/btw` 붙여넣기 텍스트 미포함
+- 터미널 탭 제목 미업데이트, Remote Control 세션 제목·`/rename`·`/exit` 아카이브 버그
+- [VSCode] Git Bash 사용 시 Windows PATH 상속 오류 (v2.1.78 회귀)
+
+### Fixed (Claude Code v2.1.80)
+- `--resume` 병렬 도구 결과 누락 (`[Tool result missing]` 플레이스홀더) 수정
+- 음성 모드 Cloudflare 봇 탐지로 인한 WebSocket 실패, 세밀한 도구 스트리밍 400 오류
+- `/remote-control` 게이트웨이·서드파티 배포에서 비표시, `/sandbox` 탭 전환 키 미반응
+- 시작 시 managed settings (`enabledPlugins` 등) 미적용 버그 (이전 세션 캐시)
+
+---
+
 ## [2.19.0] - 2026-03-19
 
 ### Added

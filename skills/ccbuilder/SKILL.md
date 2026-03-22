@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.79)
+## 핵심 변경 사항 (v2.1.81)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -135,6 +135,8 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **플러그인 MCP 중복 제거** | 동일 command/URL 서버 자동 병합 (`/plugin` 메뉴에 표시) (v2.1.71) |
 | **OAuth 수정** | 콜백 포트 충돌 hang + HTTP 200 오류 시 재인증 프롬프트 복원 (v2.1.74) |
 | **MCP Elicitation** | MCP 서버가 세션 중 구조화된 입력 요청 (폼 필드·URL) (v2.1.76) |
+| **--channels** | MCP 서버가 권한 승인 프롬프트를 폰으로 전달 (v2.1.80 research preview) |
+| **MCP OAuth CIMD** | Client ID Metadata Document (SEP-991) 지원 — Dynamic Client Registration 불필요 (v2.1.81) |
 
 **상세**: [references/mcp-guide.md](references/mcp-guide.md)
 
@@ -203,8 +205,8 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 ### Agent/CLI/Plugin 강화
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
-- **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79)
+- **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료); `--bare` hooks·LSP·플러그인 스킵 `-p` 모드 (v2.1.81); `rate_limits` 상태바 필드 (v2.1.80)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 (v2.1.79); `source: 'settings'` settings.json 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론 (v2.1.81); Skill/Command `effort` frontmatter — 호출 시 effort 레벨 오버라이드 (v2.1.80)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77)
 - **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
@@ -493,6 +495,5 @@ Skill, Subagent, Hook 구현 시 아래 로컬 레포에서 **실제 코드를 �
 - **MCP**: https://code.claude.com/docs/en/mcp
 - **Memory**: https://code.claude.com/docs/en/memory
 - **Settings**: https://code.claude.com/docs/en/settings
-
 ---
-**Status**: UPDATED (2026-03-17) | **Claude Code**: v2.1.81+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
+**Status**: UPDATED (2026-03-22) | **Claude Code**: v2.1.81+ | **Sync**: [version-sync.md](references/version-sync.md) | [check-updates.sh](../../scripts/check-updates.sh)
