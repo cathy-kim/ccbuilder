@@ -138,6 +138,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.74 수정**: OAuth 콜백 포트가 이미 사용 중일 때 인증이 hang되는 버그 수정. 리프레시 토큰 만료 후 HTTP 200으로 오류를 반환하는 OAuth 서버(예: Slack)에서 재인증 프롬프트가 나타나지 않던 버그 수정.
 
+> **v2.1.81 신규**: **CIMD/SEP-991 지원** — Dynamic Client Registration을 지원하지 않는 서버에 대해 Client ID Metadata Document (CIMD) 방식으로 OAuth 등록 가능. 서버가 `/.well-known/oauth-client` 엔드포인트를 노출하면 자동 처리됨.
+
 ---
 
 ## MCP Elicitation (v2.1.76 신규)
