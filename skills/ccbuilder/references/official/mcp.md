@@ -49,10 +49,12 @@
 | **Resources** | `@server:protocol://path`로 참조 |
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
-| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록) |
+| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
+| **--channels** | 채널 capability 선언 MCP 서버가 도구 승인 프롬프트를 폰으로 릴레이 (v2.1.80-81) |
+| **도구 호출 축소** | read/search 호출 "Queried {server}" 단일 라인 표시, Ctrl+O로 확장 (v2.1.81) |
 
 ## Managed MCP (조직 관리)
 

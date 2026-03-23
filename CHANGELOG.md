@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.20.0] - 2026-03-23
+
+### Added
+- **Claude Code v2.1.81 sync**
+  - `--bare` 플래그 — 스크립트형 `-p` 호출용 경량 모드: 훅·LSP·플러그인 동기화·스킬 디렉토리 워크 비활성화, Auto-memory 완전 비활성화; `ANTHROPIC_API_KEY` 또는 `--settings`의 `apiKeyHelper` 필수 (OAuth·키체인 인증 불가)
+  - `--channels` 권한 릴레이 — 권한 capability를 선언한 채널 서버가 도구 승인 프롬프트를 폰으로 포워드
+  - plan mode 컨텍스트 초기화 옵션 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원 가능)
+  - MCP OAuth CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버에 대한 Client ID Metadata Document 지원
+  - MCP read/search 도구 호출 "Queried {server}" 단일 라인으로 축소 (Ctrl+O로 확장)
+  - ref-tracked 플러그인 매 로드 시 재클론으로 최신 upstream 변경 사항 반영
+  - Remote Control 세션 타이틀 세 번째 메시지 이후 갱신
+- **Claude Code v2.1.80 sync**
+  - `rate_limits` statusline 스크립트 필드 — Claude.ai rate limit 사용량 표시 (5시간·7일 윈도우, `used_percentage`·`resets_at`)
+  - `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json에 플러그인 항목 인라인 선언
+  - Skills·슬래시 명령 `effort` frontmatter — 호출 시 모델 effort 레벨 오버라이드
+  - `--channels` (리서치 프리뷰) — MCP 서버가 세션에 메시지 푸시
+  - 시작 시 메모리 사용량 대폭 절감 (~80 MB, 250k 파일 레포 기준)
+  - 플러그인 install 팁 단순화 — `/plugin install` 단일 명령으로 통합
+  - CLI 도구 사용 감지로 플러그인 팁 트리거 조건 확대 (파일 패턴 매칭 외)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.79 → v2.1.81 업데이트
+  - MCP 테이블: `--channels` 추가, MCP OAuth CIMD/SEP-991 반영, MCP 도구 호출 축소 UX 추가
+  - CLI 섹션: `--bare` 플래그, `rate_limits` statusline 필드 추가
+  - Plugin 섹션: `source: 'settings'`, `effort` frontmatter, ref-tracked 플러그인 재클론 추가
+  - Breaking Changes: plan mode 컨텍스트 초기화 숨김, Windows/WSL 스트리밍 비활성화 추가
+- `references/version-sync.md`: v2.1.81 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.81)
+- 동시 다중 세션에서 OAuth 토큰 갱신 시 재인증 반복 요청 수정
+- voice mode 재시도 실패 묵살 및 오해 "check your network" 메시지 → 실제 오류 표시로 수정
+- voice mode 서버 WebSocket 무음 연결 종료 시 오디오 미복구 수정
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` 미적용으로 structured-outputs beta 헤더 전송 → Vertex/Bedrock 프록시 400 오류 수정
+- `--channels` Team/Enterprise 조직에서 managed settings 미구성 시 bypass 수정
+- Node.js 18 크래시 수정
+- 문자열 내 대시 포함 Bash 명령에 불필요한 권한 프롬프트 수정
+- 세션 중 플러그인 디렉토리 삭제 시 플러그인 훅이 프롬프트 제출 차단하는 버그 수정
+- 백그라운드 에이전트 태스크 출력이 태스크 완료 직후 폴링 시 무한 hang하는 race condition 수정
+- worktree 내 세션 재개 시 해당 worktree로 자동 전환
+- `/btw` 활성 응답 중 사용 시 붙여넣기 텍스트 미포함 수정
+- tmux에서 빠른 Cmd+Tab 후 붙여넣기가 클립보드 복사보다 앞서는 race condition 수정
+- 자동 생성 세션 설명으로 터미널 탭 제목 미업데이트 수정
+- 보이지 않는 훅 첨부가 transcript 모드 메시지 수 부풀리는 버그 수정
+- Remote Control 세션 범용 제목 → 첫 프롬프트 기반 제목으로 수정
+- `/rename` Remote Control 세션 타이틀 미동기화 수정
+- Remote Control `/exit` 세션 아카이빙 불안정 수정
+- [VSCode] Git Bash 사용 시 Windows PATH 상속 누락 수정 (v2.1.78 회귀)
+
+### Fixed (Claude Code v2.1.80)
+- `--resume` 병렬 도구 결과 누락 — 병렬 tool_use/tool_result 쌍 모두 복원
+- voice mode WebSocket 실패 (Cloudflare bot detection TLS 지문 문제) 수정
+- API 프록시·Bedrock·Vertex에서 fine-grained 도구 스트리밍 400 오류 수정
+- `/remote-control` 게이트웨이·서드파티 프로바이더 배포에서도 표시되던 버그 수정
+- `/sandbox` 탭 전환 Tab·방향키 미응답 수정
+- 원격 설정(`remote-settings.json`) 캐시로 managed settings 미적용 수정
+
+---
+
 ## [2.19.0] - 2026-03-19
 
 ### Added

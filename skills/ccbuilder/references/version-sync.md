@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-03-19
+**최종 동기화**: 2026-03-23
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.81 (2026-03-23 동기화)
+
+**새로운 기능:**
+- `--bare` 플래그 — 스크립트형 `-p` 호출 경량 모드: 훅·LSP·플러그인·스킬 디렉토리 워크 비활성화, Auto-memory 완전 비활성화; API key 또는 `apiKeyHelper`(`--settings`) 필수
+- `--channels` 권한 릴레이 — 채널 서버가 도구 승인 프롬프트를 폰으로 포워드 (v2.1.80 리서치 프리뷰 → v2.1.81 확장)
+- MCP OAuth CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버에 Client ID Metadata Document 지원
+- MCP read/search 도구 호출 "Queried {server}" 단일 라인 축소 (Ctrl+O 확장)
+- `rate_limits` statusline 필드 — Claude.ai 5시간/7일 rate limit 사용량(`used_percentage`, `resets_at`) 표시 (v2.1.80)
+- `source: 'settings'` 플러그인 마켓플레이스 소스 — settings.json에 플러그인 항목 인라인 선언 (v2.1.80)
+- Skills·슬래시 명령 `effort` frontmatter — 호출 시 모델 effort 레벨 오버라이드 (v2.1.80)
+- ref-tracked 플러그인 매 로드 시 재클론으로 upstream 최신화
+- Remote Control 세션 타이틀 세 번째 메시지 이후 갱신
+
+**Breaking Changes:**
+- plan mode 컨텍스트 초기화 옵션 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원)
+- Windows(WSL 포함) 줄 단위 응답 스트리밍 비활성화 (렌더링 문제)
+
+**주요 버그 수정:**
+- 동시 다중 세션 OAuth 토큰 갱신 시 재인증 반복 요청 수정
+- voice mode WebSocket 무음 연결 종료 시 오디오 미복구 + retry 실패 묵살 수정
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` 미적용으로 structured-outputs beta 헤더 전송 → Vertex/Bedrock 프록시 400 오류 수정
+- Node.js 18 크래시 수정
+- worktree 내 세션 재개 시 해당 worktree 자동 전환
+- 백그라운드 에이전트 태스크 출력 무한 hang race condition 수정
+- `--resume` 병렬 도구 결과 누락 수정 (v2.1.80)
+- 시작 메모리 ~80 MB 절감 (250k 파일 레포, v2.1.80)
+
+---
 
 ### v2.1.79 (2026-03-19 동기화)
 
