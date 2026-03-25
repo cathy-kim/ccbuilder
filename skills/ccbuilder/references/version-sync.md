@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.83 (2026-03-25 동기화)
+
+**새로운 기능:**
+- `CwdChanged`, `FileChanged` Hook 이벤트 — 현재 디렉토리·파일 변경 시 트리거, direnv 등 반응형 환경 관리 지원
+- Agent frontmatter `initialPrompt` 필드 — 에이전트 생성 시 첫 턴 자동 제출
+- `managed-settings.d/` 드롭인 디렉토리 — `managed-settings.json` 옆에 독립 정책 파편 배포, 알파벳 순 병합
+- `sandbox.failIfUnavailable` 설정 — 샌드박스 활성화 상태에서 시작 불가 시 비샌드박스 실행 대신 오류 종료
+- `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` — Bash 도구·훅·MCP stdio 서버 subprocess에서 Anthropic·클라우드 자격증명 스크럽
+- `disableDeepLinkRegistration` 설정 — `claude-cli://` 프로토콜 핸들러 등록 방지
+- Plugin `manifest.userConfig` 옵션 외부 노출 — 활성화 시 설정 프롬프트, `sensitive: true` 값 키체인 저장
+- 트랜스크립트 모드(`Ctrl+O`)에서 `/` 검색, `n`/`N` 매치 이동
+- `Ctrl+X Ctrl+E` 외부 편집기 readline 네이티브 바인딩 추가
+- `MEMORY.md` 인덱스 25KB 추가 절단 제한
+- `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK` env var
+
+**Breaking Changes:**
+- 백그라운드 에이전트 전체 종료 단축키 `Ctrl+F` → `Ctrl+X Ctrl+K` 변경 (readline forward-char 충돌 방지)
+
+**Deprecated:**
+- `TaskOutput` 도구 → 백그라운드 태스크 출력 파일 경로에 `Read` 도구 직접 사용으로 대체
+
+**주요 버그 수정:**
+- 컨텍스트 압축 후 백그라운드 서브에이전트 비가시 → 중복 에이전트 생성 수정
+- `--mcp-config` CLI 플래그 `allowedMcpServers`/`deniedMcpServers` managed policy 우회 수정
+- SDK 세션 히스토리 재개 시 훅 메시지가 parentUuid 체인 분기 → 히스토리 손실 수정
+- tool result 파일 `cleanupPeriodDays` 설정 무시하고 미정리되던 버그 수정
+- 대용량 파일 diff hang → 5초 타임아웃 후 graceful fallback
+- 음성 입력 활성화 시 시작 시 1–8초 UI 동결 수정
+- macOS `caffeinate` 프로세스 Claude Code 종료 후 미종료 수정
+
+---
+
 ### v2.1.81 (2026-03-23 동기화)
 
 **새로운 기능:**

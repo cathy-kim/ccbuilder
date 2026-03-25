@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-03-19
+**Last Synced**: 2026-03-25
 
 ---
 
@@ -31,6 +31,8 @@
 | 19 | `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) | override |
 | 20 | `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) | override |
 | 21 | `StopFailure` | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | - |
+| 22 | `CwdChanged` | 현재 디렉토리 변경 시 (direnv 등 반응형 환경 관리, v2.1.83) | - |
+| 23 | `FileChanged` | 파일 변경 감지 시 (반응형 환경 관리, v2.1.83) | - |
 
 ## Handler 타입
 

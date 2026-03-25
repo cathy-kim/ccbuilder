@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.21.0] - 2026-03-25
+
+### Added
+- **Claude Code v2.1.83 sync**
+  - `CwdChanged`, `FileChanged` 신규 Hook 이벤트 — 현재 디렉토리·파일 변경 감지로 반응형 환경 관리 (direnv 등) 지원
+  - Agent frontmatter `initialPrompt` 필드 — 에이전트 생성 시 첫 턴 자동 제출
+  - `managed-settings.d/` 드롭인 디렉토리 — 팀별 독립 정책 파편을 알파벳 순 병합
+  - `sandbox.failIfUnavailable` 설정 — 샌드박스 활성화 상태에서 샌드박스 미시작 시 비샌드박스 실행 대신 오류 종료
+  - `disableDeepLinkRegistration` 설정 — `claude-cli://` 프로토콜 핸들러 등록 방지
+  - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` env var — Bash 도구·훅·MCP stdio 서버 subprocess 환경에서 Anthropic·클라우드 자격증명 제거
+  - `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK` env var — 스트리밍 실패 시 비스트리밍 폴백 비활성화
+  - Plugin `manifest.userConfig` 옵션 외부 노출 — 활성화 시 설정 프롬프트, `sensitive: true` 값 키체인(macOS) / 보호 자격증명 파일 저장
+  - 트랜스크립트 검색 — transcript 모드(`Ctrl+O`)에서 `/` 검색, `n`/`N`으로 매치 이동
+  - 붙여넣기 이미지 `[Image #N]` 칩 삽입 — 프롬프트 내 위치별 참조 가능
+  - `Ctrl+X Ctrl+E` — 외부 편집기 열기 readline 네이티브 바인딩 (기존 `Ctrl+G` 유지)
+  - `Ctrl+L` — 화면 지우기 + 강제 전체 재렌더링 (Cmd+K 후 부분 공백 복구용)
+  - `chat:killAgents`, `chat:fastMode` `~/.claude/keybindings.json`에서 리바인딩 가능
+  - `MEMORY.md` 인덱스 25KB 추가 절단 (기존 200줄에 더해)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.81 → v2.1.83 업데이트
+  - 신규 Hook 이벤트: `CwdChanged`, `FileChanged` 추가 (총 23개)
+  - Agent 필드: `initialPrompt` frontmatter 추가
+  - Plugin 섹션: `managed-settings.d/` 드롭인 디렉토리 추가
+  - 신규 도구·env: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1`, `sandbox.failIfUnavailable` 추가
+  - Memory 테이블: MEMORY.md 25KB 절단 제한 추가
+  - Breaking Changes: Ctrl+F → Ctrl+X Ctrl+K 키바인딩 변경 추가
+  - Deprecated 테이블: `TaskOutput` 도구 → `Read` 대체 추가
+- `references/version-sync.md`: v2.1.83 변경사항 추적 추가
+
+### Deprecated
+- `TaskOutput` 도구 — 백그라운드 태스크 출력 파일을 `Read` 도구로 직접 읽는 방식으로 대체 (v2.1.83)
+
+### Fixed (Claude Code v2.1.83 주요)
+- 백그라운드 서브에이전트 컨텍스트 압축 후 비가시 → 중복 에이전트 생성 방지
+- `--mcp-config` CLI 플래그가 `allowedMcpServers`/`deniedMcpServers` managed policy 우회하던 버그 수정
+- SDK 세션 히스토리 재개 시 훅 progress/attachment 메시지가 parentUuid 체인 분기 → 히스토리 손실 수정
+- tool result 파일 `cleanupPeriodDays` 설정 무시 미정리 수정
+- 백그라운드 에이전트 태스크가 git/API 호출 hang 시 "running" 상태 고착 수정
+
 ## [2.20.0] - 2026-03-23
 
 ### Added

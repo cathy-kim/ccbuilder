@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.81)
+## 핵심 변경 사항 (v2.1.83)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -179,7 +179,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | 기능 | 설명 |
 |------|------|
 | **Auto Memory** | `~/.claude/projects/<project>/memory/` 영구 저장 |
-| **MEMORY.md** | 매 세션 자동 로드 (200줄 제한) |
+| **MEMORY.md** | 매 세션 자동 로드 (200줄/25KB 제한) |
 | **Modular Rules** | `.claude/rules/*.md` + `paths:` frontmatter로 경로별 규칙 |
 | **Worktree 공유** | 같은 레포의 git worktree 간 Project config/Auto memory 공유 (v2.1.63) |
 
@@ -191,27 +191,27 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `SubagentStart` | 서브에이전트 생성 시점 |
 | `PostToolUseFailure` | 도구 호출 실패 후 |
 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) |
-| `WorktreeCreate` | git worktree 생성 시 (v2.1.50) |
-| `WorktreeRemove` | git worktree 제거 시 (v2.1.50) |
+| `WorktreeCreate`/`WorktreeRemove` | git worktree 생성/제거 시 (v2.1.50) |
 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) |
 | `PostCompact` | 컨텍스트 압축 완료 후 (v2.1.76) |
-| `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) |
-| `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) |
+| `Elicitation`/`ElicitationResult` | MCP 서버 입력 요청 인터셉트 / 응답 오버라이드 (v2.1.76) |
 | `StopFailure` | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) |
+| `CwdChanged` | 현재 디렉토리 변경 시 (direnv 등 환경 관리, v2.1.83) |
+| `FileChanged` | 파일 변경 감지 시 (반응형 환경 관리, v2.1.83) |
 **신규 필드 (v2.1.69)**: `agent_id`, `agent_type`, `worktree` (모든 이벤트에 추가) | **HTTP Hook (v2.1.63)**: `type: "http"` — URL로 JSON POST
 
 ### Agent/CLI/Plugin 강화
 
-- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74)
+- **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74); `initialPrompt` 자동 첫 턴 제출 (v2.1.83)
 - **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `--bare` (-p 경량화: 훅/LSP/플러그인 비활성화·Auto-memory 끔, API key 필수, v2.1.81), `rate_limits` statusline 필드 (5시간/7일 rate limit 표시, v2.1.80)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings, `managed-settings.d/` 드롭인 정책 파편 디렉토리 (v2.1.83); `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77)
-- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77)
+- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77); `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` subprocess 환경에서 인증 자격증명 제거 (v2.1.83); `sandbox.failIfUnavailable` 샌드박스 불가 시 오류 종료 (v2.1.83)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
 
 ### Breaking Changes
 
-`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), **Agent tool `resume` 파라미터 제거** → `SendMessage({to: agentId})` 사용 (v2.1.77), Windows managed settings 레거시 경로 제거 (v2.1.75), plan mode 컨텍스트 초기화 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원 가능, v2.1.81), Windows/WSL 응답 줄 단위 스트리밍 비활성화 (v2.1.81)
+`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), **Agent tool `resume` 파라미터 제거** → `SendMessage({to: agentId})` 사용 (v2.1.77), Windows managed settings 레거시 경로 제거 (v2.1.75), plan mode 컨텍스트 초기화 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원 가능, v2.1.81), Windows/WSL 응답 줄 단위 스트리밍 비활성화 (v2.1.81), 백그라운드 에이전트 전체 종료 단축키 Ctrl+F → Ctrl+X Ctrl+K (v2.1.83)
 
 ---
 
@@ -220,11 +220,11 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | Deprecated | 대체 방법 |
 |------------|-----------|
 | `/output-style` 명령 | `/config` 사용 (v2.1.74); 또는 `--system-prompt-file` / `plugins` |
-| `legacy SDK entrypoint` | `@anthropic-ai/claude-agent-sdk`로 마이그레이션 |
 | `includeCoAuthoredBy` 설정 | 새 `attribution` 설정 사용 |
 | `$ARGUMENTS.0` 문법 | `$ARGUMENTS[0]` 사용 |
 | SSE MCP transport | HTTP (streamable-http) 사용 |
 | Sonnet 4.5 (1M context) | Sonnet 4.6 사용 (Max plan) |
+| `TaskOutput` 도구 | `Read`로 백그라운드 태스크 출력 파일 읽기 (v2.1.83) |
 
 ---
 
@@ -289,7 +289,7 @@ allowed-tools: [Read, Grep, Glob]
 }
 ```
 
-**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, StopFailure, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult (21개)
+**주요 이벤트**: SessionStart, PreToolUse, PostToolUse, Stop, StopFailure, SubagentStop, TeammateIdle, InstructionsLoaded, PostCompact, Elicitation, ElicitationResult, CwdChanged, FileChanged (23개)
 
 **상세**: [references/hooks-guide.md](references/hooks-guide.md)
 

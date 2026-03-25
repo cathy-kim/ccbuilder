@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-03-19 (v2.1.79)
+**Last Synced**: 2026-03-25 (v2.1.83)
 
 ---
 
@@ -33,6 +33,7 @@
 | `mcpServers` | 사용 가능 MCP 서버 |
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
+| `initialPrompt` | 에이전트 생성 시 자동 제출할 첫 번째 턴 프롬프트 (v2.1.83) |
 
 ## 파일 위치 & 우선순위
 

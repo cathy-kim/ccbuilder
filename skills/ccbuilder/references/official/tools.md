@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-03-10 (Claude Code v2.1.72+)
+**Last Synced**: 2026-03-25 (Claude Code v2.1.83+)
 
 ---
 
@@ -52,6 +52,7 @@
 | `TaskUpdate` | - | 작업 상태 변경 | 낮음 |
 | `TaskList` | 133+ | 작업 목록 조회 | 낮음 |
 | `TaskGet` | - | 작업 상세 조회 | 낮음 |
+| `TaskOutput` | - | ~~백그라운드 태스크 출력 조회~~ **Deprecated** → `Read`로 출력 파일 직접 읽기 (v2.1.83) | 낮음 |
 | `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
 
 ### Team Tools
