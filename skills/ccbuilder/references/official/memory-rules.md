@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/memory, https://code.claude.com/docs/en/settings
 
-**Last Synced**: 2026-02-11
+**Last Synced**: 2026-03-26
 
 ---
 
@@ -40,7 +40,7 @@ paths:
 ```
 
 - `.claude/rules/*.md` 위치
-- `paths:` frontmatter로 적용 파일 지정 (glob 패턴)
+- `paths:` frontmatter로 적용 파일 지정 (glob 패턴 또는 YAML 리스트, v2.1.84)
 - 서브디렉토리, symlink 지원
 - paths 없으면 전체 프로젝트에 적용
 
@@ -49,7 +49,7 @@ paths:
 | 항목 | 설명 |
 |------|------|
 | 위치 | `~/.claude/projects/<project>/memory/` |
-| 자동 로드 | `MEMORY.md` (매 세션, **200줄 제한**) |
+| 자동 로드 | `MEMORY.md` (매 세션, **200줄/25KB 제한**, v2.1.83) |
 | 별도 파일 | 토픽별 파일 생성 후 MEMORY.md에서 링크 |
 | 용도 | 안정적 패턴, 아키텍처 결정, 사용자 선호, 반복 문제 해결책 |
 
@@ -65,7 +65,8 @@ paths:
 | `~/.claude/settings.json` | 전체 프로젝트 | X |
 | `.claude/settings.json` | 프로젝트 | O |
 | `.claude/settings.local.json` | 프로젝트 (개인) | X (gitignore) |
-| Managed settings | 관리자 | - |
+| `managed-settings.json` | 관리자 | - |
+| `managed-settings.d/*.json` | 관리자 (팀별 드롭인, v2.1.83) | - |
 
 ## Settings 주요 필드
 

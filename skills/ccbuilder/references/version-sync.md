@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-03-23
+**최종 동기화**: 2026-03-26
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,66 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.84 (2026-03-26 동기화)
+
+**새로운 기능:**
+- PowerShell 도구 — Windows 옵트인 프리뷰
+- `ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL_SUPPORTS` env vars — Bedrock/Vertex/Foundry 고정 모델 capability 오버라이드; `_MODEL_NAME`/`_DESCRIPTION`으로 `/model` 픽커 레이블 커스텀
+- `CLAUDE_STREAM_IDLE_TIMEOUT_MS` env var — 스트리밍 유휴 워치독 타임아웃 (기본 90초)
+- `TaskCreated` Hook 이벤트 — `TaskCreate` 호출 시 발동
+- `WorktreeCreate` Hook `type: "http"` 지원 — `hookSpecificOutput.worktreePath`로 경로 반환
+- `allowedChannelPlugins` 관리형 설정 — 팀/Enterprise 채널 플러그인 허용 목록
+- Rules/Skills `paths:` frontmatter YAML 리스트 glob 지원
+- MCP 도구 설명·서버 지시문 2KB 상한 (OpenAPI 서버 컨텍스트 팽창 방지)
+- 로컬과 claude.ai 커넥터 중복 MCP 서버 제거 (로컬 설정 우선)
+- 75분+ 유휴 복귀 시 `/clear` 넛지 프롬프트
+- Global system-prompt 캐싱이 `ToolSearch` 활성화 시에도 작동 (MCP 도구 포함)
+- [VSCode] rate limit 경고 배너 (사용량 % + 리셋 시간)
+- 토큰 수 ≥1M을 "1.5m" 형식으로 표시
+- issue/PR 참조 링크: `owner/repo#123` 형식만 클릭 가능 (bare `#123` 비활성화)
+
+**주요 버그 수정:**
+- voice push-to-talk 입력 누출 및 트랜스크립트 삽입 위치 수정
+- `Ctrl+U` 멀티라인 입력에서 줄 경계 작동 수정
+- 워크플로우 서브에이전트가 `--json-schema`와 함께 API 400 오류 발생하는 버그 수정
+- partial clone 레포(Scalar/GVFS) 시작 시 mass blob 다운로드 트리거 성능 문제 수정
+- CJK IME 인라인 렌더링 및 스크린 리더 입력 추적 수정
+- macOS transient 키체인 읽기 실패로 "Not logged in" 오류 수정
+
+---
+
+### v2.1.83 (2026-03-26 동기화)
+
+**새로운 기능:**
+- `managed-settings.d/` 드롭인 디렉토리 — 팀별 독립 정책 파편 알파벳순 병합
+- `CwdChanged`, `FileChanged` Hook 이벤트 — 반응형 환경 관리 (direnv 등)
+- `sandbox.failIfUnavailable` 설정 — 샌드박스 미시작 시 에러로 종료
+- `disableDeepLinkRegistration` 설정 — `claude-cli://` 프로토콜 핸들러 등록 방지
+- `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` — Bash 도구·훅·MCP stdio 서버의 Anthropic/클라우드 자격증명 제거
+- 트랜스크립트 검색 — `Ctrl+O` 모드에서 `/` 입력, `n`/`N`으로 매치 이동
+- `Ctrl+X Ctrl+E` 외부 에디터 alias (readline 네이티브, `Ctrl+G` 유지)
+- Agent frontmatter `initialPrompt` — 에이전트 첫 턴 자동 제출
+- `chat:killAgents`, `chat:fastMode` keybindings.json으로 리바인딩 가능
+- `Ctrl+L` 화면 강제 전체 재드로우 (Cmd+K 후 UI 복구)
+- MEMORY.md 25KB 트런케이션 추가 (기존 200줄 제한에 추가)
+- Plugin MCP 서버가 org 관리형 커넥터와 중복 시 억제
+- `--bare -p` SDK 패턴 API 요청까지 ~14% 빠름
+
+**Breaking Changes:**
+- `TaskOutput` 도구 deprecated → 백그라운드 태스크 출력 파일 경로에 `Read` 사용
+- "stop all background agents" 키바인딩: `Ctrl+F` → `Ctrl+X Ctrl+K` (readline forward-char 충돌 해소)
+
+**주요 버그 수정:**
+- `--mcp-config` CLI 플래그가 `allowedMcpServers`/`deniedMcpServers` 정책 우회하던 버그 수정
+- 백그라운드 서브에이전트가 컨텍스트 컴팩션 후 보이지 않아 중복 생성되던 버그 수정
+- 백그라운드 에이전트 태스크가 git/API 호출 hang 시 "running" 상태 고착 수정
+- 미설치 플러그인 훅이 다음 세션까지 계속 발동하는 버그 수정
+- SDK 세션 히스토리 손실 (훅 progress/attachment 메시지의 parentUuid 체인 분기) 수정
+- 대형 파일 diff hang — 5초 타임아웃 후 graceful fallback
+- macOS caffeinate 프로세스 종료 미완료로 Mac 수면 방지 버그 수정
+
+---
 
 ### v2.1.81 (2026-03-23 동기화)
 

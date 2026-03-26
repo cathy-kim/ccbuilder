@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-03-10 (Claude Code v2.1.72+)
+**Last Synced**: 2026-03-26 (Claude Code v2.1.84+)
 
 ---
 
@@ -25,6 +25,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Bash` | 1,067 | Shell 명령 실행 | **높음** |
+| `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 
@@ -52,6 +53,7 @@
 | `TaskUpdate` | - | 작업 상태 변경 | 낮음 |
 | `TaskList` | 133+ | 작업 목록 조회 | 낮음 |
 | `TaskGet` | - | 작업 상세 조회 | 낮음 |
+| `TaskOutput` | - | 백그라운드 태스크 출력 — **Deprecated** (v2.1.83): `Read`로 출력 파일 경로 직접 읽기 | 낮음 |
 | `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
 
 ### Team Tools
