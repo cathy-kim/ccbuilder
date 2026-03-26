@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-03-19
+**Last Synced**: 2026-03-26
 
 ---
 
@@ -24,13 +24,16 @@
 | 12 | `TaskCompleted` | 태스크 완료 | exit 2 |
 | 13 | `PreCompact` | 컨텍스트 압축 전 | - |
 | 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
-| 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50) | - |
+| 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50); HTTP type 지원 → `hookSpecificOutput.worktreePath` 반환 (v2.1.84) | - |
 | 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |
 | 17 | `InstructionsLoaded` | CLAUDE.md / `.claude/rules/*.md` 로드 시 (v2.1.69) | - |
 | 18 | `PostCompact` | 컨텍스트 압축 완료 후 (v2.1.76) | - |
 | 19 | `Elicitation` | MCP 서버 사용자 입력 요청 인터셉트 (v2.1.76) | override |
 | 20 | `ElicitationResult` | Elicitation 응답 전송 전 오버라이드 (v2.1.76) | override |
 | 21 | `StopFailure` | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | - |
+| 22 | `CwdChanged` | 작업 디렉토리 변경 시 — 반응형 환경 관리 (direnv 등) (v2.1.83) | - |
+| 23 | `FileChanged` | 파일 변경 감지 시 (v2.1.83) | - |
+| 24 | `TaskCreated` | `TaskCreate` 호출로 태스크 생성 시 (v2.1.84) | - |
 
 ## Handler 타입
 

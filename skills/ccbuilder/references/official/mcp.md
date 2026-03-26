@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-03-17
+**Last Synced**: 2026-03-26
 
 ---
 
@@ -55,6 +55,8 @@
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
 | **--channels** | 채널 capability 선언 MCP 서버가 도구 승인 프롬프트를 폰으로 릴레이 (v2.1.80-81) |
 | **도구 호출 축소** | read/search 호출 "Queried {server}" 단일 라인 표시, Ctrl+O로 확장 (v2.1.81) |
+| **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
+| **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 
 ## Managed MCP (조직 관리)
 

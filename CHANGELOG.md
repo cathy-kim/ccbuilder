@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.21.0] - 2026-03-26
+
+### Added
+- **Claude Code v2.1.84 sync**
+  - PowerShell 도구 — Windows 옵트인 프리뷰 (`tools-reference#powershell-tool`)
+  - `ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL_SUPPORTS` env vars — Bedrock/Vertex/Foundry 고정 모델의 effort/thinking capability 오버라이드
+  - `CLAUDE_STREAM_IDLE_TIMEOUT_MS` env var — 스트리밍 유휴 워치독 타임아웃 설정 (기본 90초)
+  - `TaskCreated` Hook 이벤트 — `TaskCreate` 호출로 태스크 생성 시 발동
+  - `WorktreeCreate` Hook `type: "http"` 지원 — `hookSpecificOutput.worktreePath`로 생성된 worktree 경로 반환
+  - `allowedChannelPlugins` 관리형 설정 — 팀/Enterprise 관리자용 채널 플러그인 허용 목록 정의
+  - Rules/Skills `paths:` frontmatter YAML 리스트 glob 지원
+  - MCP 도구 설명·서버 지시문 2KB 상한 — OpenAPI 서버의 컨텍스트 팽창 방지
+  - 로컬과 claude.ai 커넥터 중복 MCP 서버 제거 — 로컬 설정 우선
+  - 75분+ 유휴 복귀 시 `/clear` 넛지 프롬프트 (오래된 세션 토큰 재캐싱 방지)
+  - `x-client-request-id` 헤더 — API 요청 타임아웃 디버깅용
+  - [VSCode] rate limit 경고 배너 (사용량 % + 리셋 시간)
+  - issue/PR 참조 링크: `owner/repo#123` 형식만 클릭 가능 (bare `#123` 비활성화)
+- **Claude Code v2.1.83 sync**
+  - `managed-settings.d/` 드롭인 디렉토리 — 팀별 독립 정책 파편 알파벳순 병합
+  - `CwdChanged`, `FileChanged` Hook 이벤트 — 반응형 환경 관리 (direnv 등)
+  - `sandbox.failIfUnavailable` 설정 — 샌드박스 미시작 시 에러로 종료 (묵시적 비활성화 방지)
+  - `disableDeepLinkRegistration` 설정 — `claude-cli://` 프로토콜 핸들러 등록 방지
+  - `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` — Bash 도구·훅·MCP stdio 서버 서브프로세스에서 자격증명 제거
+  - 트랜스크립트 검색 — `Ctrl+O` 모드에서 `/` 입력, `n`/`N`으로 매치 이동
+  - `Ctrl+X Ctrl+E` 외부 에디터 alias (readline 네이티브 바인딩; `Ctrl+G` 유지)
+  - Agent frontmatter `initialPrompt` — 에이전트 첫 턴 자동 제출
+  - `Ctrl+L` 화면 강제 전체 재드로우 — `Cmd+K` 후 UI 부분 공백 복구용
+  - MEMORY.md 25KB 트런케이션 추가 (기존 200줄 제한에 추가)
+  - `TaskOutput` 도구 deprecated → 백그라운드 태스크 출력 파일 경로에 `Read` 사용
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.81 → v2.1.84 업데이트
+  - MCP 테이블: `MCP 컨텍스트 제한` 행 추가, `Managed MCP`에 `allowedChannelPlugins`, `claude.ai MCP connectors`에 로컬 우선 중복 제거 반영
+  - Memory 테이블: `Managed Policy`에 `managed-settings.d/` 드롭인, `MEMORY.md` 25KB 한도, `Modular Rules` YAML paths 리스트 추가
+  - Hook 이벤트: 노트 라인에 `CwdChanged`, `FileChanged` (v2.1.83), `TaskCreated` (v2.1.84) 추가; `WorktreeCreate` HTTP type 지원 주석 추가; 주요 이벤트 카운트 21→24개 업데이트
+  - Agent/CLI: `initialPrompt`, `CLAUDE_STREAM_IDLE_TIMEOUT_MS`, `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB`, PowerShell 도구 추가
+  - Deprecated: `TaskOutput` → `Read` 항목 추가; `Sonnet 4.5` 항목 제거 (stale)
+- `references/version-sync.md`: v2.1.83, v2.1.84 변경사항 추적 추가
+
+---
+
 ## [2.20.0] - 2026-03-23
 
 ### Added
