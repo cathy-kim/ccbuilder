@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.22.0] - 2026-03-27
+
+### Added
+- **Claude Code v2.1.85 sync**
+  - Hook `if` 필드 — permission rule syntax (`Bash(git *)`)로 훅 조건부 실행 필터링 (프로세스 스폰 오버헤드 감소)
+  - `PreToolUse` hook `updatedInput` + `permissionDecision: "allow"` 반환으로 `AskUserQuestion` 충족 — 헤드리스 통합(custom UI)에서 대화형 질문 처리 지원
+  - `CLAUDE_CODE_MCP_SERVER_NAME`, `CLAUDE_CODE_MCP_SERVER_URL` env vars — MCP `headersHelper` 스크립트에서 서버 정보 접근, 하나의 헬퍼로 다중 서버 처리
+  - MCP OAuth RFC 9728 Protected Resource Metadata discovery — 인증 서버 자동 탐색
+  - 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김
+  - Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (긴 사전 입력 프롬프트 시 "scroll to review" 경고)
+  - 트랜스크립트에 `/loop`, `CronCreate` 스케줄 작업 실행 시 타임스탬프 마커 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.84 → v2.1.85 업데이트
+  - MCP 테이블: `CLAUDE_CODE_MCP_SERVER_NAME/URL` 행 추가, `MCP OAuth`에 RFC 9728 반영
+  - Hook 노트: `if` 필드 조건부 실행, `PreToolUse` `AskUserQuestion` 충족 기능 추가
+  - CLI/env: Deep link 5,000자, 트랜스크립트 타임스탬프 마커, `CLAUDE_CODE_MCP_SERVER_NAME/URL` 추가
+  - Plugin: 조직 정책 차단 플러그인 마켓플레이스 숨김 반영
+- `references/version-sync.md`: v2.1.85 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.85)
+- `/compact` "context exceeded" 오류 수정 (대화가 compact 요청 자체보다 클 때)
+- `deniedMcpServers` 설정이 claude.ai MCP 서버를 차단하지 못하던 버그 수정
+- MCP step-up 재인증 — 리프레시 토큰 존재 시 `403 insufficient_scope` 재인증 흐름 미트리거 수정
+- Python Agent SDK `--mcp-config`의 `type:'sdk'` MCP 서버가 시작 시 누락되던 버그 수정
+- Remote Control 세션 권한 해결 후 "Requires Action" 상태 고착 수정
+- Ghostty·Kitty·WezTerm 등 Kitty 키보드 프로토콜 지원 터미널에서 종료 후 Ctrl+C·Ctrl+D 미작동 수정
+- 원격 세션 스트리밍 중단 시 메모리 누수 수정
+- 대형 트랜스크립트 스크롤 성능 개선 (WASM yoga-layout → pure TypeScript)
+
+---
+
 ## [2.21.0] - 2026-03-26
 
 ### Added

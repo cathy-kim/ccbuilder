@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.85 (2026-03-27 동기화)
+
+**새로운 기능:**
+- Hook `if` 필드 — permission rule syntax (`Bash(git *)`)로 훅 조건부 실행 필터링, 프로세스 스폰 오버헤드 감소
+- `PreToolUse` hook `updatedInput` + `permissionDecision: "allow"` 반환으로 `AskUserQuestion` 충족 — 헤드리스 통합에서 custom UI로 대화형 질문 처리
+- `CLAUDE_CODE_MCP_SERVER_NAME`, `CLAUDE_CODE_MCP_SERVER_URL` env vars — MCP `headersHelper` 스크립트에서 서버 이름·URL 접근 (하나의 헬퍼로 다중 MCP 서버 처리)
+- MCP OAuth RFC 9728 Protected Resource Metadata discovery — 인증 서버 자동 탐색
+- 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김
+- Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (긴 프롬프트 시 "scroll to review" 경고)
+- 트랜스크립트에 `/loop`, `CronCreate` 스케줄 작업 실행 시 타임스탬프 마커 추가
+- `tool_parameters` OpenTelemetry tool_result 이벤트 `OTEL_LOG_TOOL_DETAILS=1` 플래그로 게이팅
+
+**주요 버그 수정:**
+- `/compact` "context exceeded" 오류 — 대화가 compact 요청보다 클 때 실패하던 버그 수정
+- `deniedMcpServers` 설정이 claude.ai MCP 서버를 차단하지 못하던 버그 수정
+- MCP step-up 재인증 — 리프레시 토큰 존재 시 `403 insufficient_scope`로 재인증 흐름 미트리거 수정
+- Python Agent SDK `--mcp-config`의 `type:'sdk'` MCP 서버 시작 시 누락 수정
+- Remote Control 권한 해결 후 "Requires Action" 상태 고착 수정
+- Kitty 키보드 프로토콜 지원 터미널(Ghostty·Kitty·WezTerm 등) 종료 후 enhanced keyboard mode 잔류 수정
+- 원격 세션 스트리밍 중단 시 메모리 누수 수정
+- 대형 트랜스크립트 스크롤 성능 개선 (WASM yoga-layout → pure TypeScript)
+
+---
+
 ### v2.1.84 (2026-03-26 동기화)
 
 **새로운 기능:**

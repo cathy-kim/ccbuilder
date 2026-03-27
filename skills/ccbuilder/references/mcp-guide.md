@@ -140,6 +140,48 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.81 신규**: **CIMD/SEP-991 지원** — Dynamic Client Registration을 지원하지 않는 서버에 대해 Client ID Metadata Document (CIMD) 방식으로 OAuth 등록 가능. 서버가 `/.well-known/oauth-client` 엔드포인트를 노출하면 자동 처리됨.
 
+> **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
+
+---
+
+## headersHelper 다중 서버 지원 (v2.1.85 신규)
+
+`headersHelper` 스크립트에서 `CLAUDE_CODE_MCP_SERVER_NAME`과 `CLAUDE_CODE_MCP_SERVER_URL` 환경변수를 사용하면 하나의 헬퍼 스크립트로 여러 MCP 서버의 인증 헤더를 처리할 수 있습니다.
+
+```bash
+#!/bin/bash
+# ~/.claude/mcp-headers.sh — 다중 서버 공용 headersHelper
+
+case "$CLAUDE_CODE_MCP_SERVER_NAME" in
+  "github-server")
+    echo '{"Authorization": "Bearer '"$GITHUB_TOKEN"'"}'
+    ;;
+  "jira-server")
+    echo '{"Authorization": "Basic '"$JIRA_ENCODED"'"}'
+    ;;
+  *)
+    echo '{}'
+    ;;
+esac
+```
+
+```json
+{
+  "mcpServers": {
+    "github-server": {
+      "type": "http",
+      "url": "https://mcp.github.example.com",
+      "headersHelper": "~/.claude/mcp-headers.sh"
+    },
+    "jira-server": {
+      "type": "http",
+      "url": "https://mcp.jira.example.com",
+      "headersHelper": "~/.claude/mcp-headers.sh"
+    }
+  }
+}
+```
+
 ---
 
 ## MCP Elicitation (v2.1.76 신규)

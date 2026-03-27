@@ -113,6 +113,14 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
   "decision": "modify",
   "tool_input": { "modified": "input" }
 }
+
+// v2.1.85: AskUserQuestion 충족 (헤드리스 통합용)
+// permissionDecision: "allow" + updatedInput 반환 시
+// Claude의 AskUserQuestion을 훅이 직접 처리
+{
+  "permissionDecision": "allow",
+  "updatedInput": { "answer": "사용자 응답 내용" }
+}
 ```
 
 ### PermissionRequest Decision
@@ -231,6 +239,33 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 | `"*"` | 모든 도구 |
 | `"mcp__*"` | 모든 MCP 도구 (신규) |
 | `"mcp__supabase__*"` | Supabase MCP 도구만 (신규) |
+
+---
+
+## 조건부 실행 — `if` 필드 (v2.1.85)
+
+훅에 `if` 필드를 추가하면 permission rule syntax로 실행 조건을 필터링합니다. 조건에 맞지 않으면 훅 프로세스 자체를 스폰하지 않아 오버헤드를 줄입니다.
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/check-git.sh",
+            "if": "Bash(git *)"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`if` 값은 `Bash(git *)`, `Write(src/*)` 처럼 permission rule syntax를 사용합니다.
 
 ---
 
