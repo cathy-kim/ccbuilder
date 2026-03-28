@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.86 (2026-03-28 동기화)
+
+**새로운 기능:**
+- `X-Claude-Code-Session-Id` 헤더 — API 요청마다 세션 ID 전송, 프록시에서 바디 파싱 없이 세션별 집계 가능
+- `.jj`·`.sl` VCS 디렉토리 제외 — Grep 및 파일 자동완성이 Jujutsu/Sapling 메타데이터 디렉토리로 하강하지 않음
+- Read 도구 컴팩트 줄번호 포맷 + 변경 없는 재읽기 중복 제거 (토큰 절감)
+- Bedrock/Vertex/Foundry 프롬프트 캐시 히트율 개선 — 도구 설명에서 동적 콘텐츠 제거
+- claude.ai MCP 커넥터 키체인 캐시 5s→30s 연장 — 다중 커넥터 스타트업 stall 감소
+- `@` 파일 멘션 토큰 오버헤드 감소 (raw 문자열 JSON-escape 제거)
+- `/skills` 목록 알파벳순 정렬 + 설명 250자 상한
+- Memory "Saved N memories" 알림 파일명 hover 강조·클릭으로 열기
+- Auto 모드 플랜 제한 메시지 "unavailable for your plan"으로 개선
+
+**주요 버그 수정:**
+- `--resume` 사용 시 "tool_use ids were found without tool_result blocks" 오류 (v2.1.85 이전 세션)
+- 조건부 skills/rules 설정 시 프로젝트 루트 외부 파일 Write/Edit/Read 실패
+- 스킬 호출마다 불필요한 config 디스크 쓰기 — 성능 저하 및 Windows config 손상
+- 대형 트랜스크립트 `/feedback` 사용 시 OOM 크래시
+- `--bare` 모드 대화형 세션에서 MCP 도구 드롭 및 미드턴 메시지 묵시적 폐기
+- OAuth 로그인 URL `c` 단축키가 ~20자만 복사되던 버그
+- 마스킹 입력이 좁은 터미널 줄 바꿈 시 토큰 시작 부분 노출
+- macOS/Linux 공식 마켓플레이스 플러그인 스크립트 "Permission denied" (v2.1.83 이후 회귀)
+- 다중 인스턴스 실행 중 `/model` 변경 시 다른 세션 모델이 statusline에 표시
+- [VSCode] 장시간 작업 "Not responding" 오류; Max 플랜 OAuth 갱신 시 Sonnet 초기화 버그
+
+---
+
 ### v2.1.85 (2026-03-27 동기화)
 
 **새로운 기능:**

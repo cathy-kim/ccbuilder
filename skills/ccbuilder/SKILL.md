@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.85)
+## 핵심 변경 사항 (v2.1.86)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -129,7 +129,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **환경 변수 확장** | `${VAR}`, `${VAR:-default}` in .mcp.json |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers/allowedChannelPlugins, v2.1.84) |
-| **claude.ai MCP connectors** | claude.ai MCP 커넥터 사용 (v2.1.46); `ENABLE_CLAUDEAI_MCP_SERVERS=false` 비활성화 (v2.1.63); 로컬 설정과 중복 시 로컬 우선 (v2.1.84) |
+| **claude.ai MCP connectors** | claude.ai MCP 커넥터 사용 (v2.1.46); `ENABLE_CLAUDEAI_MCP_SERVERS=false` 비활성화 (v2.1.63); 로컬 설정과 중복 시 로컬 우선 (v2.1.84); 키체인 캐시 5s→30s로 연장 — 다중 커넥터 스타트업 stall 감소 (v2.1.86) |
 | **--channels** | MCP 서버가 세션에 메시지 푸시 / 채널 서버가 도구 승인 프롬프트 폰으로 릴레이 (v2.1.80-81) |
 | **oauth.authServerMetadataUrl** | MCP OAuth 커스텀 메타데이터 URL 지정 (v2.1.69) |
 | **MCP OAuth** | 콜백 포트 충돌·재인증 수정 (v2.1.74); CIMD/SEP-991 (Client ID Metadata Document) 지원 (v2.1.81); RFC 9728 Protected Resource Metadata discovery — 인증 서버 자동 탐색 (v2.1.85) |
@@ -181,7 +181,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | 기능 | 설명 |
 |------|------|
 | **Auto Memory** | `~/.claude/projects/<project>/memory/` 영구 저장 |
-| **MEMORY.md** | 매 세션 자동 로드 (200줄/25KB 제한, v2.1.83) |
+| **MEMORY.md** | 매 세션 자동 로드 (200줄/25KB 제한, v2.1.83); "Saved N memories" 알림에서 파일명 hover 강조·클릭으로 열기 (v2.1.86) |
 | **Modular Rules** | `.claude/rules/*.md` + `paths:` frontmatter로 경로별 규칙 (YAML 리스트 지원, v2.1.84) |
 | **Worktree 공유** | 같은 레포의 git worktree 간 Project config/Auto memory 공유 (v2.1.63) |
 
@@ -207,8 +207,8 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74); `initialPrompt` — 에이전트 첫 턴 자동 제출 (v2.1.83)
 - **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `--bare` (-p 경량화: 훅/LSP/플러그인 비활성화·Auto-memory 끔, API key 필수, v2.1.81), `rate_limits` statusline 필드 (5시간/7일 rate limit 표시, v2.1.80)
 - **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80); 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김 (v2.1.85)
-- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77)
-- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85)
+- **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77); `/skills` 알파벳순 정렬 + 설명 250자 상한 (v2.1.86)
+- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85), `X-Claude-Code-Session-Id` 헤더 — API 요청마다 세션 ID 전송 (프록시 세션 집계, v2.1.86), VCS 제외 디렉토리 `.jj`·`.sl` 추가 (Jujutsu/Sapling, Grep·자동완성 미하강, v2.1.86), Read 도구 컴팩트 줄번호 포맷 + 동일 파일 재읽기 중복 제거 (토큰 절감, v2.1.86), Bedrock/Vertex/Foundry 프롬프트 캐시 히트율 개선 (도구 설명에서 동적 콘텐츠 제거, v2.1.86)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
 
 ### Breaking Changes

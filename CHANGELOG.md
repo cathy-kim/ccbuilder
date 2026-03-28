@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.23.0] - 2026-03-28
+
+### Added
+- **Claude Code v2.1.86 sync**
+  - `X-Claude-Code-Session-Id` 헤더 — API 요청마다 세션 ID 전송, 프록시에서 바디 파싱 없이 세션별 요청 집계 가능
+  - `.jj`·`.sl` VCS 디렉토리 제외 — Grep 및 파일 자동완성이 Jujutsu/Sapling 메타데이터 디렉토리로 하강하지 않음
+  - Read 도구 컴팩트 줄번호 포맷 + 변경 없는 재읽기 중복 제거 — 토큰 사용량 절감
+  - Bedrock/Vertex/Foundry 프롬프트 캐시 히트율 개선 (도구 설명에서 동적 콘텐츠 제거)
+  - claude.ai MCP 커넥터 키체인 캐시 5s→30s 연장 — 다중 커넥터 구성 시 스타트업 이벤트 루프 stall 감소
+  - `@` 파일 멘션 토큰 오버헤드 감소 — raw 문자열 콘텐츠 JSON-escape 제거
+  - `/skills` 목록 알파벳순 정렬 + 설명 250자 상한 (컨텍스트 절감)
+  - Memory "Saved N memories" 알림에서 파일명 hover 강조 및 클릭으로 열기
+  - Auto 모드 플랜 제한 시 "unavailable for your plan" 메시지 표시 (기존 "temporarily unavailable" 대체)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.85 → v2.1.86 업데이트
+  - MCP 테이블: claude.ai 커넥터 키체인 캐시 연장 반영
+  - Memory 테이블: MEMORY.md 행에 memory 파일명 클릭 가능 기능 추가
+  - 신규 명령: `/skills` 알파벳순 정렬 + 250자 상한 추가
+  - 신규 도구/env: `X-Claude-Code-Session-Id`, VCS 제외(`.jj`/`.sl`), Read 도구 개선, Bedrock/Vertex/Foundry 캐시 히트율 개선 추가
+- `references/version-sync.md`: v2.1.86 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.86)
+- `--resume` 옵션 사용 시 "tool_use ids were found without tool_result blocks" 오류 (v2.1.85 이전 생성 세션)
+- 조건부 skills/rules 설정 시 프로젝트 루트 외부 파일(예: `~/.claude/CLAUDE.md`) Write/Edit/Read 실패
+- 스킬 호출 시마다 불필요한 config 디스크 쓰기 — 성능 저하 및 Windows config 손상 유발
+- 대형 트랜스크립트 `/feedback` 사용 시 OOM 크래시
+- `--bare` 모드에서 대화형 세션의 MCP 도구 드롭 및 미드턴 메시지 묵시적 폐기
+- OAuth 로그인 URL `c` 단축키가 전체 URL 대신 ~20자만 복사되던 버그
+- OAuth 코드 붙여넣기 등 마스킹 입력이 좁은 터미널에서 줄 바꿈 시 토큰 시작 부분 노출
+- macOS/Linux에서 공식 마켓플레이스 플러그인 스크립트 "Permission denied" (v2.1.83 이후 회귀)
+- 여러 Claude Code 인스턴스 실행 중 `/model` 변경 시 다른 세션의 모델이 statusline에 표시
+- 긴 대화 하단에서 휠 스크롤/클릭 후 새 메시지 자동 스크롤 미작동
+- `/plugin` 제거 다이얼로그에서 `n` 키가 데이터 디렉토리 유지하면서 플러그인 제거하도록 수정
+- 클릭 후 Enter 시 응답 도착 전까지 트랜스크립트 공백 표시 회귀
+- `ultrathink` 키워드 삭제 후 힌트가 잔류하던 버그
+- 긴 세션에서 마크다운/하이라이트 렌더 캐시가 전체 문자열을 유지해 메모리 증가
+- [VSCode] 장시간 작업 중 "Not responding" 오류 표시
+- [VSCode] OAuth 토큰 갱신(로그인 후 8시간) 시 Max 플랜 사용자가 Sonnet으로 초기화되는 버그
+
+---
+
 ## [2.22.0] - 2026-03-27
 
 ### Added
