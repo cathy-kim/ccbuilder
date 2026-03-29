@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.23.0] - 2026-03-29
+
+### Added
+- **Claude Code v2.1.87 sync**
+  - Cowork Dispatch 메시지 미전달 버그 수정
+- **Claude Code v2.1.86 sync**
+  - `X-Claude-Code-Session-Id` 헤더 — API 요청에 세션 ID 포함, 프록시가 바디 파싱 없이 세션별 요청 집계 가능
+  - `.jj`, `.sl` VCS 디렉토리 제외 — Jujutsu·Sapling 메타데이터 디렉토리를 Grep·파일 자동완성에서 제외
+  - Read 도구 컴팩트 라인번호 포맷 + 중복 re-read 제거 — 토큰 사용량 감소
+  - `/skills` 목록 알파벳 정렬 및 설명 250자 축약 — 컨텍스트 사용량 감소
+  - 메모리 파일명 호버 하이라이트 + 클릭으로 파일 열기 ("Saved N memories" 알림)
+  - Bedrock/Vertex/Foundry 사용자 프롬프트 캐시 히트율 개선 (도구 설명에서 동적 콘텐츠 제거)
+  - Auto mode "unavailable for your plan" 메시지 명확화 (기존 "temporarily unavailable")
+  - macOS keychain 캐시 5s → 30s 연장 (claude.ai MCP 커넥터 다수 설정 시 시작 이벤트 루프 블로킹 감소)
+  - `@` 파일 멘션 시 raw string JSON 이스케이프 제거 (토큰 오버헤드 감소)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.85 → v2.1.87 업데이트
+  - 신규 명령: `/skills` 알파벳 정렬·250자 축약 추가
+  - 신규 도구/env: `X-Claude-Code-Session-Id`, `.jj`/`.sl` VCS 제외, Read 도구 컴팩트 포맷 추가
+- `references/version-sync.md`: v2.1.87, v2.1.86 변경사항 추적 추가
+
+### Fixed (Claude Code v2.1.86-87)
+- `--resume` "tool_use ids were found without tool_result blocks" 오류 (v2.1.85 이전 세션)
+- 조건부 skills/rules 설정 시 프로젝트 루트 외부 파일(~/.claude/CLAUDE.md 등) Write/Edit/Read 실패
+- 스킬 호출마다 불필요한 config 디스크 쓰기 (Windows 성능 저하·config 손상 유발)
+- `/feedback` 사용 시 긴 세션에서 OOM 크래시
+- `--bare` 모드에서 MCP 도구 드롭 및 mid-turn 메시지 무시
+- OAuth 로그인 URL `c` 단축키가 ~20자만 복사하던 버그
+- 좁은 터미널에서 마스크 입력(OAuth 코드 등)이 줄 바꿈 시 토큰 시작 부분 노출
+- 공식 마켓플레이스 플러그인 스크립트 "Permission denied" (v2.1.83 이후 macOS/Linux)
+- 다중 Claude Code 인스턴스 실행 시 statusline이 다른 세션 모델 표시
+- `/plugin` 제거 다이얼로그에서 `n` 키 동작 반전 (데이터 디렉토리 보존하며 올바르게 제거)
+- Enter 클릭 후 응답 도착 전까지 트랜스크립트 공백 표시 회귀
+- `ultrathink` 키워드 삭제 후 힌트 잔류
+- 긴 세션에서 마크다운/하이라이트 렌더 캐시 메모리 증가
+- [VSCode] 장시간 작업 중 "Not responding" 오류 표시
+- [VSCode] OAuth 토큰 갱신(로그인 8시간 후) 시 Max 플랜 사용자를 Sonnet으로 되돌리는 버그
+
+---
+
 ## [2.22.0] - 2026-03-27
 
 ### Added
