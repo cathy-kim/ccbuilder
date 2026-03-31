@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.23.0] - 2026-03-31
+
+### Added
+- **Claude Code v2.1.88 sync**
+  - `PermissionDenied` Hook 이벤트 — auto mode 분류기 거부 후 발동, `{retry: true}` 반환 시 모델 재시도 가능 (v2.1.88)
+  - `CLAUDE_CODE_NO_FLICKER=1` env var — 플리커 없는 alt-screen 렌더링 (가상 스크롤백 포함) (v2.1.88)
+  - Named subagents — `@` 멘션 타입어헤드에 Named Subagent 포함 (v2.1.88)
+  - `X-Claude-Code-Session-Id` 헤더 — API 요청에 세션 ID 포함, 프록시 세션별 집계 지원 (v2.1.86)
+  - `.jj`, `.sl` VCS 메타데이터 디렉토리를 Grep 및 파일 자동완성에서 제외 (v2.1.86)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.85 → v2.1.88 업데이트
+  - 신규 Hook 이벤트: `PermissionDenied` 추가 (총 25개)
+  - Hook 인라인 노트: v2.1.88 내용 추가 (PermissionDenied, 복합 명령 `if` 조건 수정)
+  - Breaking Changes: `showThinkingSummaries` 기본값 비활성화 추가
+  - CLI/env: `CLAUDE_CODE_NO_FLICKER=1` 추가
+- `references/hooks-guide.md`: `PermissionDenied` Hook 이벤트 행 추가
+- `references/official/hooks.md`: `PermissionDenied` Hook 이벤트 (#25) 추가
+- `references/version-sync.md`: v2.1.88 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.88 주요 수정)
+- Hook `if` 조건 필터링 — 복합 명령(`ls && git push`) 및 env-var 접두사 명령 이제 올바르게 매칭
+- `PreToolUse`/`PostToolUse` Hook에서 Write/Edit/Read 도구의 `file_path`를 절대 경로로 반환
+- 프롬프트 캐시 미스 — 롱 세션 중 도구 스키마 바이트 변경으로 캐시 미스 발생하던 버그 수정
+- `StructuredOutput` 스키마 캐시 버그 — 다중 스키마 워크플로우 ~50% 실패율 수정
+- `--resume` 크래시 — 이전 버전 tool result 포함 트랜스크립트 처리 시 크래시 수정
+- LSP 서버 좀비 상태 — 크래시 후 다음 요청 시 자동 재시작 (세션 재시작 불필요)
+- 메모리 누수 — 대형 JSON 입력이 LRU 캐시 키로 유지되던 문제 수정
+- v2.1.87: Cowork Dispatch 메시지 미전달 수정
+- v2.1.86: `--resume` "tool_use ids without tool_result blocks" 오류 수정
+
+---
+
 ## [2.22.0] - 2026-03-27
 
 ### Added

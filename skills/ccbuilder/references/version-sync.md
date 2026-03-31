@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.88 (2026-03-31 동기화)
+
+**새로운 기능:**
+- `PermissionDenied` Hook 이벤트 — auto mode 분류기 거부 후 발동, `{retry: true}` 반환 시 모델 재시도 가능
+- `CLAUDE_CODE_NO_FLICKER=1` env var — 플리커 없는 alt-screen 렌더링 (가상 스크롤백 포함)
+- Named subagents — `@` 멘션 타입어헤드에 Named Subagent 이름 포함
+- v2.1.86: `X-Claude-Code-Session-Id` 헤더 — API 요청 세션 ID 포함, 프록시 집계 지원
+- v2.1.86: `.jj`(Jujutsu), `.sl`(Sapling) VCS 메타데이터 디렉토리 Grep/자동완성 제외
+
+**Breaking Changes:**
+- `showThinkingSummaries` 기본값 false로 변경 — 복원: `"showThinkingSummaries": true` in settings.json
+
+**주요 버그 수정:**
+- Hook `if` 조건 필터링 — 복합 명령(`ls && git push`) 및 env-var 접두사 명령(`FOO=bar git push`) 매칭 수정
+- `PreToolUse`/`PostToolUse` Hook에서 Write/Edit/Read `file_path`가 절대 경로로 반환되지 않던 버그 수정
+- 프롬프트 캐시 미스 — 롱 세션 중 도구 스키마 바이트 변경으로 캐시 미스 발생하던 버그 수정
+- `StructuredOutput` 스키마 캐시 버그 — 다중 스키마 워크플로우 ~50% 실패율 수정
+- `--resume` 크래시 — 이전 버전 tool result 포함 트랜스크립트 처리 수정
+- LSP 서버 좀비 상태 — 크래시 후 다음 요청 시 자동 재시작 (세션 재시작 불필요)
+- 메모리 누수 — 대형 JSON 입력 LRU 캐시 키 유지 수정
+- v2.1.87: Cowork Dispatch 메시지 미전달 수정
+- v2.1.86: `--resume` "tool_use ids without tool_result blocks" 오류 수정
+
+---
+
 ### v2.1.85 (2026-03-27 동기화)
 
 **새로운 기능:**
