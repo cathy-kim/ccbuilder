@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-03-31
+**최종 동기화**: 2026-04-01
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.89 (2026-04-01 동기화)
+
+**새로운 기능:**
+- `"defer"` 권한 결정 — `PreToolUse` Hook에서 헤드리스 세션의 도구 호출 일시 중지, `-p --resume`으로 Hook 재평가
+- `MCP_CONNECTION_NONBLOCKING=true` — `-p` 모드에서 MCP 연결 대기 완전 생략; `--mcp-config` 서버 연결 최대 5s 제한
+- Auto mode 거부 명령 UX 개선 — 알림 표시 + `/permissions` → Recent 탭에서 `r`로 재시도
+- Hook 출력 50K 초과 시 디스크 저장 — 파일 경로 + 미리보기를 컨텍스트에 주입
+- `TaskCreated` Hook 이벤트 차단 동작(blocking behavior) 공식 문서화
+- `Edit` 도구가 `Bash`에서 `sed -n`/`cat`으로 확인한 파일에 별도 `Read` 없이 동작
+
+**Breaking Changes:**
+- `cleanupPeriodDays: 0` 설정 시 검증 오류 발생 — 이전에는 트랜스크립트 영속 비활성화, 이제 명시적 오류
+
+**주요 버그 수정:**
+- Edit/Write 도구 Windows CRLF 이중 변환 및 Markdown 하드 라인 브레이크 제거 수정
+- `-p --resume` 64KB 초과 입력 또는 deferred 마커 없을 때 행어 수정
+- `autocompact` 쓰레싱 루프 3회 반복 시 명확한 오류로 중단
+- 롱 세션 중첩 CLAUDE.md 수십 번 재주입 버그 수정
+- 프롬프트 히스토리 CJK/이모지 4KB 경계 유실 수정 (`~/.claude/history.jsonl`)
+- `/stats` 서브에이전트 토큰 미집계 및 30일 이력 손실 수정
+- "Rate limit reached" 오해 메시지 → 실제 entitlement 오류 + actionable 힌트
+
+---
 
 ### v2.1.88 (2026-03-31 동기화)
 

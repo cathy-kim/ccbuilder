@@ -184,6 +184,21 @@ esac
 
 ---
 
+## `-p` 모드 MCP 연결 최적화 (v2.1.89 신규)
+
+헤드리스(`-p`) 실행 시 MCP 연결 대기를 건너뛸 수 있습니다.
+
+```bash
+# MCP 연결 대기 완전 생략 (-p 모드 전용)
+MCP_CONNECTION_NONBLOCKING=true claude -p "prompt"
+
+# --mcp-config 서버 연결은 최대 5s로 자동 제한 (v2.1.89 기본 동작)
+```
+
+> **주의**: `MCP_CONNECTION_NONBLOCKING=true` 사용 시 MCP 서버가 완전히 연결되기 전에 첫 요청이 전송됩니다. 빠른 응답이 필요한 자동화 파이프라인에서 사용하세요.
+
+---
+
 ## MCP Elicitation (v2.1.76 신규)
 
 MCP 서버가 세션 실행 중 사용자에게 구조화된 입력을 요청할 수 있습니다. 대화형 폼 필드 또는 브라우저 URL로 표시됩니다.
