@@ -12,7 +12,7 @@
 |---|-------|------|-----------|
 | 1 | `SessionStart` | 세션 시작/재개 | - |
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
-| 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask |
+| 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
 | 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
 | 5 | `PostToolUse` | 도구 성공 후 | block |
 | 6 | `PostToolUseFailure` | 도구 실패 후 | block |
@@ -78,7 +78,7 @@
 
 | Event | 필드 | 값 |
 |-------|------|-----|
-| `PreToolUse` | `hookSpecificOutput.permissionDecision` | `allow` / `deny` / `ask` |
+| `PreToolUse` | `hookSpecificOutput.permissionDecision` | `allow` / `deny` / `ask` / `defer` (v2.1.89: 헤드리스 세션 일시 중지 후 `-p --resume` 재평가) |
 | `PermissionRequest` | `hookSpecificOutput.decision.behavior` | `allow` / `deny` |
 | `PostToolUse`, `Stop` 등 | top-level `decision` | `"block"` |
 

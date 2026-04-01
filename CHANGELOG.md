@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.24.0] - 2026-04-01
+
+### Added
+- **Claude Code v2.1.89 sync**
+  - `"defer"` 권한 결정 — `PreToolUse` Hook에서 헤드리스 세션의 도구 호출 일시 중지 후 `-p --resume`으로 Hook 재평가 가능
+  - `MCP_CONNECTION_NONBLOCKING=true` — `-p` 모드에서 MCP 연결 대기 완전 생략; `--mcp-config` 서버 연결 최대 5s 제한
+  - Auto mode 거부 명령 UX 개선 — 알림 표시 + `/permissions` → Recent 탭에서 `r`로 재시도 가능
+  - Hook 출력 50K 초과 시 디스크 저장 — 파일 경로 + 미리보기를 컨텍스트에 주입 (컨텍스트 팽창 방지)
+  - `TaskCreated` Hook 이벤트 차단 동작(blocking behavior) 공식 문서화
+  - `Edit` 도구가 `Bash`에서 `sed -n`/`cat`으로 확인한 파일에도 별도 `Read` 없이 동작
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.88 → v2.1.89 업데이트
+  - Hook 인라인 노트: v2.1.89 `"defer"` 권한 결정 및 Hook 출력 50K 디스크 저장 추가
+  - Breaking Changes: `cleanupPeriodDays: 0` 검증 오류 추가
+  - CLI: auto mode 거부 명령 알림·Recent 탭 추가
+  - 신규 env: `MCP_CONNECTION_NONBLOCKING=true` 추가
+- `references/hooks-guide.md`: PreToolUse `"defer"` 권한 결정 추가
+- `references/official/hooks.md`: PreToolUse `"defer"` 권한 결정 추가
+- `references/mcp-guide.md`: `MCP_CONNECTION_NONBLOCKING=true` 추가
+- `references/version-sync.md`: v2.1.89 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.89 주요 수정)
+- Edit/Write 도구 Windows CRLF 이중 변환 및 Markdown 하드 라인 브레이크(두 개 공백) 제거 수정
+- `-p --resume` 64KB 초과 입력 또는 deferred 마커 없을 때 행어 수정
+- `autocompact` 쓰레싱 루프 — 압축 후 즉시 컨텍스트 재충전 시 3회 반복 감지 후 명확한 오류로 중단
+- 롱 세션에서 중첩 CLAUDE.md 파일 수십 번 재주입 버그 수정
+- 프롬프트 히스토리 CJK/이모지 항목 4KB 경계에서 유실 버그 수정 (`~/.claude/history.jsonl`)
+- `/stats` 서브에이전트 토큰 미집계 및 30일 초과 이력 손실 수정
+- "Rate limit reached" 오해 메시지 — entitlement 오류를 실제 원인 + actionable 힌트로 표시
+- 대형 세션 파일(50MB+) 메시지 삭제 시 크래시 수정
+- LSP 서버 좀비 상태 — 크래시 후 다음 요청 시 자동 재시작
+
+---
+
 ## [2.23.0] - 2026-03-31
 
 ### Added

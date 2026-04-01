@@ -15,7 +15,7 @@
 | **SessionStart** | 세션 시작/재개 | No | `session_id`, `agent_type` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` |
-| **PreToolUse** | 도구 호출 전 | Yes (block/modify) | `tool_name`, `tool_input`, `tool_use_id` |
+| **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 | No | `tool_name`, `tool_result` |
 | **PostToolUseFailure** | 도구 호출 실패 후 | No | `tool_name`, `error` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
@@ -121,6 +121,12 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 {
   "permissionDecision": "allow",
   "updatedInput": { "answer": "사용자 응답 내용" }
+}
+
+// v2.1.89: "defer" — 헤드리스 세션에서 도구 호출 일시 중지
+// -p --resume 으로 재개 시 훅이 재평가됨
+{
+  "permissionDecision": "defer"
 }
 ```
 
