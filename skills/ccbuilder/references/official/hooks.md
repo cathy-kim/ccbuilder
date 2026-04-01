@@ -34,6 +34,7 @@
 | 22 | `CwdChanged` | 작업 디렉토리 변경 시 — 반응형 환경 관리 (direnv 등) (v2.1.83) | - |
 | 23 | `FileChanged` | 파일 변경 감지 시 (v2.1.83) | - |
 | 24 | `TaskCreated` | `TaskCreate` 호출로 태스크 생성 시 (v2.1.84) | - |
+| 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 
 ## Handler 타입
 
