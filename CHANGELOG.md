@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.25.0] - 2026-04-02
+
+### Added
+- **Claude Code v2.1.90 sync**
+  - `/powerup` 명령 — 애니메이션 데모와 함께 Claude Code 기능을 인터랙티브하게 학습
+  - `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` env var — git pull 실패 시 기존 마켓플레이스 캐시 유지 (오프라인 환경용)
+  - `.husky` 디렉토리를 acceptEdits 모드 보호 목록에 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.89 → v2.1.90 업데이트
+  - 신규 명령: `/powerup` 추가
+  - 신규 env: `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` 추가
+  - Breaking Changes: `--resume` picker `claude -p`/SDK 세션 제외; DNS 캐시 명령 자동 허용 제거 추가
+- `references/version-sync.md`: v2.1.90 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.90 주요 수정)
+- Rate-limit 옵션 다이얼로그 무한 반복 자동 재오픈 후 세션 크래시 수정
+- `--resume` 사용 시 deferred tools/MCP/커스텀 에이전트 포함 세션 첫 요청 프롬프트 캐시 미스 수정 (v2.1.69 이후 회귀)
+- PostToolUse format-on-save Hook이 연속 편집 사이에 파일 재작성 시 Edit/Write "File content has changed" 오류 수정
+- JSON 출력 + exit code 2로 종료하는 `PreToolUse` Hook이 도구 호출을 올바르게 차단하지 않던 버그 수정
+- Auto mode가 명시적 사용자 경계("don't push", "wait for X before Y")를 무시하던 버그 수정
+- PowerShell 도구 권한 검사 강화: trailing `&` 백그라운드 작업 우회, `-ErrorAction Break` 디버거 행, 아카이브 추출 TOCTOU, 파싱 실패 시 deny-rule 저하 수정
+- MCP 도구 스키마 캐시 키 조회 시 매 턴 JSON.stringify 제거 (성능 개선)
+- SSE transport 대용량 프레임 처리 선형 시간으로 개선 (기존 이차 시간)
+- SDK 롱 세션 트랜스크립트 쓰기 이차 시간 저하 수정 (성능 개선)
+- `/resume` all-projects 뷰 프로젝트 세션 병렬 로드 — 다수 프로젝트 사용자 로드 시간 개선
+
+---
+
 ## [2.24.0] - 2026-04-01
 
 ### Added

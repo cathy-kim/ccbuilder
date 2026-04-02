@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-01
+**최종 동기화**: 2026-04-02
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,28 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.90 (2026-04-02 동기화)
+
+**새로운 기능:**
+- `/powerup` 명령 — 애니메이션 데모와 함께 Claude Code 기능 인터랙티브 학습
+- `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` env var — git pull 실패 시 마켓플레이스 캐시 유지 (오프라인 환경용)
+- `.husky` 디렉토리를 acceptEdits 모드 보호 디렉토리에 추가
+
+**Breaking Changes:**
+- `--resume` picker에서 `claude -p`/SDK 세션 제외 — 인터랙티브 세션만 표시
+- `Get-DnsClientCache`·`ipconfig /displaydns` 자동 허용 목록 제거 — DNS 캐시 프라이버시 보호
+
+**주요 버그 수정:**
+- Rate-limit 옵션 다이얼로그 무한 반복 자동 재오픈 → 세션 크래시 수정
+- `--resume` deferred tools/MCP/커스텀 에이전트 포함 세션 첫 요청 프롬프트 캐시 미스 수정 (v2.1.69 회귀)
+- PostToolUse format-on-save Hook이 연속 편집 사이에 파일 재작성 시 Edit/Write 실패 수정
+- `PreToolUse` Hook JSON 출력 + exit code 2 도구 호출 차단 미작동 수정
+- Auto mode 명시적 사용자 경계 무시 수정 ("don't push", "wait for X before Y")
+- PowerShell 도구 권한 검사 강화 (trailing `&`, `-ErrorAction Break`, TOCTOU 등)
+- SSE transport 대용량 프레임 처리 성능 개선 (이차 → 선형 시간)
+- SDK 롱 세션 트랜스크립트 쓰기 성능 개선 (이차 시간 저하 수정)
+- MCP 도구 스키마 캐시 키 조회 시 매 턴 JSON.stringify 제거 (성능 개선)
 
 ### v2.1.89 (2026-04-01 동기화)
 
