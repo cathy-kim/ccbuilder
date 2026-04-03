@@ -279,6 +279,22 @@ claude mcp serve
 MAX_MCP_OUTPUT_TOKENS=50000
 ```
 
+### 도구 결과 크기 오버라이드 (v2.1.91 신규)
+
+MCP 서버가 도구 결과의 `_meta` 필드에 `anthropic/maxResultSizeChars` 주석을 설정하면, 해당 결과에 한해 최대 500,000자까지 크기 제한을 오버라이드할 수 있습니다. DB 스키마나 대형 파일 목록 등 대용량 결과를 잘림 없이 전달하는 데 유용합니다.
+
+```json
+{
+  "content": [{ "type": "text", "text": "...large schema..." }],
+  "_meta": {
+    "anthropic/maxResultSizeChars": 500000
+  }
+}
+```
+
+- 최대값: 500,000자
+- 서버 측에서 결과 단위로 개별 설정 (전역 설정 아님)
+
 ---
 
 ## Managed MCP (조직 관리)

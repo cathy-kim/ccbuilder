@@ -79,6 +79,7 @@
 | Warning threshold | 10,000 tokens |
 | Max output | 25,000 tokens |
 | Override | `MAX_MCP_OUTPUT_TOKENS` 환경 변수 |
+| 결과별 오버라이드 | `_meta["anthropic/maxResultSizeChars"]` — 최대 500,000자 (v2.1.91) |
 
 ## CLI 명령어
 

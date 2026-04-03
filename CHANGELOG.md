@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.26.0] - 2026-04-03
+
+### Added
+- **Claude Code v2.1.91 sync**
+  - MCP 도구 결과 크기 오버라이드: `_meta["anthropic/maxResultSizeChars"]` 주석으로 최대 500K까지 확장 (DB 스키마 등 대용량 결과 지원)
+  - `disableSkillShellExecution` 설정 — Skills/커스텀 슬래시 명령/플러그인 명령 인라인 셸 실행 비활성화
+  - `claude-cli://open?q=` 딥링크에서 다중 줄 프롬프트 지원 (`%0A` 인코딩된 줄바꿈 허용)
+  - 플러그인 `bin/` 실행파일 지원 — Bash 도구에서 bare 명령으로 직접 호출 가능
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.90 → v2.1.91 업데이트
+  - MCP 상세 라인에 `_meta["anthropic/maxResultSizeChars"]` 500K 결과 오버라이드 추가
+  - Plugin bullet에 `bin/` 실행파일 지원 추가
+  - 신규 도구·env에 `disableSkillShellExecution`, 다중 줄 딥링크 추가
+- `references/version-sync.md`: v2.1.91 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.91 주요 수정)
+- `--resume` 시 비동기 트랜스크립트 쓰기 실패로 대화 이력 유실되던 체인 단절 수정
+- iTerm2, kitty, WezTerm, Ghostty, Windows Terminal에서 `cmd+delete` 줄 앞까지 삭제 미작동 수정
+- 원격 세션 플랜 모드에서 컨테이너 재시작 후 플랜 파일 추적 유실 → 빈 플랜 승인 모달 수정
+- `permissions.defaultMode: "auto"` 에 대한 JSON 스키마 검증 오류 수정
+- Windows 버전 정리 시 현재 활성 버전의 롤백 복사본 보호 미작동 수정
+- `/feedback` 명령이 슬래시 메뉴에서 사라지는 대신 비활성화 이유를 설명하도록 개선
+- `stripAnsi` 성능 개선: Bun 환경에서 `Bun.stripANSI` 라우팅으로 속도 향상
+- Edit 도구 `old_string` 앵커 단축 — 출력 토큰 절감
+
+---
+
 ## [2.25.0] - 2026-04-02
 
 ### Added

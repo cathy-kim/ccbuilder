@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.90)
+## 핵심 변경 사항 (v2.1.91)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -138,7 +138,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **MCP Elicitation** | MCP 서버가 세션 중 구조화된 입력 요청 (폼 필드·URL) (v2.1.76) |
 | **MCP 컨텍스트 제한** | 도구 설명·서버 지시문 2KB 상한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 
-**상세**: [references/mcp-guide.md](references/mcp-guide.md)
+**상세**: [references/mcp-guide.md](references/mcp-guide.md) | **v2.1.91**: `_meta["anthropic/maxResultSizeChars"]` 주석으로 MCP 도구 결과 최대 500K까지 확장 (DB 스키마 등 대용량 결과 지원)
 
 ### Memory 계층 확장 (v2.8 강화)
 
@@ -206,9 +206,9 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74); `initialPrompt` — 에이전트 첫 턴 자동 제출 (v2.1.83)
 - **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `--bare` (-p 경량화: 훅/LSP/플러그인 비활성화·Auto-memory 끔, API key 필수, v2.1.81), `rate_limits` statusline 필드 (5시간/7일 rate limit 표시, v2.1.80); auto mode 거부 명령 알림 + `/permissions` Recent 탭에서 `r`로 재시도 (v2.1.89)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80); 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김 (v2.1.85)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80); 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김 (v2.1.85); `bin/` 실행파일 동봉 — Bash 도구에서 bare 명령으로 직접 호출 가능 (v2.1.91)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77), `/powerup` 애니메이션 데모와 함께 Claude Code 기능 인터랙티브 학습 (v2.1.90)
-- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85), `CLAUDE_CODE_NO_FLICKER=1` (플리커 없는 alt-screen 렌더링, v2.1.88), `MCP_CONNECTION_NONBLOCKING=true` (`-p` 모드 MCP 연결 대기 생략; `--mcp-config` 서버 5s 제한, v2.1.89), `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` (git pull 실패 시 기존 마켓플레이스 캐시 유지 — 오프라인 환경용, v2.1.90)
+- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85), `CLAUDE_CODE_NO_FLICKER=1` (플리커 없는 alt-screen 렌더링, v2.1.88), `MCP_CONNECTION_NONBLOCKING=true` (`-p` 모드 MCP 연결 대기 생략; `--mcp-config` 서버 5s 제한, v2.1.89), `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` (git pull 실패 시 기존 마켓플레이스 캐시 유지 — 오프라인 환경용, v2.1.90), `disableSkillShellExecution` (Skills/커스텀 슬래시 명령/플러그인 인라인 셸 실행 비활성화, v2.1.91), Deep link `claude-cli://open?q=` 다중 줄 프롬프트 지원 (`%0A` 인코딩, v2.1.91)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
 
 ### Breaking Changes
