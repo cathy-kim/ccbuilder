@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.26.0] - 2026-04-04
+
+### Added
+- **Claude Code v2.1.92 sync**
+  - `forceRemoteSettingsRefresh` policy 설정 — 원격 관리 설정 강제 갱신 (fail-closed: 취득 실패 시 CLI 종료)
+  - 인터랙티브 Bedrock 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 AWS 인증·리전·자격증명 검증·모델 핀 단계별 안내
+  - 구독 사용자 `/cost` 모델별·캐시 히트 분할 분석
+  - `/release-notes` 인터랙티브 버전 피커로 개선
+  - Remote Control 세션 이름 hostname 기본 프리픽스 (예: `myhost-graceful-unicorn`), `--remote-control-session-name-prefix`로 오버라이드
+  - Pro 사용자 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 힌트 표시
+- **Claude Code v2.1.91 sync**
+  - MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` 어노테이션으로 최대 500K 확장 (DB 스키마 등 대용량 결과 전달)
+  - `disableSkillShellExecution` 설정 — 스킬/슬래시 명령/플러그인 인라인 셸 실행 비활성화
+  - 플러그인 `bin/` 실행 파일 지원 — Bash 도구에서 bare 명령으로 직접 실행 가능
+  - `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원 (`%0A` 인코딩 허용)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.90 → v2.1.92 업데이트
+  - MCP 결과 크기 오버라이드, `disableSkillShellExecution`, `forceRemoteSettingsRefresh`, 플러그인 `bin/` 지원 추가
+  - Breaking Changes: `/tag` 명령 제거, `/vim` 명령 제거 (`/config` → Editor mode로 대체) 추가
+- `references/version-sync.md`: v2.1.91·v2.1.92 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.92 주요 수정)
+- 서브에이전트 스폰 실패 수정 — tmux 창 종료·번호 재할당 후 "Could not determine pane count" 오류로 영구 실패하던 버그
+- Stop Hook 오동작 수정 — 소형 모델이 `ok:false` 반환 시 잘못 실패하던 문제 + 비Stop 훅의 `preventContinuation:true` 시맨틱 복원
+- 스트리밍 시 배열/객체 필드 JSON 인코딩 문자열로 전송될 때 도구 입력 검증 실패 수정
+- 확장 사고(extended thinking)가 공백만 포함하는 텍스트 블록 생성 시 API 400 오류 수정
+- Write 도구 대용량 파일 diff 계산 60% 성능 개선 (탭·`&`·`$` 포함 파일 대상)
+- Linux 샌드박스 `apply-seccomp` 헬퍼 npm·native 빌드 모두 포함 (unix-socket 차단 복원)
+
+### Removed (Claude Code v2.1.92)
+- `/tag` 명령 제거
+- `/vim` 명령 제거 → `/config` → Editor mode에서 토글 가능
+
+---
+
 ## [2.25.0] - 2026-04-02
 
 ### Added

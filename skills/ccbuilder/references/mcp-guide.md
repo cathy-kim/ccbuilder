@@ -279,6 +279,21 @@ claude mcp serve
 MAX_MCP_OUTPUT_TOKENS=50000
 ```
 
+### 도구 결과 크기 오버라이드 (v2.1.91 신규)
+
+MCP 서버가 `_meta` 어노테이션으로 결과 크기 상한을 개별 오버라이드할 수 있습니다 (최대 500K 문자):
+
+```json
+{
+  "content": [{ "type": "text", "text": "...DB 스키마 전체..." }],
+  "_meta": {
+    "anthropic/maxResultSizeChars": 500000
+  }
+}
+```
+
+DB 스키마, 대용량 파일 목록 등 기본 제한(25K 토큰)으로 잘리던 결과를 전달할 때 유용합니다.
+
 ---
 
 ## Managed MCP (조직 관리)

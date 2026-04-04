@@ -77,6 +77,43 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.92 (2026-04-04 동기화)
+
+**새로운 기능:**
+- `forceRemoteSettingsRefresh` policy 설정 — 원격 관리 설정 강제 갱신, 취득 실패 시 CLI 종료 (fail-closed)
+- 인터랙티브 Bedrock 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 AWS 인증·리전·모델 핀 단계별 안내
+- 구독 사용자 `/cost` 모델별·캐시 히트 분할 분석
+- `/release-notes` 인터랙티브 버전 피커로 개선
+- Remote Control 세션 이름 hostname 기본 프리픽스, `--remote-control-session-name-prefix`로 오버라이드 가능
+- Pro 사용자 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 힌트 표시
+
+**Breaking Changes:**
+- `/tag` 명령 제거
+- `/vim` 명령 제거 → `/config` → Editor mode에서 vim 모드 토글
+
+**주요 버그 수정:**
+- 서브에이전트 스폰 — tmux 창 종료·번호 재할당 후 "Could not determine pane count" 영구 실패 수정
+- Stop Hook — 소형 모델 `ok:false` 반환 시 잘못 실패 + 비Stop 훅 `preventContinuation:true` 시맨틱 복원
+- 스트리밍 배열/객체 필드 JSON 인코딩 문자열 전송 시 도구 입력 검증 실패 수정
+- 확장 사고 공백 텍스트 블록 생성 시 API 400 오류 수정
+- Write 도구 대용량 파일 diff 계산 60% 성능 개선 (탭·`&`·`$` 포함 파일)
+- Linux 샌드박스 `apply-seccomp` 헬퍼 npm·native 빌드 모두 포함 (unix-socket 차단 복원)
+
+### v2.1.91 (2026-04-04 동기화)
+
+**새로운 기능:**
+- MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` 어노테이션, 최대 500K (DB 스키마 등 대용량 결과)
+- `disableSkillShellExecution` 설정 — 스킬/슬래시 명령/플러그인 인라인 셸 실행 비활성화
+- 플러그인 `bin/` 실행 파일 지원 — Bash 도구에서 bare 명령으로 직접 실행 가능
+- `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원 (`%0A` 인코딩 허용)
+
+**주요 버그 수정:**
+- `--resume` 트랜스크립트 체인 끊김 — 비동기 쓰기 실패 시 대화 이력 유실 수정
+- 다양한 터미널(iTerm2, kitty 등)에서 `cmd+delete` 줄 시작까지 삭제 미작동 수정
+- Remote 세션에서 플랜 모드 컨테이너 재시작 후 플랜 파일 추적 실패 수정
+- `permissions.defaultMode: "auto"` JSON 스키마 검증 오류 수정
+- Edit 도구 단축 `old_string` 앵커 사용으로 출력 토큰 감소
+
 ### v2.1.90 (2026-04-02 동기화)
 
 **새로운 기능:**
