@@ -77,6 +77,44 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.92 (2026-04-05 동기화)
+
+**새로운 기능:**
+- `forceRemoteSettingsRefresh` 정책 설정 — 시작 시 원격 관리 설정 강제 새로고침, 실패 시 종료 (fail-closed)
+- 인터랙티브 Bedrock 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 AWS 인증·리전·자격증명 검증·모델 핀 단계별 안내
+- `/cost` 구독 사용자용 모델별·캐시 히트 분류 상세 보기
+- `/release-notes` 인터랙티브 버전 피커로 전환
+- Remote Control 세션명 호스트명 기본 접두사, `--remote-control-session-name-prefix`로 오버라이드
+- Pro 사용자: 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 푸터 힌트
+
+**Breaking Changes:**
+- `/tag` 명령 제거
+- `/vim` 명령 제거 — Vim 모드는 `/config` → Editor mode로 토글
+
+**주요 버그 수정:**
+- tmux 창 종료·번호 재매기 후 서브에이전트 스폰 영구 실패 수정
+- 프롬프트 타입 Stop Hook `ok:false` 반환 시 잘못 실패하던 버그 수정; `preventContinuation:true` 의미 복원
+- Write 도구 diff 계산 60% 속도 향상 (탭/`&`/`$` 포함 대용량 파일)
+- Linux sandbox `apply-seccomp` 헬퍼 npm·native 빌드 모두 포함, unix-socket 차단 복원
+
+---
+
+### v2.1.91 (2026-04-05 동기화)
+
+**새로운 기능:**
+- MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` 어노테이션 (최대 500K)
+- `disableSkillShellExecution` 설정 — Skills/커스텀 슬래시 명령/플러그인 명령의 인라인 셸 실행 비활성화
+- Deep link `claude-cli://open?q=` 멀티라인 프롬프트 지원 (`%0A` 인코딩)
+- 플러그인 `bin/` 디렉토리 실행 파일 — Bash 도구에서 bare 명령으로 호출 가능
+
+**주요 버그 수정:**
+- `--resume` 비동기 트랜스크립트 쓰기 실패 시 대화 히스토리 유실 수정
+- 리모트 세션 plan mode 컨테이너 재시작 후 플랜 파일 추적 실패 수정
+- `permissions.defaultMode: "auto"` JSON 스키마 검증 오류 수정
+- Edit 도구 `old_string` 앵커 단축 최적화 — 출력 토큰 절감
+
+---
+
 ### v2.1.90 (2026-04-02 동기화)
 
 **새로운 기능:**

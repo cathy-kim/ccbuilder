@@ -369,6 +369,25 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
+## 도구 결과 크기 제어 (v2.1.91+)
+
+기본적으로 MCP 도구 결과는 크기가 제한됩니다. `_meta` 어노테이션으로 서버별 최대 크기를 오버라이드할 수 있습니다:
+
+```json
+{
+  "_meta": {
+    "anthropic/maxResultSizeChars": 500000
+  },
+  "result": "...large content like DB schema..."
+}
+```
+
+- 최대 허용값: 500,000자 (500K)
+- 용도: DB 스키마, 대용량 파일 목록, 긴 로그 등 대형 결과가 잘리지 않아야 할 때
+- 설정 없이도 동작하며, 필요한 경우에만 명시
+
+---
+
 ## Breaking Changes (v2.8-2.9)
 
 | 변경 | 이전 | 이후 |

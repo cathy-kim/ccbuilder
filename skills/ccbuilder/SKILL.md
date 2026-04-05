@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.90)
+## 핵심 변경 사항 (v2.1.92)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -128,6 +128,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **Scope 계층** | Local > Project (.mcp.json) > User |
 | **환경 변수 확장** | `${VAR}`, `${VAR:-default}` in .mcp.json |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
+| **`_meta["anthropic/maxResultSizeChars"]`** | 도구 결과 크기 오버라이드 (최대 500K) — DB 스키마 등 대형 결과 허용 (v2.1.91) |
 | **Managed MCP** | 조직 차원 중앙 관리 (allowedMcpServers/deniedMcpServers/allowedChannelPlugins, v2.1.84) |
 | **claude.ai MCP connectors** | claude.ai MCP 커넥터 사용 (v2.1.46); `ENABLE_CLAUDEAI_MCP_SERVERS=false` 비활성화 (v2.1.63); 로컬 설정과 중복 시 로컬 우선 (v2.1.84) |
 | **--channels** | MCP 서버가 세션에 메시지 푸시 / 채널 서버가 도구 승인 프롬프트 폰으로 릴레이 (v2.1.80-81) |
@@ -159,9 +160,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 멀티 에이전트 팀 협업 시스템. Team Lead가 Teammate들을 조율하여 병렬 작업 수행. **v2.1.72**: 팀 에이전트 리더 모델 자동 상속.
 
-```
-TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
-```
+`TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete`
 
 **활성화**: `settings.json` → `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"`
 
@@ -205,15 +204,15 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 ### Agent/CLI/Plugin 강화
 
 - **Agent 필드**: `isolation: worktree` (격리 실행), `background: true` (백그라운드), `model` (per-invocation 오버라이드 복원, v2.1.72); 전체 모델 ID (`claude-opus-4-5` 등) agent frontmatter에서 수용 (v2.1.74); `initialPrompt` — 에이전트 첫 턴 자동 제출 (v2.1.83)
-- **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `--bare` (-p 경량화: 훅/LSP/플러그인 비활성화·Auto-memory 끔, API key 필수, v2.1.81), `rate_limits` statusline 필드 (5시간/7일 rate limit 표시, v2.1.80); auto mode 거부 명령 알림 + `/permissions` Recent 탭에서 `r`로 재시도 (v2.1.89)
-- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80); 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김 (v2.1.85)
+- **CLI**: `claude agents`, `claude auth login [--console]`, `claude auth status/logout`, `claude remote-control`, `--worktree (-w)`, Ctrl+F (에이전트 종료), `--bare` (-p 경량화: 훅/LSP/플러그인 비활성화·Auto-memory 끔, API key 필수, v2.1.81), `rate_limits` statusline 필드 (5시간/7일 rate limit 표시, v2.1.80); auto mode 거부 명령 알림 + `/permissions` Recent 탭에서 `r`로 재시도 (v2.1.89); `/release-notes` 인터랙티브 버전 피커 (v2.1.92); Remote Control 세션명 호스트명 기본 접두사 (`myhost-graceful-unicorn`), `--remote-control-session-name-prefix`로 오버라이드 (v2.1.92); 인터랙티브 Bedrock 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 진입 (AWS 인증·리전·모델 핀 안내, v2.1.92)
+- **Plugin**: `settings.json` 동봉, 커스텀 npm 레지스트리, macOS plist / Windows Registry managed settings; `--plugin-dir` 로컬 개발 사본이 마켓플레이스 동명 플러그인 오버라이드 (v2.1.74); `${CLAUDE_PLUGIN_DATA}` 플러그인 영속 상태 변수 — 업데이트 후에도 유지 (v2.1.78); `CLAUDE_CODE_PLUGIN_SEED_DIR` 다중 시드 디렉토리 지원 (`:` Unix, `;` Windows, v2.1.79); `source: 'settings'` 마켓플레이스 소스 — settings.json 내 플러그인 인라인 선언 (v2.1.80); ref-tracked 플러그인 매 로드 시 재클론으로 최신화 (v2.1.81); Skills/슬래시 명령 `effort` frontmatter — 모델 effort 레벨 오버라이드 (v2.1.80); 조직 정책(`managed-settings.json`) 차단 플러그인 설치·활성화 불가 및 마켓플레이스 숨김 (v2.1.85); 플러그인 `bin/` 디렉토리 실행 파일 — Bash 도구에서 bare 명령으로 호출 가능 (v2.1.91)
 - **신규 명령**: `/loop <interval> <prompt>` (v2.1.71), `/reload-plugins` (v2.1.69), `/plan <description>` 즉시 플랜 모드 (v2.1.72), `/branch` (v2.1.77, `/fork` alias 유지), `/effort` 레벨 설정 (v2.1.76), `/copy N` N번째 최근 응답 복사 (v2.1.77), `/powerup` 애니메이션 데모와 함께 Claude Code 기능 인터랙티브 학습 (v2.1.90)
-- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85), `CLAUDE_CODE_NO_FLICKER=1` (플리커 없는 alt-screen 렌더링, v2.1.88), `MCP_CONNECTION_NONBLOCKING=true` (`-p` 모드 MCP 연결 대기 생략; `--mcp-config` 서버 5s 제한, v2.1.89), `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` (git pull 실패 시 기존 마켓플레이스 캐시 유지 — 오프라인 환경용, v2.1.90)
+- **신규 도구 · env**: `ExitWorktree` (v2.1.72), `CLAUDE_CODE_DISABLE_CRON` (v2.1.72), `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` (v2.1.74), `modelOverrides` (v2.1.73), `allowRead` sandbox 설정 (v2.1.77), 토큰 한도 확대 (Opus 4.6 기본 64k·상한 128k, v2.1.77), `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` (서브프로세스 자격증명 제거, v2.1.83), `CLAUDE_STREAM_IDLE_TIMEOUT_MS` (스트리밍 유휴 타임아웃, 기본 90s, v2.1.84), PowerShell 도구 (Windows 옵트인 프리뷰, v2.1.84), `CLAUDE_CODE_MCP_SERVER_NAME`/`CLAUDE_CODE_MCP_SERVER_URL` (headersHelper 다중 서버 구분, v2.1.85), Deep link `claude-cli://open?q=…` 최대 5,000자 지원 (v2.1.85), 트랜스크립트 `/loop`·`CronCreate` 실행 시 타임스탬프 마커 추가 (v2.1.85), `CLAUDE_CODE_NO_FLICKER=1` (플리커 없는 alt-screen 렌더링, v2.1.88), `MCP_CONNECTION_NONBLOCKING=true` (`-p` 모드 MCP 연결 대기 생략; `--mcp-config` 서버 5s 제한, v2.1.89), `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` (git pull 실패 시 기존 마켓플레이스 캐시 유지 — 오프라인 환경용, v2.1.90); `forceRemoteSettingsRefresh` 정책 설정 — 시작 시 원격 관리 설정 강제 새로고침, 실패 시 종료 (fail-closed, v2.1.92); `disableSkillShellExecution` 설정 — Skills/커스텀 슬래시 명령/플러그인 명령의 인라인 셸 실행 비활성화 (v2.1.91); Deep link `%0A` 인코딩 멀티라인 프롬프트 지원 (v2.1.91)
 - **Agent**: `SendMessage` — 중단 에이전트 자동 백그라운드 재개 (v2.1.77); Agent tool `resume` 파라미터 제거 → `SendMessage({to: agentId})` 사용 (v2.1.77)
 
 ### Breaking Changes
 
-`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), **Agent tool `resume` 파라미터 제거** → `SendMessage({to: agentId})` 사용 (v2.1.77), Windows managed settings 레거시 경로 제거 (v2.1.75), plan mode 컨텍스트 초기화 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원 가능, v2.1.81), Windows/WSL 응답 줄 단위 스트리밍 비활성화 (v2.1.81), **`showThinkingSummaries` 기본값 비활성화** — 설정 복원: `"showThinkingSummaries": true` (v2.1.88), **`cleanupPeriodDays: 0` 검증 오류** — 이전에는 트랜스크립트 영속 비활성화, 이제 명시적 오류 발생 (v2.1.89), **`--resume` picker에서 `claude -p`/SDK 세션 제외** (v2.1.90), **`Get-DnsClientCache`·`ipconfig /displaydns` 자동 허용 제거** — DNS 캐시 프라이버시 보호 (v2.1.90)
+`$ARGUMENTS.0` → `$ARGUMENTS[0]`, `npm install` → `claude install`, SSE → HTTP, Sonnet 4.5 → 4.6, Opus 4/4.1 → 4.6, Effort max 제거 (○ ◐ ●), **Agent tool `resume` 파라미터 제거** → `SendMessage({to: agentId})` 사용 (v2.1.77), Windows managed settings 레거시 경로 제거 (v2.1.75), plan mode 컨텍스트 초기화 기본 숨김 (`"showClearContextOnPlanAccept": true`로 복원 가능, v2.1.81), Windows/WSL 응답 줄 단위 스트리밍 비활성화 (v2.1.81), **`showThinkingSummaries` 기본값 비활성화** — 설정 복원: `"showThinkingSummaries": true` (v2.1.88), **`cleanupPeriodDays: 0` 검증 오류** — 이전에는 트랜스크립트 영속 비활성화, 이제 명시적 오류 발생 (v2.1.89), **`--resume` picker에서 `claude -p`/SDK 세션 제외** (v2.1.90), **`Get-DnsClientCache`·`ipconfig /displaydns` 자동 허용 제거** — DNS 캐시 프라이버시 보호 (v2.1.90), **`/tag` 명령 제거** (v2.1.92), **`/vim` 명령 제거** — `/config` → Editor mode로 Vim 모드 토글 (v2.1.92)
 
 ---
 
@@ -227,6 +226,7 @@ TeamCreate → TaskCreate → Task(teammate) → SendMessage → TeamDelete
 | `$ARGUMENTS.0` 문법 | `$ARGUMENTS[0]` 사용 |
 | SSE MCP transport | HTTP (streamable-http) 사용 |
 | `TaskOutput` 도구 | 백그라운드 태스크 출력 파일 경로에 `Read` 사용 (v2.1.83) |
+| `/tag`, `/vim` 명령 | 제거됨 — `/vim` 대체: `/config` → Editor mode (v2.1.92) |
 
 ---
 
