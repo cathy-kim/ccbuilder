@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.26.0] - 2026-04-06
+
+### Added
+- **Claude Code v2.1.92 sync**
+  - `forceRemoteSettingsRefresh` 정책 설정 — 시작 시 원격 관리 설정 강제 갱신, 실패 시 종료 (fail-closed)
+  - 인터랙티브 Bedrock 설정 마법사 — 로그인 화면에서 "3rd-party platform" 선택 시 AWS 인증·리전·자격증명·모델 고정 안내
+  - `/cost` 명령에 구독 사용자용 모델별·캐시 히트 세부 내역 추가
+  - `/release-notes` 인터랙티브 버전 픽커로 전환
+  - Remote Control 세션 이름 기본 접두사를 호스트명으로 변경 (`--remote-control-session-name-prefix` 오버라이드 가능)
+  - Pro 사용자 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 힌트 표시
+- **Claude Code v2.1.91 sync**
+  - MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` annotation으로 최대 500K까지 확장 (DB 스키마 등 대형 결과 지원)
+  - `disableSkillShellExecution` 설정 — 스킬/커스텀 슬래시 명령/플러그인 명령의 인라인 쉘 실행 비활성화
+  - `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원 (`%0A` 인코딩 허용)
+  - 플러그인 `bin/` 실행 파일 지원 — Bash 도구에서 bare command로 호출 가능
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.90 → v2.1.92 업데이트
+  - MCP 테이블: `_meta["anthropic/maxResultSizeChars"]` 결과 크기 오버라이드 추가
+  - Plugin: `bin/` 실행 파일 지원 추가, `disableSkillShellExecution` 추가
+  - 신규 env/설정: `disableSkillShellExecution`, `forceRemoteSettingsRefresh` 추가
+  - 신규 명령: `/release-notes` 인터랙티브 버전 픽커, `/tag`·`/vim` 제거 명시
+  - Breaking Changes: `/tag` 제거, `/vim` 제거 (vim 모드는 `/config` → Editor mode) 추가
+  - Deprecated 테이블: `/tag`, `/vim` 항목 추가
+- `references/version-sync.md`: v2.1.92 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.92 주요 수정)
+- 서브에이전트 "Could not determine pane count" 오류로 스폰 영구 실패 수정 (tmux 윈도우 삭제/재번호 후)
+- 소형 빠른 모델이 `ok:false` 반환 시 Stop 타입 프롬프트 Hook이 잘못 실패하던 버그 수정
+- 스트리밍 시 array/object 필드가 JSON 문자열로 발행될 때 도구 입력 검증 실패 수정
+- extended thinking이 공백 텍스트 블록을 반환할 때 API 400 오류 수정
+- 오토파일럿 키 입력·연속 프롬프트 숫자 충돌로 인한 피드백 설문 오발송 수정
+- Write 도구 대용량 파일 diff 계산 60% 속도 개선 (탭/`&`/`$` 포함 파일)
+- Linux sandbox `apply-seccomp` 헬퍼 npm·네이티브 빌드 모두 포함 — 샌드박스 유닉스 소켓 차단 복원
+
+---
+
 ## [2.25.0] - 2026-04-02
 
 ### Added

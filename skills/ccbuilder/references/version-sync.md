@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.92 (2026-04-06 동기화)
+
+**새로운 기능:**
+- `forceRemoteSettingsRefresh` 정책 설정 — 시작 시 원격 관리 설정 강제 갱신, 실패 시 종료 (fail-closed)
+- 인터랙티브 Bedrock 설정 마법사 — 로그인 화면 "3rd-party platform"에서 AWS 인증·리전·자격증명·모델 고정 안내
+- `/cost` 명령에 구독 사용자용 모델별·캐시 히트 세부 내역 추가
+- `/release-notes` 인터랙티브 버전 픽커로 전환
+- Remote Control 세션 이름 기본 접두사를 호스트명으로 변경 (`--remote-control-session-name-prefix` 오버라이드)
+- Pro 사용자 프롬프트 캐시 만료 후 복귀 시 미캐시 토큰 수 힌트 표시
+- (v2.1.91) MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` annotation, 최대 500K
+- (v2.1.91) `disableSkillShellExecution` — 스킬/커스텀 명령 인라인 쉘 실행 비활성화
+- (v2.1.91) 플러그인 `bin/` 실행 파일 지원 — Bash 도구에서 bare command 호출 가능
+- (v2.1.91) `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원
+
+**Breaking Changes:**
+- `/tag` 명령 제거 (v2.1.92)
+- `/vim` 명령 제거 — vim 모드는 `/config` → Editor mode 사용 (v2.1.92)
+
+**주요 버그 수정:**
+- 서브에이전트 "Could not determine pane count" 영구 실패 수정 (tmux 윈도우 삭제·재번호 후)
+- Stop 타입 프롬프트 Hook이 소형 빠른 모델 `ok:false` 반환 시 잘못 실패하던 버그 수정
+- 도구 입력 검증 실패 (스트리밍 시 array/object 필드 JSON 문자열 발행) 수정
+- Write 도구 대용량 파일 diff 계산 60% 속도 개선
+- (v2.1.91) `--resume` 트랜스크립트 체인 끊김 수정 (비동기 쓰기 실패 시 대화 이력 소실)
+
+---
+
 ### v2.1.90 (2026-04-02 동기화)
 
 **새로운 기능:**

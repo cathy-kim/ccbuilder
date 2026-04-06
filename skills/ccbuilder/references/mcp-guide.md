@@ -199,6 +199,25 @@ MCP_CONNECTION_NONBLOCKING=true claude -p "prompt"
 
 ---
 
+## MCP 도구 결과 크기 오버라이드 (v2.1.91 신규)
+
+기본적으로 MCP 도구 결과는 크기가 제한됩니다. `_meta["anthropic/maxResultSizeChars"]` annotation으로 최대 500K 문자까지 확장 가능합니다.
+
+DB 스키마, 대형 파일 목록 등 큰 결과를 반환하는 도구에 활용하세요:
+
+```json
+{
+  "result": "...large content...",
+  "_meta": {
+    "anthropic/maxResultSizeChars": 500000
+  }
+}
+```
+
+> 이 annotation이 없으면 기본 제한이 적용됩니다. 필요한 도구에만 선택적으로 적용하세요.
+
+---
+
 ## MCP Elicitation (v2.1.76 신규)
 
 MCP 서버가 세션 실행 중 사용자에게 구조화된 입력을 요청할 수 있습니다. 대화형 폼 필드 또는 브라우저 URL로 표시됩니다.
