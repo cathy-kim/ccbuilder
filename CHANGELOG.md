@@ -15,6 +15,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.26.0] - 2026-04-07
+
+### Added
+- **Claude Code v2.1.92 sync**
+  - `forceRemoteSettingsRefresh` 정책 설정 — CLI 시작 시 원격 managed settings 최신화 강제; 가져오기 실패 시 종료 (fail-closed)
+  - Bedrock 인터랙티브 설정 마법사 — 로그인 화면 "3rd-party platform"에서 AWS 인증·리전·자격증명 검증·모델 핀닝 단계별 가이드
+  - `/cost` 구독 사용자 대상 모델별·캐시 히트 별 비용 세부 내역
+  - `/release-notes` 인터랙티브 버전 피커로 전환
+  - Remote Control 세션 이름 호스트명 기반 기본 접두사; `--remote-control-session-name-prefix`로 오버라이드 가능
+  - Pro 사용자 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 푸터 힌트 표시
+- **Claude Code v2.1.91 sync**
+  - MCP 도구 결과 크기 오버라이드 — `_meta["anthropic/maxResultSizeChars"]` 어노테이션으로 최대 500K 결과 전달 (DB 스키마 등 대용량 데이터)
+  - `disableSkillShellExecution` 설정 — Skills/슬래시 명령/플러그인 명령 인라인 셸 실행 비활성화
+  - 플러그인 `bin/` 디렉토리 실행 파일 지원 — Bash 도구에서 bare command로 직접 실행
+  - `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원 (`%0A` 인코딩된 개행 허용)
+  - Edit 도구 `old_string` 앵커 단축 — 출력 토큰 절감
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.90 → v2.1.92 업데이트
+  - MCP 테이블: `_meta["anthropic/maxResultSizeChars"]` 결과 크기 오버라이드 추가
+  - Plugin 섹션: `bin/` 실행 파일·`disableSkillShellExecution` 추가
+  - CLI/env 섹션: `forceRemoteSettingsRefresh`·`--remote-control-session-name-prefix` 추가
+  - Hook 인라인 노트: v2.1.92 Stop Hook 수정 사항 추가
+  - Breaking Changes: `/tag`·`/vim` 명령 제거 추가
+- `references/version-sync.md`: v2.1.92 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`: MCP 도구 결과 크기 오버라이드 섹션 추가
+
+### Fixed (Claude Code v2.1.92 주요 수정)
+- 서브에이전트 생성 시 tmux 창 종료/번호 변경 후 "Could not determine pane count" 오류로 영구 실패하던 버그 수정
+- prompt-type Stop Hook에서 소형 빠른 모델이 `ok:false` 반환 시 잘못 실패하던 버그; `preventContinuation:true` 시맨틱 복원
+- 스트리밍 시 배열/객체 필드가 JSON 인코딩 문자열로 전달될 때 도구 입력 검증 실패 수정
+- 확장 사고 중 공백 텍스트 블록 생성 시 API 400 오류 수정
+- Write 도구 대용량 파일 diff 계산 속도 60% 향상 (탭/`&`/`$` 포함 파일)
+- 플러그인 MCP 서버가 미인증 claude.ai 커넥터와 중복 시 "connecting" 상태로 멈추는 버그 수정
+- Linux sandbox `apply-seccomp` 헬퍼 npm·네이티브 빌드 모두 포함 (유닉스 소켓 차단 복원)
+
+### Fixed (Claude Code v2.1.91 주요 수정)
+- `--resume` 시 비동기 트랜스크립트 쓰기 실패로 대화 이력 유실되던 트랜스크립트 체인 끊김 수정
+- plan mode 컨테이너 재시작 후 원격 세션에서 플랜 파일 추적 상실 → 권한 프롬프트·빈 플랜 승인 모달 수정
+
+---
+
+## [2.25.0] - 2026-04-02
+
+### Added
+- **Claude Code v2.1.90 sync**
+  - `/powerup` 명령 — 애니메이션 데모와 함께 Claude Code 기능을 인터랙티브하게 학습
+  - `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` env var — git pull 실패 시 기존 마켓플레이스 캐시 유지 (오프라인 환경용)
+  - `.husky` 디렉토리를 acceptEdits 모드 보호 목록에 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.89 → v2.1.90 업데이트
+  - 신규 명령: `/powerup` 추가
+  - 신규 env: `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` 추가
+  - Breaking Changes: `--resume` picker `claude -p`/SDK 세션 제외; DNS 캐시 명령 자동 허용 제거 추가
+- `references/version-sync.md`: v2.1.90 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.90 주요 수정)
+- Rate-limit 옵션 다이얼로그 무한 반복 자동 재오픈 후 세션 크래시 수정
+- `--resume` 사용 시 deferred tools/MCP/커스텀 에이전트 포함 세션 첫 요청 프롬프트 캐시 미스 수정 (v2.1.69 이후 회귀)
+- PostToolUse format-on-save Hook이 연속 편집 사이에 파일 재작성 시 Edit/Write "File content has changed" 오류 수정
+- JSON 출력 + exit code 2로 종료하는 `PreToolUse` Hook이 도구 호출을 올바르게 차단하지 않던 버그 수정
+- Auto mode가 명시적 사용자 경계("don't push", "wait for X before Y")를 무시하던 버그 수정
+- PowerShell 도구 권한 검사 강화: trailing `&` 백그라운드 작업 우회, `-ErrorAction Break` 디버거 행, 아카이브 추출 TOCTOU, 파싱 실패 시 deny-rule 저하 수정
+- MCP 도구 스키마 캐시 키 조회 시 매 턴 JSON.stringify 제거 (성능 개선)
+- SSE transport 대용량 프레임 처리 선형 시간으로 개선 (기존 이차 시간)
+- SDK 롱 세션 트랜스크립트 쓰기 이차 시간 저하 수정 (성능 개선)
+- `/resume` all-projects 뷰 프로젝트 세션 병렬 로드 — 다수 프로젝트 사용자 로드 시간 개선
+
+---
+
 ## [2.24.0] - 2026-04-01
 
 ### Added

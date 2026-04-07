@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-01
+**최종 동기화**: 2026-04-07
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,56 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.92 (2026-04-07 동기화)
+
+**새로운 기능:**
+- `forceRemoteSettingsRefresh` 정책 — CLI 시작 시 원격 managed settings 최신화 강제, 실패 시 종료 (fail-closed)
+- Bedrock 인터랙티브 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 AWS 인증·리전·자격증명·모델 핀닝 단계별 안내
+- `/cost` 구독 사용자 대상 모델별·캐시 히트 별 비용 세부 내역 표시
+- `/release-notes` 인터랙티브 버전 피커로 전환
+- Remote Control 세션 이름 호스트명 기반 기본 접두사; `--remote-control-session-name-prefix`로 오버라이드
+- Pro 사용자: 프롬프트 캐시 만료 후 세션 복귀 시 미캐시 토큰 수 푸터 힌트
+- (v2.1.91) MCP `_meta["anthropic/maxResultSizeChars"]` — 도구 결과 최대 500K 허용 (DB 스키마 등 대용량)
+- (v2.1.91) `disableSkillShellExecution` 설정 — Skills/슬래시 명령/플러그인 인라인 셸 실행 비활성화
+- (v2.1.91) 플러그인 `bin/` 실행 파일 지원 — Bash 도구에서 bare command 실행
+- (v2.1.91) `claude-cli://open?q=` 딥 링크 멀티라인 프롬프트 지원
+
+**Breaking Changes:**
+- `/tag` 명령 제거 (v2.1.92)
+- `/vim` 명령 제거 — vim 모드 토글은 `/config` → Editor mode 사용 (v2.1.92)
+
+**주요 버그 수정:**
+- 서브에이전트 생성 시 tmux 창 재번호 후 "Could not determine pane count" 영구 실패 수정
+- prompt-type Stop Hook에서 소형 빠른 모델 `ok:false` 반환 시 잘못 실패하던 버그; `preventContinuation:true` 시맨틱 복원
+- Write 도구 대용량 파일 diff 계산 60% 속도 향상 (탭/`&`/`$` 포함 파일)
+- Linux sandbox `apply-seccomp` 헬퍼 npm·네이티브 빌드 모두 포함
+- (v2.1.91) `--resume` 비동기 트랜스크립트 쓰기 실패로 대화 이력 유실 수정
+- (v2.1.91) Edit 도구 `old_string` 앵커 단축으로 출력 토큰 절감
+
+---
+
+### v2.1.90 (2026-04-02 동기화)
+
+**새로운 기능:**
+- `/powerup` 명령 — 애니메이션 데모와 함께 Claude Code 기능 인터랙티브 학습
+- `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE` env var — git pull 실패 시 마켓플레이스 캐시 유지 (오프라인 환경용)
+- `.husky` 디렉토리를 acceptEdits 모드 보호 디렉토리에 추가
+
+**Breaking Changes:**
+- `--resume` picker에서 `claude -p`/SDK 세션 제외 — 인터랙티브 세션만 표시
+- `Get-DnsClientCache`·`ipconfig /displaydns` 자동 허용 목록 제거 — DNS 캐시 프라이버시 보호
+
+**주요 버그 수정:**
+- Rate-limit 옵션 다이얼로그 무한 반복 자동 재오픈 → 세션 크래시 수정
+- `--resume` deferred tools/MCP/커스텀 에이전트 포함 세션 첫 요청 프롬프트 캐시 미스 수정 (v2.1.69 회귀)
+- PostToolUse format-on-save Hook이 연속 편집 사이에 파일 재작성 시 Edit/Write 실패 수정
+- `PreToolUse` Hook JSON 출력 + exit code 2 도구 호출 차단 미작동 수정
+- Auto mode 명시적 사용자 경계 무시 수정 ("don't push", "wait for X before Y")
+- PowerShell 도구 권한 검사 강화 (trailing `&`, `-ErrorAction Break`, TOCTOU 등)
+- SSE transport 대용량 프레임 처리 성능 개선 (이차 → 선형 시간)
+- SDK 롱 세션 트랜스크립트 쓰기 성능 개선 (이차 시간 저하 수정)
+- MCP 도구 스키마 캐시 키 조회 시 매 턴 JSON.stringify 제거 (성능 개선)
 
 ### v2.1.89 (2026-04-01 동기화)
 
