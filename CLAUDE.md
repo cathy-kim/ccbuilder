@@ -20,7 +20,7 @@ skills/ccbuilder/
 ├── SKILL.md                     # 메인 스킬 파일 (500줄 미만 필수)
 ├── references/                  # 레퍼런스 가이드 (17개)
 │   ├── official/                # Claude Code 공식 문서 요약 (6개)
-│   ├── github/                  # 커뮤니티 에코시스템 (5 docs + 11 submodules)
+│   ├── github/                  # 커뮤니티 에코시스템 (5 docs + 13 submodules)
 │   └── version-sync.md          # 버전 동기화 추적 (헤더 메타데이터 + 버전별 변경 사항)
 .claude-plugin/                  # 플러그인 매니페스트 (plugin.json, marketplace.json)
 .github/workflows/

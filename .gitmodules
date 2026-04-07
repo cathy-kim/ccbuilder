@@ -31,3 +31,9 @@
 [submodule "skills/ccbuilder/references/github/repos/claude-code-system-prompts"]
 	path = skills/ccbuilder/references/github/repos/claude-code-system-prompts
 	url = https://github.com/Piebald-AI/claude-code-system-prompts.git
+[submodule "skills/ccbuilder/references/github/repos/seongsu-kang-tycono"]
+	path = skills/ccbuilder/references/github/repos/seongsu-kang-tycono
+	url = https://github.com/seongsu-kang/tycono.git
+[submodule "skills/ccbuilder/references/github/repos/yeachan-heo-oh-my-claudecode"]
+	path = skills/ccbuilder/references/github/repos/yeachan-heo-oh-my-claudecode
+	url = https://github.com/yeachan-heo/oh-my-claudecode.git

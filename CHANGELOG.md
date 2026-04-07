@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- `seongsu-kang/tycono` 서브모듈 추가 — tycono.ai 플랫폼 레퍼런스 (`references/github/repos/`)
+- `yeachan-heo/oh-my-claudecode` 서브모듈 추가 — OMC orchestration layer 레퍼런스 (`references/github/repos/`)
+
+---
+
 ## [2.26.0] - 2026-04-07
 
 ### Added
