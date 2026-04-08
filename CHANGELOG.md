@@ -15,6 +15,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.27.0] - 2026-04-08
+
+### Added
+- **Claude Code v2.1.96 sync**
+  - Amazon Bedrock powered by Mantle 지원 — `CLAUDE_CODE_USE_MANTLE=1` 환경 변수로 활성화 (v2.1.94)
+  - 기본 effort 레벨 high로 변경 — API-key·Bedrock·Vertex·Foundry·Team·Enterprise 사용자 대상 (`/effort`로 조정 가능, v2.1.94)
+  - Slack MCP `send-message` 도구 호출 시 compact `Slacked #channel` 헤더 + 채널 링크 표시 (v2.1.94)
+  - `keep-coding-instructions` 플러그인 frontmatter 필드 — output style 지정 (v2.1.94)
+  - `UserPromptSubmit` Hook → `hookSpecificOutput.sessionTitle` 반환으로 세션 제목 동적 설정 (v2.1.94)
+  - `"skills": ["./"]` 플러그인 선언 시 frontmatter `name` 필드로 호출명 결정 — 디렉토리명 대신 일관된 이름 보장 (v2.1.94)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.92 → v2.1.96 업데이트
+  - Hook 인라인 노트: `UserPromptSubmit` `sessionTitle` 출력·플러그인 hook 수정 사항 추가 (v2.1.94)
+  - Plugin 섹션: `keep-coding-instructions` frontmatter·`"skills": ["./"]` 이름 결정 로직 추가
+  - CLI/env 섹션: `CLAUDE_CODE_USE_MANTLE=1`·기본 effort high 변경 추가
+- `references/version-sync.md`: v2.1.96 변경사항 추적 엔트리 추가
+- `references/official/hooks.md`: `UserPromptSubmit` `hookSpecificOutput.sessionTitle` 추가
+
+### Fixed (Claude Code v2.1.96 주요 수정)
+- Bedrock 요청 `403 "Authorization header is missing"` 오류 수정 — `AWS_BEARER_TOKEN_BEDROCK`·`CLAUDE_CODE_SKIP_BEDROCK_AUTH` 사용 시 발생하던 v2.1.94 회귀
+
+### Fixed (Claude Code v2.1.94 주요 수정)
+- 429 rate-limit 응답의 긴 Retry-After 헤더로 에이전트가 무한 대기하던 버그 수정 (즉시 오류 표출)
+- macOS Console 로그인 시 잠긴 키체인으로 "Not logged in" 오류 무시되던 버그 수정 (`claude doctor` 진단 추가)
+- 플러그인 skill hook YAML frontmatter 무시 버그 수정
+- `CLAUDE_PLUGIN_ROOT` 미설정 시 플러그인 hook "No such file or directory" 오류 수정
+- `${CLAUDE_PLUGIN_ROOT}` 로컬 마켓플레이스 플러그인 시작 시 소스 디렉토리로 잘못 해석되던 버그 수정
+- CJK·멀티바이트 텍스트 stream-json 청크 경계 분할 시 U+FFFD 손상 수정
+- `--resume` 같은 레포의 다른 worktree 세션 직접 재개 (cd 명령 출력 대신)
+- [VSCode] `settings.json` 파싱 실패 시 권한 규칙 미적용 경고 배너 추가
+
+---
+
 ## [2.26.0] - 2026-04-07
 
 ### Added

@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.96 (2026-04-08 동기화)
+
+**새로운 기능 (v2.1.94):**
+- Amazon Bedrock powered by Mantle 지원 — `CLAUDE_CODE_USE_MANTLE=1`
+- 기본 effort 레벨 high로 변경 — API-key·Bedrock·Vertex·Foundry·Team·Enterprise 사용자 (`/effort`로 조정)
+- Slack MCP `send-message` 시 compact `Slacked #channel` 헤더 + 채널 링크 표시
+- `keep-coding-instructions` 플러그인 frontmatter 필드 — output style 지정
+- `UserPromptSubmit` Hook `hookSpecificOutput.sessionTitle` — 세션 제목 동적 설정
+- `"skills": ["./"]` 선언 시 frontmatter `name`으로 호출명 결정 (디렉토리명 대신)
+
+**Breaking Changes:**
+- 없음
+
+**주요 버그 수정:**
+- (v2.1.96) Bedrock 403 회귀 수정 — `AWS_BEARER_TOKEN_BEDROCK`·`CLAUDE_CODE_SKIP_BEDROCK_AUTH` 사용 시 Authorization header 누락
+- (v2.1.94) 429 rate-limit 긴 Retry-After → 에이전트 무한 대기 수정 (즉시 오류 표출)
+- (v2.1.94) 플러그인 skill hook YAML frontmatter 무시 버그 수정
+- (v2.1.94) `CLAUDE_PLUGIN_ROOT` 미설정 시 hook "No such file" 오류 수정
+- (v2.1.94) CJK·멀티바이트 텍스트 stream-json 청크 분할 시 U+FFFD 손상 수정
+- (v2.1.94) `--resume` 동일 레포 다른 worktree 세션 직접 재개
+- (v2.1.94) [VSCode] `settings.json` 파싱 실패 시 권한 규칙 미적용 경고 배너
+
+---
+
 ### v2.1.92 (2026-04-07 동기화)
 
 **새로운 기능:**

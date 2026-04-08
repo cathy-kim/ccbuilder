@@ -78,6 +78,7 @@
 
 | Event | 필드 | 값 |
 |-------|------|-----|
+| `UserPromptSubmit` | `hookSpecificOutput.sessionTitle` | 세션 제목 동적 설정 (v2.1.94) |
 | `PreToolUse` | `hookSpecificOutput.permissionDecision` | `allow` / `deny` / `ask` / `defer` (v2.1.89: 헤드리스 세션 일시 중지 후 `-p --resume` 재평가) |
 | `PermissionRequest` | `hookSpecificOutput.decision.behavior` | `allow` / `deny` |
 | `PostToolUse`, `Stop` 등 | top-level `decision` | `"block"` |
