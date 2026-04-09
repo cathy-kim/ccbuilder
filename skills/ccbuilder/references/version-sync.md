@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.97 (2026-04-09 동기화)
+
+**새로운 기능:**
+- NO_FLICKER 모드 Focus view 토글 (`Ctrl+O`) — 프롬프트·툴 요약(diffstats)·최종 응답만 표시
+- `refreshInterval` statusline 설정 — N초마다 status line 명령 재실행
+- `workspace.git_worktree` statusline JSON 입력 필드 — linked git worktree 내부 시 설정
+- `/agents` `● N running` 인디케이터 — 에이전트 유형별 실시간 서브에이전트 인스턴스 수 표시
+- Cedar 정책 파일 (`.cedar`, `.cedarpolicy`) 구문 강조 지원
+- `/claude-api` skill Managed Agents 포함으로 확장
+- Accept Edits 모드: 안전한 env var 접두사·프로세스 래퍼 명령 자동 승인 (`LANG=C rm foo`, `timeout 5 mkdir out`)
+- CJK 문장 구두점 뒤 `/`·`@` 완성 트리거 (공백 없이 동작)
+- Bash tool OTEL 추적: 서브프로세스에 W3C `TRACEPARENT` env var 상속
+
+**주요 버그 수정:**
+- `--dangerously-skip-permissions` 보호 경로 승인 후 accept-edits 모드로 무음 다운그레이드 수정
+- Bash tool 권한 강화 — env-var 접두사·네트워크 리다이렉트 검사 개선, 오탐 감소
+- Permission rule 이름이 JS prototype 속성(`toString` 등)과 일치 시 `settings.json` 무음 무시되던 버그 수정
+- MCP HTTP/SSE 연결 서버 재연결 시 ~50 MB/hr 버퍼 누수 수정
+- MCP OAuth `oauth.authServerMetadataUrl` 재시작 후 토큰 갱신 시 무시되던 버그 수정 (ADFS 지원)
+- 429 지수 백오프 최솟값 적용 — 소 `Retry-After` 값으로 ~13초 내 전체 소진 방지
+- `Stop`/`SubagentStop` Hook 롱 세션 실패 수정
+- 서브에이전트 `cwd:` 격리 후 부모 Bash 작업 디렉토리 오염 수정
+- `claude plugin update` git 기반 플러그인에서 최신 커밋 있어도 "already at latest" 오보 수정
+- NO_FLICKER 모드 다수 렌더링 버그 수정 (URL 복사, zellij 스크롤, MCP 결과 호버 크래시, 메모리 누수)
+- Bedrock SigV4: 빈 문자열 env var (`AWS_BEARER_TOKEN_BEDROCK` 등) 인증 실패 수정
+
+---
+
 ### v2.1.92 (2026-04-07 동기화)
 
 **새로운 기능:**

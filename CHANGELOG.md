@@ -15,6 +15,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.27.0] - 2026-04-09
+
+### Added
+- **Claude Code v2.1.97 sync**
+  - NO_FLICKER 모드 Focus view 토글 (`Ctrl+O`) — 프롬프트·툴 요약(edit diffstats)·최종 응답만 표시
+  - `refreshInterval` statusline 설정 — N초마다 status line 명령 재실행
+  - `workspace.git_worktree` statusline JSON 입력 필드 — 현재 디렉토리가 linked git worktree 내부일 때 설정
+  - `/agents` 페이지 `● N running` 인디케이터 — 에이전트 유형별 실시간 서브에이전트 인스턴스 수 표시
+  - Cedar 정책 파일 (`.cedar`, `.cedarpolicy`) 구문 강조 지원
+  - `/claude-api` skill이 Managed Agents 포함으로 확장
+  - Accept Edits 모드: 안전한 env var 접두사·프로세스 래퍼 명령 자동 승인 (`LANG=C rm foo`, `timeout 5 mkdir out` 등)
+  - 이미지 압축 — 붙여넣기·첨부 이미지가 Read 도구로 읽은 이미지와 동일한 토큰 버짓으로 압축
+  - CJK 문장 구두점 뒤 `/`·`@` 완성 트리거 (일본어·중국어 입력 시 공백 불필요)
+  - Bash tool OTEL 추적: 서브프로세스에 W3C `TRACEPARENT` env var 상속
+  - Bridge 세션 카드에 로컬 git 저장소·브랜치·작업 디렉토리 표시
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.92 → v2.1.97 업데이트
+  - MCP 섹션: `oauth.authServerMetadataUrl` 재시작 후 토큰 갱신 시 ADFS 지원 수정 추가
+  - CLI 섹션: NO_FLICKER `Ctrl+O` Focus view, `refreshInterval`, `workspace.git_worktree`, `/agents` `● N running` 추가
+  - Hook 섹션: `Stop`/`SubagentStop` Hook 롱 세션 실패 수정, 서브에이전트 `cwd:` 격리 후 부모 Bash 오염 수정 추가
+- `references/version-sync.md`: v2.1.97 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.97 주요 수정)
+- `--dangerously-skip-permissions`이 보호 경로 쓰기 승인 후 accept-edits 모드로 무음 다운그레이드되던 버그 수정
+- Bash tool 권한 강화 — env-var 접두사·네트워크 리다이렉트 검사 강화, 일반 명령 오탐 감소
+- Permission rule 이름이 JS prototype 속성(`toString` 등)과 일치할 때 `settings.json` 무음 무시되던 버그 수정
+- 관리자가 managed-settings allow rule 제거 후 프로세스 재시작 전까지 규칙이 잔존하던 버그 수정
+- `permissions.additionalDirectories` 설정 변경이 세션 중간에 적용되지 않던 버그 수정
+- `additionalDirectories`에서 디렉토리 제거 시 `--add-dir`로 전달된 동일 디렉토리 접근도 취소되던 버그 수정
+- MCP HTTP/SSE 연결이 서버 재연결 시 ~50 MB/hr 버퍼 누수되던 버그 수정
+- MCP OAuth `oauth.authServerMetadataUrl`이 재시작 후 토큰 갱신 시 무시되던 버그 수정 (ADFS 등 지원)
+- 429 재시도 시 서버 `Retry-After`가 작을 때 ~13초 내 모든 시도 소진되던 버그 수정 — 지수 백오프 최솟값 적용
+- `Stop`/`SubagentStop` Hook이 롱 세션에서 실패하던 버그 수정
+- 서브에이전트가 worktree 격리 또는 `cwd:` 오버라이드 사용 시 부모 세션 Bash tool 작업 디렉토리가 오염되던 버그 수정
+- `claude plugin update`가 git 기반 마켓플레이스 플러그인에서 원격에 최신 커밋 있어도 "already at latest" 반환하던 버그 수정
+- 플러그인 frontmatter `name`이 YAML 불리언 키워드일 때 슬래시 명령 피커 오류 수정
+- NO_FLICKER 모드 다수 렌더링 버그 수정 (URL 복사 공백 삽입, zellij 스크롤 아티팩트, MCP 툴 결과 호버 크래시, 메모리 누수, Windows Terminal 마우스 스크롤 속도)
+- Bedrock SigV4 인증: `AWS_BEARER_TOKEN_BEDROCK`/`ANTHROPIC_BEDROCK_BASE_URL`이 빈 문자열(GitHub Actions 미설정 입력값)일 때 실패하던 버그 수정
+
+---
+
 ## [2.26.0] - 2026-04-07
 
 ### Added
