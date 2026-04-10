@@ -14,7 +14,7 @@
 |-------|------------|--------------|---------------|
 | **SessionStart** | 세션 시작/재개 | No | `session_id`, `agent_type` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
-| **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` |
+| **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt`; `hookSpecificOutput.sessionTitle` 반환으로 세션 제목 동적 설정 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 | No | `tool_name`, `tool_result` |
 | **PostToolUseFailure** | 도구 호출 실패 후 | No | `tool_name`, `error` |

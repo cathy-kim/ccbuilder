@@ -15,6 +15,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.27.0] - 2026-04-10
+
+### Added
+- **Claude Code v2.1.98 sync**
+  - Google Vertex AI 인터랙티브 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 GCP 인증·프로젝트·리전·자격증명 검증·모델 핀닝 단계별 가이드
+  - `Monitor` 도구 — 백그라운드 스크립트의 스트리밍 이벤트 실시간 수신
+  - `CLAUDE_CODE_PERFORCE_MODE` env var — 설정 시 Read-only 파일에 Edit/Write 실패 + `p4 edit` 힌트 제공
+  - `CLAUDE_CODE_SCRIPT_CAPS` env var — 세션별 스크립트 호출 횟수 제한
+  - `--exclude-dynamic-system-prompt-sections` 프린트 모드 플래그 — 크로스-유저 프롬프트 캐싱 최적화
+  - `workspace.git_worktree` 상태 줄 JSON 필드 — linked git worktree 세션 감지
+  - W3C `TRACEPARENT` env var — Bash 도구 서브프로세스에 OTEL 트레이스 컨텍스트 전파
+  - LSP `clientInfo` — language server initialize 요청에 Claude Code 클라이언트 정보 포함
+  - `/agents` 탭 레이아웃 (Running + Library) + Run agent·View running instance 액션
+  - `/reload-plugins` — 재시작 없이 플러그인 제공 Skills 즉시 반영
+  - Vim 모드 개선 — NORMAL 모드 `j`/`k`로 히스토리 탐색 및 푸터 필 선택
+- **Claude Code v2.1.97 sync**
+  - `refreshInterval` 상태 줄 설정 — N초마다 상태 줄 명령 재실행
+  - Focus view 토글 (`Ctrl+O`) — NO_FLICKER 모드에서 프롬프트·도구 요약·최종 응답 집중 뷰
+  - Cedar policy 파일 (`.cedar`, `.cedarpolicy`) 구문 강조
+  - `/agents`에 `● N running` 인디케이터 추가
+- **Claude Code v2.1.94 sync**
+  - Amazon Bedrock Mantle 지원 — `CLAUDE_CODE_USE_MANTLE=1` 설정
+  - `hookSpecificOutput.sessionTitle` — `UserPromptSubmit` 훅에서 세션 제목 동적 설정
+  - `keep-coding-instructions` 플러그인 frontmatter 필드 — 출력 스타일 코딩 지침 유지
+  - 플러그인 `"skills": ["./"]` 선언 시 frontmatter `name`을 호출 이름으로 사용 (설치 방법 무관 안정적)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.92 → v2.1.98 업데이트
+  - 신규 도구·env 섹션: Monitor, CLAUDE_CODE_PERFORCE_MODE, CLAUDE_CODE_SCRIPT_CAPS, CLAUDE_CODE_USE_MANTLE 추가
+  - CLI 섹션: refreshInterval, workspace.git_worktree, /agents 탭 레이아웃, Vertex AI 마법사 추가
+  - Hook 인라인 노트: v2.1.94 hookSpecificOutput.sessionTitle 추가
+  - Breaking Changes: 기본 effort 레벨 medium→high (v2.1.94) 추가
+- `references/version-sync.md`: v2.1.98 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: UserPromptSubmit 훅 hookSpecificOutput.sessionTitle 필드 추가
+- `references/official/tools.md`: Monitor 도구 추가
+
+### Fixed (Claude Code v2.1.98 주요 보안·안정성 수정)
+- Bash 도구 백슬래시 이스케이프 플래그로 권한 우회 → 임의 코드 실행 가능 취약점 수정
+- 복합 Bash 명령(`&&`, `|`)이 강제 권한 프롬프트·auto mode 안전 검사 우회하던 버그 수정
+- env-var 접두사 read-only 명령이 안전 변수(`LANG`, `TZ`, `NO_COLOR` 등) 외 프롬프트 미발생 수정
+- `/dev/tcp/...`·`/dev/udp/...` 리다이렉트 자동 허용 → 프롬프트 요청으로 수정
+- MCP OAuth `oauth.authServerMetadataUrl` 재시작 후 토큰 갱신 시 무시되던 버그 수정 (ADFS 등 IdP)
+- 429 재시도 시 서버 소형 `Retry-After`로 전체 시도 소진 (~13s) → 지수 백오프 최소값 적용
+- `--dangerously-skip-permissions` 보호 경로 쓰기 승인 후 accept-edits 모드로 무음 강등 수정
+- `Bash(cmd:*)` 및 `Bash(git commit *)` 와일드카드 규칙이 추가 공백/탭 명령 미매칭 수정
+- `permissions.additionalDirectories` 변경이 세션 중간에 즉시 적용되지 않던 버그 수정
+- agent team 멤버가 리더의 권한 모드를 상속하지 않던 버그 수정 (`--dangerously-skip-permissions`)
+
+---
+
 ## [2.26.0] - 2026-04-07
 
 ### Added

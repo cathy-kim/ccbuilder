@@ -74,6 +74,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
+| `Monitor` | - | 백그라운드 스크립트 스트리밍 이벤트 실시간 수신 (v2.1.98) | 낮음 |
 | `Computer` | 161 | Chrome 브라우저 자동화 | **높음** |
 | `LSP` | 255 | Language Server Protocol | 낮음 |
 | `ToolSearch` | 144+690 | MCP 도구 검색/로드 | 낮음 |

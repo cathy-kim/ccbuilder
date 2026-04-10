@@ -77,6 +77,36 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.98 (2026-04-10 동기화)
+
+**새로운 기능:**
+- Google Vertex AI 인터랙티브 설정 마법사 — 로그인 화면 "3rd-party platform" 선택 시 GCP 인증·프로젝트·리전·자격증명 검증·모델 핀닝 단계별 가이드 (v2.1.98)
+- `Monitor` 도구 — 백그라운드 스크립트 스트리밍 이벤트 실시간 수신 (v2.1.98)
+- `CLAUDE_CODE_PERFORCE_MODE` env var — Read-only 파일 Edit/Write 차단 + `p4 edit` 힌트 (v2.1.98)
+- `CLAUDE_CODE_SCRIPT_CAPS` env var — 세션별 스크립트 호출 횟수 제한 (v2.1.98)
+- `--exclude-dynamic-system-prompt-sections` 프린트 모드 플래그 — 크로스-유저 프롬프트 캐싱 최적화 (v2.1.98)
+- `workspace.git_worktree` 상태 줄 JSON 필드 — linked git worktree 세션 감지 (v2.1.97)
+- `refreshInterval` 상태 줄 설정 — N초마다 상태 줄 명령 재실행 (v2.1.97)
+- Focus view 토글 (`Ctrl+O`) — NO_FLICKER 모드 집중 뷰 (v2.1.97)
+- `/agents` 탭 레이아웃 (Running + Library) + `● N running` 인디케이터 (v2.1.97-98)
+- Amazon Bedrock Mantle 지원 — `CLAUDE_CODE_USE_MANTLE=1` (v2.1.94)
+- `hookSpecificOutput.sessionTitle` — `UserPromptSubmit` 훅에서 세션 제목 동적 설정 (v2.1.94)
+- `keep-coding-instructions` 플러그인 frontmatter 필드 (v2.1.94)
+- W3C `TRACEPARENT` — Bash 서브프로세스 OTEL 트레이스 전파; LSP `clientInfo` 지원 (v2.1.98)
+
+**Breaking Changes:**
+- 기본 effort 레벨 medium → high — API-key/Bedrock/Vertex/Foundry/Team/Enterprise 사용자 (`/effort`로 조정, v2.1.94)
+
+**주요 보안 수정:**
+- Bash 백슬래시 이스케이프 플래그 권한 우회 (임의 코드 실행) 취약점 수정 (v2.1.98)
+- 복합 Bash 명령 강제 권한 프롬프트 우회 수정 (v2.1.98)
+- `/dev/tcp/...`·`/dev/udp/...` 리다이렉트 자동 허용 수정 (v2.1.98)
+- `--dangerously-skip-permissions` 보호 경로 후 accept-edits 강등 수정 (v2.1.98)
+- 429 재시도 지수 백오프 최소값 적용 (v2.1.97-98)
+- MCP OAuth `authServerMetadataUrl` 재시작 후 토큰 갱신 시 무시 수정 (v2.1.97-98)
+
+---
+
 ### v2.1.92 (2026-04-07 동기화)
 
 **새로운 기능:**
