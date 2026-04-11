@@ -39,6 +39,10 @@
 
 **TeammateIdle · TaskCompleted (v2.1.71)**: `{"continue": false, "stopReason": "..."}` 응답으로 팀메이트 중단 가능 (Stop Hook과 동일 방식)
 
+**v2.1.94 업데이트**: `UserPromptSubmit` Hook에서 `hookSpecificOutput.sessionTitle` 반환으로 세션 제목 설정 가능
+
+**v2.1.101 업데이트**: settings.json 내 미인식 Hook 이벤트 이름이 파일 전체를 무시하지 않도록 개선 (settings 복원력 향상); `permissions.deny` 규칙이 `PreToolUse` Hook의 `permissionDecision: "ask"` 응답을 올바르게 오버라이드; `allowManagedHooksOnly` 설정 시 managed settings로 강제 활성화된 플러그인 Hook 정상 실행
+
 ---
 
 ## Hook 타입 (v2.12)

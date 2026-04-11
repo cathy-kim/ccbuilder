@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.101 (2026-04-11 동기화)
+
+**새로운 기능:**
+- `/team-onboarding` 명령 — 로컬 Claude Code 사용 이력 기반 팀원 온보딩 가이드 자동 생성
+- OS CA 인증서 저장소 기본 신뢰 — 기업 TLS 프록시 추가 설정 불필요 (`CLAUDE_CODE_CERT_STORE=bundled`으로 번들 CA만 사용 가능)
+- `/ultraplan` 및 원격 세션 기능 기본 클라우드 환경 자동 생성
+- settings.json 복원력 개선: 미인식 Hook 이벤트 이름이 파일 전체를 무시하지 않도록 수정
+- `permissions.deny` 규칙이 `PreToolUse` Hook의 `permissionDecision: "ask"` 올바르게 오버라이드
+- `allowManagedHooksOnly` 설정 시 managed settings 강제 활성화 플러그인 Hook 정상 실행
+- (v2.1.98) `Monitor` 도구 신규 — 백그라운드 스크립트 스트리밍 이벤트 수신
+- (v2.1.98) `CLAUDE_CODE_PERFORCE_MODE` env var — 읽기 전용 파일 Edit/Write 시 `p4 edit` 힌트 표시
+- (v2.1.98) Google Vertex AI 인터랙티브 설정 마법사 — "3rd-party platform" 로그인 화면에서 단계별 안내
+- (v2.1.98) `workspace.git_worktree` statusline JSON 필드 — linked git worktree 감지
+- (v2.1.97) Focus view 토글 (`Ctrl+O`) in `NO_FLICKER` 모드; `refreshInterval` statusline 설정
+- (v2.1.94) Amazon Bedrock Mantle 지원 (`CLAUDE_CODE_USE_MANTLE=1`)
+- (v2.1.94) `hookSpecificOutput.sessionTitle` — `UserPromptSubmit` Hook에서 세션 제목 설정
+- (v2.1.94) `keep-coding-instructions` frontmatter — 플러그인 output style 코딩 지시문 유지
+- (v2.1.94) 플러그인 skills frontmatter `name` 호출 이름으로 사용 — 안정적 이름 제공
+
+**Breaking Changes:**
+- 기본 effort 레벨 medium → high으로 변경 (API key·Bedrock/Vertex/Foundry·Team·Enterprise 사용자, v2.1.94)
+
+**주요 버그 수정:**
+- LSP 바이너리 탐지 POSIX `which` 폴백 커맨드 인젝션 취약점 수정
+- 격리된 worktree 내 서브에이전트 자신의 파일 Read/Edit 접근 거부 수정
+- 서브에이전트가 동적 주입 MCP 서버 도구 미상속 수정
+- hardcoded 5분 요청 타임아웃 수정 (`API_TIMEOUT_MS` 적용)
+- Grep 도구 내장 ripgrep 경로 stale 시 ENOENT — 시스템 `rg` 폴백 및 세션 중 자동 복구
+- `RemoteTrigger` 도구 `run` 액션 빈 body 전송으로 서버 거부 수정
+
+---
+
 ### v2.1.92 (2026-04-07 동기화)
 
 **새로운 기능:**

@@ -15,6 +15,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.27.0] - 2026-04-11
+
+### Added
+- **Claude Code v2.1.101 sync**
+  - `/team-onboarding` 명령 — 로컬 Claude Code 사용 이력 기반 팀원 온보딩 가이드 자동 생성
+  - OS CA 인증서 저장소 기본 신뢰 — 기업 TLS 프록시 별도 설정 없이 동작 (`CLAUDE_CODE_CERT_STORE=bundled`으로 번들 CA만 사용)
+  - `/ultraplan` 및 원격 세션 기능에서 기본 클라우드 환경 자동 생성 (웹 사전 설정 불필요)
+  - Settings 복원력 개선: settings.json 내 미인식 Hook 이벤트 이름이 파일 전체를 무시하지 않도록 수정
+  - `allowManagedHooksOnly` 설정 시 managed settings 강제 활성화 플러그인 Hook 정상 실행
+  - `permissions.deny` 규칙이 `PreToolUse` Hook의 `permissionDecision: "ask"` 올바르게 오버라이드
+  - `claude -p --resume <name>` — `/rename` 또는 `--name`으로 설정한 세션 제목으로 재개 가능
+  - rate-limit 재시도 메시지에 어떤 limit이 hit되었는지·재설정 시각 표시
+  - 개선된 beta OTEL 트레이싱: `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, `OTEL_LOG_TOOL_CONTENT` 지원, 민감 속성 옵트인 전까지 미방출
+- **Claude Code v2.1.98 sync**
+  - Google Vertex AI 인터랙티브 설정 마법사 — 로그인 화면 "3rd-party platform"에서 GCP 인증·프로젝트·리전·자격증명 검증·모델 핀닝 단계별 안내
+  - `CLAUDE_CODE_PERFORCE_MODE` env var — 읽기 전용 파일 Edit/Write 시 `p4 edit` 힌트와 함께 실패 처리
+  - `Monitor` 도구 신규 — 백그라운드 스크립트 스트리밍 이벤트 수신
+  - Linux 서브프로세스 샌드박싱: `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` 설정 시 PID 네임스페이스 격리; `CLAUDE_CODE_SCRIPT_CAPS` — 세션별 스크립트 호출 횟수 제한
+  - `--exclude-dynamic-system-prompt-sections` 플래그 — print 모드 교차 사용자 프롬프트 캐시 개선
+  - `workspace.git_worktree` statusline JSON 필드 — linked git worktree 세션 감지
+  - Bash 도구 서브프로세스에 W3C `TRACEPARENT` env var 전파 (OTEL 트레이싱 활성화 시)
+- **Claude Code v2.1.97 sync**
+  - `NO_FLICKER` 모드 Focus view 토글 (`Ctrl+O`) — 프롬프트·도구 요약·최종 응답만 표시
+  - `refreshInterval` statusline 설정 — N초마다 statusline 명령 재실행
+  - `/agents` 뷰에 `● N running` 지표 추가 — 실행 중인 서브에이전트 수 표시
+- **Claude Code v2.1.94 sync**
+  - Amazon Bedrock Mantle 지원 (`CLAUDE_CODE_USE_MANTLE=1`)
+  - 기본 effort 레벨 medium → high으로 변경 (API key·Bedrock/Vertex/Foundry·Team·Enterprise 사용자)
+  - `keep-coding-instructions` frontmatter 필드 — 플러그인 output style 코딩 지시문 유지
+  - `hookSpecificOutput.sessionTitle` — `UserPromptSubmit` Hook에서 세션 제목 설정
+  - 플러그인 skills `"skills": ["./"]` 선언 시 frontmatter `name`을 호출 이름으로 사용
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.92 → v2.1.101 업데이트
+  - Plugin 섹션: `keep-coding-instructions` frontmatter, frontmatter `name` 사용, `context: fork`/`agent` 수정 추가
+  - 신규 명령: `/team-onboarding` 추가
+  - 신규 도구·env: Monitor 도구, CLAUDE_CODE_USE_MANTLE, CLAUDE_CODE_PERFORCE_MODE, CLAUDE_CODE_CERT_STORE, refreshInterval, workspace.git_worktree, CLAUDE_CODE_SCRIPT_CAPS, --exclude-dynamic-system-prompt-sections 추가
+  - Hook 인라인 노트: v2.1.94 hookSpecificOutput.sessionTitle, v2.1.101 settings 복원력·permissions.deny 수정 추가
+  - Breaking Changes: 기본 effort 레벨 변경 추가
+- `references/version-sync.md`: v2.1.101 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.101 주요 수정)
+- LSP 바이너리 탐지 POSIX `which` 폴백의 커맨드 인젝션 취약점 수정
+- 가상 스크롤러에서 긴 세션 시 메시지 목록 수십 개 복본 보유 메모리 누수 수정
+- 대용량 세션에서 `--resume`/`--continue` 시 대화 컨텍스트 유실 수정
+- `--resume` 체인 복구가 무관한 서브에이전트 대화로 브리징하던 버그 수정
+- 격리된 worktree에서 실행 중인 서브에이전트가 자신의 worktree 내 파일 Read/Edit 접근 거부 수정
+- 서브에이전트가 동적 주입된 MCP 서버 도구를 상속받지 못하던 버그 수정
+- hardcoded 5분 요청 타임아웃 수정 — 로컬 LLM·확장 사고·느린 게이트웨이 대응 (`API_TIMEOUT_MS` 적용)
+- `RemoteTrigger` 도구 `run` 액션이 빈 body 전송하여 서버에서 거부되던 버그 수정
+- Grep 도구 내장 ripgrep 바이너리 경로 stale 시 ENOENT 오류 — 시스템 `rg` 폴백 및 세션 중 자동 복구
+- settings.json env 값이 문자열 대신 숫자일 때 크래시 수정
+
+---
+
 ## [2.26.0] - 2026-04-07
 
 ### Added

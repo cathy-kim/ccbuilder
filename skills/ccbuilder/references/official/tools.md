@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-03-26 (Claude Code v2.1.84+)
+**Last Synced**: 2026-04-11 (Claude Code v2.1.101+)
 
 ---
 
@@ -26,6 +26,7 @@
 |------|--------|------|--------|
 | `Bash` | 1,067 | Shell 명령 실행 | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
+| `Monitor` | - | 백그라운드 스크립트 stdout 이벤트 스트리밍 수신 (v2.1.98) | 낮음 |
 | `Task` | 1,214 | 서브에이전트 실행 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 
