@@ -260,6 +260,11 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
+## 버그 수정 (v2.1.101)
+
+- **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속
+- **isolation: worktree 파일 접근**: 격리된 worktree에서 실행 중인 서브에이전트가 자신의 worktree 내 파일에 Read/Edit 접근이 거부되던 버그 수정 — 이제 자신의 worktree 내 파일에 정상 접근 가능
+
 ---
 
 ## 공식 문서
