@@ -14,7 +14,7 @@
 |-------|------------|--------------|---------------|
 | **SessionStart** | 세션 시작/재개 | No | `session_id`, `agent_type` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
-| **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` |
+| **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 | No | `tool_name`, `tool_result` |
 | **PostToolUseFailure** | 도구 호출 실패 후 | No | `tool_name`, `error` |
@@ -38,6 +38,12 @@
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
 **TeammateIdle · TaskCompleted (v2.1.71)**: `{"continue": false, "stopReason": "..."}` 응답으로 팀메이트 중단 가능 (Stop Hook과 동일 방식)
+
+**settings.json 복원력 (v2.1.101)**: 알 수 없는 훅 이벤트 이름이 있어도 전체 settings.json이 무시되지 않음 — 알 수 없는 이벤트만 건너뜀
+
+**allowManagedHooksOnly (v2.1.101)**: managed settings로 강제 활성화된 플러그인의 훅이 이 설정 하에서도 정상 실행됨
+
+**permissions.deny + PreToolUse (v2.1.101)**: `permissions.deny` 규칙이 `PreToolUse` hook의 `permissionDecision: "ask"` 응답을 다운그레이드로 재정의하지 않도록 수정 (이전에는 hook이 deny를 프롬프트로 약화 가능)
 
 ---
 

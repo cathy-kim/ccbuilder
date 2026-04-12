@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-07
+**최종 동기화**: 2026-04-12
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,45 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.101 (2026-04-12 동기화)
+
+**새로운 기능:**
+- `/team-onboarding` 명령 — 로컬 Claude Code 사용 이력 기반 팀원 온보딩 가이드 자동 생성
+- OS CA 인증서 저장소 기본 신뢰 — 엔터프라이즈 TLS 프록시 별도 설정 불필요 (`CLAUDE_CODE_CERT_STORE=bundled`로 비활성화)
+- `/ultraplan` 및 원격 세션 기능: 웹 설정 없이 기본 클라우드 환경 자동 생성
+- settings.json 복원력 — 알 수 없는 훅 이벤트 이름이 전체 파일 무시를 유발하지 않도록 개선
+- `claude -p --resume <name>` — `/rename`·`--name`으로 설정한 세션 제목으로 재개 지원
+- beta 추적 `OTEL_LOG_USER_PROMPTS`, `OTEL_LOG_TOOL_DETAILS`, `OTEL_LOG_TOOL_CONTENT` 환경변수 지원
+- SDK `query()` — `for await` break 또는 `await using` 시 서브프로세스·임시 파일 자동 정리
+- (v2.1.98) Google Vertex AI 인터랙티브 설정 마법사 (로그인 화면 "3rd-party platform")
+- (v2.1.98) `CLAUDE_CODE_PERFORCE_MODE` — 읽기 전용 파일 편집 시 `p4 edit` 힌트
+- (v2.1.98) `Monitor` 도구 — 백그라운드 스크립트 이벤트 스트리밍
+- (v2.1.98) `workspace.git_worktree` status line JSON 입력 필드
+- (v2.1.98) `--exclude-dynamic-system-prompt-sections` print mode 플래그
+- (v2.1.97) focus view 토글 (`Ctrl+O`, `NO_FLICKER` 모드)
+- (v2.1.97) `refreshInterval` status line 재실행 주기 설정
+- (v2.1.94) `CLAUDE_CODE_USE_MANTLE=1` — Amazon Bedrock Mantle 지원
+- (v2.1.94) `keep-coding-instructions` frontmatter 필드
+- (v2.1.94) `hookSpecificOutput.sessionTitle` — `UserPromptSubmit` Hook에서 세션 제목 설정
+- (v2.1.94) `"skills": ["./"]` 선언 시 frontmatter `name`으로 호출명 결정
+
+**Breaking Changes:**
+- 기본 effort 레벨 medium → **high** 전환 (API키·Bedrock·Vertex·Foundry·Team·Enterprise 사용자, v2.1.94)
+
+**주요 버그 수정:**
+- LSP binary 탐지 POSIX `which` 폴백 명령 인젝션 취약점 수정 (보안)
+- 장기 세션 메모리 누수 (가상 스크롤러 메시지 목록 중복 저장) 수정
+- `--resume`/`--continue` 대용량 세션 대화 컨텍스트 유실 수정
+- 서브에이전트가 동적 주입 MCP 서버 도구를 상속받지 못하던 버그 수정
+- 격리된 worktree 서브에이전트의 자신 worktree 파일 Read/Edit 거부 수정
+- 하드코딩된 5분 요청 타임아웃 수정 (`API_TIMEOUT_MS` 적용)
+- `permissions.deny` 규칙이 `PreToolUse` hook의 `permissionDecision: "ask"` 다운그레이드를 방지
+- Grep 도구 내장 ripgrep 바이너리 stale 시 시스템 `rg` 폴백 + 자동 복구
+- (v2.1.98) Bash 도구 백슬래시 이스케이프 플래그 권한 우회·복합 명령 강제 프롬프트 우회 수정
+- (v2.1.98) 429 재시도 지수 백오프 최솟값 적용 (소형 `Retry-After` 시 시도 소진 방지)
+
+---
 
 ### v2.1.92 (2026-04-07 동기화)
 

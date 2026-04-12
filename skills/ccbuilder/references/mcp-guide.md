@@ -287,6 +287,8 @@ claude mcp serve
 
 다른 앱에서 Claude Code를 MCP 서버로 연결하여 사용할 수 있습니다.
 
+> **v2.1.101 수정**: `claude mcp serve` 도구 호출이 `outputSchema`를 검증하는 MCP 클라이언트에서 "Tool execution failed" 오류로 실패하던 버그 수정.
+
 ---
 
 ## 출력 제한
