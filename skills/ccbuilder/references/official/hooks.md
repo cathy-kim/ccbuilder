@@ -22,7 +22,7 @@
 | 10 | `Stop` | Claude 응답 완료 | block |
 | 11 | `TeammateIdle` | 팀메이트 유휴 상태 | exit 2 |
 | 12 | `TaskCompleted` | 태스크 완료 | exit 2 |
-| 13 | `PreCompact` | 컨텍스트 압축 전 | - |
+| 13 | `PreCompact` | 컨텍스트 압축 전 — exit code 2 또는 `{"decision":"block"}` 반환으로 차단 가능 (v2.1.105) | block |
 | 14 | `Setup` | 초기 설정 (--init, --init-only, --maintenance) | - |
 | 15 | `WorktreeCreate` | git worktree 생성 (v2.1.50); HTTP type 지원 → `hookSpecificOutput.worktreePath` 반환 (v2.1.84) | - |
 | 16 | `WorktreeRemove` | git worktree 제거 (v2.1.50) | - |

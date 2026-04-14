@@ -15,6 +15,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.28.0] - 2026-04-14
+
+### Added
+- **Claude Code v2.1.107 sync**
+  - 긴 작업 중 thinking 힌트를 더 빨리 표시 (v2.1.107)
+  - `PreCompact` Hook 차단 지원 — exit code 2 또는 `{"decision":"block"}` 반환으로 컨텍스트 압축 차단 가능 (v2.1.105)
+  - 플러그인 `monitors` 매니페스트 최상위 키 — 세션 시작 또는 스킬 invoke 시 백그라운드 모니터 자동 실행 (v2.1.105)
+  - `EnterWorktree` `path` 파라미터 — 현재 레포의 기존 worktree로 전환 (v2.1.105)
+  - `/proactive` — `/loop` 별칭 추가 (v2.1.105)
+  - 스킬 설명 최대 길이 250 → 1,536자 확대; 초과 시 시작 경고 (v2.1.105)
+  - `WebFetch` `<style>`·`<script>` 태그 내용 제거 — CSS/JS 헤비 페이지 컨텍스트 예산 보호 (v2.1.105)
+  - 스트림 5분 무응답 시 자동 중단 후 non-streaming 재시도 (v2.1.105)
+  - 네트워크 오류 즉시 재시도 메시지 표시 (v2.1.105)
+  - MCP 대용량 출력 truncation 프롬프트 — JSON(`jq`), 텍스트(청크 크기 계산) 등 포맷별 처리 레시피 제공 (v2.1.105)
+  - `/doctor` 레이아웃 개선: 상태 아이콘 표시, `f` 키로 Claude 자동 수정 (v2.1.105)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.101 → v2.1.107 업데이트
+  - Hook 인라인 노트: v2.1.105 `PreCompact` 차단 지원 추가
+  - Plugin 섹션: `monitors` 매니페스트 키, 스킬 설명 길이 확대 추가
+  - 신규 명령: `/proactive` 별칭 추가
+  - 신규 도구·env: `EnterWorktree` path 파라미터, `WebFetch` 개선 추가
+- `references/version-sync.md`: v2.1.107 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.27.0] - 2026-04-12
 
 ### Added
