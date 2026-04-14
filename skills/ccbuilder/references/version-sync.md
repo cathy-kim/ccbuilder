@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.107 (2026-04-14 동기화)
+
+**새로운 기능:**
+- (v2.1.107) 긴 작업 중 thinking 힌트 더 빨리 표시
+- (v2.1.105) `PreCompact` Hook 차단 지원 — exit code 2 또는 `{"decision":"block"}` 반환으로 컨텍스트 압축 차단 가능
+- (v2.1.105) 플러그인 `monitors` 매니페스트 최상위 키 — 세션 시작/스킬 invoke 시 백그라운드 모니터 자동 실행
+- (v2.1.105) `EnterWorktree` `path` 파라미터 — 현재 레포의 기존 worktree로 전환
+- (v2.1.105) `/proactive` — `/loop` 별칭
+- (v2.1.105) 스킬 설명 최대 길이 250 → 1,536자; 초과 시 시작 경고
+- (v2.1.105) `WebFetch` `<style>`·`<script>` 태그 내용 제거 — CSS/JS 헤비 페이지 컨텍스트 예산 보호
+- (v2.1.105) MCP 대용량 출력 truncation 프롬프트 — JSON(`jq`), 텍스트(청크 계산) 등 포맷별 처리 레시피
+- (v2.1.105) 스트림 5분 무응답 시 자동 중단 후 non-streaming 재시도
+- (v2.1.105) `/doctor` 레이아웃 개선: 상태 아이콘 + `f` 키로 자동 수정
+
+**주요 버그 수정:**
+- 대기열 메시지에 첨부된 이미지 유실 수정 (v2.1.105)
+- 긴 대화에서 프롬프트 입력 줄바꿈 시 화면 공백 수정 (v2.1.105)
+- 멀티라인 응답 선택 시 선행 공백 복사 수정 (v2.1.105)
+- ASCII 아트·들여쓰기 다이어그램 선행 공백 삭제 수정 (v2.1.105)
+- one-shot 예약 작업 반복 재실행 수정 (v2.1.105)
+- `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 전체 프로젝트 지표 비활성화 수정 (v2.1.105)
+- MCP tools가 headless/remote-trigger 세션 첫 턴에 누락되는 버그 수정 (v2.1.105)
+- AWS Bedrock 비US 리전 `/model` 피커에서 잘못된 `us.*` 모델 ID 저장 수정 (v2.1.105)
+- 429 rate-limit 오류에서 raw JSON 덤프 대신 깔끔한 메시지 표시 (v2.1.105)
+
+---
+
 ### v2.1.101 (2026-04-12 동기화)
 
 **새로운 기능:**

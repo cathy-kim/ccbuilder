@@ -23,7 +23,7 @@
 | **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
 | **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path` |
 | **TeammateIdle** | 팀메이트 유휴 상태 (v2.7 신규) | No | `teammate_name`, `agent_id` |
-| **PreCompact** | compact 전 | No | - |
+| **PreCompact** | 컨텍스트 압축 전 — exit code 2 또는 `{"decision":"block"}` 반환으로 압축 차단 가능 (v2.1.105) | Yes (block) | - |
 | **Notification** | 알림 발생 | No | `notification` |
 | **Setup** | 초기 설정 | No | `trigger` (init/init-only/maintenance) |
 | **WorktreeCreate** | git worktree 생성 (v2.1.50) | No | `worktree_path`, `branch` |
