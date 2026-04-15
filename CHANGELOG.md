@@ -15,6 +15,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.29.0] - 2026-04-15
+
+### Added
+- **Claude Code v2.1.109 sync**
+  - extended-thinking 표시기 로테이팅 진행 힌트 개선 (v2.1.109)
+  - `ENABLE_PROMPT_CACHING_1H` env var — API key·Bedrock·Vertex·Foundry 1시간 프롬프트 캐시 TTL 옵트인; `FORCE_PROMPT_CACHING_5M` — 5분 TTL 강제 (v2.1.108)
+  - `/recap` 명령 — 세션 복귀 시 컨텍스트 요약 제공; `/config`에서 설정, `CLAUDE_CODE_ENABLE_AWAY_SUMMARY`로 강제 활성화 (v2.1.108)
+  - Skill tool로 내장 슬래시 명령 자동 탐색·실행 지원 (`/init`, `/review`, `/security-review`, v2.1.108)
+  - `/undo` — `/rewind` 별칭 추가 (v2.1.108)
+  - `/model` 전환 전 미캐시 경고 — 다음 응답이 전체 히스토리 미캐시로 읽힘 안내 (v2.1.108)
+  - `/resume` 피커 현재 디렉토리 세션 기본 표시; `Ctrl+A`로 전체 프로젝트 표시 (v2.1.108)
+  - 오류 메시지 개선: 서버 rate limit vs plan 사용 한도 구분; 5xx/529 오류 → status.claude.com 링크; 미지원 슬래시 명령 유사어 제안 (v2.1.108)
+  - 언어 문법 온디맨드 로드 — 파일 읽기·편집·구문 강조 메모리 절약 (v2.1.108)
+  - 상세 트랜스크립트(`Ctrl+O`) "verbose" 표시기 추가 (v2.1.108)
+  - `DISABLE_PROMPT_CACHING*` env var 설정 시 시작 경고 (v2.1.108)
+  - 다수 버그 수정: `/login` 코드 입력 붙여넣기, 텔레메트리 비활성화 시 캐시 TTL 폴백, `CLAUDE_ENV_FILE` `#` 주석 줄 처리, `--resume` 세션 이름·색상 유실, `/feedback` Enter 재제출, 다이어크리틱 문자 응답 누락, 정책 플러그인 자동 업데이트 등 (v2.1.108)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.107 → v2.1.109 업데이트
+  - CLI 섹션: Skill tool 내장 슬래시 명령 지원, `/model` 경고, `/resume` 피커 개선, 오류 메시지 개선, thinking 힌트 추가
+  - 신규 명령: `/recap`, `/undo` 추가
+  - 신규 도구·env: `ENABLE_PROMPT_CACHING_1H`, `FORCE_PROMPT_CACHING_5M`, `CLAUDE_CODE_ENABLE_AWAY_SUMMARY` 추가
+- `references/version-sync.md`: v2.1.109 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.28.0] - 2026-04-14
 
 ### Added
