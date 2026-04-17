@@ -15,6 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.30.0] - 2026-04-17
+
+### Added
+- **Claude Code v2.1.112 sync**
+  - Claude Opus 4.7 `xhigh` effort 레벨 추가 — `/effort`, `--effort`, 모델 피커에서 설정; 기타 모델은 `high`로 폴백 (v2.1.111)
+  - Auto mode Max 구독자의 Opus 4.7에서 사용 가능; `--enable-auto-mode` 플래그 불필요 (v2.1.111)
+  - `/effort` 인자 없이 호출 시 인터랙티브 슬라이더 오픈 — 화살표 키 탐색, Enter 확인 (v2.1.111)
+  - "Auto (match terminal)" 테마 옵션 — 터미널 다크/라이트 모드 자동 매칭 (`/theme`, v2.1.111)
+  - `/less-permission-prompts` 스킬 — 트랜스크립트 스캔 후 읽기 전용 Bash/MCP 허용 목록 자동 생성 (v2.1.111)
+  - `/ultrareview [<PR#>]` — 병렬 멀티에이전트 클라우드 코드 리뷰; 인자 없으면 현재 브랜치, `<PR#>` 지정 시 GitHub PR 리뷰 (v2.1.111)
+  - Read-only Bash glob 패턴(`ls *.ts`) 및 `cd <project-dir> &&` 시작 명령 권한 프롬프트 제거 (v2.1.111)
+  - `/skills` 메뉴 토큰 수 기준 정렬 토글 (`t` 키, v2.1.111)
+  - Plan 파일명 프롬프트 기반 자동 생성 — 기존 무작위 단어 대신 의미 있는 이름 (v2.1.111)
+  - `CLAUDE_CODE_USE_POWERSHELL_TOOL` — PowerShell 도구 옵트인; Linux/macOS는 `=1` + `pwsh` PATH 필요 (v2.1.111)
+  - `OTEL_LOG_RAW_API_BODIES` — OpenTelemetry로 전체 API 요청/응답 body 방출 (디버깅용, v2.1.111)
+  - `/tui [fullscreen]` 명령 및 `tui` 설정 — 같은 대화에서 플리커 없는 렌더링 전환 (v2.1.110)
+  - Push notification 도구 — Remote Control + "Push when Claude decides" 설정 시 모바일 푸시 알림 (v2.1.110)
+  - `autoScrollEnabled` 설정 — 풀스크린 모드 대화 자동 스크롤 비활성화 (v2.1.110)
+  - `/focus` 명령 — focus view 토글; `Ctrl+O`는 normal/verbose 트랜스크립트 토글로 변경 (v2.1.110)
+  - `--resume`/`--continue`가 만료되지 않은 예약 작업(scheduled tasks) 재활성화 (v2.1.110)
+  - 다수 버그 수정: `claude-opus-4-7 temporarily unavailable` auto mode 오류 (v2.1.112), iTerm2 + tmux 화면 티어링, `@` 파일 제안 전체 재스캔, LSP 진단 순서 오류, 탭 완성 `/resume` 임의 세션 재개, `/clear` 세션 이름 유실, Bedrock/Vertex/Foundry 429 오류 링크, 피드백 설문 연속 표시, bare URL 클릭 불가 (v2.1.111); 세션 정리 서브에이전트 트랜스크립트 누락, MCP tool hang, 비스트리밍 폴백 hang (v2.1.110)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.109 → v2.1.112 업데이트
+  - CLI 섹션: Opus 4.7 xhigh, auto mode 플래그 제거, PowerShell 도구, read-only Bash glob 권한 제거, `/tui`, push notification, `autoScrollEnabled` 추가
+  - 신규 명령: `/ultrareview`, `/less-permission-prompts`, `/tui`, `/focus` 추가
+  - 신규 도구·env: `CLAUDE_CODE_USE_POWERSHELL_TOOL`, `OTEL_LOG_RAW_API_BODIES`, `PushNotification` 도구, `autoScrollEnabled` 추가
+  - Breaking Changes: `Ctrl+O` 동작 변경 추가 (v2.1.110)
+- `references/version-sync.md`: v2.1.112 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.29.0] - 2026-04-15
 
 ### Added

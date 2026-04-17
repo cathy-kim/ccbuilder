@@ -77,6 +77,44 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.112 (2026-04-17 동기화)
+
+**새로운 기능:**
+- (v2.1.111) Claude Opus 4.7 `xhigh` effort 레벨 — `/effort`, `--effort`, 모델 피커에서 설정; 기타 모델은 `high` 폴백
+- (v2.1.111) Auto mode Max 구독자의 Opus 4.7에서 사용 가능; `--enable-auto-mode` 플래그 불필요
+- (v2.1.111) `/effort` 인자 없이 호출 시 인터랙티브 슬라이더 — 화살표 키 탐색, Enter 확인
+- (v2.1.111) "Auto (match terminal)" 테마 옵션 — 터미널 다크/라이트 모드 자동 매칭 (`/theme`)
+- (v2.1.111) `/less-permission-prompts` 스킬 — 트랜스크립트 스캔 후 읽기 전용 Bash/MCP 허용 목록 자동 생성
+- (v2.1.111) `/ultrareview [<PR#>]` — 병렬 멀티에이전트 클라우드 코드 리뷰 (현재 브랜치 또는 GitHub PR 번호 지정)
+- (v2.1.111) Read-only Bash glob 패턴(`ls *.ts`) 및 `cd <project-dir> &&` 시작 명령 권한 프롬프트 제거
+- (v2.1.111) `/skills` 메뉴 토큰 수 기준 정렬 토글 (`t` 키)
+- (v2.1.111) Plan 파일명 프롬프트 기반 자동 생성 (기존 무작위 단어 → 의미 있는 이름)
+- (v2.1.111) `CLAUDE_CODE_USE_POWERSHELL_TOOL` — PowerShell 도구 옵트인 (Windows 기본, Linux/macOS `=1` + `pwsh` PATH 필요)
+- (v2.1.111) `OTEL_LOG_RAW_API_BODIES` — 전체 API 요청/응답 OpenTelemetry log event 방출
+- (v2.1.110) `/tui [fullscreen]` 명령 및 `tui` 설정 — 같은 대화에서 플리커 없는 렌더링 전환
+- (v2.1.110) Push notification 도구 — Remote Control 활성화 + "Push when Claude decides" 설정 시 모바일 푸시
+- (v2.1.110) `autoScrollEnabled` 설정 — 풀스크린 모드 자동 스크롤 비활성화
+- (v2.1.110) `/focus` 명령 — focus view 토글; `Ctrl+O`는 normal/verbose 트랜스크립트 토글로 변경
+- (v2.1.110) `--resume`/`--continue` 만료되지 않은 예약 작업 재활성화
+
+**주요 버그 수정:**
+- `claude-opus-4-7 temporarily unavailable` auto mode 오류 수정 (v2.1.112)
+- iTerm2 + tmux 화면 티어링(랜덤 문자, 입력 드리프트) 수정 (v2.1.111)
+- `@` 파일 제안이 비-git 디렉토리에서 매 턴 전체 프로젝트 재스캔하던 버그 수정 (v2.1.111)
+- LSP 진단이 편집 이전 내용으로 나타나 모델이 방금 편집한 파일 재읽던 버그 수정 (v2.1.111)
+- 탭 완성 `/resume`이 세션 피커 대신 임의 세션 즉시 재개하던 버그 수정 (v2.1.111)
+- `/clear` 시 `/rename` 설정 세션 이름 유실 수정 (v2.1.111)
+- 플러그인 오류 처리 개선: 의존성 충돌·잘못된·복잡한 버전 요구사항 구분; stale 버전 수정; 중단된 이전 설치 복구 (v2.1.111)
+- Bedrock/Vertex/Foundry 429 오류가 status.claude.com 링크 표시하던 버그 수정 (v2.1.111)
+- 피드백 설문이 연속으로 표시되던 버그 수정 (v2.1.111)
+- Bash/PowerShell/MCP 출력 줄바꿈 bare URL 클릭 불가 수정 (v2.1.111)
+- Windows: `CLAUDE_ENV_FILE` 및 SessionStart hook 환경 파일 미적용 수정 (v2.1.111)
+- MCP tool call이 SSE/HTTP 연결 끊김 시 무한 hang 수정 (v2.1.110)
+- 비스트리밍 폴백 재시도 다분 hang 수정 (v2.1.110)
+- 세션 정리 시 서브에이전트 트랜스크립트 포함 전체 디렉토리 삭제 수정 (v2.1.110)
+
+---
+
 ### v2.1.109 (2026-04-15 동기화)
 
 **새로운 기능:**

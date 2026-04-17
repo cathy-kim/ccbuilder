@@ -35,6 +35,7 @@
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
 | `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `PushNotification` | - | 모바일 푸시 알림 — Remote Control + "Push when Claude decides" 설정 필요 (v2.1.110) | 낮음 |
 
 ### Planning Tools
 
