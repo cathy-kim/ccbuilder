@@ -15,6 +15,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.30.0] - 2026-04-18
+
+### Added
+- **Claude Code v2.1.114 sync**
+  - CLI 네이티브 바이너리 스폰으로 전환 — 번들 JS 대신 플랫폼별 optional dependency 실행 (v2.1.113)
+  - `sandbox.network.deniedDomains` 설정 — 광역 허용 도메인 와일드카드 내 특정 도메인 차단 가능 (v2.1.113)
+  - Claude Opus 4.7 `xhigh` effort 레벨 — high~max 사이; `/effort`, `--effort`, 모델 피커에서 설정 가능 (v2.1.111)
+  - Auto mode — Max 구독자 Opus 4.7 지원; `--enable-auto-mode` 플래그 불필요 (v2.1.111)
+  - `/effort` 인터랙티브 슬라이더 — 인자 없이 호출 시 화살표 키 탐색, Enter 확인 (v2.1.111)
+  - "Auto (match terminal)" 테마 옵션 — 터미널 dark/light 모드 자동 매칭 (v2.1.111)
+  - `/ultrareview` 명령 — 클라우드 병렬 멀티에이전트 코드리뷰; 인자 없으면 현재 브랜치, `/ultrareview <PR#>`으로 특정 PR 리뷰 (v2.1.111)
+  - `/less-permission-prompts` 스킬 — 읽기 전용 Bash·MCP 도구 트랜스크립트 스캔 후 `.claude/settings.json` 허용 리스트 자동 제안 (v2.1.111)
+  - `/tui` 명령 및 `tui` 설정 — 같은 대화 내에서 플리커 없는 풀스크린 렌더링 전환 (v2.1.110)
+  - `/focus` 명령 — 포커스 뷰 별도 토글 (`Ctrl+O`는 verbose transcript 전용으로 분리, v2.1.110)
+  - Push notification tool — Remote Control + "Push when Claude decides" 설정 시 모바일 푸시 알림 전송 (v2.1.110)
+  - `autoScrollEnabled` 설정 — 풀스크린 모드 자동 스크롤 비활성화 (v2.1.110)
+  - `OTEL_LOG_RAW_API_BODIES` 환경 변수 — API 요청·응답 전체 본문 OTEL 로그 이벤트 출력 (v2.1.111)
+  - `CLAUDE_CODE_USE_POWERSHELL_TOOL` — PowerShell 도구 옵트인 (Linux/macOS: `=1`, Windows 점진적 배포, v2.1.111)
+  - plan 파일 프롬프트 기반 이름 자동 생성 (예: `fix-auth-race-snug-otter.md`, v2.1.111)
+  - Esc로 `/loop` 대기 wakeup 취소; wakeup 메시지 "Claude resuming /loop wakeup" 표시 (v2.1.113)
+  - 서브에이전트 스트림 정지 시 10분 후 명확한 오류 반환 — 무한 행 방지 (v2.1.113)
+  - `/extra-usage`, Remote Control `@`-파일 자동완성 지원 (v2.1.113)
+  - `--resume`/`--continue` 만료 미경과 예약 작업 복원 (v2.1.110)
+  - `/context`, `/exit`, `/reload-plugins` Remote Control 지원 (v2.1.110)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.109 → v2.1.114 업데이트
+  - CLI 섹션: 네이티브 바이너리, xhigh effort, auto mode 플래그 불필요, `/tui`·`/focus`·`/ultrareview`·`/less-permission-prompts`, plan 파일 이름, `/loop` Esc 취소, 서브에이전트 타임아웃, `Ctrl+U` 변경 추가
+  - Agent Teams 섹션: v2.1.114 권한 다이얼로그 크래시 수정 추가
+  - 신규 명령: `/tui`, `/focus`, `/ultrareview`, `/less-permission-prompts` 추가
+  - 신규 도구·env: `sandbox.network.deniedDomains`, `autoScrollEnabled`, `OTEL_LOG_RAW_API_BODIES`, `CLAUDE_CODE_USE_POWERSHELL_TOOL` 추가
+  - Breaking Changes: Bash deny 규칙 강화(env/sudo 래퍼), `Bash(find:*)` -exec 자동 승인 차단, macOS /private/ 위험 경로, `Ctrl+U` 변경 추가
+- `references/version-sync.md`: v2.1.114 변경사항 추적 엔트리 추가
+
+### Security
+- Bash deny 규칙이 env/sudo/watch/ionice/setsid 래퍼로 감싼 명령도 매칭 (v2.1.113)
+- `Bash(find:*)` allow 규칙이 `find -exec`/`-delete` 자동 승인 불가 (v2.1.113)
+- macOS `/private/{etc,var,tmp,home}` 경로를 `Bash(rm:*)` 위험 경로로 처리 (v2.1.113)
+- Bash 멀티라인 첫 줄 주석 시 전체 명령 트랜스크립트 표시 — UI 스푸핑 차단 (v2.1.113)
+
+---
+
 ## [2.29.0] - 2026-04-15
 
 ### Added
