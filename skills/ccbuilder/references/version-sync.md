@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-15
+**최종 동기화**: 2026-04-18
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,41 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.114 (2026-04-18 동기화)
+
+**새로운 기능:**
+- (v2.1.113) CLI 네이티브 바이너리 스폰으로 전환 — 번들 JS 대신 플랫폼별 optional dependency 실행
+- (v2.1.113) `sandbox.network.deniedDomains` 설정 — 광역 허용 도메인 와일드카드 내 특정 도메인 차단
+- (v2.1.113) Esc로 `/loop` 대기 wakeup 취소; wakeup 표시 메시지 개선
+- (v2.1.113) 서브에이전트 스트림 정지 시 10분 후 명확한 오류 반환 — 무한 행 방지
+- (v2.1.111) Claude Opus 4.7 `xhigh` effort 레벨 — high~max 사이
+- (v2.1.111) Auto mode — Max 구독자 Opus 4.7 지원; `--enable-auto-mode` 플래그 불필요
+- (v2.1.111) `/effort` 인터랙티브 슬라이더 (인자 없이 호출 시 화살표 키 탐색)
+- (v2.1.111) "Auto (match terminal)" 테마 옵션
+- (v2.1.111) `/ultrareview` — 클라우드 병렬 멀티에이전트 코드리뷰
+- (v2.1.111) `/less-permission-prompts` — 읽기 전용 Bash·MCP 허용 리스트 자동 제안
+- (v2.1.111) `OTEL_LOG_RAW_API_BODIES` env var — API 요청·응답 전체 OTEL 로그
+- (v2.1.111) `CLAUDE_CODE_USE_POWERSHELL_TOOL` — PowerShell 도구 옵트인
+- (v2.1.111) plan 파일 프롬프트 기반 이름 자동 생성
+- (v2.1.110) `/tui` 명령 및 `tui` 설정 — 플리커 없는 풀스크린 렌더링
+- (v2.1.110) Push notification tool
+- (v2.1.110) `/focus` 명령 — 포커스 뷰 토글 (`Ctrl+O`는 verbose 전용 분리)
+- (v2.1.110) `autoScrollEnabled` 설정
+
+**보안 강화 (v2.1.113):**
+- Bash deny 규칙 — env/sudo/watch/ionice/setsid 래퍼 명령 매칭
+- `Bash(find:*)` allow 규칙이 `find -exec`/`-delete` 자동 승인 불가
+- macOS `/private/{etc,var,tmp,home}` 경로 `Bash(rm:*)` 위험 경로 처리
+- Bash 멀티라인 첫 줄 주석 시 전체 명령 표시 — UI 스푸핑 차단
+
+**주요 버그 수정:**
+- Agent Teams 팀메이트 도구 권한 요청 시 권한 다이얼로그 크래시 수정 (v2.1.114)
+- MCP 동시 호출 타임아웃 핸들링 — 한 도구 응답이 다른 호출 watchdog 해제 버그 수정 (v2.1.113)
+- claude-opus-4-7 auto mode 사용 불가 수정 (v2.1.112)
+- `Cmd-backspace`/`Ctrl+U` 커서 앞 텍스트 삭제 복원 (v2.1.113)
+
+---
 
 ### v2.1.109 (2026-04-15 동기화)
 
