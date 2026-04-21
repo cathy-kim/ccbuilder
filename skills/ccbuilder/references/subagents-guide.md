@@ -88,7 +88,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `disallowedTools` | string[] | 차단된 도구 목록 (신규) | - |
 | `permissionMode` | string | 권한 모드 (신규) | default |
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
-| `hooks` | object[] | 내장 Hook 정의 | - |
+| `hooks` | object[] | 내장 Hook 정의 — `--agent` 메인 스레드 실행 시에도 발동 (v2.1.116) | - |
 
 ---
 

@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.116 (2026-04-21 동기화)
+
+**새로운 기능:**
+- (v2.1.116) `/resume` 40MB+ 대용량 세션 최대 67% 빠른 재개; dead-fork 항목 효율 처리
+- (v2.1.116) 다중 stdio MCP 서버 빠른 시작; `resources/templates/list` 첫 `@`-멘션 시로 지연
+- (v2.1.116) thinking 스피너 인라인 진행 표시 — "still thinking" / "thinking more" / "almost done thinking"
+- (v2.1.116) `/config` 검색이 옵션 값 매칭 지원 (예: "vim" → Editor mode)
+- (v2.1.116) `/doctor` 응답 중에도 열기 가능
+- (v2.1.116) `/reload-plugins`·자동 업데이트 시 마켓플레이스 누락 의존성 자동 설치
+- (v2.1.116) Bash `gh` 명령 GitHub API rate limit 히트 시 에이전트 백오프 힌트
+- (v2.1.116) Agent frontmatter `hooks:` — `--agent` 메인 스레드 실행 시에도 발동
+- (v2.1.116) VS Code/Cursor/Windsurf 풀스크린 스크롤 부드럽게 개선; `/terminal-setup` 스크롤 민감도 설정
+
+**보안 강화:**
+- 샌드박스 auto-allow가 `rm`/`rmdir`의 `/`, `$HOME` 등 위험 경로 안전 검사 우회 불가
+
+**주요 버그 수정:**
+- Devanagari 등 인도 계열 스크립트 터미널 컬럼 정렬 깨짐 수정
+- Kitty 키보드 프로토콜 터미널(iTerm2, Ghostty, kitty, WezTerm, Windows Terminal)에서 `Ctrl+-` undo 미작동 수정
+- Kitty 키보드 프로토콜 터미널(Warp fullscreen, kitty, Ghostty, WezTerm)에서 `Cmd+Left/Right` 줄 이동 미작동 수정
+- `npx`·`bun run` 래퍼로 실행 시 `Ctrl+Z` 터미널 행 수정
+- 인라인 모드 터미널 리사이즈·대용량 출력 시 스크롤백 중복 표시 수정
+- 짧은 터미널에서 모달 검색 다이얼로그 화면 넘침 수정
+- VS Code 통합 터미널 스크롤 중 빈 셀·composer chrome 사라짐 수정
+- 병렬 요청 완료 시 cache control TTL 순서 관련 API 400 오류 수정
+- 50MB 초과 트랜스크립트에서 `/branch` 거부 수정
+- 대용량 세션 파일에서 `/resume`이 빈 대화 표시 대신 오류 보고 수정
+- `/plugin` Installed 탭에서 동일 항목 중복 표시 수정
+- worktree 진입 후 `/update`·`/tui` 미작동 수정
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**

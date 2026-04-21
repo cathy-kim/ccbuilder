@@ -20,7 +20,7 @@ MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연�
 |-----------|------|------|
 | **HTTP** | HTTP 기반 (streamable-http) | **권장** |
 | **SSE** | Server-Sent Events | Deprecated |
-| **Stdio** | 로컬 프로세스 (stdin/stdout) | 지원 |
+| **Stdio** | 로컬 프로세스 (stdin/stdout) — 다중 서버 동시 구성 시 빠른 시작; `resources/templates/list` 첫 `@`-멘션 시로 지연 (v2.1.116) | 지원 |
 
 ---
 

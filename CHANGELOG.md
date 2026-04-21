@@ -15,6 +15,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-21
+
+### Added
+- **Claude Code v2.1.116 sync**
+  - `/resume` 40MB+ 대용량 세션 최대 67% 빠른 재개; 다수 dead-fork 항목이 있는 세션 효율적 처리 (v2.1.116)
+  - 다중 stdio MCP 서버 구성 시 빠른 시작; `resources/templates/list` 첫 `@`-멘션 시로 지연 (v2.1.116)
+  - thinking 스피너 인라인 진행 표시 — "still thinking" / "thinking more" / "almost done thinking"으로 별도 힌트 행 대체 (v2.1.116)
+  - `/config` 검색이 옵션 값 매칭 지원 — "vim" 검색 시 Editor mode 설정 발견 (v2.1.116)
+  - `/doctor` 응답 중에도 열기 가능 — 현재 턴 완료 대기 불필요 (v2.1.116)
+  - `/reload-plugins` 및 백그라운드 플러그인 자동 업데이트 시 마켓플레이스에서 누락 의존성 자동 설치 (v2.1.116)
+  - Bash `gh` 명령이 GitHub API rate limit 히트 시 에이전트 백오프 힌트 표시 (v2.1.116)
+  - Settings Usage 탭 5시간·주간 사용량 즉시 표시; usage 엔드포인트 rate limit 시에도 실패 없음 (v2.1.116)
+  - Agent frontmatter `hooks:` — `--agent`로 메인 스레드 에이전트 실행 시에도 발동 (v2.1.116)
+  - 슬래시 명령 메뉴 필터 결과 없을 시 "No commands match" 표시 (v2.1.116)
+  - VS Code, Cursor, Windsurf 풀스크린 스크롤 부드럽게 개선; `/terminal-setup`이 에디터 스크롤 민감도 설정 (v2.1.116)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.116 업데이트
+  - 제목 업데이트
+  - MCP 섹션: stdio 시작 최적화 행 추가
+  - Agent 필드: `hooks:` frontmatter `--agent` 지원 추가
+  - CLI 섹션: `/resume` 성능, thinking 스피너 인라인, `/config` 값 검색, `/doctor` 응답 중 열기, Bash `gh` rate limit 힌트 추가
+  - Plugin 섹션: `/reload-plugins` 누락 의존성 자동 설치 추가
+  - Breaking Changes: 샌드박스 auto-allow rm/rmdir 위험 경로 검사 강화 추가
+- `references/version-sync.md`: v2.1.116 변경사항 추적 엔트리 추가
+
+### Security
+- 샌드박스 auto-allow가 `rm`/`rmdir`의 `/`, `$HOME` 등 위험 경로 안전 검사를 우회하지 못하도록 수정 (v2.1.116)
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added
