@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-03-26 (Claude Code v2.1.84+)
+**Last Synced**: 2026-04-22 (Claude Code v2.1.117+)
 
 ---
 
@@ -16,8 +16,8 @@
 | `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함) | 낮음 |
 | `Write` | 127 | 파일 생성/덮어쓰기 | **높음** |
 | `Edit` | 246 | 파일 내 문자열 치환 | **중간** |
-| `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
-| `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
+| `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`); 네이티브 빌드(macOS·Linux)에서는 Bash 경유 `bfs` 사용 (v2.1.117) | 낮음 |
+| `Grep` | 300 | 파일 내용 검색 (ripgrep); 네이티브 빌드(macOS·Linux)에서는 Bash 경유 `ugrep` 사용 (v2.1.117) | 낮음 |
 | `NotebookEdit` | 121 | Jupyter 노트북 셀 편집 | 중간 |
 
 ### Execution Tools

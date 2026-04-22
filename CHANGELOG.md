@@ -15,6 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-22
+
+### Added
+- **Claude Code v2.1.117 sync**
+  - Agent frontmatter `mcpServers`/`hooks:` — `--agent` 메인 스레드 세션에서 로드·발동 (v2.1.116-117)
+  - `CLAUDE_CODE_FORK_SUBAGENT=1` — 외부 빌드 포크 서브에이전트 활성화 (v2.1.117)
+  - `plugin install` 재설치 시 누락 의존성 자동 설치; `blockedMarketplaces`·`strictKnownMarketplaces` 적용 범위 확대 (v2.1.117)
+  - `/model` 선택 재시작 후 유지 (프로젝트 핀 오버라이드 시에도), 시작 헤더 모델 출처 표시 (v2.1.117)
+  - `/resume` 대용량 세션(40MB+) 최대 67% 빠른 로드·오래된 세션 자동 요약 제안 (v2.1.116-117)
+  - MCP 서버 시작 속도 향상: 로컬·claude.ai 서버 병렬 connect 기본화; stdio 다중 서버 병렬 초기화 (v2.1.116-117)
+  - thinking 스피너 인라인 진행 메시지 — "still thinking", "thinking more", "almost done thinking" (v2.1.117)
+  - OpenTelemetry: `user_prompt` 이벤트에 슬래시 명령 출처(`command_name`/`command_source`) 추가; API 이벤트에 `effort` 속성 추가 (v2.1.117)
+  - macOS·Linux 네이티브 빌드: `Glob`·`Grep` 도구 → 내장 `bfs`·`ugrep` 교체 (Bash 도구 경유, 속도 향상) (v2.1.117)
+  - `cleanupPeriodDays` 정리 대상 확대: `~/.claude/tasks/`, `shell-snapshots/`, `backups/` 포함 (v2.1.117)
+  - 보안: sandbox auto-allow가 `rm`/`rmdir` 위험 경로 안전 검사 우회 불가 (v2.1.116)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.117 업데이트
+  - Agent 필드 섹션: mcpServers/hooks `--agent` 지원 추가
+  - CLI 섹션: /model 선택 영속화, /resume 개선 추가
+  - Plugin 섹션: 의존성 자동 설치, blockedMarketplaces 강화 추가
+  - 신규 도구·env: CLAUDE_CODE_FORK_SUBAGENT=1 추가
+  - Breaking Changes: Pro/Max Opus 4.6·Sonnet 4.6 기본 effort medium→high 추가
+- `references/version-sync.md`: v2.1.117 변경사항 추적 엔트리 추가
+- `references/official/subagents.md`: `--agent` 메인 스레드 frontmatter 지원 추가 (v2.1.116-117)
+- `references/official/tools.md`: 네이티브 빌드 bfs/ugrep 교체 주석 추가 (v2.1.117)
+
+### Breaking Changes
+- **Pro/Max 구독자 Opus 4.6·Sonnet 4.6 기본 effort `medium` → `high`** (v2.1.117)
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added

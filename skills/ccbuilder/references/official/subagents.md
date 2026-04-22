@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-03-26 (v2.1.84)
+**Last Synced**: 2026-04-22 (v2.1.117)
 
 ---
 
@@ -30,8 +30,8 @@
 | `maxTurns` | 최대 에이전트 턴 수 |
 | `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78) |
 | `skills` | 프리로드할 Skill (전체 내용 주입) |
-| `mcpServers` | 사용 가능 MCP 서버 |
-| `hooks` | Agent 스코프 라이프사이클 훅 |
+| `mcpServers` | 사용 가능 MCP 서버; `--agent` 메인 스레드 실행 시에도 로드 (v2.1.117) |
+| `hooks` | Agent 스코프 라이프사이클 훅; `--agent` 메인 스레드 실행 시 발동 (v2.1.116) |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
 
@@ -70,3 +70,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
+- **`--agent` frontmatter 지원**: `claude --agent <path>` 실행 시 `mcpServers`/`hooks:` frontmatter 로드·발동 (v2.1.116-117)
+- **`CLAUDE_CODE_FORK_SUBAGENT=1`**: 외부 빌드에서 포크 서브에이전트 활성화 (v2.1.117)

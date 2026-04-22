@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.117 (2026-04-22 동기화)
+
+**새로운 기능:**
+- Agent frontmatter `mcpServers`·`hooks:` — `--agent` 메인 스레드 세션에서 로드·발동 (v2.1.116-117)
+- `CLAUDE_CODE_FORK_SUBAGENT=1` — 외부 빌드 포크 서브에이전트 활성화 (v2.1.117)
+- `plugin install` 재설치 시 누락 의존성 자동 설치; `blockedMarketplaces`/`strictKnownMarketplaces` 적용 범위 확대 (v2.1.117)
+- `/model` 선택 재시작 후 유지 (프로젝트 핀 오버라이드 포함); 시작 헤더에 모델 출처 표시 (v2.1.117)
+- `/resume` 대용량 세션(40MB+) 최대 67% 빠른 로드; 오래된 대형 세션 요약 제안 (v2.1.116-117)
+- MCP 시작 속도 향상: 로컬·claude.ai 서버 병렬 connect 기본화; stdio 다중 서버 병렬 초기화 (v2.1.116-117)
+- thinking 스피너 인라인 진행 메시지 ("still thinking", "thinking more", "almost done thinking", v2.1.117)
+- macOS·Linux 네이티브 빌드: `Glob`·`Grep` → 내장 `bfs`·`ugrep` 교체 (Bash 도구 경유, v2.1.117)
+- `cleanupPeriodDays` 정리 대상 확대: `tasks/`, `shell-snapshots/`, `backups/` 포함 (v2.1.117)
+
+**Breaking Changes:**
+- **Pro/Max 구독자 Opus 4.6·Sonnet 4.6 기본 effort `medium` → `high`** (v2.1.117)
+
+**주요 버그 수정:**
+- OAuth 토큰 만료 시 "Please run /login" 오류 → 401 시 자동 갱신으로 수정 (v2.1.117)
+- `WebFetch` 대용량 HTML 페이지 hang 수정 (v2.1.117)
+- Opus 4.7 세션 `/context` 비율 부정확 → 1M 컨텍스트 창 기준으로 수정 (v2.1.117)
+- Bash `gh` 명령 GitHub API rate limit 시 힌트 표시 (v2.1.116)
+- 보안: sandbox auto-allow `rm`/`rmdir` 위험 경로 안전 검사 우회 수정 (v2.1.116)
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**
