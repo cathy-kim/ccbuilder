@@ -44,6 +44,7 @@
 | `type: "http"` | URL로 JSON POST, JSON 응답 수신 (shell 불필요, v2.1.63) |
 | `type: "prompt"` | 단일 LLM 호출. `{ok: true/false, reason: "..."}` |
 | `type: "agent"` | 서브에이전트 (도구 접근 가능). prompt와 동일 스키마 |
+| `type: "mcp_tool"` | MCP 도구 직접 invoke — shell 없이 MCP 결과로 결정 제어 (v2.1.118) |
 | `async: true` | 백그라운드 실행 (command hook만). 차단 안 함 |
 
 ## Matcher 패턴

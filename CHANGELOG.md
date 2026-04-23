@@ -15,6 +15,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-23
+
+### Added
+- **Claude Code v2.1.118 sync**
+  - Hook `type: "mcp_tool"` 신규 타입 — Hook에서 MCP 도구 직접 invoke (v2.1.118)
+  - Vim visual mode `v`(visual)/`V`(visual-line) — 시각 선택·operator·피드백 (v2.1.118)
+  - `/usage` 명령 — `/cost`·`/stats` 통합, 두 단축어는 관련 탭 열기로 유지 (v2.1.118)
+  - Custom themes — `/theme`에서 생성·전환, `~/.claude/themes/` JSON 편집, 플러그인 `themes/` 배포 지원 (v2.1.118)
+  - `DISABLE_UPDATES` env var — 모든 업데이트 경로 완전 차단 (`claude update` 포함, v2.1.118)
+  - `wslInheritsWindowsSettings` 정책 키 — WSL이 Windows managed settings 상속 (v2.1.118)
+  - Auto mode `"$defaults"` — `autoMode.allow/soft_deny/environment`에 포함 시 기본 목록 보존하며 커스텀 규칙 추가 (v2.1.118)
+  - `claude plugin tag` — 버전 검증 포함 플러그인 릴리스 git 태그 생성 (v2.1.118)
+  - `--continue`/`--resume` — `/add-dir`로 추가한 디렉토리 기준 세션 복원 (v2.1.118)
+  - Agent frontmatter `mcpServers` — `--agent` 메인스레드 에이전트 세션에서도 로드 (v2.1.117)
+  - Agent frontmatter `hooks:` — `--agent` 메인스레드 에이전트 세션에서도 발동 (v2.1.116)
+  - `/resume` 오래된 대용량 세션 재읽기 전 요약 제안 (v2.1.117)
+  - Native builds macOS/Linux: Glob·Grep 도구 → embedded `bfs`·`ugrep` via Bash (별도 tool round-trip 없이 빠른 검색, v2.1.117)
+  - `CLAUDE_CODE_FORK_SUBAGENT=1` — 외부 빌드에서 forked subagent 활성화 (v2.1.117)
+  - `/resume` 대용량 세션(40MB+) 최대 67% 빠른 로드 (v2.1.116)
+  - Thinking 스피너 인라인 진행 표시 ("still thinking", "thinking more", "almost done thinking") (v2.1.116)
+  - `/doctor` 응답 중 열기 가능 (v2.1.116)
+  - Bash tool `gh` API rate limit 힌트 (v2.1.116)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.118 업데이트
+  - 신규 Hook 이벤트 섹션: `type: "mcp_tool"` Hook 타입 및 Agent frontmatter `hooks:` `--agent` 지원 추가
+  - Agent/CLI/Plugin 섹션: vim visual mode, `/usage`, 커스텀 테마, `DISABLE_UPDATES`, `wslInheritsWindowsSettings`, auto mode `"$defaults"`, `claude plugin tag`, native builds bfs/ugrep, `mcpServers` `--agent` 로드, forked subagents 추가
+  - 신규 도구·env 섹션: `DISABLE_UPDATES`, `wslInheritsWindowsSettings`, auto mode `"$defaults"` 추가
+  - Breaking Changes: Pro/Max 구독자 기본 effort medium → high (Opus/Sonnet 4.6, v2.1.117) 추가
+- `references/version-sync.md`: v2.1.118 변경사항 추적 엔트리 추가
+
+### Security
+- Sandbox auto-allow이 `rm`/`rmdir` 대상 `/`, `$HOME` 등 위험 경로 안전 검사 우회하던 버그 수정 (v2.1.116)
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added

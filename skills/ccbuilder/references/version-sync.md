@@ -77,6 +77,42 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.118 (2026-04-23 동기화)
+
+**새로운 기능:**
+- (v2.1.118) Hook `type: "mcp_tool"` 신규 타입 — Hook에서 MCP 도구 직접 invoke
+- (v2.1.118) Vim visual mode `v`(visual)/`V`(visual-line) — 시각 선택·operator·피드백
+- (v2.1.118) `/usage` — `/cost`·`/stats` 통합 명령 (단축어로 유지, 관련 탭 열기)
+- (v2.1.118) Custom themes — `/theme` 생성·전환, `~/.claude/themes/` JSON 편집, 플러그인 `themes/` 배포
+- (v2.1.118) `DISABLE_UPDATES` env var — 모든 업데이트 경로 완전 차단 (`DISABLE_AUTOUPDATER`보다 강력)
+- (v2.1.118) `wslInheritsWindowsSettings` 정책 키 — WSL이 Windows managed settings 상속
+- (v2.1.118) Auto mode `"$defaults"` — `autoMode.allow/soft_deny/environment`에 포함 시 기본 목록 보존
+- (v2.1.118) `claude plugin tag` — 버전 검증 포함 플러그인 릴리스 git 태그 생성
+- (v2.1.118) `--continue`/`--resume` — `/add-dir`로 추가한 디렉토리 기준 세션 복원
+- (v2.1.117) Agent frontmatter `mcpServers` — `--agent` 메인스레드 에이전트 세션에서 로드
+- (v2.1.117) Agent frontmatter `hooks:` — `--agent` 메인스레드 에이전트 세션에서도 발동
+- (v2.1.117) `/resume` 오래된 대용량 세션 재읽기 전 요약 제안 (기존 `--resume` 동작 일치)
+- (v2.1.117) Native builds macOS/Linux: Glob·Grep → embedded `bfs`·`ugrep` via Bash (빠른 검색, tool round-trip 제거)
+- (v2.1.117) 기본 effort Pro/Max 구독자 Opus 4.6·Sonnet 4.6: medium → high
+- (v2.1.117) `CLAUDE_CODE_FORK_SUBAGENT=1` — 외부 빌드 forked subagent 활성화
+- (v2.1.116) `/resume` 대용량 세션(40MB+) 최대 67% 빠른 로드
+- (v2.1.116) Thinking 스피너 인라인 진행 표시 ("still thinking", "thinking more", "almost done thinking")
+- (v2.1.116) Agent frontmatter `hooks:` `--agent` 메인스레드 세션 발동 (v2.1.117 확장)
+- (v2.1.116) Bash tool `gh` GitHub API rate limit 힌트
+
+**Breaking Changes:**
+- Pro/Max 구독자 기본 effort medium → high (Opus 4.6·Sonnet 4.6, v2.1.117); `/effort`로 조정 가능
+
+**주요 버그 수정:**
+- MCP OAuth 토큰 갱신 경쟁 조건 다수 수정 — macOS 키체인 경쟁, 서버 조기 취소, Linux/Windows credential 저장 크래시 (v2.1.118)
+- `CLAUDE_CODE_OAUTH_TOKEN` 환경 변수 세션에서 `/login` 효과 없던 버그 수정 (v2.1.118)
+- Agent-type hooks "Messages are required for agent hooks" 오류 수정 (v2.1.118)
+- `/fork` 전체 부모 대화를 포크마다 디스크에 쓰던 버그 수정 — 포인터 저장·읽기 시 로드 (v2.1.118)
+- 서브에이전트 `SendMessage` 재개 시 명시적 `cwd` 미복원 수정 (v2.1.118)
+- Sandbox auto-allow가 `rm`/`rmdir` 위험 경로 안전 검사 우회하던 버그 수정 (v2.1.116)
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**

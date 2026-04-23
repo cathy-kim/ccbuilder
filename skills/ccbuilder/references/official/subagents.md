@@ -30,7 +30,7 @@
 | `maxTurns` | 최대 에이전트 턴 수 |
 | `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78) |
 | `skills` | 프리로드할 Skill (전체 내용 주입) |
-| `mcpServers` | 사용 가능 MCP 서버 |
+| `mcpServers` | 사용 가능 MCP 서버 — `--agent` 메인스레드 세션에서도 로드 (v2.1.117) |
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |

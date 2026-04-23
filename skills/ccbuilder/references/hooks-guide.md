@@ -90,6 +90,18 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
 }
 ```
 
+### MCP Tool Hook (v2.1.118 신규)
+
+Hook에서 MCP 도구를 직접 invoke합니다. shell 스크립트 없이 MCP 도구 결과를 바탕으로 결정 제어 가능:
+
+```json
+{
+  "type": "mcp_tool",
+  "server": "my-mcp-server",
+  "tool": "validate_input"
+}
+```
+
 ---
 
 ## 비동기 Hook (신규)
