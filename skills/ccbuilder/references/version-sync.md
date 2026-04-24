@@ -77,6 +77,42 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.119 (2026-04-24 동기화)
+
+**새로운 기능:**
+- (v2.1.119) `/config` 설정(`theme`, `editor mode`, `verbose` 등) `~/.claude/settings.json` 영속화 + project/local/policy 오버라이드 우선순위 참여
+- (v2.1.119) `prUrlTemplate` 설정 — 풋터 PR 배지를 커스텀 코드리뷰 URL로 지정
+- (v2.1.119) `CLAUDE_CODE_HIDE_CWD` env var — 시작 로고에서 현재 작업 디렉토리 숨김
+- (v2.1.119) `--from-pr` GitLab Merge Request·Bitbucket Pull Request·GitHub Enterprise PR URL 지원
+- (v2.1.119) `--print` 모드에서 에이전트 `tools:`·`disallowedTools:` frontmatter 준수
+- (v2.1.119) `--agent <name>` 내장 에이전트 `permissionMode` frontmatter 준수
+- (v2.1.119) PowerShell 도구 명령 permission mode 자동 승인 (Bash와 동일)
+- (v2.1.119) Hooks: `PostToolUse`·`PostToolUseFailure` 입력에 `duration_ms` 추가 (도구 실행 시간, 권한 프롬프트·PreToolUse 훅 시간 제외)
+- (v2.1.119) 서브에이전트·SDK MCP 서버 재설정 시 병렬 연결 전환 (직렬 → 병렬)
+- (v2.1.119) 버전 제약 플러그인 자동 업데이트 — 최고 만족 git 태그로 업데이트
+- (v2.1.119) OpenTelemetry: `tool_result`·`tool_decision` 이벤트에 `tool_use_id`; `tool_result`에 `tool_input_size_bytes` 추가
+- (v2.1.119) Status line stdin JSON에 `effort.level`·`thinking.enabled` 포함
+- (v2.1.119) Slash command 제안 매칭 문자 하이라이트; 긴 설명 두 번째 줄 래핑
+- (v2.1.119) `owner/repo#N` 단축 링크 git 리모트 호스트 기반 (github.com 고정 제거)
+
+**보안 강화 (v2.1.119):**
+- `blockedMarketplaces` `hostPattern`·`pathPattern` 올바르게 적용
+
+**주요 버그 수정:**
+- CRLF 붙여넣기 빈 줄 중복 삽입 수정 (v2.1.119)
+- kitty 키보드 프로토콜 멀티라인 붙여넣기 줄바꿈 손실 수정 (v2.1.119)
+- Bash 거부 시 Glob/Grep 도구 사라지는 버그 수정 — native macOS/Linux 빌드 (v2.1.119)
+- 풀스크린 스크롤업 시 도구 완료마다 스냅백 수정 (v2.1.119)
+- async `PostToolUse` 훅 응답 미반환 시 빈 항목 트랜스크립트 기록 수정 (v2.1.119)
+- `@`-파일 Tab 완성이 슬래시 명령 내 절대경로 사용 시 전체 프롬프트 교체 수정 (v2.1.119)
+- MCP HTTP/SSE/WebSocket 서버 headers `${ENV_VAR}` 플레이스홀더 미치환 수정 (v2.1.119)
+- `/plan` 및 `/plan open` 기존 플랜 미작동 수정; auto mode와 plan mode 충돌 수정 (v2.1.119)
+- `TaskList` 임의 파일시스템 순서 대신 ID 정렬 반환 수정 (v2.1.119)
+- `/export` 현재 기본 모델 대신 실제 사용 모델 표시 수정 (v2.1.119)
+- verbose 출력 설정 재시작 후 미영속 수정 (v2.1.119)
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**

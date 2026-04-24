@@ -70,3 +70,4 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
+- **--agent permissionMode (v2.1.119)**: `--agent <name>` 실행 시 에이전트 정의의 `permissionMode` frontmatter 준수; `--print` 모드도 `tools:`·`disallowedTools:` frontmatter 준수 (인터랙티브 모드와 동일)

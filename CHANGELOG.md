@@ -15,6 +15,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-24
+
+### Added
+- **Claude Code v2.1.119 sync**
+  - `/config` 설정(`theme`, `editor mode`, `verbose` 등) `~/.claude/settings.json` 영속화 + project/local/policy 오버라이드 우선순위 참여
+  - `prUrlTemplate` 설정 — 풋터 PR 배지를 커스텀 코드리뷰 URL로 지정 (github.com 기본값 대체)
+  - `CLAUDE_CODE_HIDE_CWD` env var — 시작 로고에서 현재 작업 디렉토리 숨김
+  - `--from-pr` GitLab Merge Request·Bitbucket Pull Request·GitHub Enterprise PR URL 지원
+  - `--print` 모드에서 에이전트 `tools:`·`disallowedTools:` frontmatter 준수 (인터랙티브 모드와 동일한 동작)
+  - `--agent <name>` 실행 시 내장 에이전트 정의의 `permissionMode` frontmatter 준수
+  - PowerShell 도구 명령 permission mode에서 자동 승인 지원 (Bash와 동일)
+  - Hooks: `PostToolUse`·`PostToolUseFailure` 입력에 `duration_ms` 추가 (도구 실행 시간, 권한 프롬프트 및 PreToolUse 훅 시간 제외)
+  - 서브에이전트·SDK MCP 서버 재설정 시 직렬 → 병렬 연결로 전환
+  - 버전 제약 플러그인 자동 업데이트 — 다른 플러그인의 버전 제약을 만족하는 최고 git 태그로 업데이트
+  - OpenTelemetry: `tool_result`·`tool_decision` 이벤트에 `tool_use_id` 추가; `tool_result`에 `tool_input_size_bytes` 추가
+  - Status line: stdin JSON에 `effort.level`·`thinking.enabled` 포함
+  - Slash command 제안 매칭 문자 하이라이트; 긴 설명 두 번째 줄 래핑 (트런케이션 대체)
+  - `owner/repo#N` 단축 링크 git 리모트 호스트 기반 (github.com 고정 제거)
+  - Security: `blockedMarketplaces` `hostPattern`·`pathPattern` 올바르게 적용
+  - 다수 버그 수정: CRLF 붙여넣기 빈 줄 중복, kitty 프로토콜 멀티라인 줄바꿈 손실, Bash 거부 시 Glob/Grep 사라지는 버그, 풀스크린 스크롤 스냅백, async `PostToolUse` 훅 빈 항목, `@`-파일 Tab 완성 전체 프롬프트 교체, MCP headers `${ENV_VAR}` 미치환, MCP OAuth client secret, `/plan` mode 동작, `/skills` Enter 키, `/agents` 레이블 오류, `/export` 모델 표시, verbose 설정 미영속, `/usage` 진행바 중첩, `TaskList` 정렬 등 (v2.1.119)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.119 업데이트
+  - CLI 섹션: `/config` 영속화, `prUrlTemplate`, `CLAUDE_CODE_HIDE_CWD`, `--from-pr` 멀티호스트, `--print`/`--agent` frontmatter 준수, PowerShell 자동 승인, MCP 병렬 연결 추가
+  - Hook 섹션: `PostToolUse`·`PostToolUseFailure` `duration_ms` 추가
+- `references/version-sync.md`: v2.1.119 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added
