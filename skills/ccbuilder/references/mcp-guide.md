@@ -142,6 +142,14 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
 
+> **v2.1.119 수정**: HTTP/SSE/WebSocket MCP 서버의 `headers` 필드 내 `${ENV_VAR}` 플레이스홀더가 요청 전에 올바르게 치환됩니다. OAuth `--client-secret`으로 저장된 client secret이 `client_secret_post` 방식 서버의 토큰 교환 시 전송됩니다.
+
+---
+
+## 병렬 연결 (v2.1.119 신규)
+
+서브에이전트 및 SDK에서 MCP 서버 재구성 시 모든 서버가 직렬 대신 **병렬**로 연결됩니다. 서버가 많은 환경에서 서브에이전트 시작 시간이 크게 단축됩니다.
+
 ---
 
 ## headersHelper 다중 서버 지원 (v2.1.85 신규)

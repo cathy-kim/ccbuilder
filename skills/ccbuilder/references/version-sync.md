@@ -77,6 +77,43 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.119 (2026-04-25 동기화)
+
+**새로운 기능:**
+- `/config` 설정(`theme`, `editor mode`, `verbose` 등) `~/.claude/settings.json` 영속 저장, project/local/policy precedence 참여 (v2.1.119)
+- `prUrlTemplate` 설정 — 푸터 PR 뱃지 커스텀 코드리뷰 URL 지정 (v2.1.119)
+- `CLAUDE_CODE_HIDE_CWD` 환경 변수 — 시작 로고 작업 디렉토리 숨김 (v2.1.119)
+- `--from-pr` GitLab MR·Bitbucket PR·GitHub Enterprise PR URL 지원 (v2.1.119)
+- `--print` 모드 에이전트 `tools:`·`disallowedTools:` frontmatter 준수 (v2.1.119)
+- `--agent` built-in 에이전트 `permissionMode` frontmatter 준수 (v2.1.119)
+- PowerShell 도구 명령 permission mode 자동 승인 (v2.1.119)
+- Hooks: `PostToolUse`·`PostToolUseFailure` 입력에 `duration_ms` 포함 (도구 실행 시간, permission 프롬프트·PreToolUse 훅 제외) (v2.1.119)
+- 서브에이전트·SDK MCP 서버 재구성 시 병렬 연결 (v2.1.119)
+- 플러그인 버전 제약 고정 플러그인 최고 호환 git tag 자동 업데이트 (v2.1.119)
+- `owner/repo#N` 단축 링크 git remote 호스트 기반 생성 (v2.1.119)
+- OpenTelemetry `tool_result`·`tool_decision`에 `tool_use_id` 포함; `tool_result`에 `tool_input_size_bytes` (v2.1.119)
+- Status line stdin JSON `effort.level`·`thinking.enabled` 포함 (v2.1.119)
+- Vertex AI tool search 기본 비활성화 (`ENABLE_TOOL_SEARCH` 옵트인) (v2.1.119)
+
+**보안 강화:**
+- `blockedMarketplaces` `hostPattern`·`pathPattern` 엔트리 올바르게 적용 수정 (v2.1.119)
+
+**주요 버그 수정:**
+- CRLF 붙여넣기(Windows 클립보드, Xcode) 빈 줄 이중 삽입 수정 (v2.1.119)
+- kitty keyboard protocol 멀티라인 붙여넣기 줄바꿈 유실 수정 (v2.1.119)
+- Bash 도구 권한 거부 시 Glob·Grep 도구 사라지는 버그 수정 (v2.1.119)
+- async `PostToolUse` 훅 빈 응답 시 세션 트랜스크립트 빈 항목 저장 수정 (v2.1.119)
+- `Agent` tool `isolation: worktree` 이전 세션 stale worktree 재사용 수정 (v2.1.119)
+- `TaskList` 임의 순서 반환 → ID 정렬 수정 (v2.1.119)
+- `/plan`·`/plan open` 기존 플랜 미작동 수정 (v2.1.119)
+- MCP HTTP 연결 OAuth discovery non-JSON 응답 시 "Invalid OAuth error response" 수정 (v2.1.119)
+- `${ENV_VAR}` HTTP/SSE/WebSocket MCP 서버 `headers` 플레이스홀더 치환 수정 (v2.1.119)
+- MCP OAuth `client_secret_post` 서버에서 client secret 미전송 수정 (v2.1.119)
+- `/export` 현재 기본 모델 대신 실제 대화 사용 모델 표시 (v2.1.119)
+- verbose 출력 설정 재시작 후 미유지 수정 (v2.1.119)
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**

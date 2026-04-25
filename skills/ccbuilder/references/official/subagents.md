@@ -66,6 +66,8 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **Tool Search**: MCP 도구가 컨텍스트 10% 초과 시 자동 활성화
 - **Skill 프리로드**: `skills` 필드로 Skill 전체 내용을 agent에 주입
 - **Resume (v2.1.77 제거)**: Agent tool `resume` 파라미터 제거됨 → `SendMessage({to: agentId})` 로 대체
+- **--print frontmatter 준수 (v2.1.119)**: `--print` 모드에서 에이전트 `tools:`·`disallowedTools:` frontmatter 적용 (인터랙티브 모드와 동일)
+- **--agent permissionMode 준수 (v2.1.119)**: `--agent <name>`으로 built-in 에이전트 실행 시 정의된 `permissionMode` 준수
 - **병렬 실행**: 독립적인 리서치는 여러 agent 동시 실행
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)

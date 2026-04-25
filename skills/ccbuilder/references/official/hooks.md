@@ -14,8 +14,8 @@
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
 | 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
 | 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
-| 5 | `PostToolUse` | 도구 성공 후 | block |
-| 6 | `PostToolUseFailure` | 도구 실패 후 | block |
+| 5 | `PostToolUse` | 도구 성공 후 (`duration_ms` 포함, v2.1.119) | block |
+| 6 | `PostToolUseFailure` | 도구 실패 후 (`duration_ms` 포함, v2.1.119) | block |
 | 7 | `Notification` | 알림 발송 시 | - |
 | 8 | `SubagentStart` | 서브에이전트 생성 | - |
 | 9 | `SubagentStop` | 서브에이전트 완료 | block |

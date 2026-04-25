@@ -86,7 +86,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `model` | string | 모델 (sonnet/opus/haiku) | sonnet |
 | `allowed-tools` | string[] | 허용된 도구 목록 | 모든 도구 |
 | `disallowedTools` | string[] | 차단된 도구 목록 (신규) | - |
-| `permissionMode` | string | 권한 모드 (신규) | default |
+| `permissionMode` | string | 권한 모드 (신규); `--agent`로 built-in 에이전트 실행 시에도 준수 (v2.1.119) | default |
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 
@@ -171,6 +171,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | 불가 (Subagent가 다른 Subagent 호출 불가) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
+
+> **v2.1.119 업데이트**: `--print` 모드에서 에이전트 정의의 `tools:`·`disallowedTools:` frontmatter를 준수합니다 (이전에는 무시됨). `--agent <name>`으로 built-in 에이전트 실행 시 해당 정의의 `permissionMode`도 준수합니다.
 
 ---
 

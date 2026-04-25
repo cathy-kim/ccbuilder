@@ -15,6 +15,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-25
+
+### Added
+- **Claude Code v2.1.119 sync**
+  - `/config` 설정(`theme`, `editor mode`, `verbose` 등) `~/.claude/settings.json`에 영속 저장, project/local/policy override precedence 참여 (v2.1.119)
+  - `prUrlTemplate` 설정 — 푸터 PR 뱃지를 커스텀 코드리뷰 URL로 지정 (v2.1.119)
+  - `CLAUDE_CODE_HIDE_CWD` 환경 변수 — 시작 로고의 작업 디렉토리 표시 숨김 (v2.1.119)
+  - `--from-pr` GitLab MR, Bitbucket PR, GitHub Enterprise PR URL 지원 (v2.1.119)
+  - `--print` 모드에서 에이전트 `tools:`·`disallowedTools:` frontmatter 준수 — 인터랙티브 모드 동작과 일치 (v2.1.119)
+  - `--agent <name>` built-in 에이전트 정의의 `permissionMode` 준수 (v2.1.119)
+  - PowerShell 도구 명령 permission mode에서 자동 승인 가능 — Bash 동작과 동일 (v2.1.119)
+  - Hooks: `PostToolUse`·`PostToolUseFailure` 입력에 `duration_ms` (도구 실행 시간, ms 단위, permission 프롬프트·PreToolUse 훅 시간 제외) 포함 (v2.1.119)
+  - 서브에이전트·SDK MCP 서버 재구성 시 병렬 연결 — 기존 직렬 연결 대비 빠름 (v2.1.119)
+  - 플러그인 버전 제약으로 고정된 플러그인 최고 호환 git tag로 자동 업데이트 (v2.1.119)
+  - Vim mode: INSERT 모드 Esc가 대기 메시지를 입력창으로 되돌리지 않음; 재차 Esc로 중단 (v2.1.119)
+  - 슬래시 명령 자동완성: 매칭된 글자 하이라이트 표시 (v2.1.119)
+  - 슬래시 명령 피커: 긴 설명 잘림 대신 두 번째 줄로 줄바꿈 (v2.1.119)
+  - `owner/repo#N` 단축 링크가 github.com 고정 대신 git remote 호스트 기반 생성 (v2.1.119)
+  - OpenTelemetry: `tool_result`·`tool_decision` 이벤트에 `tool_use_id` 포함; `tool_result`에 `tool_input_size_bytes` 추가 (v2.1.119)
+  - Status line stdin JSON에 `effort.level`·`thinking.enabled` 포함 (v2.1.119)
+  - Vertex AI tool search 기본 비활성화 (`ENABLE_TOOL_SEARCH` 환경 변수로 옵트인, v2.1.119)
+  - **보안**: `blockedMarketplaces` `hostPattern`·`pathPattern` 항목 올바르게 적용 (v2.1.119)
+  - **버그 수정 (주요)**: CRLF 붙여넣기 시 빈 줄 이중 삽입; kitty keyboard protocol 멀티라인 붙여넣기 줄바꿈 유실; Bash 도구 거부 시 Glob·Grep 도구 사라짐; 풀스크린 스크롤 탐색 도구 완료 시 맨 아래로 스냅; async `PostToolUse` 훅 빈 응답 세션 트랜스크립트 저장; `Agent` tool `isolation: worktree` 이전 세션 worktree 재사용; `TaskList` 임의 순서 반환 (ID 정렬 수정); `/plan`·`/plan open` 기존 플랜 미작동; `/skills` Enter 키 다이얼로그 닫힘; `${ENV_VAR}` MCP 서버 `headers` 플레이스홀더 미치환; MCP OAuth `client_secret_post` 서버 secret 미전송 (v2.1.119)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.119 업데이트
+  - 제목 `(v2.1.114)` → `(v2.1.119)` 변경
+  - MCP 섹션: 병렬 재연결, headers `${ENV_VAR}` 수정, OAuth secret 수정 추가
+  - 신규 Hook 이벤트 섹션: `duration_ms` 필드 추가
+  - CLI 섹션: `/config` 영속화, `--from-pr` 멀티플랫폼, `--print`/`--agent` frontmatter 준수, PowerShell 자동 승인, `owner/repo#N` 링크 개선, Vertex AI tool search 기본 비활성화 추가
+  - 신규 도구·env: `prUrlTemplate`, `CLAUDE_CODE_HIDE_CWD`, status line `effort.level`/`thinking.enabled` 추가
+- `references/version-sync.md`: v2.1.119 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added

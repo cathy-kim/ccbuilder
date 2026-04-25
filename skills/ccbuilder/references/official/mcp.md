@@ -57,6 +57,8 @@
 | **도구 호출 축소** | read/search 호출 "Queried {server}" 단일 라인 표시, Ctrl+O로 확장 (v2.1.81) |
 | **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
+| **병렬 연결 (v2.1.119)** | 서브에이전트·SDK MCP 서버 재구성 시 병렬 연결 (기존 직렬 대비 빠름) |
+| **headers 환경 변수 (v2.1.119)** | HTTP/SSE/WebSocket MCP 서버 `headers`의 `${ENV_VAR}` 플레이스홀더 요청 전 치환 수정 |
 
 ## Managed MCP (조직 관리)
 
