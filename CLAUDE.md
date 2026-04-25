@@ -5,9 +5,9 @@
 **ccbuilder** — Claude Code 확장 기능(Skills, Hooks, Agents, Agent Teams, Ralph Loops) 빌더 플러그인.
 28개 레퍼런스 문서(17개 가이드 + 6개 공식 + 5개 에코시스템)를 포함하는 지식 베이스.
 
-- **ccbuilder version**: 2.30.0 (Semantic Versioning)
-- **Claude Code compatibility**: v2.1.114+
-- **Last sync**: 2026-04-18
+- **ccbuilder version**: 2.31.0 (Semantic Versioning)
+- **Claude Code compatibility**: v2.1.119+
+- **Last sync**: 2026-04-25
 
 ## Project Structure
 
