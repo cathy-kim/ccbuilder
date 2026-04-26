@@ -15,6 +15,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.31.0] - 2026-04-26
+
+### Added
+- **Claude Code v2.1.119 sync**
+  - `/config` 설정(테마, 에디터 모드 등)이 `~/.claude/settings.json`에 영속 저장되며 프로젝트/로컬/정책 우선순위 계층 참여 (v2.1.119)
+  - `prUrlTemplate` 설정 — PR 배지 푸터를 커스텀 코드리뷰 URL로 지정 (v2.1.119)
+  - `CLAUDE_CODE_HIDE_CWD` 환경변수 — 시작 로고에서 작업 디렉토리 숨김 (v2.1.119)
+  - `--from-pr` GitLab MR·Bitbucket PR·GitHub Enterprise URL 지원 (v2.1.119)
+  - `--print` 모드에서 agent `tools:`/`disallowedTools:` frontmatter 준수 — 인터랙티브 모드와 동일 동작 (v2.1.119)
+  - `--agent <name>` built-in agent의 `permissionMode` frontmatter 준수 (v2.1.119)
+  - PowerShell 도구 명령 자동 승인 — Bash와 동일 권한 모드 동작 (v2.1.119)
+  - Hooks: `PostToolUse`·`PostToolUseFailure` 입력에 `duration_ms`(도구 실행 시간, 권한 프롬프트·PreToolUse 제외) 필드 추가 (v2.1.119)
+  - 서브에이전트·SDK MCP 서버 재구성 시 병렬 연결 — 직렬 연결 대비 기동 속도 개선 (v2.1.119)
+  - Plugins: 다른 플러그인 버전 제약으로 핀된 플러그인 만족하는 최고 git 태그로 자동 업데이트 (v2.1.119)
+  - Status line stdin JSON에 `effort.level`·`thinking.enabled` 필드 추가 (v2.1.119)
+  - vim visual mode `v`/visual-line mode `V` — 선택·연산자·시각적 피드백 지원 (v2.1.118)
+  - `/usage` 신규 — `/cost`와 `/stats` 통합 (v2.1.118)
+  - Custom themes — `/theme` 명령으로 생성·전환; `~/.claude/themes/` JSON 파일 편집; 플러그인 `themes/` 디렉토리 배포 지원 (v2.1.118)
+  - Hooks → MCP 도구 직접 실행 (`type: "mcp_tool"` 훅 타입 추가) (v2.1.118)
+  - `DISABLE_UPDATES` 환경변수 — 수동 `claude update` 포함 전체 업데이트 경로 차단 (v2.1.118)
+  - `wslInheritsWindowsSettings` 정책 키 — WSL에서 Windows 측 managed settings 상속 (v2.1.118)
+  - Auto mode `"$defaults"` — `autoMode.allow`·`soft_deny`·`environment`에 내장 목록 유지하며 커스텀 규칙 추가 (v2.1.118)
+  - `claude plugin tag` 명령 — 버전 검증 포함 플러그인 릴리스 git 태그 생성 (v2.1.118)
+  - Forked subagents 외부 빌드 활성화 `CLAUDE_CODE_FORK_SUBAGENT=1` (v2.1.117)
+  - Agent frontmatter `mcpServers` — `--agent` 세션에서 MCP 서버 로드 지원 (v2.1.117)
+  - `/model` 선택 영속화 — 재시작 후에도 유지; 시작 헤더에 모델 출처(project/managed pin) 표시 (v2.1.117)
+  - `/resume` 대용량 오래된 세션 요약 제안 (v2.1.117)
+  - Native builds(macOS/Linux) Glob·Grep → 내장 `bfs`·`ugrep` 전환 (v2.1.117)
+  - Pro/Max 구독자 Opus 4.6·Sonnet 4.6 기본 effort `high`으로 상향 (v2.1.117)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.114 → v2.1.119 업데이트
+  - MCP 섹션: Hook → MCP 직접 호출, 서브에이전트·SDK 병렬 연결 추가
+  - Hooks 섹션: `duration_ms` 필드, `mcp_tool` 타입 추가
+  - Agent/CLI 섹션: `--from-pr` 멀티플랫폼, `/usage` 통합, custom themes, `DISABLE_UPDATES`, `wslInheritsWindowsSettings`, `plugin tag`, status line 필드, PowerShell 자동 승인, vim visual mode 추가
+  - Breaking Changes: `--print` frontmatter 준수, vim INSERT Esc 변경 추가
+- `references/version-sync.md`: v2.1.119 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: `duration_ms` 필드, `mcp_tool` 훅 타입 추가
+- `references/official/hooks.md`: `mcp_tool` 훅 타입 추가
+
+---
+
 ## [2.30.0] - 2026-04-18
 
 ### Added
