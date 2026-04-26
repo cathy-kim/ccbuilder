@@ -77,6 +77,42 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.119 (2026-04-26 동기화)
+
+**새로운 기능:**
+- (v2.1.119) `/config` 설정 `~/.claude/settings.json` 영속화 — 프로젝트/로컬/정책 우선순위 계층 참여
+- (v2.1.119) `prUrlTemplate` 설정 — PR 배지 푸터 커스텀 URL 지정
+- (v2.1.119) `CLAUDE_CODE_HIDE_CWD` env var — 시작 로고 작업 디렉토리 숨김
+- (v2.1.119) `--from-pr` GitLab MR·Bitbucket PR·GitHub Enterprise URL 지원
+- (v2.1.119) `--print` 모드 agent `tools:`/`disallowedTools:` frontmatter 준수
+- (v2.1.119) `--agent <name>` built-in agent `permissionMode` 준수
+- (v2.1.119) PowerShell 도구 자동 승인 — Bash와 동일 권한 모드
+- (v2.1.119) Hooks: PostToolUse·PostToolUseFailure에 `duration_ms` 필드 추가
+- (v2.1.119) 서브에이전트·SDK MCP 서버 재구성 시 병렬 연결
+- (v2.1.119) Status line stdin JSON에 `effort.level`·`thinking.enabled` 추가
+- (v2.1.119) Security: `blockedMarketplaces` hostPattern/pathPattern 적용 수정
+- (v2.1.118) vim visual mode `v`/visual-line mode `V`
+- (v2.1.118) `/usage` — `/cost`+`/stats` 통합
+- (v2.1.118) Custom themes (`/theme`, `~/.claude/themes/`, plugin `themes/`)
+- (v2.1.118) Hooks → MCP 도구 직접 실행 (`type: "mcp_tool"` 타입)
+- (v2.1.118) `DISABLE_UPDATES` env var — 전체 업데이트 경로 차단
+- (v2.1.118) `wslInheritsWindowsSettings` 정책
+- (v2.1.118) `claude plugin tag` 명령
+- (v2.1.117) Agent frontmatter `mcpServers` — `--agent` 세션 MCP 서버 로드
+- (v2.1.117) `CLAUDE_CODE_FORK_SUBAGENT=1` — 외부 빌드 forked subagents 활성화
+- (v2.1.117) Pro/Max Opus 4.6·Sonnet 4.6 기본 effort `high`
+
+**주요 버그 수정:**
+- vim INSERT Esc — 대기 메시지 입력창으로 당기지 않음; 다시 Esc로 중단 (v2.1.119)
+- 비활성화된 MCP 서버가 `/status`에서 "failed"로 표시되는 버그 수정 (v2.1.119)
+- async PostToolUse hooks 응답 없을 때 빈 트랜스크립트 항목 작성 버그 수정 (v2.1.119)
+- `/skills` Enter 키가 다이얼로그를 닫는 버그 수정 (v2.1.119)
+- `TaskList` 파일시스템 순서 대신 ID 정렬 반환 (v2.1.119)
+- MCP OAuth `expires_in` 누락 시 매 시간 재인증 필요 버그 수정 (v2.1.118)
+- credential 저장 크래시로 `~/.claude/.credentials.json` 손상 수정 (v2.1.118)
+
+---
+
 ### v2.1.114 (2026-04-18 동기화)
 
 **새로운 기능:**

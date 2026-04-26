@@ -89,6 +89,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `permissionMode` | string | 권한 모드 (신규) | default |
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
+| `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
 
 ---
 
