@@ -16,7 +16,7 @@
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
-| **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `tool_result`, `duration_ms` |
+| **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
 | **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason` |

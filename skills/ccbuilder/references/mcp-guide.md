@@ -237,6 +237,32 @@ Hook으로 인터셉트 가능:
 
 ---
 
+## alwaysLoad — Tool Search 지연 비활성화 (v2.1.121 신규)
+
+MCP 서버 설정에 `alwaysLoad: true`를 추가하면, 해당 서버의 모든 도구가 tool-search 지연 없이 항상 로드됩니다.
+
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "type": "http",
+      "url": "https://mcp.example.com",
+      "alwaysLoad": true
+    }
+  }
+}
+```
+
+> **용도**: 자주 사용하는 MCP 서버의 도구를 tool-search 없이 즉시 접근할 때 사용하세요. Tool Search가 활성화된 환경에서도 해당 서버 도구는 항상 사용 가능합니다.
+
+---
+
+## MCP 서버 시작 자동 재시도 (v2.1.121 신규)
+
+MCP 서버가 시작 시 일시적 오류를 만나면 연결 끊긴 채로 유지되지 않고, 최대 3회 자동 재시도합니다.
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.
