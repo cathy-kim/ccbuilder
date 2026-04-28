@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.121 (2026-04-28 동기화)
+
+**새로운 기능:**
+- (v2.1.121) `alwaysLoad` MCP 서버 설정 옵션 — `true` 시 해당 서버 모든 도구 tool-search 지연 없이 항상 로드
+- (v2.1.121) MCP 서버 시작 일시 오류 시 최대 3회 자동 재시도 (이전: 연결 끊긴 채 유지)
+- (v2.1.121) `claude plugin prune` — 고아 자동 설치 플러그인 의존성 제거; `plugin uninstall --prune` 연쇄 삭제
+- (v2.1.121) `/skills` 필터 검색박스 — 긴 스킬 목록에서 타이핑으로 검색, 스크롤 불필요
+- (v2.1.121) PostToolUse hooks `hookSpecificOutput.updatedToolOutput` — 모든 도구에서 tool output 교체 지원 (기존 MCP 전용→전체 확장)
+- (v2.1.121) `--dangerously-skip-permissions` — `.claude/skills/`, `.claude/agents/`, `.claude/commands/` 쓰기 프롬프트 스킵
+- (v2.1.121) SDK `mcp_authenticate` `redirectUri` 파라미터 — 커스텀 스킴 완료 및 claude.ai 커넥터 지원
+- (v2.1.121) OpenTelemetry: `stop_reason`, `gen_ai.response.finish_reasons`, `user_system_prompt` (`OTEL_LOG_USER_PROMPTS` 게이팅) LLM span 필드 추가
+- (v2.1.121) Vertex AI: X.509 인증서 기반 Workload Identity Federation (mTLS ADC) 지원
+- (v2.1.120) Windows: Git Bash 불필요 — 미설치 시 PowerShell을 셸 도구로 자동 사용
+- (v2.1.120) `claude ultrareview [target]` CLI 서브커맨드 — CI/스크립트 비대화형 실행; `--json` raw output; exit 0/1
+- (v2.1.120) `${CLAUDE_EFFORT}` — Skill 콘텐츠에서 현재 effort 레벨 동적 참조 가능
+- (v2.1.120) `AI_AGENT` 환경변수 서브프로세스 자동 설정 — `gh` 등이 Claude Code 트래픽 귀속
+- (v2.1.120) `claude plugin validate` — `marketplace.json` 최상위 `$schema`·`version`·`description`, `plugin.json` `$schema` 허용
+
+**주요 버그 수정:**
+- 다수 이미지 세션 멀티-GB RSS 무제한 메모리 증가 수정 (v2.1.121)
+- `/usage` 대용량 트랜스크립트 히스토리 ~2GB 메모리 누수 수정 (v2.1.121)
+- Bash 도구 — 시작 디렉토리 삭제·이동 시 영구 비활성화 버그 수정 (v2.1.121)
+- `--resume` 비정상 종료로 손상된 트랜스크립트 라인 건너뛰기 (v2.1.121)
+- Microsoft 365 MCP OAuth `prompt` 파라미터 중복·미지원 오류 수정 (v2.1.121)
+- Esc 중 stdio MCP 도구 호출 시 전체 서버 연결 종료 버그 수정 (v2.1.120)
+
+---
+
 ### v2.1.119 (2026-04-26 동기화)
 
 **새로운 기능:**
