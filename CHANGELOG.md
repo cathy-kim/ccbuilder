@@ -15,6 +15,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.33.0] - 2026-04-29
+
+### Added
+- **Claude Code v2.1.123 sync**
+  - OAuth 인증 실패 수정 — `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 발생하던 401 재시도 루프 수정 (v2.1.123)
+- **Claude Code v2.1.122 sync**
+  - `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`), `X-Amzn-Bedrock-Service-Tier` 헤더로 전송 (v2.1.122)
+  - `/resume` 검색창에 PR URL 붙여넣기로 해당 PR 생성 세션 자동 검색 (GitHub/GHE/GitLab/Bitbucket, v2.1.122)
+  - `/mcp` — claude.ai 커넥터가 동일 URL 수동 서버에 의해 숨겨질 때 중복 제거 힌트 표시 (v2.1.122)
+  - OpenTelemetry: `api_request`/`api_error` 로그 이벤트의 숫자 속성을 문자열 대신 숫자로 출력 (v2.1.122)
+  - OpenTelemetry: `@`-멘션 해석에 대한 `claude_code.at_mention` 로그 이벤트 추가 (v2.1.122)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.121 → v2.1.123 업데이트
+  - MCP 섹션: `/mcp` 중복 커넥터 힌트 추가
+  - CLI 섹션: `/resume` PR URL 검색 추가
+  - 신규 도구·env 섹션: `ANTHROPIC_BEDROCK_SERVICE_TIER` 추가
+  - 인증 섹션: OAuth 401 재시도 루프 수정 내용 추가
+- `references/version-sync.md`: v2.1.123 변경사항 추적 엔트리 추가
+
+### Fixed
+- `/branch` — 되감기된 타임라인 항목을 포함한 소스 세션에서 fork 시 "tool_use ids were found without tool_result blocks" 오류 수정 (v2.1.122)
+- `/model` — Bedrock 애플리케이션 추론 프로파일 ARN에서 Effort 옵션 누락 및 `output_config.effort` 미전송 수정 (v2.1.122)
+- Vertex AI / Bedrock — 세션 제목 생성 등 구조화 출력 쿼리 시 `invalid_request_error: output_config: Extra inputs are not permitted` 오류 수정 (v2.1.122)
+- Vertex AI `count_tokens` — 프록시 게이트웨이 사용자 400 오류 수정 (v2.1.122)
+- `spinnerTipsOverride.excludeDefault` — 시간 기반 스피너 팁 억제 미작동 수정 (v2.1.122)
+- ToolSearch — 세션 시작 후 nonblocking 모드로 연결된 MCP 도구 누락 수정 (v2.1.122)
+- `!exit`/`!quit` — bash 모드에서 셸 명령 대신 CLI 종료되던 버그 수정 (v2.1.122)
+- 이미지 크기 조정 — 최신 모델에서 2576px 대신 올바른 2000px 최대값 적용 (v2.1.122)
+- Remote control 세션 유휴 상태 초당 2회 리드로로 `tmux -CC` 파이프 범람 수정 (v2.1.122)
+- 일부 세션에서 어시스턴트 메시지 빈 화면 표시 수정 (v2.1.122)
+- settings.json 잘못된 hooks 항목이 전체 파일 무효화하던 버그 수정 (v2.1.122)
+- Voice mode: 터미널이 Caps Lock 키 이벤트를 전달하지 않으므로 Caps Lock 바인딩 시 오류 표시 (v2.1.122)
+
+---
+
 ## [2.32.0] - 2026-04-28
 
 ### Added

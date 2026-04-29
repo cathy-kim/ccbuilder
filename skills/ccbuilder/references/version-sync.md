@@ -77,6 +77,28 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.123 (2026-04-29 동기화)
+
+**새로운 기능:**
+- (v2.1.122) `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`), `X-Amzn-Bedrock-Service-Tier` 헤더로 전송
+- (v2.1.122) `/resume` 검색창 PR URL 붙여넣기 — 해당 PR 생성 세션 자동 탐색 (GitHub/GHE/GitLab/Bitbucket)
+- (v2.1.122) `/mcp` — claude.ai 커넥터가 동일 URL 수동 서버에 숨겨질 때 중복 제거 힌트 표시
+- (v2.1.122) OpenTelemetry: `api_request`/`api_error` 숫자 속성 타입 수정 (문자열 → 숫자)
+- (v2.1.122) OpenTelemetry: `claude_code.at_mention` 로그 이벤트 추가 (`@`-멘션 해석)
+
+**주요 버그 수정:**
+- OAuth 인증 — `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 환경에서 401 재시도 루프 수정 (v2.1.123)
+- `/branch` — 되감기된 타임라인 항목 포함 소스 세션 fork 시 tool_use/tool_result 블록 오류 수정 (v2.1.122)
+- `/model` — Bedrock 애플리케이션 추론 프로파일 ARN에서 Effort 옵션 누락 수정 (v2.1.122)
+- Vertex AI / Bedrock — 구조화 출력 쿼리 시 `output_config: Extra inputs` 오류 수정 (v2.1.122)
+- Vertex AI `count_tokens` — 프록시 게이트웨이 400 오류 수정 (v2.1.122)
+- ToolSearch — nonblocking 모드 세션 시작 후 연결된 MCP 도구 누락 수정 (v2.1.122)
+- settings.json 잘못된 hooks 항목이 전체 파일 무효화하던 버그 수정 (v2.1.122)
+
+**영향 범위:** MCP/인증 관련 없음 — 참조 파일 업데이트 불필요
+
+---
+
 ### v2.1.121 (2026-04-28 동기화)
 
 **새로운 기능:**
