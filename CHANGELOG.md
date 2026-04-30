@@ -15,6 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.33.0] - 2026-04-30
+
+### Added
+- **Claude Code v2.1.123 sync**
+  - `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`); `X-Amzn-Bedrock-Service-Tier` 헤더로 전송 (v2.1.122)
+  - `/resume` 검색창에 PR URL 붙여넣기로 해당 PR 생성 세션 검색 (GitHub, GitHub Enterprise, GitLab, Bitbucket 지원, v2.1.122)
+  - `/mcp`에서 동일 URL 로컬 서버에 의해 숨겨진 claude.ai 커넥터 표시 + 중복 제거 힌트 (v2.1.122)
+  - OpenTelemetry: `api_request`·`api_error` 로그 이벤트의 numeric 속성을 문자열 대신 숫자로 출력 (v2.1.122)
+  - OpenTelemetry: `@`-mention 해석 시 `claude_code.at_mention` 로그 이벤트 추가 (v2.1.122)
+
+### Fixed
+- OAuth 인증 시 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 401 재시도 루프 버그 수정 (v2.1.123)
+- 비차단 모드에서 세션 시작 후 연결된 MCP 도구가 ToolSearch에 누락되는 버그 수정 (v2.1.122)
+- settings.json의 잘못된 형식 hooks 항목이 전체 파일 무시를 유발하는 버그 수정 (v2.1.122)
+- `/branch`로 생성한 포크에서 "tool_use ids were found without tool_result blocks" 오류 수정 (v2.1.122)
+- Bedrock application inference profile ARN에서 `/model` Effort 옵션 미표시 및 `output_config.effort` 미전송 수정 (v2.1.122)
+- Vertex AI / Bedrock에서 세션 제목 생성 등 구조화 출력 쿼리 시 `invalid_request_error` 수정 (v2.1.122)
+- 프록시 게이트웨이 뒤 Vertex AI `count_tokens` 400 오류 수정 (v2.1.122)
+- `spinnerTipsOverride.excludeDefault` 시간 기반 spinner tips 미억제 수정 (v2.1.122)
+- `!exit`/`!quit` bash 모드에서 CLI 종료 대신 셸 명령으로 실행되지 않는 버그 수정 (v2.1.122)
+- 신모델에 이미지 전송 시 2000px 대신 2576px로 리사이즈되는 버그 수정 (v2.1.122)
+- Remote control 세션 idle 상태 초당 2회 재렌더링으로 tmux -CC 파이프 범람 수정 (v2.1.122)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.121 → v2.1.123 업데이트
+  - MCP 섹션: claude.ai 커넥터 중복 감지 및 힌트 추가
+  - CLI 섹션: `ANTHROPIC_BEDROCK_SERVICE_TIER`, `/resume` PR URL 검색 추가
+- `references/version-sync.md`: v2.1.123 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`: ToolSearch nonblocking 수정 및 `/mcp` 중복 커넥터 감지 추가
+
+---
+
 ## [2.32.0] - 2026-04-28
 
 ### Added

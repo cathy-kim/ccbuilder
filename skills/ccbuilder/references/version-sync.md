@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.123 (2026-04-30 동기화)
+
+**새로운 기능:**
+- (v2.1.122) `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`); `X-Amzn-Bedrock-Service-Tier` 헤더 전송
+- (v2.1.122) `/resume` 검색창에 PR URL 붙여넣기로 해당 PR 생성 세션 검색 (GitHub·GHE·GitLab·Bitbucket)
+- (v2.1.122) `/mcp`에서 동일 URL 로컬 서버에 숨겨진 claude.ai 커넥터 표시 + 중복 제거 힌트
+- (v2.1.122) OpenTelemetry: `api_request`·`api_error` 로그 이벤트 numeric 속성 → 숫자 출력 (기존 문자열)
+- (v2.1.122) OpenTelemetry: `claude_code.at_mention` 로그 이벤트 추가 — `@`-mention 해석 추적
+
+**주요 버그 수정:**
+- OAuth 인증 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 401 재시도 루프 수정 (v2.1.123)
+- 비차단(nonblocking) 모드에서 세션 시작 후 연결된 MCP 도구가 ToolSearch에 누락되는 버그 수정 (v2.1.122)
+- settings.json 잘못된 형식 hooks 항목이 전체 파일 무시를 유발하는 버그 수정 (v2.1.122)
+- `/branch` 포크에서 rewound 타임라인 항목 포함 시 "tool_use ids were found without tool_result blocks" 오류 수정 (v2.1.122)
+- Bedrock ARN에서 `/model` Effort 옵션 미표시 및 `output_config.effort` 미전송 수정 (v2.1.122)
+- Vertex AI / Bedrock 구조화 출력 쿼리 `invalid_request_error: Extra inputs are not permitted` 수정 (v2.1.122)
+- Vertex AI `count_tokens` 프록시 게이트웨이 400 오류 수정 (v2.1.122)
+- 신모델 이미지 2576px 리사이즈 → 정확한 2000px 최대값 수정 (v2.1.122)
+
+---
+
 ### v2.1.121 (2026-04-28 동기화)
 
 **새로운 기능:**
