@@ -15,6 +15,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.33.0] - 2026-05-01
+
+### Added
+- **Claude Code v2.1.126 sync**
+  - `/model` picker가 `ANTHROPIC_BASE_URL`이 Anthropic 호환 게이트웨이를 가리킬 때 `/v1/models` 엔드포인트에서 모델 목록 조회 (v2.1.126)
+  - `claude project purge [path]` — 프로젝트 전체 상태(트랜스크립트·태스크·파일 이력·설정) 삭제; `--dry-run`·`-y/--yes`·`-i/--interactive`·`--all` 지원 (v2.1.126)
+  - `--dangerously-skip-permissions` — `.claude/`·`.git/`·`.vscode/`·shell 설정 파일 등 이전 보호 경로 쓰기 프롬프트 생략 확장 (재앙적 삭제 명령은 계속 프롬프트, v2.1.126)
+  - `claude auth login` — 브라우저 콜백이 localhost에 도달 못하는 환경(WSL2·SSH·컨테이너)에서 터미널에 OAuth 코드 직접 붙여넣기 지원 (v2.1.126)
+  - `claude_code.skill_activated` OpenTelemetry 이벤트 — 사용자 입력 슬래시 명령에서도 발동; `invocation_trigger` 속성 추가 (`"user-slash"`·`"claude-proactive"`·`"nested-skill"`, v2.1.126)
+  - Auto mode: 권한 확인 대기 시 스피너 빨간색 표시 — 도구 실행 중으로 오해 방지 (v2.1.126)
+  - Windows: PowerShell 도구 활성화 시 기본 셸로 PowerShell 사용 (Bash 대신); PowerShell 7 (Microsoft Store·MSI without PATH·.NET global tool) 자동 탐지 (v2.1.126)
+  - `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 배포에서 Bedrock/Vertex/Foundry 분석 자동 비활성화 제거 (v2.1.126)
+  - Read 도구: 파일별 악성코드 평가 알림 제거 — 레거시 모델의 불필요 거부 및 주석 방지 (v2.1.126)
+  - `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`); `X-Amzn-Bedrock-Service-Tier` 헤더 전송 (v2.1.122)
+  - `/resume` 검색창에 PR URL 붙여넣기 → 해당 PR 생성 세션 탐색 (GitHub·GitHub Enterprise·GitLab·Bitbucket, v2.1.122)
+  - `/mcp` — 수동 추가 서버와 URL이 중복된 claude.ai 커넥터 표시 + 중복 제거 힌트 (v2.1.122)
+  - OpenTelemetry: `claude_code.at_mention` `@`-멘션 해결 로그 이벤트 추가 (v2.1.122)
+  - OpenTelemetry: `api_request`/`api_error` 이벤트 숫자 속성이 문자열이 아닌 숫자 타입으로 발신 (v2.1.122)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.121 → v2.1.126 업데이트
+  - MCP 섹션: claude.ai 커넥터 중복 표시 힌트 추가 (v2.1.122)
+  - CLI 섹션: `claude project purge`, `--dangerously-skip-permissions` 확장, `claude auth login` 터미널 OAuth, auto mode 스피너 색상, Windows PowerShell 기본 셸, `/resume` PR URL 탐색, `/model` 게이트웨이 모델 목록 추가
+  - 환경변수: `ANTHROPIC_BEDROCK_SERVICE_TIER`, OpenTelemetry 이벤트(`claude_code.skill_activated`, `claude_code.at_mention`) 추가
+- `references/version-sync.md`: v2.1.126 변경사항 추적 엔트리 추가
+
+### Fixed
+- **Security:** `allowManagedDomainsOnly`/`allowManagedReadPathsOnly` 설정이 상위 managed-settings 소스에 `sandbox` 블록 없을 때 무시되던 버그 수정 (v2.1.126)
+- 2000px 초과 이미지 붙여넣기 시 세션 중단 — 자동 다운스케일링 및 이력의 과대 이미지 자동 제거 후 재시도 (v2.1.126)
+- Mac 슬립 후 재개 시 "Stream idle timeout" 오류 수정 (v2.1.126)
+- 백그라운드·원격 세션에서 긴 thinking 중 "Stream idle timeout" 오류 수정 (v2.1.126)
+- 지연 로드 도구(WebSearch·WebFetch 등)가 `context: fork` 스킬·서브에이전트 첫 턴에서 누락되던 버그 수정 (v2.1.126)
+- `--channels`로 시작한 인터랙티브 세션에서 plan-mode 도구 누락 수정 (v2.1.126)
+- Agent SDK hang — 병렬 도구 호출 배치에서 잘못된 도구 이름 발신 시 hang 수정 (v2.1.126)
+- OAuth 인증 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 401 재시도 루프 수정 (v2.1.123)
+- Windows no-flicker 모드에서 일본어/한국어/중국어 텍스트 깨짐 수정 (v2.1.126)
+- `Ctrl+L`이 프롬프트 입력 초기화하던 버그 수정 → 화면 강제 재드로우로 변경 (v2.1.126)
+- `/plugin` Uninstall이 "Enabled"로 잘못 표시되던 버그 수정 (v2.1.126)
+
+---
+
 ## [2.32.0] - 2026-04-28
 
 ### Added

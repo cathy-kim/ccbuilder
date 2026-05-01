@@ -77,6 +77,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.126 (2026-05-01 동기화)
+
+**새로운 기능:**
+- (v2.1.126) `/model` picker `ANTHROPIC_BASE_URL`이 Anthropic 호환 게이트웨이를 가리킬 때 `/v1/models` 엔드포인트에서 모델 목록 조회
+- (v2.1.126) `claude project purge [path]` — 프로젝트 전체 상태(트랜스크립트·태스크·파일 이력·설정) 삭제; `--dry-run`·`-y/--yes`·`-i/--interactive`·`--all` 지원
+- (v2.1.126) `--dangerously-skip-permissions` — `.claude/`·`.git/`·`.vscode/`·shell 설정 파일 쓰기 프롬프트 생략 확장 (재앙적 삭제 명령은 계속 프롬프트)
+- (v2.1.126) `claude auth login` — WSL2·SSH·컨테이너에서 브라우저 콜백 없이 터미널 OAuth 코드 붙여넣기 지원
+- (v2.1.126) `claude_code.skill_activated` OpenTelemetry 이벤트 — 사용자 슬래시 명령에서도 발동; `invocation_trigger` 속성 (`"user-slash"`·`"claude-proactive"`·`"nested-skill"`)
+- (v2.1.126) Auto mode: 권한 확인 대기 시 스피너 빨간색 표시
+- (v2.1.126) Windows: PowerShell 도구 활성화 시 기본 셸로 PowerShell 사용; PowerShell 7 (Store·MSI without PATH·.NET global tool) 자동 탐지
+- (v2.1.126) Read 도구: 파일별 악성코드 평가 알림 제거 (레거시 모델 불필요 거부 방지)
+- (v2.1.126) `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 배포에서 Bedrock/Vertex/Foundry 분석 자동 비활성화 제거
+- (v2.1.122) `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`), `X-Amzn-Bedrock-Service-Tier` 헤더 전송
+- (v2.1.122) `/resume` 검색창에 PR URL 붙여넣기 → 해당 PR 생성 세션 탐색 (GitHub·GitHub Enterprise·GitLab·Bitbucket)
+- (v2.1.122) `/mcp` — 수동 서버와 URL 중복된 claude.ai 커넥터 힌트와 함께 표시
+- (v2.1.122) OpenTelemetry: `claude_code.at_mention` 이벤트 추가; 숫자 속성 올바른 타입으로 발신
+
+**보안 수정:**
+- `allowManagedDomainsOnly`/`allowManagedReadPathsOnly` 상위 managed-settings에 sandbox 블록 없을 때 무시되던 버그 수정 (v2.1.126)
+
+**주요 버그 수정:**
+- 2000px 초과 이미지 붙여넣기 세션 중단 — 자동 다운스케일링 (v2.1.126)
+- Mac 슬립 후 / 백그라운드·원격 세션 긴 thinking 중 "Stream idle timeout" 수정 (v2.1.126)
+- 지연 로드 도구(`WebSearch`·`WebFetch` 등)가 `context: fork` 스킬·서브에이전트 첫 턴에서 누락되던 버그 수정 (v2.1.126)
+- Agent SDK 병렬 도구 호출 배치의 잘못된 도구 이름으로 인한 hang 수정 (v2.1.126)
+- OAuth 인증 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 401 재시도 루프 수정 (v2.1.123)
+
+---
+
 ### v2.1.121 (2026-04-28 동기화)
 
 **새로운 기능:**
