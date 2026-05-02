@@ -77,6 +77,32 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.126 (2026-05-02 동기화)
+
+**새로운 기능:**
+- (v2.1.126) `claude project purge [path]` — 프로젝트 상태 전체 삭제(트랜스크립트·태스크·파일 히스토리·설정 엔트리); `--dry-run`·`-y`·`-i`·`--all` 지원
+- (v2.1.126) `--dangerously-skip-permissions` `.claude/`·`.git/`·`.vscode/`·셸 설정 파일 쓰기 프롬프트 우회 확장
+- (v2.1.126) `claude auth login` OAuth 코드 터미널 붙여넣기 지원 — WSL2·SSH·컨테이너 환경
+- (v2.1.126) `claude_code.skill_activated` OpenTelemetry 이벤트 `invocation_trigger` 속성 (`"user-slash"`, `"claude-proactive"`, `"nested-skill"`)
+- (v2.1.126) `/model` 피커 — `ANTHROPIC_BASE_URL` 게이트웨이의 `/v1/models` 모델 목록 조회
+- (v2.1.126) Auto mode 권한 확인 지연 시 스피너 빨간색 전환
+- (v2.1.126) Windows: PowerShell 도구 활성화 시 기본 셸 설정; Store·MSI·.NET global tool 경로 감지
+- (v2.1.122) `ANTHROPIC_BEDROCK_SERVICE_TIER` — Bedrock 서비스 티어 선택 (`default`/`flex`/`priority`)
+- (v2.1.122) `/resume` 검색창 PR URL 붙여넣기로 세션 검색 — GitHub·GitLab·Bitbucket 지원
+- (v2.1.122) OpenTelemetry: 숫자 속성 타입 수정; `claude_code.at_mention` 이벤트 추가
+
+**보안 수정:**
+- (v2.1.126) `allowManagedDomainsOnly`·`allowManagedReadPathsOnly` — `sandbox` 블록 없는 상위 관리설정 소스에서도 올바르게 적용
+
+**주요 버그 수정:**
+- Read 도구 악성코드 평가 리마인더 제거 — 레거시 모델 오거부 방지 (v2.1.126)
+- 2000px 초과 이미지 붙여넣기 세션 중단 수정; 히스토리 과대 이미지 자동 제거 후 재시도 (v2.1.126)
+- OAuth 로그인 타임아웃 수정 (느린/프록시·IPv6 devcontainer·브라우저 콜백 불가 환경, v2.1.126)
+- 일본어/한국어/중국어 Windows no-flicker 모드 문자 깨짐 수정 (v2.1.126)
+- Agent SDK 병렬 도구 호출 배치 잘못된 도구 이름 행(hang) 수정 (v2.1.126)
+
+---
+
 ### v2.1.121 (2026-04-28 동기화)
 
 **새로운 기능:**

@@ -15,6 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.33.0] - 2026-05-02
+
+### Added
+- **Claude Code v2.1.126 sync**
+  - `claude project purge [path]` — 프로젝트 상태 전체 삭제(트랜스크립트·태스크·파일 히스토리·설정 엔트리); `--dry-run`·`-y/--yes`·`-i/--interactive`·`--all` 지원 (v2.1.126)
+  - `--dangerously-skip-permissions` `.claude/`·`.git/`·`.vscode/`·셸 설정 파일 쓰기 프롬프트 우회 확장 — 위험 삭제 명령은 여전히 프롬프트 표시 (v2.1.126)
+  - `claude auth login` OAuth 코드 터미널 직접 붙여넣기 지원 — WSL2·SSH·컨테이너에서 브라우저 콜백 불가 시 활용 (v2.1.126)
+  - `claude_code.skill_activated` OpenTelemetry 이벤트 — 사용자 슬래시 명령에서도 발동; `invocation_trigger` 속성 추가 (`"user-slash"`, `"claude-proactive"`, `"nested-skill"`) (v2.1.126)
+  - `/model` 피커 — `ANTHROPIC_BASE_URL`이 호환 게이트웨이를 가리킬 때 `/v1/models` 엔드포인트에서 모델 목록 조회 (v2.1.126)
+  - Auto mode: 권한 확인이 멈출 때 스피너 빨간색 전환 — 실행 중 상태와 구분 (v2.1.126)
+  - Windows: PowerShell 도구 활성화 시 PowerShell을 기본 셸로 사용; Store·MSI·.NET global tool 경로 PowerShell 7 감지 추가 (v2.1.126)
+  - 보안 수정: `allowManagedDomainsOnly`·`allowManagedReadPathsOnly` — `sandbox` 블록 없는 상위 우선순위 관리설정 소스에서도 올바르게 적용 (v2.1.126)
+  - `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 — Bedrock 서비스 티어 선택 (`default`·`flex`·`priority`), `X-Amzn-Bedrock-Service-Tier` 헤더로 전달 (v2.1.122)
+  - `/resume` 검색창에 PR URL 붙여넣기로 해당 PR 생성 세션 찾기 — GitHub·GitHub Enterprise·GitLab·Bitbucket 지원 (v2.1.122)
+  - `/mcp` — 동일 URL 수동 추가 서버에 가려진 claude.ai 커넥터 표시 및 중복 제거 힌트 (v2.1.122)
+  - OpenTelemetry: `api_request`·`api_error` 이벤트 숫자 속성 문자열→숫자 타입 수정; `claude_code.at_mention` 이벤트 추가 (v2.1.122)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.121 → v2.1.126 업데이트
+  - MCP 섹션: `/model` 게이트웨이 모델 목록, `allowManagedDomainsOnly` 보안 수정, `/mcp` 커넥터 개선, `ANTHROPIC_BEDROCK_SERVICE_TIER` 추가
+  - CLI 섹션: `claude project purge`, `--dangerously-skip-permissions` 확장, `claude auth login` 개선, Auto mode 스피너, Windows PowerShell 기본 셸, `/resume` PR URL 붙여넣기 추가
+- `references/version-sync.md`: v2.1.126 변경사항 추적 엔트리 추가
+
+### Fixed
+- Read 도구: 악성코드 평가 리마인더 제거 — 레거시 모델 오거부·불필요한 주석 유발 방지 (v2.1.126)
+- 2000px 초과 이미지 붙여넣기 시 세션 중단 수정 — 자동 다운스케일 및 히스토리 과대 이미지 자동 제거 후 재시도 (v2.1.126)
+- OAuth 로그인: 느린/프록시 연결·IPv6 devcontainer·브라우저 콜백 불가 환경 타임아웃 수정 (v2.1.126)
+- 일본어/한국어/중국어 텍스트 Windows no-flicker 모드 문자 깨짐 수정 (v2.1.126)
+- Agent SDK: 병렬 도구 호출 배치에서 잘못된 도구 이름 발생 시 행(hang) 수정 (v2.1.126)
+
+---
+
 ## [2.32.0] - 2026-04-28
 
 ### Added
