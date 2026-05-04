@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-28
+**최종 동기화**: 2026-05-03
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.126 (2026-05-03 동기화)
+
+**새로운 기능:**
+- (v2.1.126) `claude project purge [path]` — 프로젝트 전체 상태(트랜스크립트·태스크·파일 이력·설정 엔트리) 삭제; `--dry-run`, `-y/--yes`, `-i/--interactive`, `--all` 지원
+- (v2.1.126) `/model` 피커에서 `ANTHROPIC_BASE_URL` Anthropic 호환 게이트웨이의 `/v1/models` 엔드포인트 모델 목록 표시
+- (v2.1.126) `claude auth login` OAuth 코드 터미널 직접 붙여넣기 — WSL2·SSH·컨테이너 환경 브라우저 콜백 불가 시 대응
+- (v2.1.126) `claude_code.skill_activated` OTel 이벤트 신규 `invocation_trigger` 속성 (`"user-slash"`, `"claude-proactive"`, `"nested-skill"`)
+- (v2.1.126) Auto mode 스피너 — 권한 확인 지연 시 빨간색으로 전환 (도구 실행 중 오인 방지)
+- (v2.1.126) `--dangerously-skip-permissions` 확장 — `.claude/`, `.git/`, `.vscode/`, 셸 설정 파일 쓰기 프롬프트 생략 (재앙적 명령은 계속 프롬프트)
+- (v2.1.126) Windows: Microsoft Store·PATH 미등록 MSI·`.NET global tool` 경로 PowerShell 7 자동 탐지; PowerShell 도구 활성화 시 기본 셸로 사용
+- (v2.1.122) `ANTHROPIC_BEDROCK_SERVICE_TIER` env var — Bedrock 서비스 티어 선택 (`default`, `flex`, `priority`); `X-Amzn-Bedrock-Service-Tier` 헤더로 전송
+- (v2.1.122) `/resume` 검색창 PR URL 붙여넣기로 해당 PR 생성 세션 탐색 (GitHub·GitHub Enterprise·GitLab·Bitbucket)
+- (v2.1.122) OpenTelemetry `claude_code.at_mention` 로그 이벤트 — `@`-멘션 해결 추적
+- (v2.1.122) `/mcp` — 중복 URL 수동 서버로 숨겨진 claude.ai 커넥터 표시 + 중복 제거 힌트
+
+**보안 수정:**
+- `allowManagedDomainsOnly`·`allowManagedReadPathsOnly` — 상위 관리형 설정 소스에 `sandbox` 블록 없을 때 무시되던 버그 수정 (v2.1.126)
+
+**주요 버그 수정:**
+- 2000px 초과 이미지 붙여넣기 시 세션 중단 → 자동 다운스케일·히스토리 과대 이미지 자동 제거·재시도 (v2.1.126)
+- `context: fork` 스킬·서브에이전트 첫 턴에 지연 로드 도구(WebSearch·WebFetch 등) 누락 수정 (v2.1.126)
+- Windows CJK 텍스트 no-flicker 모드에서 깨진 문자 수정 (v2.1.126)
+- `Ctrl+L` 프롬프트 입력 클리어 → 화면 강제 재드로우만 수행 (readline 동작 일치, v2.1.126)
+- Mac 수면 해제 후 "Stream idle timeout" 수정; 백그라운드·원격 세션 긴 thinking 중 잘못된 타임아웃 수정 (v2.1.126)
+- OAuth 로그인 타임아웃 — slow·proxy·IPv6-only devcontainer·WSL2 브라우저 콜백 실패 수정 (v2.1.126)
+- Agent SDK 병렬 도구 호출 배치에서 잘못된 도구 이름 방출 시 hang 수정 (v2.1.126)
+- ToolSearch — nonblocking 모드 세션 시작 후 연결 MCP 도구 누락 수정 (v2.1.122)
+- settings.json 잘못된 훅 항목 시 전체 파일 무효화 수정 (v2.1.122)
+- OAuth 인증 `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` 설정 시 401 루프 수정 (v2.1.123)
+
+---
 
 ### v2.1.121 (2026-04-28 동기화)
 
