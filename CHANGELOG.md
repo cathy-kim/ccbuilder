@@ -15,6 +15,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-05
+
+### Added
+- **Claude Code v2.1.128 sync**
+  - `/mcp` 슬래시 명령에서 연결된 서버별 도구 수 표시 및 0개 도구로 연결된 서버 별도 표지 (v2.1.128)
+  - `--plugin-dir`이 디렉토리 외에 `.zip` 아카이브도 지원 — 배포된 플러그인 아카이브를 직접 로드 가능 (v2.1.128)
+  - `--channels`가 console(API key) 인증에서도 동작 — managed settings 조직은 `channelsEnabled: true` 설정 필요 (v2.1.128)
+  - bare `/color` (인자 없이 호출) 시 랜덤 세션 색상 자동 선택 (v2.1.128)
+  - `/model` 피커 개선 — 중복 Opus 4.7 항목 통합, 현재 Opus가 "Opus"로 표시 (v2.1.128)
+  - SDK 호스트가 Bash 권한 프롬프트에 영속 `localSettings` 제안 수신 — "항상 허용" 클릭 시 `.claude/settings.local.json`에 기록 (v2.1.128)
+  - 서브프로세스(Bash, hooks, MCP, LSP)가 `OTEL_*` 환경변수를 더 이상 상속하지 않음 — CLI의 OTLP 엔드포인트가 Bash 도구로 실행한 앱에 노출되지 않음 (v2.1.128)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.128 업데이트
+  - MCP 섹션: `--channels` console 인증, `workspace` 예약명·재연결 요약·도구 수 표시·stdio 아규먼트 오염 수정 추가
+  - Plugin 섹션: `--plugin-dir` `.zip` 아카이브 지원 추가
+  - 신규 도구 섹션: `EnterWorktree` local HEAD 기반 브랜치 생성 수정 추가
+  - Breaking Changes: MCP `workspace` 서버명 예약 추가
+- `references/version-sync.md`: v2.1.128 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`: `workspace` 예약명, 재연결 요약, `/mcp` 도구 수, stdio 아규먼트 오염 수정 섹션 추가
+- `references/official/mcp.md`: v2.1.128 MCP 변경사항 3개 항목 추가
+- `references/official/tools.md`: `EnterWorktree` local HEAD 기반 브랜치 생성 수정 설명 추가
+
+### Fixed
+- **Breaking Change**: MCP `workspace` 서버명 예약 — 동명 기존 서버는 경고 후 스킵 (v2.1.128)
+- `EnterWorktree` 신규 브랜치를 `origin/<default-branch>` 대신 local HEAD 기반으로 생성 — unpushed commit 유실 방지 (v2.1.128)
+- Auto mode 분류기 평가 불가 시 오류에 힌트(retry, `/compact`, `--debug`) 포함 (v2.1.128)
+- parallel shell 도구 호출: 읽기 전용 명령(grep, git diff, ls) 실패 시 형제 호출 취소되지 않음 (v2.1.128)
+- MCP stdio 서버가 `CLAUDE_CODE_SHELL_PREFIX` 설정 환경에서 공백·셸 메타문자 포함 아규먼트 오염 수정 (v2.1.128)
+- `/plugin update`가 npm 소스 플러그인 신규 버전 감지 못하던 버그 수정 (v2.1.128)
+- 서브에이전트 요약이 트랜스크립트 정적 상태에서 반복 발동하던 버그 수정 — idle 서브에이전트 최악 토큰 비용 상한 (v2.1.128)
+- 서브에이전트 진행 요약에서 프롬프트 캐시 누락 수정 — `cache_creation` ~3배 감소 (v2.1.128)
+- MCP 서버가 구조화 콘텐츠와 콘텐츠 블록 모두 반환 시 이미지 드롭되던 버그 수정 (v2.1.128)
+- 1M-context 모델의 세션이 실제 API 한도 도달 전에 "Prompt is too long"으로 잘못 차단되던 버그 수정 (v2.1.128)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added

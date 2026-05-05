@@ -77,6 +77,32 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.128 (2026-05-05 동기화)
+
+**새로운 기능:**
+- (v2.1.128) bare `/color` — 인자 없이 호출 시 랜덤 세션 색상 자동 선택
+- (v2.1.128) `/mcp` — 연결된 서버별 도구 수 표시 및 0개 도구 서버 별도 표지
+- (v2.1.128) `--plugin-dir` `.zip` 아카이브 지원 — 배포된 플러그인 아카이브 직접 로드
+- (v2.1.128) `--channels` console(API key) 인증 지원; managed settings 조직은 `channelsEnabled: true` 필요
+- (v2.1.128) `/model` 피커: 중복 Opus 4.7 항목 통합, 현재 Opus "Opus"로 표시
+- (v2.1.128) 서브프로세스(Bash, hooks, MCP, LSP) `OTEL_*` 환경변수 더 이상 상속 안 함
+- (v2.1.128) SDK 호스트 Bash 권한 프롬프트에 영속 `localSettings` 제안 수신 — "항상 허용" 시 `.claude/settings.local.json` 기록
+
+**Breaking Changes:**
+- (v2.1.128) MCP `workspace` 서버명 예약 — 동명 기존 서버는 경고 후 스킵
+
+**주요 버그 수정:**
+- `EnterWorktree` 신규 브랜치를 `origin/<default-branch>` 대신 local HEAD 기반으로 생성 — unpushed commit 유실 방지 (v2.1.128)
+- 재연결 MCP 서버 도구 목록 홍수 → 서버 접두사별 요약 표시 (v2.1.128)
+- MCP stdio 서버 `CLAUDE_CODE_SHELL_PREFIX` 설정 시 아규먼트 오염 수정 (v2.1.128)
+- parallel shell 도구: 읽기 전용 명령 실패 시 형제 호출 취소되지 않음 (v2.1.128)
+- 서브에이전트 진행 요약 프롬프트 캐시 누락 수정 — `cache_creation` ~3배 감소 (v2.1.128)
+- 1M-context 모델 세션이 실제 한도 전 "Prompt is too long" 잘못 차단 수정 (v2.1.128)
+- `/plugin update` npm 소스 플러그인 신규 버전 미감지 수정 (v2.1.128)
+- MCP 서버 구조화 콘텐츠+콘텐츠 블록 반환 시 이미지 드롭 수정 (v2.1.128)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**
