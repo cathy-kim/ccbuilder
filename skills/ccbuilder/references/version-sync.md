@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.131 (2026-05-06 동기화)
+
+**새로운 기능:**
+- (v2.1.129) `--plugin-url <url>` 플래그 — 세션에 URL에서 `.zip` 플러그인 아카이브 로드
+- (v2.1.129) `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` env var — 자동 탐지 실패 터미널(Emacs `eat` 등) 동기화 출력 강제
+- (v2.1.129) `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` env var — Homebrew·WinGet 백그라운드 자동 업그레이드
+- (v2.1.129) `skillOverrides` 설정 동작 수정 — `"off"`·`"user-invocable-only"`·`"name-only"` 정상 작동
+- (v2.1.129) Plugin manifests `themes`·`monitors` → `"experimental": { ... }` 블록 선언 권장 (기존 최상위 선언 경고)
+- (v2.1.129) `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` — 게이트웨이 `/v1/models` 모델 목록 옵트인 (자동에서 전환)
+- (v2.1.129) `claude_code.pull_request.count` OTel 메트릭 — MCP 도구 생성 PR/MR 포함 카운트
+- (v2.1.129) Policy 거부 오류 메시지에 API Request ID 포함
+- (v2.1.129) Ctrl+R 히스토리 피커 전체 프로젝트 기본 검색 복원 (pre-2.1.124 동작)
+
+**주요 버그 수정:**
+- VS Code extension Windows `createRequire` 폴리필 하드코딩 빌드 경로 수정 (v2.1.131)
+- Mantle 엔드포인트 `x-api-key` 헤더 누락 인증 실패 수정 (v2.1.131)
+- 1시간 프롬프트 캐시 TTL 5분으로 자동 다운그레이드되던 버그 수정 (v2.1.129)
+- `Bash(mkdir *)`, `Bash(touch *)` allow 규칙 프로젝트 내 경로 미적용 수정 (v2.1.129)
+- `deniedMcpServers` `*://` 와일드카드 패턴 대소문자 혼합 호스트명 매칭 수정 (v2.1.129)
+- 서브에이전트 실행 중 agent 패널 숨겨지던 회귀 수정 (v2.1.129)
+- OAuth 리프레시 race condition 수면 해제 후 전체 세션 로그아웃 수정 (v2.1.129)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**

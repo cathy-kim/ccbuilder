@@ -15,6 +15,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-06
+
+### Added
+- **Claude Code v2.1.131 sync**
+  - `--plugin-url <url>` 플래그 — 세션에 URL에서 `.zip` 플러그인 아카이브 로드 (v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` env var — 자동 탐지 실패 터미널(Emacs `eat` 등) 동기화 출력 강제 활성화 (v2.1.129)
+  - `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` env var — Homebrew·WinGet 설치 시 백그라운드 자동 업그레이드 후 재시작 안내 (v2.1.129)
+  - `skillOverrides` 설정 동작 수정 — `"off"` 모델·`/` 모두 숨김, `"user-invocable-only"` 모델만 숨김, `"name-only"` 설명 축소 (v2.1.129)
+  - `claude_code.pull_request.count` OTel 메트릭 — MCP 도구로 생성한 PR/MR도 카운트 (기존: 셸 명령만, v2.1.129)
+  - Plugin manifests: `themes`·`monitors` → `"experimental": { ... }` 블록 선언 권장; 최상위 선언 시 `claude plugin validate` 경고 (v2.1.129)
+  - Policy 거부 오류 메시지에 API Request ID 포함 — 지원 디버깅 용이 (v2.1.129)
+  - Ctrl+R 히스토리 피커 기본값 — 전체 프로젝트 검색 복원 (pre-2.1.124 동작), Ctrl+S로 현재 프로젝트/세션 축소 (v2.1.129)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.131 업데이트
+  - Plugin 섹션: `--plugin-url`, `themes`·`monitors` experimental 블록, `skillOverrides` 설정 추가
+  - env 섹션: `CLAUDE_CODE_FORCE_SYNC_OUTPUT`, `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`, `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` 추가
+  - Breaking Changes: 게이트웨이 모델 목록 자동→옵트인 변경 추가
+- Gateway `/v1/models` 모델 목록 자동 탐색 → `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 옵트인으로 전환 (v2.1.129)
+- `references/version-sync.md`: v2.1.131 변경사항 추적 엔트리 추가
+
+### Fixed
+- VS Code extension Windows 활성화 실패 — 번들 SDK `createRequire` 폴리필 하드코딩 빌드 경로 수정 (v2.1.131)
+- Mantle 엔드포인트 인증 실패 — `x-api-key` 헤더 누락 수정 (v2.1.131)
+- 1시간 프롬프트 캐시 TTL이 5분으로 자동 다운그레이드되던 버그 수정 (v2.1.129)
+- `Bash(mkdir *)`, `Bash(touch *)` 등 allow 규칙이 프로젝트 내 경로에서 적용 안 되던 버그 수정 (v2.1.129)
+- `deniedMcpServers` `*://` 와일드카드 패턴이 대소문자 혼합 호스트명 매칭 실패 수정 (v2.1.129)
+- `/context` 호출 시 ASCII 시각화 격자가 대화에 덤프되어 ~1.6k 토큰 낭비하던 버그 수정 (v2.1.129)
+- 서브에이전트 실행 중 agent 패널 숨겨지던 회귀 수정 (v2.1.129, 2.1.122 회귀)
+- OAuth 리프레시 race condition — 수면 해제 후 전체 세션 로그아웃 버그 수정 (v2.1.129)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added
