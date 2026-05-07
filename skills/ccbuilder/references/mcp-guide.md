@@ -263,6 +263,18 @@ MCP 서버가 시작 시 일시적 오류를 만나면 연결 끊긴 채로 유�
 
 ---
 
+## workspace — 예약 서버 이름 (v2.1.128)
+
+`workspace`는 예약된 MCP 서버 이름입니다. 이 이름을 사용하는 기존 서버는 경고 후 생략됩니다.
+
+---
+
+## tools/list 실패 처리 개선 (v2.1.132)
+
+MCP 서버가 연결에는 성공하지만 `tools/list`에 실패하는 경우, Claude Code는 1회 재시도한 뒤 `/mcp`에 "connected · tools fetch failed" 상태를 표시합니다 (기존: 0 도구로 무음 처리).
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.

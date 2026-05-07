@@ -77,6 +77,41 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.132 (2026-05-07 동기화)
+
+**새로운 기능:**
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` — Bash 도구 서브프로세스 환경에 훅 `session_id`와 동일한 세션 ID 자동 주입
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 대체 화면 렌더러 비활성화, 터미널 네이티브 스크롤백 유지
+- (v2.1.129) `--plugin-url <url>` 플래그 — URL에서 플러그인 `.zip` 아카이브를 현재 세션에 로드
+- (v2.1.129) `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` — Emacs eat 등 자동 감지 미스 터미널 동기화 출력 강제 활성화
+- (v2.1.129) `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew/WinGet 설치 시 백그라운드 자동 업그레이드 + 재시작 프롬프트
+- (v2.1.129) `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` — 게이트웨이 `/v1/models` 모델 탐색 옵트인 전환 (기존: v2.1.126~128 자동)
+- (v2.1.129) `skillOverrides` 설정 작동 수정 — `off`·`user-invocable-only`·`name-only`
+- (v2.1.129) Ctrl+R 히스토리 피커 전체 프로젝트 기본 검색 복원 (v2.1.124 이전 동작), Ctrl+S로 현재 프로젝트 축소
+- (v2.1.129) 3rd-party 배포(Bedrock·Vertex·Foundry·`ANTHROPIC_BASE_URL`) Anthropic 서피스 스피너 힌트 제거
+- (v2.1.129) `claude_code.pull_request.count` OTel 메트릭 MCP 도구 경유 PR/MR 카운트 포함
+- (v2.1.128) `/mcp` 연결된 서버 도구 수 표시 및 0 도구 서버 플래그
+- (v2.1.128) `--plugin-dir` `.zip` 아카이브 허용 (디렉토리 외)
+- (v2.1.128) `--channels` 콘솔(API 키) 인증 지원 (콘솔 조직 `channelsEnabled: true` 필요)
+- (v2.1.128) MCP `workspace` 예약 서버 이름 — 충돌 시 경고 후 생략
+- (v2.1.128) Subprocesses(Bash·hooks·MCP·LSP) `OTEL_*` 환경변수 더 이상 상속하지 않음
+- (v2.1.128) Plugin 매니페스트 `themes`/`monitors` → `"experimental": { ... }` 하위 이동 권장
+
+**주요 버그 수정:**
+- 외부 SIGINT graceful shutdown 미작동 — 터미널 모드 복원·`--resume` 힌트 표시 (v2.1.132)
+- `--resume` 이모지 분할 `no low surrogate` 오류; 손상 세션 로드 시 자동 sanitize (v2.1.132)
+- `--permission-mode` 플래그가 plan 모드 세션 `-p --resume`/`--continue` 시 무시되던 버그 (v2.1.132)
+- MCP stdio 서버 비프로토콜 stdout 무제한 메모리 증가(10GB+ RSS) 수정 (v2.1.132)
+- MCP `tools/list` 실패 시 0 도구 표시 → 1회 재시도 + "connected · tools fetch failed" (v2.1.132)
+- 비인가 claude.ai MCP 커넥터 "failed" → "needs auth" 표시 (v2.1.132)
+- Bedrock/Vertex `ENABLE_PROMPT_CACHING_1H` 설정 시 400 오류 수정 (v2.1.132)
+- statusline `context_window` 토큰 수 세션 누적 → 현재 컨텍스트 사용량 수정 (v2.1.132)
+- `EnterWorktree` 브랜치 `origin/<기본-브랜치>` → 로컬 HEAD 기반 생성 (unpushed 커밋 보존, v2.1.128)
+- VS Code 익스텐션 Windows 활성화 실패(`createRequire` 폴리필 버그) 수정 (v2.1.131)
+- Mantle 엔드포인트 `x-api-key` 헤더 누락 수정 (v2.1.131)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**
