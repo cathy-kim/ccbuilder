@@ -72,6 +72,12 @@ claude mcp add --scope user <name> -- <command>
 
 ---
 
+## 예약된 서버 이름
+
+`workspace`는 예약된 서버 이름입니다 (v2.1.128+). 기존에 `workspace`라는 이름의 MCP 서버를 사용하고 있다면 다른 이름으로 변경해야 합니다 — 경고와 함께 스킵됩니다.
+
+---
+
 ## .mcp.json 설정
 
 ```json

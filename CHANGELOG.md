@@ -15,6 +15,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-08
+
+### Added
+- **Claude Code v2.1.133 sync**
+  - `worktree.baseRef` 설정 (`fresh`|`head`) — `--worktree`·`EnterWorktree`·agent-isolation worktree 브랜치 기반 선택; 기본 `fresh`=`origin/<default>` (**Breaking**: v2.1.128 local HEAD 동작 복원, v2.1.133)
+  - `sandbox.bwrapPath`/`sandbox.socatPath` managed settings — Linux/WSL 커스텀 bubblewrap·socat 바이너리 경로 지정 (v2.1.133)
+  - `parentSettingsBehavior` 관리자 티어 키 (`'first-wins'|'merge'`) — SDK managedSettings를 정책 병합에 옵트인 (v2.1.133)
+  - Hooks `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` env var — 훅 및 Bash 도구에서 현재 effort 레벨 접근 (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` Bash 서브프로세스 환경 자동 주입 — 훅의 `session_id`와 일치 (v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 alt-screen 렌더러 옵트아웃, 터미널 네이티브 스크롤백 유지 (v2.1.132)
+  - `--plugin-url <url>` 플래그 — 현재 세션에 URL에서 플러그인 zip 아카이브 로드 (v2.1.129)
+  - `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` env var — Homebrew/WinGet 설치 시 백그라운드 자동 업그레이드 + 재시작 프롬프트 (v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` env var — 자동 탐지 미적용 터미널(Emacs eat 등)에서 동기화 출력 강제 (v2.1.129)
+  - `skillOverrides` 설정 — `off`(모델·슬래시 숨김)·`user-invocable-only`(모델만 숨김)·`name-only`(설명 축소) (v2.1.129)
+  - `--plugin-dir` zip 아카이브 지원 — 디렉토리 외 zip 파일도 플러그인으로 로드 (v2.1.128)
+  - `/mcp` 연결된 서버 도구 수 표시 + 도구 0개 서버 플래그 (v2.1.128)
+  - `--channels` console(API key) 인증 지원 (v2.1.128)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.133 업데이트
+  - Hooks 섹션: `effort.level` JSON 입력 필드, `$CLAUDE_EFFORT` env var 추가
+  - CLI 섹션: `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN`, `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`, `CLAUDE_CODE_FORCE_SYNC_OUTPUT`, `sandbox.bwrapPath/socatPath`, `worktree.baseRef`, `parentSettingsBehavior` 추가
+  - Plugin 섹션: `--plugin-url`, `--plugin-dir` zip 지원, `skillOverrides`, `themes/monitors` experimental 이동 추가
+  - Breaking Changes: `worktree.baseRef` 기본값, 게이트웨이 탐색 옵트인, MCP workspace 예약어, OTEL 상속 제거 추가
+- `references/version-sync.md`: v2.1.133 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: `effort.level` JSON 입력 필드, `$CLAUDE_EFFORT` env var 추가
+- `references/official/hooks.md`: `effort.level` 공통 입력 필드 추가
+- `references/mcp-guide.md`: `workspace` 서버명 예약어 주의사항 추가
+
+### Fixed
+- 병렬 세션 refresh-token 경쟁으로 공유 자격증명 삭제 후 401 데드엔드 수정 (v2.1.133)
+- `Edit`/`Write` allow 규칙이 드라이브 루트(`C:\`·POSIX `/`) 스코프 시 항상 프롬프트 표시하던 버그 수정 (v2.1.133)
+- MCP OAuth 전체 흐름(discovery·DCR·토큰 교환·갱신)에서 `HTTP(S)_PROXY`/`NO_PROXY`/mTLS 미준수 수정 (v2.1.133)
+- `--add-dir`/SDK `additionalDirectories`로 전달된 매핑 네트워크 드라이브에서 Read/Write/Edit 거부 수정 (v2.1.133)
+- 서브에이전트가 Skill 도구로 프로젝트·사용자·플러그인 스킬 탐색 불가 수정 (v2.1.133)
+- `/effort` 한 세션 변경이 다른 동시 세션 effort 레벨을 바꾸던 버그 수정 (v2.1.133)
+- VS Code 확장이 Windows에서 "Unsupported platform" 오류로 활성화 실패 수정 (v2.1.131)
+
+### Breaking Changes
+- **`worktree.baseRef` 기본값 `fresh`** — `EnterWorktree` 브랜치 기반이 local HEAD(v2.1.128)에서 다시 `origin/<default>`로 복원; 이전 동작 유지: `worktree.baseRef: "head"` 설정 (v2.1.133)
+- **게이트웨이 `/v1/models` 탐색 옵트인** — `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 필요 (v2.1.129에서 자동→옵트인 변경)
+- **MCP `workspace` 서버명 예약** — 기존 `workspace` 서버 경고 후 스킵 (v2.1.128)
+- **서브프로세스 `OTEL_*` env 상속 제거** — CLI 자체 OTLP 엔드포인트를 Bash 도구 앱이 사용하지 않도록 (v2.1.128)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added

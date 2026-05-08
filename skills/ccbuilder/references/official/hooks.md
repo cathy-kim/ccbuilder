@@ -36,6 +36,17 @@
 | 24 | `TaskCreated` | `TaskCreate` 호출로 태스크 생성 시 (v2.1.84) | - |
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 
+## 공통 입력 필드 (v2.1.133+)
+
+모든 Hook 이벤트 JSON 입력에 `effort.level` 필드 포함 — 현재 세션 effort 레벨 접근 가능. Bash hook에서는 `$CLAUDE_EFFORT` 환경변수로도 접근.
+
+```json
+{
+  "session_id": "...",
+  "effort": { "level": "high" }
+}
+```
+
 ## Handler 타입
 
 | 타입 | 설명 |

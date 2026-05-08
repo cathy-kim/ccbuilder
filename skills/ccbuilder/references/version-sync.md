@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.133 (2026-05-08 동기화)
+
+**새로운 기능:**
+- (v2.1.133) `worktree.baseRef` 설정 (`fresh`|`head`) — `--worktree`·`EnterWorktree`·agent-isolation worktree 브랜치 기반; 기본 `fresh`=`origin/<default>` (**Breaking**: v2.1.128 local HEAD 동작 복원)
+- (v2.1.133) `sandbox.bwrapPath`/`sandbox.socatPath` managed settings — Linux/WSL 커스텀 bubblewrap·socat 바이너리 경로
+- (v2.1.133) `parentSettingsBehavior` 관리자 티어 키 (`'first-wins'|'merge'`) — SDK managedSettings 정책 병합 옵트인
+- (v2.1.133) Hooks `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` env var — 훅·Bash 도구에서 현재 effort 레벨 접근
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` Bash 서브프로세스 환경 자동 주입
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — alt-screen 렌더러 옵트아웃
+- (v2.1.129) `--plugin-url <url>` 플래그 — URL에서 플러그인 zip 로드 (현재 세션)
+- (v2.1.129) `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew/WinGet 자동 업그레이드
+- (v2.1.129) `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` — 동기화 출력 강제
+- (v2.1.129) `skillOverrides` 설정 — `off`·`user-invocable-only`·`name-only`
+- (v2.1.129) Plugin `themes`/`monitors` → `"experimental": {}` 하위 선언 권장 (top-level 경고)
+- (v2.1.128) `--plugin-dir` zip 아카이브 지원
+- (v2.1.128) `--channels` console(API key) 인증 지원
+- (v2.1.128) `/mcp` 연결된 서버 도구 수 표시 + 도구 0개 서버 플래그
+
+**Breaking Changes:**
+- `worktree.baseRef` 기본값 `fresh` — `EnterWorktree` local HEAD(v2.1.128) 동작 복원됨 (v2.1.133)
+- 게이트웨이 `/v1/models` 탐색 옵트인 (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`, v2.1.129)
+- MCP `workspace` 서버명 예약어 — 경고 후 스킵 (v2.1.128)
+- 서브프로세스 `OTEL_*` 환경변수 상속 제거 (v2.1.128)
+
+**주요 버그 수정:**
+- 병렬 세션 refresh-token 경쟁으로 공유 자격증명 삭제 후 401 데드엔드 수정 (v2.1.133)
+- 서브에이전트 Skill 도구로 프로젝트·사용자·플러그인 스킬 탐색 불가 수정 (v2.1.133)
+- `/effort` 한 세션 변경이 다른 동시 세션에 영향 수정 (v2.1.133)
+- MCP OAuth 전체 흐름에서 `HTTP(S)_PROXY`/`NO_PROXY`/mTLS 미준수 수정 (v2.1.133)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**
