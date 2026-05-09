@@ -77,6 +77,37 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.138 (2026-05-09 동기화)
+
+**새로운 기능:**
+- (v2.1.136) `settings.autoMode.hard_deny` — auto mode 분류기 조건 없이 무조건 차단하는 규칙 (사용자 의도·허용 예외 무관)
+- (v2.1.136) `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — OTel 응답 캡처 엔터프라이즈용 세션 품질 설문 재활성화
+- (v2.1.133) `worktree.baseRef` 설정 (`fresh` | `head`) — `--worktree`·`EnterWorktree`·agent-isolation worktree 브랜치 기준점 선택
+- (v2.1.133) Hooks: 입력에 `effort.level` JSON 필드 + `$CLAUDE_EFFORT` env var (Bash 서브프로세스에서도 읽기 가능)
+- (v2.1.133) `sandbox.bwrapPath`·`sandbox.socatPath` 관리형 설정 (Linux/WSL 커스텀 bubblewrap·socat 경로)
+- (v2.1.133) `parentSettingsBehavior` 어드민 키 (`first-wins` | `merge`) — SDK managedSettings 정책 병합 옵트인
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` env var — Bash 도구 서브프로세스에 세션 ID 자동 주입
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 alt-screen 렌더러 비활성화·터미널 스크롤백 유지
+- (v2.1.129) `--plugin-url <url>` — URL에서 플러그인 `.zip` 현재 세션 로드
+- (v2.1.129) `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` — 오감지 터미널(Emacs eat 등) 동기화 출력 강제
+- (v2.1.129) `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew·WinGet 배경 자동 업그레이드
+- (v2.1.129) `skillOverrides` 설정 (`off` | `user-invocable-only` | `name-only`) — 스킬 모델·슬래시 표시 제어
+- (v2.1.128) `/mcp` 연결 서버 도구 수 표시·0개 도구 서버 플래그
+
+**Breaking Changes:**
+- (v2.1.133) `worktree.baseRef` 기본값 `fresh` — `EnterWorktree` 브랜치 기준이 `origin/<default>`로 복원 (v2.1.128부터 로컬 HEAD였음); 유지하려면 `worktree.baseRef: "head"` 설정
+- (v2.1.128) MCP `workspace` 예약 서버명 — 해당 이름 서버 경고 후 건너뜀
+
+**주요 버그 수정:**
+- MCP 서버(`.mcp.json`·플러그인·claude.ai) `/clear` 후 소실 수정 (v2.1.136)
+- MCP OAuth 리프레시 토큰 다수 서버 동시 갱신 시 유실 수정 — 일일 재인증 불필요 (v2.1.136)
+- `--resume`·`--continue` 프로젝트 경로 밑줄 포함 시 세션 탐색 실패 수정 (v2.1.136)
+- `CLAUDE_ENV_FILE` SessionStart 훅 env var `/resume`·`/clear` 후 만료 수정 (v2.1.136)
+- 서브에이전트가 Skill 도구로 스킬 탐색 못하던 버그 수정 (v2.1.133)
+- VS Code 확장 Windows 활성화 실패 수정 (v2.1.137)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**

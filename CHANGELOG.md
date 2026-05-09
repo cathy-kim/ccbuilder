@@ -15,6 +15,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-09
+
+### Added
+- **Claude Code v2.1.138 sync** (v2.1.127–v2.1.138)
+  - `settings.autoMode.hard_deny` — auto mode 분류기가 사용자 의도·허용 예외 관계없이 무조건 차단하는 classifier 규칙 (v2.1.136)
+  - `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — OTel로 응답 캡처하는 엔터프라이즈용 세션 품질 설문 재활성화 (v2.1.136)
+  - `worktree.baseRef` 설정 (`fresh` | `head`) — `--worktree`·`EnterWorktree`·agent-isolation worktree의 브랜치 기준점 선택 (v2.1.133)
+  - Hooks: 입력에 `effort.level` JSON 필드 및 `$CLAUDE_EFFORT` env var 추가 — Bash 도구 서브프로세스에서도 읽기 가능 (v2.1.133)
+  - `sandbox.bwrapPath` 및 `sandbox.socatPath` 관리형 설정 — Linux/WSL 커스텀 bubblewrap·socat 바이너리 경로 지정 (v2.1.133)
+  - `parentSettingsBehavior` 어드민 티어 키 (`first-wins` | `merge`) — SDK managedSettings(상위 티어) 정책 병합 옵트인 (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` env var — Bash 도구 서브프로세스 환경에 세션 ID 자동 주입 (훅 `session_id`와 동일 값, v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` env var — 풀스크린 alt-screen 렌더러 비활성화·터미널 네이티브 스크롤백 유지 (v2.1.132)
+  - `--plugin-url <url>` 플래그 — URL에서 플러그인 `.zip` 아카이브를 현재 세션에 로드 (v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` env var — auto-detection 누락 터미널(Emacs `eat` 등)에서 동기화 출력 강제 (v2.1.129)
+  - `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` env var — Homebrew·WinGet 설치본 배경 자동 업그레이드 및 재시작 프롬프트 (v2.1.129)
+  - `skillOverrides` 설정 — `off`(모델·슬래시 명령 숨김), `user-invocable-only`(모델 전용 숨김), `name-only`(설명 축소) (v2.1.129)
+  - `/mcp` 연결 서버 도구 수 표시 및 0개 도구 서버 플래그 (v2.1.128)
+  - Plugin manifests: `themes`·`monitors`를 `"experimental": { ... }` 하위로 이동 권장 (최상위 선언은 여전히 동작하나 `claude plugin validate` 경고, v2.1.129)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.138 업데이트
+  - MCP 섹션: `/mcp` 도구 수 표시, `workspace` 예약 서버명 추가
+  - Hooks 섹션: `effort.level` 입력 필드, `$CLAUDE_EFFORT` env var, `parentSettingsBehavior`, `settings.autoMode.hard_deny` 추가
+  - CLI 섹션: `worktree.baseRef`, `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN`, `--plugin-url`, `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`, `CLAUDE_CODE_FORCE_SYNC_OUTPUT`, `skillOverrides` 추가
+  - Breaking Changes: `worktree.baseRef` 기본값 복원, MCP `workspace` 예약명 추가
+- `references/version-sync.md`: v2.1.138 변경사항 추적 엔트리 추가
+
+### Fixed
+- MCP 서버(`.mcp.json`·플러그인·claude.ai 커넥터)가 `/clear` 후 소실되던 버그 수정 (v2.1.136)
+- MCP OAuth 리프레시 토큰이 다수 서버 동시 갱신 시 유실되던 버그 — 일일 재인증 불필요 (v2.1.136)
+- Extended thinking이 도구 호출 후 redacted thinking 블록 방출 시 API 400 오류 수정 (v2.1.136)
+- `--resume`·`--continue` 프로젝트 경로에 밑줄 포함 시 세션 탐색 실패 수정 (v2.1.136)
+- Plan mode에서 `Edit(...)` allow 규칙 존재 시 파일 쓰기가 차단되지 않던 버그 수정 (v2.1.136)
+- WSL2 Windows 클립보드 이미지 붙여넣기 — xclip·wl-paste 미작동 시 PowerShell 폴백 (v2.1.136)
+- `AskUserQuestion` 배열로 전달한 다중 선택 답변이 누락되던 버그 수정 (v2.1.136)
+- `CLAUDE_ENV_FILE` SessionStart 훅 env var가 `/resume`·`/clear` 후 만료되던 버그 수정 (v2.1.136)
+- Plugin 슬래시 명령에 공백 포함 시(e.g. `/myplugin review`) 네임스페이스 형식으로 해석 안 되던 버그 수정 (v2.1.136)
+- 서브에이전트가 Skill 도구로 프로젝트·사용자·플러그인 스킬을 탐색하지 못하던 버그 수정 (v2.1.133)
+- `Edit`·`Write` allow 규칙이 드라이브 루트(`C:\`·POSIX `/`) 범위로 설정 시 잘못 매칭되던 버그 수정 (v2.1.133)
+- VS Code 확장 Windows 활성화 실패 수정 (v2.1.137)
+
+### Breaking Changes
+- **`worktree.baseRef` 기본값 `fresh`** (v2.1.133) — `EnterWorktree`·`--worktree`·agent-isolation worktree가 `origin/<default>`에서 분기 (v2.1.128부터 로컬 HEAD였던 것 복원); 로컬 HEAD 유지 시 `worktree.baseRef: "head"` 설정
+- **MCP `workspace` 예약 서버명** (v2.1.128) — 해당 이름의 MCP 서버는 경고와 함께 건너뜀
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added
