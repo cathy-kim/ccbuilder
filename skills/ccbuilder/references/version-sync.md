@@ -77,6 +77,42 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.138 (2026-05-10 동기화)
+
+**새로운 기능:**
+- (v2.1.136) `settings.autoMode.hard_deny` — auto mode 분류기 무조건 차단 규칙 (사용자 의도·예외 불문)
+- (v2.1.136) `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — 기업 OTEL 세션 품질 조사 재활성화
+- (v2.1.133) `worktree.baseRef` 설정 (`fresh` | `head`) — worktree 브랜치 기준 선택 (기본 `fresh`=`origin/<default>`)
+- (v2.1.133) Hooks: `effort.level` JSON 필드 + `$CLAUDE_EFFORT` env var — 현재 effort 레벨 참조
+- (v2.1.133) `sandbox.bwrapPath` / `sandbox.socatPath` managed settings — Linux/WSL bubblewrap·socat 바이너리 경로 지정
+- (v2.1.133) `parentSettingsBehavior` admin-tier 키 — SDK managedSettings 정책 병합 옵트인
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 주입
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 렌더러 비활성화
+- (v2.1.129) `--plugin-url <url>` — URL에서 플러그인 `.zip` 설치 (현재 세션 한정)
+- (v2.1.129) `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew·WinGet 백그라운드 자동 업데이트
+- (v2.1.129) `skillOverrides` 설정 정상 작동 — `off`·`user-invocable-only`·`name-only`
+- (v2.1.129) 게이트웨이 `/v1/models` 발견 opt-in 전환 (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`)
+- (v2.1.128) `--plugin-dir` `.zip` 아카이브 직접 지원
+- (v2.1.128) `--channels` 콘솔(API 키) 인증 지원
+- (v2.1.128) MCP: `workspace` 예약 서버 이름으로 지정
+- (v2.1.128) 서브프로세스 `OTEL_*` env var 상속 제거
+
+**Breaking Changes:**
+- `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 없이는 게이트웨이 모델 목록 발견 비작동 (v2.1.129)
+- `worktree.baseRef` 기본값 `fresh` — `EnterWorktree` 브랜치 기준 `origin/<default>` 복귀; 미푸시 커밋 유지: `"head"` 설정 (v2.1.133)
+- MCP `workspace` 예약 서버 이름 — 기존 서버 건너뜀 경고 (v2.1.128)
+
+**주요 버그 수정:**
+- MCP 서버 `/clear` 후 VSCode·JetBrains·Agent SDK에서 사라지는 버그 수정 (v2.1.136)
+- MCP OAuth 리프레시 토큰 동시 다중 서버 갱신 시 손실 수정 (v2.1.136)
+- 서브에이전트 Skill 도구로 프로젝트·사용자·플러그인 Skills 미탐색 수정 (v2.1.133)
+- `--resume`/`--continue` 경로 밑줄 포함 시 세션 미탐색 수정 (v2.1.136)
+- `AskUserQuestion` 배열 다중 선택 답변 무시 수정 (v2.1.136)
+- `CronList` 출력 qualifiers·예약 프롬프트 누락 수정 (v2.1.136)
+- `CLAUDE_ENV_FILE` SessionStart 훅 env vars `/resume`·`/clear` 후 stale 수정 (v2.1.136)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**

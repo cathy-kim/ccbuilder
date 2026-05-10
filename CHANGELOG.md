@@ -15,6 +15,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-10
+
+### Added
+- **Claude Code v2.1.138 sync**
+  - `settings.autoMode.hard_deny` — auto mode 분류기 무조건 차단 규칙; 사용자 의도·예외 허용 없이 항상 차단 (v2.1.136)
+  - `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — 기업 OTEL 세션 품질 조사 재활성화 (v2.1.136)
+  - `worktree.baseRef` 설정 (`fresh` | `head`) — worktree 브랜치 기준 선택; 기본 `fresh`=`origin/<default>` (v2.1.133)
+  - Hooks: `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` env var — 현재 effort 레벨 Hook에서 참조 (v2.1.133)
+  - `sandbox.bwrapPath` / `sandbox.socatPath` managed settings — Linux/WSL bubblewrap·socat 바이너리 경로 지정 (v2.1.133)
+  - `parentSettingsBehavior` admin-tier 키 — SDK `managedSettings` 정책 병합 옵트인 (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 주입 (v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 렌더러 비활성화, 터미널 기본 스크롤백 유지 (v2.1.132)
+  - `--plugin-url <url>` — URL에서 플러그인 `.zip` 아카이브 다운로드·설치 (현재 세션 한정, v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` — 자동 감지 미작동 터미널(Emacs eat 등)에서 동기화 출력 강제 활성화 (v2.1.129)
+  - `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew·WinGet 설치 시 백그라운드 자동 업그레이드 + 재시작 프롬프트 (v2.1.129)
+  - `skillOverrides` 설정 정상 작동 — `off`(모델+슬래시 숨김)·`user-invocable-only`(모델만 숨김)·`name-only`(설명 축소) (v2.1.129)
+  - `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` — 게이트웨이 `/v1/models` 모델 목록 발견 옵트인 (v2.1.129)
+  - `--plugin-dir` `.zip` 플러그인 아카이브 직접 지원 (v2.1.128)
+  - `--channels` 콘솔(API 키) 인증에서도 작동 (v2.1.128)
+  - `/mcp` 연결된 서버의 도구 수 표시 + 0 도구 서버 플래그 (v2.1.128)
+  - Ctrl+R 히스토리 피커 기본값: 모든 프로젝트 검색으로 복원; Ctrl+S로 현재 프로젝트/세션 필터 (v2.1.129)
+  - SDK 호스트: Bash 권한 프롬프트에 영속 `localSettings` 제안 — "Always allow" → `.claude/settings.local.json` 기록 (v2.1.128)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.138 업데이트
+  - Hook 이벤트: `effort.level`/`$CLAUDE_EFFORT` 추가 (v2.1.133)
+  - env/도구: `worktree.baseRef`, `settings.autoMode.hard_deny`, `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN`, `--plugin-url`, `skillOverrides`, `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` 추가
+  - Breaking Changes: 게이트웨이 모델 목록 opt-in, `worktree.baseRef` 기본값, MCP `workspace` 예약 추가
+- `references/version-sync.md`: v2.1.138 변경사항 추적 엔트리 추가
+- Plugin 매니페스트: `themes`/`monitors` → `"experimental"` 하위 선언 권장 (위반 시 `claude plugin validate` 경고, v2.1.129)
+- MCP: `workspace` 예약 서버 이름으로 지정 — 기존 `workspace` 서버 경고 후 건너뜀 (v2.1.128)
+- 서브프로세스(Bash, Hooks, MCP, LSP)의 `OTEL_*` 환경변수 상속 제거 — OTEL 계측 앱이 CLI OTLP 엔드포인트를 덮어쓰는 문제 방지 (v2.1.128)
+
+### Fixed
+- MCP 서버(`.mcp.json`, 플러그인, claude.ai 커넥터)가 VSCode·JetBrains·Agent SDK에서 `/clear` 후 사라지는 버그 수정 (v2.1.136)
+- MCP OAuth 리프레시 토큰: 다중 서버 동시 갱신 시 토큰 손실 수정 → 매일 재인증 불필요 (v2.1.136)
+- 서브에이전트가 Skill 도구로 프로젝트·사용자·플러그인 Skills 미탐색 버그 수정 (v2.1.133, v2.1.136)
+- `--resume`/`--continue` 프로젝트 경로에 밑줄(`_`) 포함 시 세션 미탐색 수정 (v2.1.136)
+- plan mode에서 `Edit(...)` allow 규칙 존재 시 파일 쓰기 차단 안 되던 버그 수정 (v2.1.136)
+- `plugin.json`의 `skills` 항목이 플러그인 기본 `skills/` 디렉토리를 숨기던 버그 수정 (v2.1.136)
+- `CronList` 출력 qualifiers·예약 프롬프트 누락 수정 (v2.1.136)
+- `AskUserQuestion` 배열로 전달된 다중 선택 답변 무시 버그 수정 (v2.1.136)
+- `CLAUDE_ENV_FILE` SessionStart 훅 env vars가 `/resume`·`/clear` 후 stale해지는 버그 수정 (v2.1.136)
+- 플러그인 슬래시 명령 공백 포함 시(예: `/myplugin review`) 네임스페이스 형식으로 미해석 수정 (v2.1.136)
+- 동시 credential 쓰기가 갱신된 OAuth 토큰을 덮어쓰던 로그인 루프 수정 (v2.1.136)
+- Extended thinking 후 tool call 시 redacted thinking block 400 오류 수정 (v2.1.136)
+- WSL2: xclip/wl-paste 미작동 시 Windows 클립보드 이미지 붙여넣기 PowerShell 폴백 (v2.1.136)
+- `/effort` 한 세션에서 설정 시 다른 동시 세션 effort 레벨까지 변경되던 버그 수정 (v2.1.133)
+- `Read`/`Write`/`Edit` 네트워크 드라이브(`--add-dir`/`additionalDirectories`) 경로 거부 수정 (v2.1.133)
+- 병렬 세션 refresh-token 경쟁 조건으로 모두 401 오류 나던 버그 수정 (v2.1.133)
+- Remote Control 중단이 로컬 Esc와 동일하게 CLI 세션 완전 취소하지 않던 버그 수정 (v2.1.133)
+- `HTTP(S)_PROXY` / `NO_PROXY` / mTLS가 MCP OAuth 전체 흐름에 적용되지 않던 버그 수정 (v2.1.133)
+
+### Breaking Changes
+- **게이트웨이 `/v1/models` 자동 발견 비활성화**: `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 명시 필요 (v2.1.129; 이전 v2.1.126–2.1.128에서 자동 작동)
+- **`worktree.baseRef` 기본값 `fresh`**: `EnterWorktree` 브랜치 기준 `origin/<default>`로 복귀; 미푸시 커밋 유지하려면 `worktree.baseRef: "head"` 설정 필요 (v2.1.133)
+- **MCP `workspace` 예약 서버 이름**: `workspace` 이름의 기존 서버 경고 후 건너뜀 (v2.1.128)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added

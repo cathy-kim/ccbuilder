@@ -37,6 +37,8 @@
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
+**v2.1.133 추가 공통 필드**: 모든 Hook 이벤트에 `effort.level` JSON 필드 (현재 effort 레벨: `low`/`medium`/`high`/`xhigh`) 추가; Bash 서브프로세스·훅 모두 `$CLAUDE_EFFORT` 환경변수로도 참조 가능
+
 **TeammateIdle · TaskCompleted (v2.1.71)**: `{"continue": false, "stopReason": "..."}` 응답으로 팀메이트 중단 가능 (Stop Hook과 동일 방식)
 
 **settings.json 복원력 (v2.1.101)**: 알 수 없는 훅 이벤트 이름이 있어도 전체 settings.json이 무시되지 않음 — 알 수 없는 이벤트만 건너뜀
