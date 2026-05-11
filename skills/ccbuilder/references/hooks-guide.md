@@ -45,6 +45,8 @@
 
 **permissions.deny + PreToolUse (v2.1.101)**: `permissions.deny` 규칙이 `PreToolUse` hook의 `permissionDecision: "ask"` 응답을 다운그레이드로 재정의하지 않도록 수정 (이전에는 hook이 deny를 프롬프트로 약화 가능)
 
+**effort.level 필드 (v2.1.133)**: 모든 훅 입력 JSON에 `effort.level` 필드 추가 — 현재 세션의 effort 레벨(`low`·`medium`·`high`·`xhigh`) 참조 가능; `$CLAUDE_EFFORT` env var로 Bash 도구 서브프로세스에서도 접근 가능
+
 ---
 
 ## Hook 타입 (v2.12)

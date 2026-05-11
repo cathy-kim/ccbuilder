@@ -52,6 +52,12 @@ claude mcp add --transport sse <name> <url>
 
 ---
 
+## 예약 서버 이름
+
+`workspace`는 예약된 MCP 서버 이름입니다 — 해당 이름의 서버는 경고 메시지와 함께 스킵됩니다 (v2.1.128).
+
+---
+
 ## 설치 Scope
 
 ```

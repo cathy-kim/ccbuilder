@@ -15,6 +15,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-11
+
+### Added
+- **Claude Code v2.1.138 sync**
+  - `worktree.baseRef` 설정 (`fresh`|`head`) — EnterWorktree/`--worktree`/에이전트 격리 worktree의 기준 브랜치 선택 (`fresh`: origin/<default>, `head`: local HEAD, v2.1.133)
+  - `settings.autoMode.hard_deny` — auto mode 분류기 조건 없이 무조건 차단하는 규칙 (v2.1.136)
+  - 훅 입력 JSON에 `effort.level` 필드 추가 + `$CLAUDE_EFFORT` env var — 모든 훅·Bash 도구에서 현재 effort 레벨 참조 가능 (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 주입 (v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 alt-screen 렌더러 비활성화·터미널 네이티브 스크롤백 유지 (v2.1.132)
+  - `--plugin-url <url>` — URL에서 .zip 플러그인 아카이브 현재 세션 설치 (v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` — 동기화 출력 강제 활성화 (Emacs eat 등 자동 탐지 미지원 터미널용, v2.1.129)
+  - `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` — Homebrew/WinGet 설치 시 백그라운드 자동 업그레이드 + 재시작 프롬프트 (v2.1.129)
+  - `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — OTel로 응답 수집하는 엔터프라이즈 세션 품질 서베이 재활성화 (v2.1.136)
+  - `sandbox.bwrapPath`/`sandbox.socatPath` — Linux/WSL bubblewrap·socat 커스텀 바이너리 경로 지정 (v2.1.133)
+  - `parentSettingsBehavior` (`first-wins`|`merge`) — admin 티어 SDK `managedSettings` 병합 정책 옵트인 (v2.1.133)
+  - `--plugin-dir` .zip 아카이브 지원 (기존 디렉토리에 추가, v2.1.128)
+  - `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` — `/model` 피커 게이트웨이 `/v1/models` 모델 목록 옵트인 (v2.1.126-128 자동 → v2.1.129부터 옵트인)
+  - `skillOverrides` 설정 정상 동작 수정 (`off`·`user-invocable-only`·`name-only`, v2.1.129)
+  - `/mcp` 연결된 서버별 도구 수 표시·0개 도구 서버 플래그 (v2.1.128)
+  - `--channels` 콘솔 API key 인증 지원 (v2.1.128)
+  - Ctrl+R 히스토리 피커 전체 프로젝트 검색 기본 복원 (v2.1.129)
+  - WSL2 Windows 클립보드 이미지 붙여넣기 PowerShell 폴백 (xclip/wl-paste 미지원 시, v2.1.136)
+  - `claude_code.pull_request.count` OTel 메트릭 — MCP 도구로 생성한 PR/MR도 집계 (v2.1.129)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.138 업데이트
+  - MCP 섹션: `workspace` 예약 서버 이름, `/clear` 후 서버 소멸 수정, OAuth 동시 리프레시 수정 추가
+  - Hooks 섹션: `effort.level` 필드, 서브에이전트 스킬 탐색 수정, plugin 훅 버그 수정 추가
+  - CLI 섹션: `worktree.baseRef`, `autoMode.hard_deny`, 게이트웨이 모델 목록 옵트인, `/mcp` 도구 수 등 추가
+  - 신규 도구·env 섹션: `CLAUDE_CODE_SESSION_ID`, `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN`, `--plugin-url`, `sandbox.bwrapPath/socatPath`, `parentSettingsBehavior` 추가
+  - Breaking Changes: `worktree.baseRef` 기본값, `workspace` 예약, `OTEL_*` 상속 제거, `themes`·`monitors` experimental 이동 추가
+- `references/version-sync.md`: v2.1.138 변경사항 추적 엔트리 추가
+
+### Fixed
+- `/clear` 후 VS Code·JetBrains·Agent SDK MCP 서버 소멸 버그 수정 (v2.1.136)
+- MCP OAuth 리프레시 토큰 동시 갱신 시 손실 수정 — 다수 원격 MCP 서버 환경 일일 재인증 불필요 (v2.1.136)
+- `--resume`/`--continue` 프로젝트 경로에 언더스코어 포함 시 세션 미탐색 수정 (v2.1.136)
+- plan mode에서 매칭 `Edit(...)` 허용 규칙 존재 시 파일 쓰기 차단 불가 수정 (v2.1.136)
+- plugin.json `skills` 항목이 기본 `skills/` 디렉토리를 숨기던 버그 수정 (v2.1.136)
+- `AskUserQuestion` 멀티셀렉트 답변 배열 전달 시 버려지던 버그 수정 (v2.1.136)
+- `CronList` 출력에 qualifier·예약 프롬프트 누락 수정 (v2.1.136)
+- 서브에이전트 Skill tool로 프로젝트·사용자·플러그인 스킬 탐색 불가 수정 (v2.1.133)
+- 병렬 세션 refresh-token 경합으로 인한 401 데드엔드 수정 (v2.1.133)
+- Esc 중 stdio MCP 도구 호출 시 전체 서버 종료 방지 (v2.1.133)
+- `/effort` 한 세션의 변경이 다른 병렬 세션에 영향 주던 버그 수정 (v2.1.133)
+
+### Breaking Changes
+- **`worktree.baseRef` 기본 `fresh`**: EnterWorktree가 `origin/<default>` 기준으로 복귀 (v2.1.128에서 local HEAD로 변경됐다가 v2.1.133에서 되돌아옴); `worktree.baseRef: "head"` 설정으로 이전 동작 유지 가능
+- **`workspace` MCP 서버 이름 예약**: 해당 이름 서버 경고 후 스킵 (v2.1.128)
+- **Bash 서브프로세스 `OTEL_*` env var 상속 제거**: OTEL 계측 앱이 CLI 자체 OTLP 엔드포인트를 물려받지 않음 (v2.1.128)
+- **plugin `themes`·`monitors` 최상위 선언 경고**: `"experimental": {}` 아래로 이동 권장 (top-level 동작은 유지, v2.1.129)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added
