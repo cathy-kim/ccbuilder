@@ -77,6 +77,51 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.139 (2026-05-12 동기화)
+
+**새로운 기능:**
+- (v2.1.139) Agent view (Research Preview): `claude agents` — 실행 중·대기 중·완료된 모든 세션 단일 목록
+- (v2.1.139) `/goal` 명령 — 완료 조건 설정, 조건 충족까지 턴 간 자동 지속; interactive·`-p`·Remote Control 지원; 경과 시간/턴/토큰 오버레이
+- (v2.1.139) `/scroll-speed` 명령 — 마우스 휠 스크롤 속도 실시간 조정
+- (v2.1.139) `claude plugin details <name>` — 플러그인 컴포넌트 인벤토리·세션당 예상 토큰 비용 표시
+- (v2.1.139) Hook `args: string[]` exec form — 셸 없이 명령 직접 스폰, 경로 플레이스홀더 인용 불필요
+- (v2.1.139) Hook `continueOnBlock` (PostToolUse) — `true` 시 훅 거부 이유 Claude에 피드백 후 턴 계속
+- (v2.1.139) MCP stdio 서버 환경에 `CLAUDE_PROJECT_DIR` 자동 주입; 플러그인 명령에서 `${CLAUDE_PROJECT_DIR}` 참조
+- (v2.1.139) Remote MCP 서버 일시 오류 재연결 재시도 전체 사용자 활성화
+- (v2.1.139) `/mcp` Reconnect — `.mcp.json` 편집 반영, 재시작 불필요
+- (v2.1.139) Subagent API 요청 `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더; OTel span `agent_id`/`parent_agent_id`
+- (v2.1.139) Compaction 프롬프트 — 민감한 사용자 지시사항 보존 요청
+- (v2.1.136) `settings.autoMode.hard_deny` — auto mode 무조건 차단 규칙
+- (v2.1.136) `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` — 기업 OTEL 세션 품질 설문 재활성화
+- (v2.1.133) `worktree.baseRef` 설정 (`fresh`|`head`) — `--worktree`·`EnterWorktree`·에이전트 격리 워크트리 기준 브랜치 선택 (기본: `fresh`)
+- (v2.1.133) `sandbox.bwrapPath`·`sandbox.socatPath` managed 설정 — Linux/WSL bubblewrap·socat 바이너리 경로 지정
+- (v2.1.133) `parentSettingsBehavior` admin-tier 키 (`first-wins`|`merge`) — SDK managedSettings 정책 병합 옵트인
+- (v2.1.133) 훅 `effort.level` JSON 입력 필드·`$CLAUDE_EFFORT` env var
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 설정
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — alt-screen 렌더러 비활성화, 네이티브 스크롤백 유지
+- (v2.1.129) `--plugin-url <url>` 플래그 — URL에서 플러그인 .zip 로드
+- (v2.1.129) `skillOverrides` 설정 정상 동작 (`off`·`user-invocable-only`·`name-only`)
+- (v2.1.128) `/mcp` 서버별 도구 수 표시; `workspace` reserved 서버 이름
+- (v2.1.128) `--plugin-dir` .zip 아카이브 지원
+
+**Breaking Changes:**
+- `worktree.baseRef` 기본값 `fresh` — `EnterWorktree` 기준 브랜치 local HEAD → origin/<default> 복귀; 유지하려면 `worktree.baseRef: "head"` 설정 (v2.1.133)
+- Remote Control·`/schedule`·claude.ai MCP 커넥터·알림 설정 — `ANTHROPIC_API_KEY`/`apiKeyHelper`/`ANTHROPIC_AUTH_TOKEN` 설정 시 비활성화, Claude.ai 로그인 있어도 불가 (v2.1.139)
+
+**주요 버그 수정:**
+- `autoAllowBashIfSandboxed` — `$VAR`·`$(cmd)` 셸 확장 명령 자동 승인 수정 (v2.1.139)
+- 훅 터미널 접근으로 인터랙티브 프롬프트 오염 수정 — 훅 실행 시 터미널 접근 없음 (v2.1.139)
+- HTTP/SSE MCP 서버 비프로토콜 데이터 16MB 상한으로 메모리 증가 방지 (v2.1.139)
+- `Skill(name *)` 와일드카드 접두사 매칭 수정 (v2.1.139)
+- settings.json 심볼릭 링크 hot-reload 수정 (v2.1.139)
+- MCP OAuth 동시 갱신 토큰 유실 수정 (v2.1.136)
+- `--resume`/`--continue` 경로 밑줄 포함 시 세션 탐색 실패 수정 (v2.1.136)
+- 서브에이전트 project/user/plugin skills `Skill` 도구 탐색 수정 (v2.1.133)
+- Remote Control stop/interrupt 로컬 Esc와 동일하게 세션 완전 취소 (v2.1.133)
+- `HTTP(S)_PROXY`/`NO_PROXY`/mTLS MCP OAuth 전체 플로우 적용 (v2.1.133)
+
+---
+
 ### v2.1.126 (2026-05-03 동기화)
 
 **새로운 기능:**

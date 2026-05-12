@@ -104,6 +104,21 @@ claude mcp add --scope user <name> -- <command>
 }
 ```
 
+### CLAUDE_PROJECT_DIR (신규 v2.1.139)
+
+stdio MCP 서버는 `CLAUDE_PROJECT_DIR` 환경변수를 자동으로 받습니다 (hooks와 동일). 플러그인 명령의 `${CLAUDE_PROJECT_DIR}`도 동일하게 확장됩니다:
+
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "my-server",
+      "args": ["--project-dir", "${CLAUDE_PROJECT_DIR}"]
+    }
+  }
+}
+```
+
 ---
 
 ## OAuth 인증

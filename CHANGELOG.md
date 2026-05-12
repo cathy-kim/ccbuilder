@@ -15,6 +15,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-12
+
+### Added
+- **Claude Code v2.1.139 sync**
+  - Agent view (Research Preview): `claude agents` — 실행 중·대기 중·완료된 모든 Claude Code 세션 단일 목록 표시 (v2.1.139)
+  - `/goal` 명령 — 완료 조건 설정, 조건 충족까지 턴 간 자동 지속; interactive·`-p`·Remote Control 지원; 경과 시간/턴/토큰 오버레이 패널 (v2.1.139)
+  - `/scroll-speed` 명령 — 마우스 휠 스크롤 속도 실시간 미리보기로 조정 (v2.1.139)
+  - `claude plugin details <name>` — 플러그인 컴포넌트 인벤토리 및 세션당 예상 토큰 비용 표시 (v2.1.139)
+  - Hook `args: string[]` 필드 (exec form) — 셸 없이 명령 직접 스폰, 경로 플레이스홀더 인용 불필요 (v2.1.139)
+  - Hook `continueOnBlock` (PostToolUse) — `true` 시 훅 거부 이유를 Claude에 피드백하고 턴 계속 (v2.1.139)
+  - MCP stdio 서버 환경에 `CLAUDE_PROJECT_DIR` 자동 주입; 플러그인 명령에서 `${CLAUDE_PROJECT_DIR}` 참조 가능 (v2.1.139)
+  - Remote MCP 서버 일시 오류 재연결 재시도 전체 사용자 활성화 (v2.1.139)
+  - `/mcp` Reconnect — `.mcp.json` 편집 사항 재시작 없이 반영 (v2.1.139)
+  - Subagent API 요청: `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더; OTel span `agent_id`/`parent_agent_id` 속성 (v2.1.139)
+  - Compaction 프롬프트 — 민감한 사용자 지시사항 보존 요청 (v2.1.139)
+  - `settings.autoMode.hard_deny` — auto mode 분류기 조건 없이 무조건 차단 규칙 (v2.1.136)
+  - `worktree.baseRef` 설정 (`fresh`|`head`) — `--worktree`·`EnterWorktree`·에이전트 격리 워크트리의 기준 브랜치 선택 (v2.1.133)
+  - `sandbox.bwrapPath`·`sandbox.socatPath` managed 설정 — Linux/WSL bubblewrap·socat 바이너리 경로 지정 (v2.1.133)
+  - `parentSettingsBehavior` admin-tier 키 (`first-wins`|`merge`) — SDK managedSettings 정책 병합 옵트인 (v2.1.133)
+  - 훅 입력 JSON `effort.level` 필드·`$CLAUDE_EFFORT` env var — 현재 effort 레벨 접근 (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` env var — Bash 도구 서브프로세스 환경에 세션 ID 자동 설정 (v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 alt-screen 렌더러 비활성화, 네이티브 스크롤백 유지 (v2.1.132)
+  - `--plugin-url <url>` 플래그 — URL에서 플러그인 .zip 아카이브를 현재 세션에 로드 (v2.1.129)
+  - `skillOverrides` 설정 정상 동작 — `off`·`user-invocable-only`·`name-only` 모드 수정 (v2.1.129)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.139 업데이트
+  - MCP 섹션: `CLAUDE_PROJECT_DIR` stdio 주입, Remote MCP 재연결 행 추가
+  - Hooks 섹션: `args` exec form, `continueOnBlock`, `effort.level`/`$CLAUDE_EFFORT` 추가
+  - CLI 섹션: Agent view, `/goal`, `/scroll-speed`, `CLAUDE_CODE_SESSION_ID`, `worktree.baseRef`, `settings.autoMode.hard_deny` 등 추가
+  - Plugin 섹션: `claude plugin details`, `themes`/`monitors` experimental 권장 추가
+  - Breaking Changes: `worktree.baseRef` 기본값 변경, Remote Control API key 비활성화 추가
+- `references/version-sync.md`: v2.1.139 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Hook `args` exec form, `continueOnBlock`, `effort.level` 업데이트
+- `references/mcp-guide.md`: `CLAUDE_PROJECT_DIR` stdio 주입 추가
+
+### Fixed
+- `autoAllowBashIfSandboxed` — `$VAR`·`$(cmd)` 셸 확장 명령 자동 승인 안 되던 버그 수정 (v2.1.139)
+- 훅 터미널 접근으로 인터랙티브 프롬프트 오염 수정 — 훅 실행 시 터미널 접근 없음 (v2.1.139)
+- HTTP/SSE MCP 서버 비프로토콜 데이터 무제한 메모리 증가 수정 — SSE 프레임 16MB 상한 (v2.1.139)
+- `Skill(name *)` 권한 규칙 — 와일드카드 접두사 매칭 정상 동작 (v2.1.139)
+- settings.json 심볼릭 링크 hot-reload 수정 (v2.1.139)
+- MCP OAuth 동시 갱신 시 토큰 유실 수정 — 다수 Remote MCP 서버 사용 시 일일 재인증 불필요 (v2.1.136)
+- `--resume`/`--continue` — 경로에 밑줄(`_`) 포함 시 세션 탐색 실패 수정 (v2.1.136)
+- plan mode — `Edit(...)` allow 규칙 있을 때 파일 쓰기를 차단하지 않던 버그 수정 (v2.1.136)
+- 서브에이전트 — 프로젝트·사용자·플러그인 skills `Skill` 도구로 정상 탐색 (v2.1.133)
+- Remote Control stop/interrupt — 로컬 Esc와 동일하게 세션 완전 취소 (v2.1.133)
+- `HTTP(S)_PROXY`/`NO_PROXY`/mTLS MCP OAuth 전체 플로우에 적용 (v2.1.133)
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added

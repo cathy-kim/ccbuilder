@@ -16,7 +16,7 @@
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
-| **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
+| **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121); `continueOnBlock: true` — 훅 거부 이유를 Claude에 피드백 후 턴 계속 (v2.1.139) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
 | **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason` |
@@ -36,6 +36,8 @@
 | **PermissionDenied** | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 가능 (v2.1.88) | Yes (retry) | `tool_name`, `denial_reason` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
+
+**`effort.level` 공통 필드 (v2.1.133)**: 모든 Hook 이벤트 입력 JSON에 `effort.level` 필드 포함; `$CLAUDE_EFFORT` 환경 변수로도 접근 가능; Bash 도구 서브프로세스에서도 `$CLAUDE_EFFORT` 읽기 가능
 
 **TeammateIdle · TaskCompleted (v2.1.71)**: `{"continue": false, "stopReason": "..."}` 응답으로 팀메이트 중단 가능 (Stop Hook과 동일 방식)
 
@@ -102,6 +104,36 @@ Hook에서 MCP 도구를 직접 실행합니다:
   "arguments": { "key": "value" }
 }
 ```
+
+### Exec Hook — `args` 필드 (신규 v2.1.139)
+
+`args: string[]` 필드 — 셸을 거치지 않고 명령을 직접 스폰합니다. 경로 플레이스홀더에 인용 부호 필요 없음:
+
+```json
+{
+  "type": "command",
+  "args": ["./hooks/validate.sh", "$TOOL_NAME", "$FILE_PATH"]
+}
+```
+
+### PostToolUse `continueOnBlock` (신규 v2.1.139)
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Write",
+      "hooks": [{
+        "type": "command",
+        "command": "./hooks/lint.sh",
+        "continueOnBlock": true
+      }]
+    }]
+  }
+}
+```
+
+`continueOnBlock: true` — 훅이 `{"decision": "block", "reason": "..."}` 반환 시 거부 이유를 Claude에게 피드백하고 턴을 계속합니다.
 
 ---
 
