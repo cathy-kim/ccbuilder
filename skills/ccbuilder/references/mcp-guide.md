@@ -104,6 +104,23 @@ claude mcp add --scope user <name> -- <command>
 }
 ```
 
+### CLAUDE_PROJECT_DIR (v2.1.139+)
+
+Stdio MCP 서버는 `CLAUDE_PROJECT_DIR` 환경변수를 자동으로 수신합니다. Plugin config에서도 `${CLAUDE_PROJECT_DIR}`로 참조 가능:
+
+```json
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "node",
+      "args": ["${CLAUDE_PROJECT_DIR}/.mcp/server.js"]
+    }
+  }
+}
+```
+
+> **주의**: `workspace`는 MCP 예약 서버 이름 (v2.1.128+) — 해당 이름으로 서버 등록 시 경고 후 스킵됨
+
 ---
 
 ## OAuth 인증
