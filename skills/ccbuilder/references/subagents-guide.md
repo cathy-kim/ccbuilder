@@ -18,6 +18,8 @@
 | `Bash` | 명령어 실행 전문 | Bash 도구만 |
 | `claude-code-guide` | Claude Code 문서 조회 | 공식 문서 검색 |
 
+> **v2.1.140+**: `subagent_type`은 대소문자·구분자 무관 매칭 — `"Code Reviewer"`, `"code_reviewer"`, `"code-reviewer"` 모두 동일하게 해석됨
+
 ---
 
 ## 커스텀 에이전트 정의 (.claude/agents/) - v2.3

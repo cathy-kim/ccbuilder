@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-05-03
+**최종 동기화**: 2026-05-13
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,43 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.140 (2026-05-13 동기화)
+
+**새로운 기능:**
+- (v2.1.140) Agent tool `subagent_type` 대소문자·구분자 무관 매칭 — `"Code Reviewer"` → `code-reviewer` 자동 해석
+- (v2.1.139) agent view (Research Preview) — `claude agents` 실행 중·대기·완료 세션 단일 목록
+- (v2.1.139) `/goal <condition>` 명령 — 완료 조건 설정, 조건 충족 시까지 자율 실행 (interactive·`-p`·Remote Control)
+- (v2.1.139) Hook `args: string[]` (exec form) — 셸 없이 직접 실행, 경로 플레이스홀더 인용 불필요
+- (v2.1.139) Hook `continueOnBlock` PostToolUse 옵션 — 거부 사유 모델 피드백 후 턴 계속
+- (v2.1.139) MCP stdio 서버에 `CLAUDE_PROJECT_DIR` 환경변수 자동 제공; plugin config `${CLAUDE_PROJECT_DIR}` 참조 가능
+- (v2.1.139) 서브에이전트 API 요청에 `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더 + OTEL span 속성 추가
+- (v2.1.136) `settings.autoMode.hard_deny` — auto mode 무조건 차단 규칙
+- (v2.1.133) Hook `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` env var (Bash 서브프로세스 포함)
+- (v2.1.133) `worktree.baseRef` 설정 (`fresh` | `head`) — worktree 브랜치 기준점 선택
+- (v2.1.133) `sandbox.bwrapPath` / `sandbox.socatPath` 관리형 설정 — 커스텀 bubblewrap·socat 경로
+- (v2.1.133) `parentSettingsBehavior` admin-tier 키 (`'first-wins' | 'merge'`)
+- (v2.1.132) `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 제공
+- (v2.1.132) `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 렌더러 비활성화, 네이티브 스크롤백 유지
+- (v2.1.129) `--plugin-url <url>` — 세션 전용 플러그인 .zip URL 즉시 로드
+- (v2.1.129) `skillOverrides` 설정 정상 동작 — `off` / `user-invocable-only` / `name-only`
+- (v2.1.129) `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` / `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` 신규 env var
+- (v2.1.128) `workspace`는 MCP 예약 서버 이름 — 기존 서버 경고 후 스킵
+
+**Breaking Changes:**
+- `worktree.baseRef` 기본값 `"fresh"` — `EnterWorktree` 기준점 `origin/<default>` (v2.1.133); 미푸시 커밋 유지 시 `"head"` 설정
+
+**주요 버그 수정:**
+- `/goal` `disableAllHooks`/`allowManagedHooksOnly` 설정 시 무한 대기 수정 (v2.1.140)
+- settings hot-reload 심볼릭 링크 파일 변경 이벤트 오귀속 수정 (v2.1.140)
+- `claude --bg` 유휴 종료 직전 연결 오류 수정 (v2.1.140)
+- Remote managed settings 401 force-refresh 재시도 (v2.1.140)
+- `/loop` 중복 wakeup 폴링 수정 (v2.1.140)
+- `Read` 도구 `offset` 공백/`+` 접두사 허용 (v2.1.140)
+- `/clear` 후 MCP 서버(`.mcp.json`·플러그인·claude.ai 커넥터) 사라지는 버그 수정 (v2.1.136)
+- Plan mode `Edit(...)` allow 규칙 시 파일 쓰기 차단 수정 (v2.1.136)
+
+---
 
 ### v2.1.126 (2026-05-03 동기화)
 

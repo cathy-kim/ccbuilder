@@ -15,6 +15,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.34.0] - 2026-05-13
+
+### Added
+- **Claude Code v2.1.140 sync**
+  - Agent tool `subagent_type` 대소문자·구분자 무관 매칭 — `"Code Reviewer"` → `code-reviewer` 자동 해석 (v2.1.140)
+  - agent view (Research Preview): `claude agents` — 실행 중·대기·완료 모든 세션 단일 목록 (v2.1.139)
+  - `/goal <condition>` 명령 — 완료 조건 설정, 조건 충족 시까지 자율 실행 (interactive·`-p`·Remote Control, v2.1.139)
+  - `/scroll-speed` 명령 — 마우스 휠 속도 라이브 프리뷰 조정 (v2.1.139)
+  - Hook `args: string[]` (exec form) — 셸 없이 직접 실행, 경로 플레이스홀더 인용 불필요 (v2.1.139)
+  - Hook `continueOnBlock` PostToolUse 옵션 — 거부 사유 모델 피드백 후 턴 계속 (v2.1.139)
+  - MCP stdio 서버에 `CLAUDE_PROJECT_DIR` 환경변수 자동 제공; plugin config `${CLAUDE_PROJECT_DIR}` 참조 가능 (v2.1.139)
+  - Hook `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` env var — 현재 effort 레벨 Bash 서브프로세스 포함 전달 (v2.1.133)
+  - `worktree.baseRef` 설정 (`fresh` | `head`) — worktree 브랜치 기준점 선택 (v2.1.133)
+  - `sandbox.bwrapPath` / `sandbox.socatPath` 관리형 설정 — Linux/WSL 커스텀 bubblewrap·socat 경로 (v2.1.133)
+  - `parentSettingsBehavior` admin-tier 키 (`'first-wins' | 'merge'`) (v2.1.133)
+  - `CLAUDE_CODE_SESSION_ID` — Bash 서브프로세스 환경에 세션 ID 자동 제공 (v2.1.132)
+  - `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` — 풀스크린 렌더러 비활성화, 네이티브 스크롤백 유지 (v2.1.132)
+  - `settings.autoMode.hard_deny` — auto mode 무조건 차단 규칙 (v2.1.136)
+  - `--plugin-url <url>` — 세션 전용 플러그인 .zip URL 즉시 로드 (v2.1.129)
+  - `skillOverrides` 설정 정상 동작 수정 — `off` / `user-invocable-only` / `name-only` 지원 (v2.1.129)
+  - `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` / `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` 신규 env var (v2.1.129)
+  - 서브에이전트 API 요청에 `x-claude-code-agent-id` / `x-claude-code-parent-agent-id` 헤더 추가 (v2.1.139)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.126 → v2.1.140 업데이트
+  - Agent 섹션: `subagent_type` 대소문자 무관 매칭, agent view, `/goal`, agent 헤더 추가
+  - Hook 섹션: `args` exec form, `continueOnBlock`, `effort.level`/`$CLAUDE_EFFORT` 추가
+  - MCP 섹션: `CLAUDE_PROJECT_DIR`, `workspace` 예약명 추가
+  - CLI 섹션: `/goal`, `/scroll-speed`, `CLAUDE_CODE_SESSION_ID`, `worktree.baseRef`, `skillOverrides` 등 추가
+- `references/version-sync.md`: v2.1.140 변경사항 추적 엔트리 추가
+
+### Fixed
+- `/goal` 명령 `disableAllHooks`/`allowManagedHooksOnly` 설정 시 무한 대기 → 명확한 메시지 표시 (v2.1.140)
+- settings hot-reload 심볼릭 링크 설정 파일 변경 이벤트 오귀속·스퓨리어스 `ConfigChange` 훅 수정 (v2.1.140)
+- `claude --bg` 백그라운드 서비스 유휴 종료 직전 "connection dropped mid-request" 오류 수정 (v2.1.140)
+- Remote managed settings 401 시 force-refresh 토큰으로 1회 재시도 (v2.1.140)
+- `/loop` 백그라운드 태스크 완료 알림 후 중복 wakeup 폴링 수정 (v2.1.140)
+- `Read` 도구 `offset` 파라미터 공백 패딩·`+` 접두사 문자열 허용 (v2.1.140)
+- `/clear` 후 MCP 서버(`.mcp.json`·플러그인·claude.ai 커넥터) 사라지는 버그 수정 (v2.1.136)
+- Plan mode에서 매칭 `Edit(...)` allow 규칙 존재 시 파일 쓰기 차단 수정 (v2.1.136)
+
+### Breaking Changes
+- `worktree.baseRef` 기본값 `"fresh"` — `EnterWorktree`·`--worktree` 브랜치 기준이 `origin/<default>` (v2.1.133); 미푸시 커밋 유지 시 `"head"` 설정 필요
+
+---
+
 ## [2.33.0] - 2026-05-03
 
 ### Added

@@ -45,6 +45,10 @@
 
 **permissions.deny + PreToolUse (v2.1.101)**: `permissions.deny` 규칙이 `PreToolUse` hook의 `permissionDecision: "ask"` 응답을 다운그레이드로 재정의하지 않도록 수정 (이전에는 hook이 deny를 프롬프트로 약화 가능)
 
+**effort.level + $CLAUDE_EFFORT (v2.1.133)**: 모든 Hook 이벤트 JSON 입력에 `effort.level` 필드 포함; Bash 서브프로세스에도 `$CLAUDE_EFFORT` 환경변수 자동 설정
+
+**continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
+
 ---
 
 ## Hook 타입 (v2.12)
@@ -89,6 +93,22 @@ Shell 없이 URL로 JSON POST, JSON 응답 수신:
   "agent": "security-reviewer"
 }
 ```
+
+### Exec Form Hook (신규 v2.1.139)
+
+셸을 거치지 않고 명령을 직접 실행합니다. 경로 플레이스홀더 인용 불필요:
+
+```json
+{
+  "type": "command",
+  "command": "/path/to/hook-binary",
+  "args": ["--flag", "value"]
+}
+```
+
+`args: string[]` 필드를 사용하면 셸 없이 직접 스폰하므로 공백·특수문자를 포함한 경로도 안전하게 처리됩니다.
+
+---
 
 ### MCP Tool Hook (신규 v2.1.118)
 
