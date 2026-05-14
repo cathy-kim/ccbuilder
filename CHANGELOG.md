@@ -15,6 +15,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.35.0] - 2026-05-14
+
+### Added
+- **Claude Code v2.1.141 sync**
+  - Hook JSON 출력 `terminalSequence` 필드 — 제어 터미널 없이 데스크탑 알림·창 제목·벨 신호 발송 가능
+  - `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` env var — SSH 키 없는 환경에서 GitHub 플러그인 소스 HTTPS 클론
+  - `ANTHROPIC_WORKSPACE_ID` env var — workload identity federation 토큰 특정 워크스페이스 범위 지정
+  - `claude agents --cwd <path>` — 세션 목록을 특정 디렉토리 범위로 필터링
+  - `/feedback` 최근 세션 포함 지원 (최근 24시간·7일) — 현재 세션 범위를 넘는 이슈 제보 가능
+  - Rewind 메뉴 "Summarize up to here" — 최근 대화 유지하며 이전 컨텍스트 압축
+  - auto mode permission dialog: `permissions.ask` 규칙이 프롬프트를 발생시킨 경우 원인 설명 추가
+  - 파일 편집 권한 프롬프트에서 "view diff in your IDE" 옵션 복원 (IDE 연결 시)
+  - 백그라운드 에이전트(`/bg`·`←←`) 현재 permission mode 유지 — 기본값으로 revert 방지
+  - `claude agents`: 작업 완료 후 백그라운드 쉘이 남아있는 에이전트를 Completed 상태로 이동
+  - thinking 스피너 10초 후 황색 전환 — 장시간 thinking 중 작업 진행 중임을 시각적으로 표시
+  - 플러그인 메뉴 탐색 개선: `→`/Tab 탭 전환, `↑` 탭 스트립 이동, 풀스크린 모드 탭 헤더·검색박스 클릭 가능
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.140 → v2.1.141 업데이트
+  - Hook 섹션: `terminalSequence` 필드, `EnterWorktree` transcript_path 버그 수정 추가
+  - CLI 섹션: `claude agents --cwd`, 백그라운드 에이전트 permission mode 유지, `/feedback` 세션 포함, Rewind "Summarize" 추가
+  - 신규 도구·env 섹션: `ANTHROPIC_WORKSPACE_ID`, `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` 추가
+- `references/version-sync.md`: v2.1.141 변경사항 추적 엔트리 추가
+
+### Fixed
+- Bedrock/Vertex/Foundry/gateway에서 background side-queries에 unavailable Haiku 모델 ID 전송 수정
+- `claude daemon status` 및 `/doctor` Windows에서 daemon pipe key file 잠김·읽기 불가 시 불명확 오류 수정
+- `claude agents` 크래시된 세션 열 때 작업 디렉토리 삭제 시 중복 dispatch 수정
+- hooks에서 `EnterWorktree` 이후 non-existent `transcript_path` 수신 버그 수정
+- 마크다운 테이블 셀 줄바꿈 시 세로 key-value 레이아웃으로 폴백하던 회귀 수정 (v2.1.136 회귀)
+- `/model` 명령이 한 세션에서 다른 동시 세션의 autocompact 임계값을 변경하던 버그 수정
+- MCP HTTP/SSE 서버 연결 시 403 반환 시 "failed" 대신 "needs auth" 표시 수정
+- Remote MCP 서버 optional server-events 스트림 재연결 실패 시 불필요한 연결 해제 수정
+- MCP 서버 config의 POSIX shell parameter expansion(`${var%pattern}` 등)을 누락 환경변수로 잘못 플래그하던 버그 수정
+- `claude plugin install` marketplace `ref`가 upstream에 없을 때 `sha`가 pinned되어도 실패하던 버그 수정
+- Bedrock: `awsCredentialExport` — ambient AWS 자격증명 확인 시에도 항상 실행 (cross-account 인증 수정)
+
+---
+
 ## [2.34.0] - 2026-05-13
 
 ### Added

@@ -90,6 +90,7 @@
 - **Async Hook**: 백그라운드 실행, 다음 턴에 `systemMessage` 또는 `additionalContext` 반환
 - **SessionStart 환경 변수**: `$CLAUDE_ENV_FILE`에 기록하면 세션 전체에서 사용 가능
 - **MCP 도구 Hook**: MCP 도구도 일반 도구와 동일하게 Hook 발동
+- **`terminalSequence`** (v2.1.141): Hook JSON 출력에 추가 가능 — 제어 터미널 없이 데스크탑 알림·창 제목·벨 신호 발송 (예: tmux 알림, 터미널 벨)
 
 ## Deprecation
 

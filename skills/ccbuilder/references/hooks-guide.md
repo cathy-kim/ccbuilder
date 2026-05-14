@@ -49,6 +49,8 @@
 
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
+**terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
+
 ---
 
 ## Hook 타입 (v2.12)

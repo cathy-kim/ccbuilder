@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.141 (2026-05-14 동기화)
+
+**새로운 기능:**
+- (v2.1.141) Hook JSON 출력 `terminalSequence` 필드 — 제어 터미널 없이 데스크탑 알림·창 제목·벨 신호 발송 가능
+- (v2.1.141) `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` env var — SSH 키 없는 환경에서 GitHub 플러그인 소스 HTTPS 클론 (기본: SSH)
+- (v2.1.141) `ANTHROPIC_WORKSPACE_ID` env var — workload identity federation 토큰 특정 워크스페이스 범위 지정
+- (v2.1.141) `claude agents --cwd <path>` — 세션 목록을 특정 디렉토리 범위로 필터링
+- (v2.1.141) `/feedback` 최근 세션 포함 지원 (24시간·7일) — 현재 세션 범위를 넘는 이슈 제보 가능
+- (v2.1.141) Rewind 메뉴 "Summarize up to here" — 최근 대화 유지하며 이전 컨텍스트 압축
+- (v2.1.141) auto mode permission dialog: `permissions.ask` 규칙 원인 설명 추가
+- (v2.1.141) 파일 편집 권한 프롬프트 "view diff in your IDE" 옵션 복원 (IDE 연결 시)
+- (v2.1.141) 백그라운드 에이전트(`/bg`·`←←`) 현재 permission mode 유지 — 기본값 revert 방지
+- (v2.1.141) `claude agents`: 완료 후 백그라운드 쉘이 남은 에이전트 → Completed 상태 이동
+- (v2.1.141) thinking 스피너 10초 후 황색 전환 표시
+
+**주요 버그 수정:**
+- Bedrock/Vertex/Foundry/gateway background side-queries에 unavailable Haiku 모델 ID 전송 수정 (v2.1.141)
+- hooks에서 `EnterWorktree` 이후 non-existent `transcript_path` 수신 버그 수정 (v2.1.141)
+- 마크다운 테이블 셀 줄바꿈 시 세로 key-value 레이아웃 폴백 회귀 수정 (v2.1.141, v2.1.136 회귀)
+- MCP HTTP/SSE 서버 403 반환 시 "needs auth" 표시 수정 (v2.1.141)
+- MCP 서버 config POSIX shell parameter expansion 누락 env var로 오판 수정 (v2.1.141)
+- `claude plugin install` upstream `ref` 없을 때 `sha` pinned 시 실패 수정 (v2.1.141)
+- Bedrock `awsCredentialExport` ambient 자격증명 시에도 항상 실행 (cross-account 인증, v2.1.141)
+- Remote MCP 서버 optional server-events 스트림 실패 시 불필요한 연결 해제 수정 (v2.1.141)
+
+---
+
 ### v2.1.140 (2026-05-13 동기화)
 
 **새로운 기능:**
