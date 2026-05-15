@@ -15,6 +15,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.36.0] - 2026-05-15
+
+### Added
+- **Claude Code v2.1.142 sync**
+  - `claude agents` 신규 플래그 — `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions`으로 백그라운드 세션 상세 설정 가능
+  - Fast Mode Opus 4.7 기본 전환 (이전: Opus 4.6); `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1`로 Opus 4.6 고정 가능
+  - 루트 레벨 `SKILL.md` 보유 플러그인 (`skills/` 서브디렉토리 없음) 스킬로 자동 노출
+  - `/plugin` 상세 패널 및 `claude plugin details`에서 플러그인이 제공하는 LSP 서버 목록 표시
+  - `/web-setup` 기존 GitHub App 연결 교체 전 경고 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.141 → v2.1.142 업데이트
+  - CLI 섹션: `claude agents` 신규 플래그, Fast Mode Opus 4.7 전환 추가
+  - Plugin 섹션: 루트 레벨 SKILL.md 플러그인 자동 노출, LSP 서버 표시 추가
+- `references/version-sync.md`: v2.1.142 변경사항 추적 엔트리 추가
+
+### Fixed
+- `MCP_TOOL_TIMEOUT` 설정이 원격 HTTP/SSE MCP 서버의 per-request fetch timeout에 미반영되던 버그 수정 (도구 호출 60초 상한 → 설정값 적용)
+- 백그라운드 세션이 기존 git worktree 미인식으로 Edit 차단 및 `EnterWorktree` 중복 생성 거부하던 버그 수정
+- macOS 수면/재개 후 백그라운드 세션 소실 및 daemon 재연결 실패 수정 (클록 점프를 경과 유휴로 잘못 처리하던 문제)
+- 바이너리 업그레이드(`brew upgrade` 등) 후 데몬 미정상 종료로 파견 에이전트가 삭제된 경로에서 크래시 루프하던 버그 수정
+- `claude --bg --dangerously-skip-permissions` 플래그가 retire/wake 후 유지되지 않던 버그 수정
+- 플러그인 `skills: ["./"]` 사용 시 "path escapes plugin directory" 거짓 오류 수정
+- Reactive compaction 첫 시도 시 원본 요청 overflow 크기에서 시드 — 낭비 재시도 방지
+
+---
+
 ## [2.35.0] - 2026-05-14
 
 ### Added
