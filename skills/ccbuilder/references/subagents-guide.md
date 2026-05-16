@@ -263,6 +263,23 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
+## claude agents 플래그 (v2.1.142 신규)
+
+`claude agents` 서브커맨드에 백그라운드 세션 상세 설정 플래그가 추가되었습니다:
+
+| 플래그 | 설명 |
+|--------|------|
+| `--add-dir <path>` | 세션에 추가 디렉토리 마운트 |
+| `--settings <path>` | 커스텀 settings.json 경로 지정 |
+| `--mcp-config <path>` | MCP 설정 파일 경로 지정 |
+| `--plugin-dir <path>` | 플러그인 디렉토리 경로 지정 |
+| `--permission-mode <mode>` | 권한 모드 설정 |
+| `--model <model>` | 사용 모델 지정 |
+| `--effort <level>` | effort 레벨 설정 |
+| `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
+
+---
+
 ## 버그 수정 (v2.1.101)
 
 - **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속

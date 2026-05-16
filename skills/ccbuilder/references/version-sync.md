@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-05-14
+**최종 동기화**: 2026-05-15
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,25 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.142 (2026-05-15 동기화)
+
+**새로운 기능:**
+- (v2.1.142) `claude agents` 신규 플래그 — `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions` 백그라운드 세션 상세 설정
+- (v2.1.142) Fast Mode Opus 4.7 기본 전환 (이전: Opus 4.6); `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1`로 Opus 4.6 고정 가능
+- (v2.1.142) 루트 레벨 `SKILL.md` 보유 플러그인 (`skills/` 서브디렉토리 없음) 스킬로 자동 노출
+- (v2.1.142) `/plugin` 상세 패널 및 `claude plugin details`에서 제공 LSP 서버 목록 표시
+- (v2.1.142) `/web-setup` 기존 GitHub App 연결 교체 전 경고 추가
+
+**주요 버그 수정:**
+- `MCP_TOOL_TIMEOUT` 설정이 원격 HTTP/SSE MCP 서버 per-request fetch timeout에 미반영되던 버그 수정 (60초 상한 → 설정값 반영) (v2.1.142)
+- 백그라운드 세션 기존 git worktree 미인식 → Edit 차단·`EnterWorktree` 중복 거부 버그 수정 (v2.1.142)
+- macOS 수면/재개 후 백그라운드 세션 소실 및 daemon 재연결 실패 수정 (v2.1.142)
+- 바이너리 업그레이드 후 데몬 미정상 종료로 파견 에이전트 크래시 루프 수정 (v2.1.142)
+- 플러그인 `skills: ["./"]` "path escapes plugin directory" 거짓 오류 수정 (v2.1.142)
+- Reactive compaction 첫 시도 시 원본 요청 overflow 크기에서 시드 — 낭비 재시도 방지 (v2.1.142)
+
+---
 
 ### v2.1.141 (2026-05-14 동기화)
 
