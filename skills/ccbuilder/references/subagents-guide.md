@@ -280,6 +280,16 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 ---
 
+## v2.1.143 변경사항
+
+- **`worktree.bgIsolation: "none"`**: settings.json에서 설정 시 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 — git worktree가 비실용적인 레포(모노레포·대형 레포 등)에 활용
+- **Background 세션 플래그 유지**: `/bg`·`←`-detach 후 respawn 시 `--mcp-config`·`--settings`·`--add-dir`·`--plugin-dir`·`--strict-mcp-config`·`--fallback-model`·`--allow-dangerously-skip-permissions` 플래그 보존
+- **`permissions.defaultMode` 준수**: `claude agents`에서 디스패치된 백그라운드 세션이 settings.json의 `permissions.defaultMode` 적용 (기존: auto mode 강제)
+- **Model/effort 레벨 유지**: 백그라운드 세션 유휴 후 재개 시 설정한 model·effort 레벨 보존
+- **Worktree 정리 안전성**: `git worktree remove` 실패 시 `rm -rf` 폴백 제거 — gitignored 파일·진행 중인 파일 보호
+
+---
+
 ## 버그 수정 (v2.1.101)
 
 - **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속

@@ -77,6 +77,32 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.143 (2026-05-16 동기화)
+
+**새로운 기능:**
+- (v2.1.143) Plugin 의존성 강제 — `claude plugin disable` 의존 플러그인 존재 시 거부 (비활성화 체인 힌트 제공); `claude plugin enable` 전이 의존성 강제 활성화
+- (v2.1.143) `/plugin` 마켓플레이스 탐색 패널에 컨텍스트 비용 예상 (턴별·호출별 토큰 추정) 표시
+- (v2.1.143) `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 (worktree 비실용 레포용)
+- (v2.1.143) PowerShell 도구 `-ExecutionPolicy Bypass` 기본 적용 (`CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`으로 비활성화)
+- (v2.1.143) Windows Bedrock·Vertex·Foundry PowerShell 도구 기본 활성화 (`CLAUDE_CODE_USE_POWERSHELL_TOOL=0` 옵트아웃)
+- (v2.1.143) 백그라운드 세션 유휴 후 재개 시 model/effort 레벨 유지
+- (v2.1.143) `/bg`·`←`-detach `--mcp-config`·`--settings`·`--add-dir`·`--plugin-dir`·`--strict-mcp-config`·`--fallback-model`·`--allow-dangerously-skip-permissions` 플래그 respawn 후 유지
+- (v2.1.143) `claude agents` 디스패치 백그라운드 세션 settings.json `permissions.defaultMode` 준수
+- (v2.1.143) `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` — stop hook 연속 차단 상한 (기본 8회)
+- (v2.1.143) `claude --bg --dangerously-skip-permissions` retire→wake 후 플래그 유지
+- (v2.1.143) Shift+Tab이 attached agent 세션에서 auto mode 포함 사이클
+
+**주요 버그 수정:**
+- stop hook 연속 차단 무한 루프 수정 (v2.1.143)
+- Esc/Ctrl+C로 `/loop` wakeup 취소 안 되던 버그 수정 (v2.1.143)
+- `/goal` 평가기가 백그라운드 쉘·서브에이전트 실행 중 발동하던 버그 수정 (v2.1.143)
+- settings.json `env` `NO_COLOR`/`FORCE_COLOR`가 Claude Code UI 색상 제거하던 버그 수정 (v2.1.143)
+- Worktree 정리 `git worktree remove` 실패 시 `rm -rf` 폴백으로 파일 손실하던 버그 수정 (v2.1.143)
+- macOS 백그라운드 세션 `~/Documents` 등 접근 불가 버그 수정 (v2.1.143)
+- 손상된 `.credentials.json` (`scopes` 배열 아닌 경우) CLI 시작 중단 버그 수정 (v2.1.143)
+
+---
+
 ### v2.1.142 (2026-05-15 동기화)
 
 **새로운 기능:**

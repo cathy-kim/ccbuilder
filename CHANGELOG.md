@@ -15,6 +15,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.37.0] - 2026-05-16
+
+### Added
+- **Claude Code v2.1.143 sync**
+  - Plugin 의존성 강제 — `claude plugin disable` 의존 플러그인 존재 시 비활성화 거부 (비활성화 체인 힌트 제공); `claude plugin enable` 시 전이 의존성 강제 활성화
+  - `/plugin` 마켓플레이스 탐색 패널에 컨텍스트 비용 예상 (턴별·호출별 토큰 추정) 표시
+  - `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 (worktree가 비실용적인 레포용)
+  - PowerShell 도구 `-ExecutionPolicy Bypass` 기본 적용 (`CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`으로 비활성화)
+  - Windows Bedrock·Vertex·Foundry 사용자 PowerShell 도구 기본 활성화 (`CLAUDE_CODE_USE_POWERSHELL_TOOL=0`으로 옵트아웃)
+  - 백그라운드 세션이 유휴 후 재개 시 model/effort 레벨 유지
+  - `/bg`·`←`-detach 시 `--mcp-config`·`--settings`·`--add-dir`·`--plugin-dir`·`--strict-mcp-config`·`--fallback-model`·`--allow-dangerously-skip-permissions` 플래그 유지
+  - `claude agents`에서 디스패치된 백그라운드 세션이 settings.json `permissions.defaultMode` 준수 (기존: auto mode 강제)
+  - `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var — stop hook 연속 차단 상한 설정 (기본 8회, 초과 시 경고 후 턴 종료)
+  - Shift+Tab이 attached agent 세션에서 auto mode 포함 사이클
+  - `claude --bg --dangerously-skip-permissions` retire→wake 후 플래그 유지
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.142 → v2.1.143 업데이트
+  - CLI 섹션: `/bg` 플래그 유지, PowerShell 기본 활성화, `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`, background session 개선 추가
+  - Plugin 섹션: plugin 의존성 강제, 컨텍스트 비용 예상 표시 추가
+  - 신규 도구·env 섹션: `worktree.bgIsolation: "none"` 추가
+- `references/version-sync.md`: v2.1.143 변경사항 추적 엔트리 추가
+
+### Fixed
+- Stop hook이 연속으로 차단할 때 무한 루프하던 버그 수정 (8회 초과 시 경고 후 종료)
+- `/loop` 대기 중 Esc/Ctrl+C로 wakeup 취소 안 되던 버그 수정
+- `/goal` 평가기가 백그라운드 쉘·위임된 서브에이전트 실행 중에도 발동하던 버그 수정
+- settings.json `env`의 `NO_COLOR`/`FORCE_COLOR`가 Claude Code 자체 UI 색상을 제거하던 버그 수정 (이제 서브프로세스에만 적용)
+- `--agent <name>` 옵션이 `plugin:` 접두사 없이 플러그인 기여 에이전트를 찾지 못하던 버그 수정
+- Worktree 정리 시 `git worktree remove` 실패 후 `rm -rf` 폴백으로 gitignored·진행 중 파일 손실하던 버그 수정
+- macOS에서 백그라운드 세션이 `~/Documents`·`~/Desktop`·`~/Downloads` 읽기 시 "Operation not permitted" 오류 (Full Disk Access 허용 시에도) 수정
+- 손상된 `.credentials.json` (`scopes`가 배열이 아닌 경우) CLI 시작 중단·OAuth 토큰 갱신 묵살 버그 수정
+- 백그라운드 에이전트 false-positive worker-stall 감지 폭풍 수정 (호스트 수면 또는 macOS App Nap 후)
+- 5xx 오류 메시지가 설정된 게이트웨이·클라우드 프로바이더 대신 status.claude.com을 가리키던 버그 수정
+
+---
+
 ## [2.36.0] - 2026-05-15
 
 ### Added
