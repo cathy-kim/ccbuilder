@@ -25,7 +25,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Bash` | 1,067 | Shell 명령 실행 | **높음** |
-| `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
+| `PowerShell` | - | PowerShell 명령 실행 — Windows Bedrock/Vertex/Foundry 기본 활성화 (v2.1.143); 일반 Windows 옵트인 (v2.1.84); `-ExecutionPolicy Bypass` 기본 적용, `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`으로 옵트아웃; `CLAUDE_CODE_USE_POWERSHELL_TOOL=0`으로 비활성화 | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 

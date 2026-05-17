@@ -15,6 +15,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.37.0] - 2026-05-17
+
+### Added
+- **Claude Code v2.1.143 sync**
+  - 플러그인 의존성 강제: `claude plugin disable` 다른 활성 플러그인이 의존 시 거부 + copy-pasteable disable-chain 힌트 제공
+  - `claude plugin enable` 전이 의존성 강제 활성화
+  - `/plugin` 마켓플레이스 탐색 패널에 예상 컨텍스트 비용(per-turn·per-invocation 토큰 추정치) 표시
+  - `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 (worktree 비실용 환경용)
+  - PowerShell 도구 `-ExecutionPolicy Bypass` 기본 적용; `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`으로 옵트아웃 가능
+  - 백그라운드 세션 유휴 후 재개 시 모델/effort 레벨 보존
+  - Shift+Tab attached agent 세션에서 auto mode 포함 사이클
+  - `claude agents` 신규 플래그: `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions` — 대시보드·파견 세션 기본값 설정
+  - `/bg`·`←`-detach가 `--mcp-config`, `--settings`, `--add-dir`, `--plugin-dir`, `--strict-mcp-config`, `--fallback-model`, `--allow-dangerously-skip-permissions` 보존
+  - `claude agents` 세션 `permissions.defaultMode` 준수 (이전: 자동으로 auto mode 오버라이드)
+  - PowerShell 도구 Windows Bedrock/Vertex/Foundry 기본 활성화 (`CLAUDE_CODE_USE_POWERSHELL_TOOL=0`으로 옵트아웃)
+  - `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` — Stop hook 연속 블록 횟수 상한 (기본 8회, 초과 시 경고+턴 종료)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.142 → v2.1.143 업데이트
+  - Plugin 섹션: 플러그인 의존성 강제 및 컨텍스트 비용 표시 추가
+  - CLI 섹션: `claude agents` 플래그, `/bg` 설정 보존, 백그라운드 세션 개선, worktree cleanup 안전화 추가
+  - 신규 도구·env 섹션: `worktree.bgIsolation`, `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`, `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY` 추가
+- `references/version-sync.md`: v2.1.143 변경사항 추적 엔트리 추가
+
+### Fixed
+- Stop hook이 연속 블록 시 무한 루프 — 8회 연속 블록 후 경고와 함께 턴 종료 (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`으로 상한 오버라이드 가능)
+- Esc/Ctrl+C로 대기 중인 `/loop` wakeup 취소 불가 수정
+- `/goal` 평가기가 백그라운드 쉘·위임 서브에이전트 실행 중 발동하던 버그 수정
+- `NO_COLOR`/`FORCE_COLOR` settings.json env가 Claude Code 자체 UI 색상에 적용되던 버그 수정 (이제 서브프로세스에만 적용)
+- `/bg` 프롬프트 없이 실행 시 "continue" 전송 → 입력 대기로 변경
+- `--agent <name>` plugin-contributed 에이전트를 `plugin:` 접두사 없이 탐색 가능
+- 백그라운드 세션이 IDE 파일 참조를 warm spare 입력으로 포착하던 버그 수정
+- worktree cleanup `git worktree remove` 실패 시 `rm -rf` 폴백 제거 (gitignored·작업중 파일 손실 방지)
+- 백그라운드 세션 macOS `~/Documents`·`~/Desktop`·`~/Downloads` "Operation not permitted" 수정 (Full Disk Access 부여 시에도 발생)
+- 손상된 `.credentials.json` (non-array `scopes`) CLI hang·OAuth 토큰 갱신 조용한 중단 수정
+- Windows `claude agents` 우측 클릭 붙여넣기 수정
+- 백그라운드 에이전트 호스트 수면·macOS App Nap 후 거짓 양성 worker-stall 탐지 수정
+- 5xx 오류 메시지가 gateway/cloud provider 대신 status.claude.com 안내하던 버그 수정
+
+---
+
 ## [2.36.0] - 2026-05-15
 
 ### Added

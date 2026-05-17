@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.143 (2026-05-17 동기화)
+
+**새로운 기능:**
+- (v2.1.143) 플러그인 의존성 강제: `claude plugin disable` 다른 활성 플러그인이 의존 시 거부 + copy-pasteable disable-chain 힌트; `claude plugin enable` 전이 의존성 강제 활성화
+- (v2.1.143) `/plugin` 마켓플레이스 탐색 패널에 예상 컨텍스트 비용(per-turn·per-invocation 토큰 추정치) 표시
+- (v2.1.143) `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집
+- (v2.1.143) PowerShell 도구 `-ExecutionPolicy Bypass` 기본 적용; `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1` 옵트아웃
+- (v2.1.143) 백그라운드 세션 유휴 후 재개 시 모델/effort 레벨 보존
+- (v2.1.143) `claude agents` 신규 플래그: `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions`
+- (v2.1.143) `/bg`·`←`-detach가 MCP 서버·설정·fallback model·권한 설정 보존
+- (v2.1.143) PowerShell 도구 Windows Bedrock/Vertex/Foundry 기본 활성화 (`CLAUDE_CODE_USE_POWERSHELL_TOOL=0` 옵트아웃)
+- (v2.1.143) `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` — Stop hook 연속 블록 횟수 상한 (기본 8회)
+
+**주요 버그 수정:**
+- Stop hook 연속 블록 무한 루프 방지 — 8회 연속 블록 후 경고+턴 종료 (v2.1.143)
+- `NO_COLOR`/`FORCE_COLOR` settings.json env가 Claude Code UI 색상에 적용되던 버그 수정 (v2.1.143)
+- worktree cleanup `rm -rf` 폴백 제거 — gitignored·작업중 파일 손실 방지 (v2.1.143)
+- 백그라운드 세션 macOS `~/Documents`·`~/Desktop`·`~/Downloads` 접근 거부 수정 (Full Disk Access 부여 시에도 발생, v2.1.143)
+- `/bg` 프롬프트 없이 실행 시 "continue" 전송 버그 수정 (v2.1.143)
+- 백그라운드 세션 IDE 파일 참조 warm spare 포착 버그 수정 (v2.1.143)
+- 손상된 `.credentials.json` hang 수정 (v2.1.143)
+
+---
+
 ### v2.1.142 (2026-05-15 동기화)
 
 **새로운 기능:**
