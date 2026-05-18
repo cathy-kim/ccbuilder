@@ -263,7 +263,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
-## claude agents 플래그 (v2.1.142 신규)
+## claude agents 플래그 (v2.1.142+)
 
 `claude agents` 서브커맨드에 백그라운드 세션 상세 설정 플래그가 추가되었습니다:
 
@@ -277,6 +277,16 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--model <model>` | 사용 모델 지정 |
 | `--effort <level>` | effort 레벨 설정 |
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
+
+**v2.1.143**: `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`는 이제 대시보드와 파견된 백그라운드 세션 모두에 적용됩니다. `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions`는 파견 세션의 기본값을 설정합니다.
+
+## Worktree 백그라운드 격리 설정 (v2.1.143)
+
+| 설정 | 설명 |
+|------|------|
+| `worktree.bgIsolation: "none"` | 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 — worktree가 비실용적인 레포(대용량·Perforce 등)에 사용 |
+| `/bg`·`←`-detach | `--mcp-config`, `--settings`, `--add-dir`, `--plugin-dir`, `--strict-mcp-config` 유지 — 재생성 시 MCP 서버·설정 보존 (v2.1.143) |
+| `permissions.defaultMode` | 이제 `claude agents`에서 파견된 백그라운드 세션에도 적용 (기존 auto 모드 강제 재정의 해소, v2.1.143) |
 
 ---
 

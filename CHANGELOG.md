@@ -15,6 +15,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.37.0] - 2026-05-18
+
+### Added
+- **Claude Code v2.1.143 sync**
+  - 플러그인 의존성 강제 — `claude plugin disable` 의존 플러그인 존재 시 거부 (disable-chain 힌트 제공); `claude plugin enable` 전이 의존성 자동 force-enable
+  - `/plugin` 마켓플레이스 탐색 창에 컨텍스트 비용 예측 (per-turn·per-invocation 토큰 추정치) 표시
+  - `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션이 `EnterWorktree` 없이 working copy 직접 편집 (worktree 비실용 레포용)
+  - PowerShell 도구 `-ExecutionPolicy Bypass` 자동 전달 (옵트아웃: `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`)
+  - 백그라운드 세션 유휴 재개 후 모델·effort 설정 유지
+  - `/bg`·`←`-detach 이제 `--mcp-config`, `--settings`, `--add-dir`, `--plugin-dir`, `--strict-mcp-config` 유지 — 재생성 시 MCP 서버·설정 보존
+  - 백그라운드 세션 settings.json `permissions.defaultMode` 준수 (기존 auto 모드 강제 재정의 해소)
+  - `/bg`·`←`-detach `--fallback-model` 및 `--allow-dangerously-skip-permissions` 보존
+  - `claude agents` `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions` 파견 세션 기본값 설정
+  - Stop Hook 연속 8회 block 시 경고와 함께 턴 종료 (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var로 상한 조정)
+  - Shift+Tab (attached agent 세션) auto mode 포함 사이클
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.142 → v2.1.143 업데이트
+  - 플러그인 의존성 강제, 컨텍스트 비용 예측 추가
+  - `worktree.bgIsolation`, `/bg` 설정 보존, `permissions.defaultMode` 준수 추가
+  - Stop Hook block cap, PowerShell `-ExecutionPolicy Bypass` 추가
+- `references/version-sync.md`: v2.1.143 변경사항 추적 엔트리 추가
+
+### Fixed
+- `.credentials.json` `scopes` 값이 배열이 아닐 때 CLI 시작 hang 또는 OAuth 토큰 갱신 무음 중단 버그 수정
+- Stop Hook이 반복 block 시 무한 루프 — 8회 연속 block 후 경고와 함께 턴 종료
+- Esc/Ctrl+C로 대기 중인 `/loop` wakeup 취소 불가 버그 수정
+- `/goal` 평가자가 백그라운드 쉘·위임 서브에이전트 실행 중에도 발동하던 버그 수정
+- settings.json `env`의 `NO_COLOR`/`FORCE_COLOR`가 Claude Code UI 색상 제거하던 버그 수정 (이제 서브프로세스에만 적용)
+- `--agent <name>` `plugin:` 접두사 없이 플러그인 기여 에이전트 찾지 못하던 버그 수정
+- Worktree cleanup `git worktree remove` 실패 시 `rm -rf` 폴백 제거 — gitignored·진행 중 파일 손실 방지
+- macOS `~/Documents`, `~/Desktop`, `~/Downloads` 하위 파일 읽기 시 "Operation not permitted" 오류 수정 (Full Disk Access 부여 시에도 발생)
+- `claude agents --allow-dangerously-skip-permissions` 파견 세션 기본값 bypass 모드 설정하던 버그 수정
+
+---
+
 ## [2.36.0] - 2026-05-15
 
 ### Added

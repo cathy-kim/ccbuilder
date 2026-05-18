@@ -51,6 +51,8 @@
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
 
+**Stop Hook block cap (v2.1.143)**: Stop Hook이 연속 8회 block 결정을 반환하면 경고와 함께 턴이 강제 종료됩니다. `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var로 상한 조정 가능.
+
 ---
 
 ## Hook 타입 (v2.12)
