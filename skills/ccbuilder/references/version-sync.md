@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.144 (2026-05-19 동기화)
+
+**새로운 기능:**
+- (v2.1.144) `/resume` 백그라운드 세션 지원 — `claude --bg`·agent view 세션이 bg 태그와 함께 picker에 표시
+- (v2.1.144) 백그라운드 서브에이전트 완료 알림에 경과 시간 표시 (예: "3h 2m 5s")
+- (v2.1.144) `/plugin` browse·discover 패널 마지막 업데이트 날짜 표시
+- (v2.1.144) `/model` 현재 세션만 변경; `d`로 신규 세션 기본값 설정
+- (v2.1.144) `/usage-credits` (`/extra-usage` 리네임; 이전 이름 호환 유지)
+- (v2.1.143) 플러그인 의존성 강제 (`claude plugin disable`/`enable` 의존성 체인 검사)
+- (v2.1.143) `/plugin` 마켓플레이스 per-turn·per-invocation 컨텍스트 비용 예측 표시
+- (v2.1.143) `worktree.bgIsolation: "none"` — 백그라운드 세션 working copy 직접 편집
+- (v2.1.143) `/bg`·`←`-detach에서 `--mcp-config`·`--fallback-model` 등 다수 플래그 보존
+
+**주요 버그 수정:**
+- MCP 서버 paginated `tools/list` 첫 페이지만 반환하여 도구 누락 수정 (v2.1.144)
+- MCP 비지원 MIME 타입(SVG) 이미지 대화 중단 → 디스크 저장·참조로 복구 (v2.1.144)
+- `.mcp.json` 파싱 실패 시 `claude mcp list` 구성 오류 표시 개선 (v2.1.144)
+- SDK/헤드리스 MCP pre-wait 병렬화 → 최대 2s 시작 개선 (v2.1.144)
+- 시작 시 `api.anthropic.com` 연결 불가 최대 75s 지연 → side-channel 15s 타임아웃 (v2.1.144)
+- AskUserQuestion notes 필드 Escape 키 → 응답 선택으로 복귀 (이전: 턴 중단) (v2.1.144)
+- Stop hook 연속 블록 무한 루프 → 8회 후 경고·종료 (v2.1.143)
+- Worktree cleanup이 `git worktree remove` 실패 시 `rm -rf` 폴백 안 하도록 수정 (v2.1.143)
+
+---
+
 ### v2.1.142 (2026-05-15 동기화)
 
 **새로운 기능:**

@@ -15,6 +15,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.37.0] - 2026-05-19
+
+### Added
+- **Claude Code v2.1.144 sync**
+  - `/resume` 백그라운드 세션 지원 — `claude --bg` 또는 agent view로 시작된 세션이 bg 태그와 함께 인터랙티브 세션과 동일한 picker에 표시
+  - 백그라운드 서브에이전트 완료 알림에 경과 시간 표시 (예: "Agent completed · 3h 2m 5s")
+  - `/plugin` browse·discover 패널에 플러그인 마지막 업데이트 날짜 표시
+  - `/model` 현재 세션만 변경; 피커에서 `d` 키로 신규 세션 기본값 설정
+  - `/usage-credits` 명령 (`/extra-usage`에서 리네임; 이전 이름 계속 동작)
+  - `claude --bg --name <label>` 스폰 확인 메시지에 이름 출력
+  - `/doctor` hook `command` 필드 누락 시 exec-form 예시 표시
+  - 스킬 목록 절삭 알림 시작 화면에서 제거 — `/doctor`로 상세 확인
+  - 플러그인 의존성 강제 (`claude plugin disable` 의존 있을 시 거부; `claude plugin enable` 전이 의존성 자동 활성화) (v2.1.143)
+  - `/plugin` 마켓플레이스 탐색에 per-turn·per-invocation 컨텍스트 비용 예측 표시 (v2.1.143)
+  - `/plugin` 활성화·비활성화·제거 후 설치 목록으로 자동 복귀
+  - `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션 EnterWorktree 없이 working copy 직접 편집 (v2.1.143)
+  - `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var — Stop hook 연속 블록 상한 설정 (기본 8회) (v2.1.143)
+  - PowerShell 도구 Windows Bedrock·Vertex·Foundry 사용자에게 기본 활성화 (v2.1.143)
+  - `/bg`·`←`-detach에서 `--mcp-config`, `--settings`, `--add-dir`, `--plugin-dir`, `--strict-mcp-config`, `--fallback-model`, `--allow-dangerously-skip-permissions` 보존 (v2.1.143)
+
+### Fixed
+- MCP 서버 paginated `tools/list` 첫 페이지만 반환하여 도구 누락 버그 수정
+- MCP 비지원 MIME 타입(SVG 등) 이미지 → 디스크 저장 후 tool result 참조로 대화 복구
+- `.mcp.json` 파싱 실패(VS Code `"servers"` 키 등) 시 `claude mcp list` 구성 오류 표시 개선
+- SDK/헤드리스 MCP 시작 최적화 — pre-wait 병렬화로 최대 2s 빠름
+- 시작 시 `api.anthropic.com` 연결 불가(캡티브 포털·방화벽·VPN) 75s 지연 수정 → side-channel 15s 타임아웃
+- 파일 확장자·내용 불일치(예: HTML을 .png로 저장) 시 대화 복구 불가 버그 수정 → 텍스트 폴백
+- `head`/`tail` 파일 뷰가 read-before-edit 체크 충족; `egrep`/`fgrep`/`git grep`/`git diff` "no matches"(exit 1)를 명령 실패로 미보고
+- AskUserQuestion notes 필드에서 Escape 키가 응답 선택으로 복귀 (이전: 턴 중단)
+- `/branch` 워크트리 진입 후 또는 일부 백그라운드 세션에서 "No conversation to branch" 실패 수정
+- `claude respawn <id>` 중지된 백그라운드 세션에 "stopped" 표시 버그 수정
+- Stop hook 연속 블록 무한 루프 수정 → 8회 후 경고와 함께 턴 종료 (v2.1.143)
+- `/goal` 평가자가 백그라운드 쉘·위임 서브에이전트 실행 중 발동하던 버그 수정 (v2.1.143)
+- `NO_COLOR`/`FORCE_COLOR` 설정이 Claude Code 자체 UI 색상을 제거하던 버그 수정 (v2.1.143)
+- Worktree cleanup이 `git worktree remove` 실패 시 `rm -rf`로 폴백하지 않도록 수정 — gitignored 파일 보호 (v2.1.143)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.142 → v2.1.144 업데이트
+  - MCP 섹션: paginated `tools/list` 수정, MIME 타입 복구, `mcp list` 오류 표시 개선, pre-wait 병렬화 추가
+  - CLI 섹션: `/resume` bg 지원, `/model` 세션 한정, `/usage-credits`, 백그라운드 세션 플래그 보존 추가
+  - Plugin 섹션: 의존성 강제, 컨텍스트 비용 표시, 마지막 업데이트 날짜 추가
+  - 신규 도구·env 섹션: `worktree.bgIsolation`, `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` 추가
+- `references/version-sync.md`: v2.1.144 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.36.0] - 2026-05-15
 
 ### Added
