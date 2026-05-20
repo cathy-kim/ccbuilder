@@ -77,6 +77,46 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.145 (2026-05-20 동기화)
+
+**새로운 기능:**
+- (v2.1.145) `claude agents --json` — 실행 중인 세션 JSON 목록 출력 (스크립팅·tmux-resurrect·상태바 연동)
+- (v2.1.145) `agent_id`·`parent_agent_id` 속성을 `claude_code.tool` OTEL 스팬에 추가; 백그라운드 서브에이전트 트레이스 parenting 수정
+- (v2.1.145) Status line JSON에 GitHub 리포·PR 정보 포함 (감지 시)
+- (v2.1.145) `/plugin` Discover·Browse 화면에서 설치 전 플러그인 명령·에이전트·스킬·훅·MCP/LSP 서버 목록 표시
+- (v2.1.145) `claude agents` 터미널 탭 제목에 입력 대기 수 표시
+- (v2.1.145) 슬래시 명령·`@`-멘션 목록 풀스크린 모드에서 마우스 호버·클릭 지원
+- (v2.1.145) Stop·SubagentStop hook input에 `background_tasks`·`session_crons` 필드 추가
+- (v2.1.145) Read 도구: 전체 파일 읽기 토큰 초과 시 하드 오류 대신 트런케이션 + "PARTIAL view" 안내
+- (v2.1.144) `/resume` 백그라운드 세션 지원 (`--bg`·agent view 세션, `bg` 태그 표시)
+- (v2.1.144) 백그라운드 서브에이전트 완료 알림에 경과 시간 표시
+- (v2.1.144) `/model` 현재 세션만 적용; `d` 키로 신규 세션 기본 모델 설정
+- (v2.1.144) `/usage-credits` (`/extra-usage` 리네임, 구 명령 alias 유지)
+- (v2.1.143) Plugin dependency enforcement: `claude plugin disable` 의존 플러그인 존재 시 거부+힌트; `claude plugin enable` 전이 의존성 자동 활성화
+- (v2.1.143) `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션 직접 편집 (EnterWorktree 불필요)
+- (v2.1.143) PowerShell 도구에 `-ExecutionPolicy Bypass` 자동 전달 (옵트아웃: `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`)
+- (v2.1.143) Stop hook 연속 8회 차단 시 경고 후 턴 종료 (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`으로 상한 오버라이드)
+
+**보안 수정:**
+- 비허용 env var에 대한 bare 변수 할당 Bash 명령 자동 승인 bypass 수정 (v2.1.145)
+
+**주요 버그 수정:**
+- MCP 프롬프트 슬래시 명령 필수 인자 누락 시 서버 오류 원문 대신 누락 인자명+사용법 표시 (v2.1.145)
+- `api.anthropic.com` 미도달 시 시작 hang 최대 75s → 15s 타임아웃 수정 (v2.1.144)
+- 터미널 크기 변경 후 스피너·경과 시간 freeze, 출력 깨짐 수정 (v2.1.144)
+- MCP 서버 paginated `tools/list` 첫 페이지만 반환하던 버그 수정 (v2.1.144)
+- 스킬 디렉토리 내 빌드 실행 시 파일 디스크립터 소진 수정 (v2.1.144)
+- Skill tool 헤드리스 모드 권한 오류 수정 (v2.1.144, v2.1.141 회귀)
+- `context: fork` 스킬 자기 재귀 무한 루프 수정 (v2.1.145)
+- Agent Teams 비ASCII 이름 팀메이트 API 호출 실패 수정 (v2.1.145)
+- `/review` deprecated `projectCards` GraphQL 쿼리 오류 수정 (v2.1.145)
+- `claude plugin validate` `skills:` 파일 경로 가리킬 때 미플래그 수정 (v2.1.145)
+- Stop hook 연속 반복 차단 무한 루프 수정 (v2.1.143)
+- `/branch` worktree 진입 후 실패 수정 (v2.1.144)
+- 백그라운드 세션 macOS Full Disk Access 보호 폴더 크래시 수정 (v2.1.144)
+
+---
+
 ### v2.1.142 (2026-05-15 동기화)
 
 **새로운 기능:**

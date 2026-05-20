@@ -277,6 +277,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--model <model>` | 사용 모델 지정 |
 | `--effort <level>` | effort 레벨 설정 |
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
+| `--json` | 실행 중인 세션 목록을 JSON으로 출력 (스크립팅·tmux-resurrect·상태바 연동, v2.1.145) |
 
 ---
 
