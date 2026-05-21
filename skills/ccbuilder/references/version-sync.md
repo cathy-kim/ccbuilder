@@ -77,6 +77,45 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.146 (2026-05-21 동기화)
+
+**새로운 기능:**
+- (v2.1.146) `/code-review [effort]` 명령 — `/simplify` 리네임, 선택적 effort 레벨 지원 (e.g. `/code-review high`)
+- (v2.1.146) auto mode에서 사용자·스킬이 `AskUserQuestion` 명시 의존 시 억제하지 않음
+- (v2.1.145) `claude agents --json` — 실행 중 세션 JSON 목록 출력 (스크립팅·tmux-resurrect·status bar)
+- (v2.1.145) `agent_id`·`parent_agent_id` 속성 — `claude_code.tool` OTEL span에 추가; 백그라운드 서브에이전트 trace parenting 수정
+- (v2.1.145) `/plugin` Discover·Browse 화면에서 설치 전 명령·에이전트·스킬·훅·MCP/LSP 서버 상세 미리 보기
+- (v2.1.145) status line JSON 입력에 GitHub 레포·PR 정보 포함 (감지 시)
+- (v2.1.145) Stop·SubagentStop Hook 입력에 `background_tasks`·`session_crons` 필드 추가
+- (v2.1.145) 슬래시 명령·@-멘션 제안 목록 풀스크린 모드 마우스 호버·클릭 지원
+- (v2.1.144) `/resume` 백그라운드 세션 지원 — `bg` 마커로 구분 표시
+- (v2.1.144) 백그라운드 서브에이전트 완료 알림에 elapsed duration 표시 (예: "Agent completed · 3h 2m 5s")
+- (v2.1.144) `/model` 현재 세션만 변경 — 신규 세션 기본값 설정은 모델 피커 `d` 키
+- (v2.1.144) `/extra-usage` → `/usage-credits` 리네임 (구 명령 유지)
+- (v2.1.144) `/plugin` browse·discover 패널 플러그인 마지막 업데이트 일시 표시
+- (v2.1.143) `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션 worktree 격리 없이 직접 편집
+- (v2.1.143) `claude plugin disable` 의존성 강제 — 의존 플러그인 존재 시 거부 + disable-chain 힌트
+- (v2.1.143) `claude plugin enable` 전이적 의존성 자동 강제 활성화
+- (v2.1.143) `/plugin` 마켓플레이스 브라우즈 패널 예상 컨텍스트 비용 표시
+- (v2.1.143) `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var — stop hook 블록 반복 상한 오버라이드 (기본 8회)
+- (v2.1.143) PowerShell 도구 `-ExecutionPolicy Bypass` 기본 전달
+
+**Breaking Changes:**
+- `/simplify` → `/code-review [effort]` 리네임 (v2.1.146)
+- PowerShell 도구 `-ExecutionPolicy Bypass` 기본 전달 — 옵트아웃: `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1` (v2.1.143)
+
+**주요 버그 수정:**
+- MCP `resources/list`, `resources/templates/list`, `prompts/list` 페이지네이션 서버에서 2페이지 이후 항목 누락 수정 (v2.1.146)
+- Windows PowerShell 도구 winget/Microsoft Store 설치 시 "command line is invalid" 오류 수정 (v2.1.146)
+- Read 도구 전체 파일 토큰 한도 초과 시 "PARTIAL view" 노티스와 함께 첫 페이지 트런케이션 반환 (v2.1.145)
+- Agent Teams 비ASCII 이름 팀메이트 API 호출 실패 (유효하지 않은 헤더 인코딩) 수정 (v2.1.145)
+- `/review` deprecated `projectCards` GraphQL 쿼리 수정 (v2.1.145)
+- `claude plugin validate` `skills:` 항목 파일 가리킬 때 미검출 수정 (v2.1.145)
+- 시작 시 `api.anthropic.com` 미달 시 최대 75초 hang 현상 수정 — 15초 타임아웃 (v2.1.144)
+- Stop Hook 반복 블록 무한 루프 — 8회 연속 블록 후 경고와 함께 턴 종료 (v2.1.143)
+
+---
+
 ### v2.1.142 (2026-05-15 동기화)
 
 **새로운 기능:**
