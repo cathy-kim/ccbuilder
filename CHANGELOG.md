@@ -15,6 +15,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.37.0] - 2026-05-21
+
+### Added
+- **Claude Code v2.1.146 sync**
+  - `/code-review [effort]` 명령 — `/simplify` 리네임, 선택적 effort 레벨 지원 (e.g. `/code-review high`) (v2.1.146)
+  - `claude agents --json` — 실행 중 세션 JSON 목록 출력 (스크립팅·tmux-resurrect·status bar 지원) (v2.1.145)
+  - `/resume` 백그라운드 세션 지원 — `bg` 마커로 구분 표시 (v2.1.144)
+  - `/model` 현재 세션만 변경 — 모델 피커 `d` 키로 신규 세션 기본값 설정 (v2.1.144)
+  - `/extra-usage` → `/usage-credits` 리네임 (구 명령 유지) (v2.1.144)
+  - `worktree.bgIsolation: "none"` 설정 — 백그라운드 세션 EnterWorktree 없이 작업 디렉토리 직접 편집 (v2.1.143)
+  - `claude plugin disable` 의존성 강제 — 다른 플러그인 의존 시 거부 + copy-pasteable disable-chain 힌트 (v2.1.143)
+  - `claude plugin enable` 전이적 의존성 자동 강제 활성화 (v2.1.143)
+  - `/plugin` 마켓플레이스 브라우즈 패널 예상 컨텍스트 비용(per-turn·per-invocation 토큰) 표시 (v2.1.143)
+  - `/plugin` Discover·Browse 화면에서 설치 전 명령·에이전트·스킬·훅·MCP/LSP 서버 상세 미리 보기 (v2.1.145)
+  - Stop·SubagentStop Hook 입력에 `background_tasks`·`session_crons` 필드 추가 (v2.1.145)
+  - status line JSON 입력에 GitHub 레포·PR 정보 포함 (감지 시) (v2.1.145)
+  - auto mode에서 사용자·스킬이 `AskUserQuestion` 명시 의존 시 억제하지 않도록 수정 (v2.1.146)
+  - `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` env var — stop hook 블록 반복 상한 오버라이드 (기본 8회) (v2.1.143)
+  - 백그라운드 서브에이전트 완료 알림에 elapsed duration 추가 (v2.1.144)
+  - PowerShell 도구 `-ExecutionPolicy Bypass` 기본 전달 (v2.1.143)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.142 → v2.1.146 업데이트
+  - CLI 섹션: `/code-review`, `claude agents --json`, `/resume` bg 지원, `/model` 세션 전용, `/usage-credits`, `worktree.bgIsolation`, `CLAUDE_CODE_STOP_HOOK_BLOCK_CAP` 추가
+  - Plugin 섹션: 플러그인 의존성 강제, `/plugin` 상세 미리 보기, 컨텍스트 비용 표시 추가
+  - Hook 섹션: Stop·SubagentStop `background_tasks`/`session_crons` 필드 추가
+  - Breaking Changes: `/simplify` → `/code-review` 리네임, PowerShell `-ExecutionPolicy Bypass` 기본 전달 추가
+- `references/version-sync.md`: v2.1.146 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Stop·SubagentStop `background_tasks`/`session_crons` 필드 업데이트
+- `references/official/hooks.md`: Stop·SubagentStop `background_tasks`/`session_crons` 필드 업데이트
+
+### Fixed
+- MCP `resources/list`, `resources/templates/list`, `prompts/list` 페이지네이션 서버에서 2페이지 이후 항목 누락 버그 수정 (v2.1.146)
+- Read 도구 전체 파일 토큰 한도 초과 시 하드 에러 대신 "PARTIAL view" 노티스와 함께 첫 페이지 트런케이션 반환 (v2.1.145)
+- 시작 시 `api.anthropic.com` 미달 시 최대 75초 hang 현상 수정 — 사이드 채널 API 호출 15초 타임아웃 (v2.1.144)
+- Agent Teams 비ASCII 이름 팀메이트 API 호출 실패 (유효하지 않은 헤더 인코딩) 수정 (v2.1.145)
+- Windows PowerShell 도구 winget/Microsoft Store 경유 설치 시 "command line is invalid" 오류 수정 (v2.1.146)
+- `/review` deprecated `projectCards` GraphQL 쿼리로 Classic Projects 보유 레포 오류 수정 (v2.1.145)
+- `claude plugin validate` `skills:` 항목이 디렉토리 대신 파일 가리킬 때 미검출 수정 (v2.1.145)
+- Stop Hook 반복 블록 무한 루프 수정 — 8회 연속 블록 후 경고와 함께 턴 종료 (v2.1.143)
+
+### Breaking Changes
+- `/simplify` → `/code-review [effort]` 리네임 (v2.1.146)
+- PowerShell 도구 `-ExecutionPolicy Bypass` 기본 전달 — 옵트아웃: `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1` (v2.1.143)
+
+---
+
 ## [2.36.0] - 2026-05-15
 
 ### Added
