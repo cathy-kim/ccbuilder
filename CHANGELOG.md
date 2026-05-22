@@ -15,6 +15,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.38.0] - 2026-05-22
+
+### Added
+- **Claude Code v2.1.148 sync**
+  - 핀드 백그라운드 세션 (`Ctrl+T` in `claude agents`) — 유휴 시 유지, Claude Code 업데이트 적용 자동 재시작, 메모리 압박 시 비핀드 세션 우선 제거 (v2.1.147)
+  - `/code-review --comment` — 수정사항을 인라인 GitHub PR 코멘트로 게시 지원 (v2.1.147)
+  - 자동 업데이터 개선 — 일시적 네트워크 오류 재시도, 에러 카테고리·OS 에러 코드 상세 보고, 업데이트 실패 시 현재 버전 표시 (v2.1.147)
+  - 프롬프트 히스토리 연속 중복 항목 미기록 — 동일 프롬프트 재제출 시 히스토리 중복 방지 (v2.1.147)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.146 → v2.1.148 업데이트
+  - CLI 섹션: 핀드 백그라운드 세션, `/code-review --comment`, 자동 업데이터 개선, `CLAUDE_CODE_SUBAGENT_MODEL` 에이전트 팀 수정 추가
+- `references/version-sync.md`: v2.1.148 변경사항 추적 엔트리 추가
+
+### Fixed
+- Bash 도구 일부 사용자에서 모든 명령에 exit code 127 반환하던 회귀 수정 (v2.1.148, v2.1.147 회귀)
+- 플러그인 에이전트 `tools:` frontmatter에 여러 `Agent(...)` 타입 선언 시 마지막 항목만 유지되던 버그 수정 (v2.1.147)
+- Hook `if` 조건 `PowerShell(git push*)` 등 미매칭 수정 — `PowerShell(*)`만 작동하던 버그 (v2.1.147)
+- 슬래시 명령 뒤 탭·개행 입력 시 알 수 없는 명령으로 처리되던 버그 수정 (v2.1.147)
+- 헤드리스/SDK 모드에서 알 수 없는 슬래시 명령 무시 → 에러 메시지 표시 (v2.1.147)
+- 붙여넣은 텍스트가 `[Pasted text #N]` 플레이스홀더로 에이전트에 전달되던 버그 수정 (v2.1.147)
+- `/effort` 슬라이더 잘못된 초기 레벨로 열리던 버그 수정 (v2.1.147)
+- MCP 서버 페이지네이션 시 resources·templates·prompts 2페이지 이후 누락 수정 (v2.1.147)
+- `CLAUDE_CODE_SUBAGENT_MODEL` 에이전트 팀 teammate 프로세스에 미적용되던 버그 수정 (v2.1.147)
+- 백그라운드 세션 이미 부여된 도구 권한("don't ask again") 재요청하던 버그 수정 (v2.1.147)
+- 쉘 스냅샷에서 단일 언더스코어로 시작하는 이름의 사용자 함수 누락 수정 (v2.1.147)
+
+---
+
 ## [2.37.0] - 2026-05-21
 
 ### Added
