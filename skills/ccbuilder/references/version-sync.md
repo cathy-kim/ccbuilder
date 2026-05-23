@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.150 (2026-05-23 동기화)
+
+**새로운 기능:**
+- (v2.1.150) 내부 인프라 개선 (사용자 가시 변경 없음)
+- (v2.1.149) `/usage` 카테고리별 사용량 분석 — skills·subagents·plugins·MCP 서버별 비용 표시
+- (v2.1.149) `/diff` 상세 뷰 키보드 스크롤 지원 (arrows·j/k·PgUp/PgDn·Space·Home/End)
+- (v2.1.149) 마크다운 GFM task list 체크박스 렌더링 — `- [ ] todo` / `- [x] done` 기본 불릿 대신 체크박스 표시
+- (v2.1.149) Enterprise: `allowAllClaudeAiMcps` managed 설정 — `managed-mcp.json`과 함께 claude.ai cloud MCP 커넥터 동시 로드
+- (v2.1.147) 핀된 백그라운드 세션 (`Ctrl+T` in `claude agents`) 유휴 시 유지·업데이트 in-place 재시작·메모리 압박 시에만 비핀 세션 후 제거
+- (v2.1.147) 자동 업데이트 개선 — 네트워크 실패 재시도, 상세 오류 카테고리·OS 에러 코드 보고
+
+**주요 버그 수정:**
+- PowerShell 권한 우회 — 내장 `cd` 함수(`cd..`, `cd\`, `cd~`, `X:`)가 감지 없이 워크스페이스 외부 디렉토리 접근 허용하던 버그 수정 (v2.1.149)
+- git worktree 내 sandbox 쓰기 허용 리스트가 공유 `.git` 디렉토리 대신 전체 메인 레포 루트를 커버하던 버그 수정 (v2.1.149)
+- `find` 명령이 macOS 시스템 파일/vnode 테이블 고갈·호스트 크래시 유발하던 버그 수정 (v2.1.149)
+- `/ultraplan` 및 원격 세션 생성 시 변경 없는 워킹 트리에서 "Could not capture uncommitted changes" 실패 수정 (v2.1.149)
+- Bash 도구 exit code 127 회귀 수정 (v2.1.147 회귀 → v2.1.148 핫픽스)
+- managed-settings 승인 다이얼로그 수락 후 터미널 프리즈 수정 (v2.1.149)
+
+---
+
 ### v2.1.146 (2026-05-21 동기화)
 
 **새로운 기능:**
