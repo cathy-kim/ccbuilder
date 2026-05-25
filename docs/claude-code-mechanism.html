@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claude Code 동작 메커니즘</title>
+<style>
+  /* ===== Palette: 3색 (Primary=blue / Accent=amber / Neutral=gray) ===== */
+  :root {
+    --bg:        #f6f6f3;
+    --surface:   #ffffff;
+    --ink:       #1b1b18;
+    --ink-soft:  #5d5d56;
+    --ink-faint: #8a8a82;
+    --line:      #e3e3dc;
+    --line-2:    #cfcfc7;
+    --primary:   #2347d9;   /* blue */
+    --primary-bg:#eef1fd;
+    --accent:    #b54708;   /* amber-brown : 강조/주의 */
+    --accent-bg: #fbf0e6;
+    --code-bg:   #1c1c1a;
+    --code-ink:  #e8e8e2;
+    --code-key:  #9db4ff;
+    --code-dim:  #8f8f86;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+                 "Pretendard", "Noto Sans KR", Roboto, sans-serif;
+    line-height: 1.7; font-size: 15px; -webkit-font-smoothing: antialiased;
+  }
+  code, pre, .mono { font-family: "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace; }
+
+  .wrap { display: grid; grid-template-columns: 268px 1fr; max-width: 1280px; margin: 0 auto; }
+  nav.side {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--line); background: var(--surface); padding: 28px 18px 40px;
+  }
+  nav.side .brand { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 4px; }
+  nav.side .sub { font-size: 12px; color: var(--ink-faint); margin-bottom: 22px; }
+  nav.side a {
+    display: block; padding: 7px 10px; margin: 1px 0; text-decoration: none;
+    color: var(--ink-soft); font-size: 13.5px; border-left: 2px solid transparent;
+    transition: background .12s, color .12s;
+  }
+  nav.side a:hover { background: var(--bg); color: var(--ink); }
+  nav.side a.active { color: var(--primary); border-left-color: var(--primary); background: var(--primary-bg); font-weight: 600; }
+  nav.side .grp { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin: 18px 0 4px 10px; }
+
+  main { padding: 48px 56px 120px; min-width: 0; }
+
+  header.hero { margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+  header.hero h1 { font-size: 30px; line-height: 1.25; margin: 0 0 10px; letter-spacing: -0.02em; }
+  header.hero p { margin: 0; color: var(--ink-soft); max-width: 72ch; }
+  .repo-pill {
+    display: inline-block; font-size: 12px; color: var(--ink-soft); background: var(--bg);
+    border: 1px solid var(--line); padding: 3px 9px; margin-bottom: 16px;
+  }
+  .repo-pill b { color: var(--ink); }
+
+  section { margin: 0 0 64px; scroll-margin-top: 24px; }
+  section > h2 { font-size: 22px; letter-spacing: -0.01em; margin: 0 0 6px; }
+  section > h2 .n {
+    display: inline-block; min-width: 30px; color: var(--primary); font-variant-numeric: tabular-nums;
+    font-size: 15px; font-weight: 700; vertical-align: middle; margin-right: 6px;
+  }
+  section > .lead { color: var(--ink-soft); margin: 0 0 22px; max-width: 76ch; }
+  h3 { font-size: 16px; margin: 28px 0 10px; letter-spacing: -0.01em; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); padding: 20px 22px; margin: 16px 0; }
+  .note { border-left: 3px solid var(--primary); background: var(--primary-bg); padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+  .warn { border-left: 3px solid var(--accent); background: var(--accent-bg); padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+  .warn b, .note b { color: var(--ink); }
+  .kbd { background: var(--bg); border: 1px solid var(--line-2); padding: 1px 6px; font-size: 12.5px; }
+  .tag { display:inline-block; font-size:11px; padding:2px 7px; border:1px solid var(--line-2); color:var(--ink-soft); background:var(--bg); margin-left:6px; vertical-align:middle;}
+
+  .diagram { background: var(--surface); border: 1px solid var(--line); padding: 18px; margin: 18px 0; overflow-x: auto; text-align: center; }
+  .mermaid { font-size: 13px; }
+  .diagram .cap { display:block; text-align:left; font-size:12px; color:var(--ink-faint); margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--bg); font-weight: 600; border-bottom: 1px solid var(--line-2); }
+  td code, th code { font-size: 12.5px; background: var(--bg); padding: 1px 5px; }
+  tr:hover td { background: #fcfcfb; }
+
+  pre.code { background: var(--code-bg); color: var(--code-ink); padding: 16px 18px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; margin: 0; }
+  pre.code .k { color: var(--code-key); }
+  pre.code .c { color: var(--code-dim); }
+  p code, li code { background: var(--bg); border: 1px solid var(--line); padding: 1px 5px; font-size: 12.5px; }
+
+  details.cite { margin: 12px 0; border: 1px solid var(--line); background: var(--surface); }
+  details.cite > summary { cursor: pointer; padding: 10px 14px; font-size: 13px; color: var(--primary); list-style: none; user-select: none; font-weight: 600; }
+  details.cite > summary::-webkit-details-marker { display: none; }
+  details.cite > summary::before { content: "▸ "; color: var(--ink-faint); }
+  details.cite[open] > summary::before { content: "▾ "; }
+  details.cite[open] > summary { border-bottom: 1px solid var(--line); }
+
+  ul.clean { padding-left: 20px; } ul.clean li { margin: 5px 0; }
+  .srcref { color: var(--accent); font-size: 12px; }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li { position: relative; padding: 12px 16px 12px 52px; border: 1px solid var(--line); background: var(--surface); margin: 8px 0; }
+  ol.steps > li::before {
+    counter-increment: s; content: counter(s);
+    position: absolute; left: 14px; top: 12px; width: 24px; height: 24px;
+    background: var(--primary); color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center;
+  }
+  ol.steps > li b { color: var(--ink); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 22px; color: var(--ink-faint); font-size: 12.5px; }
+
+  @media (max-width: 900px) {
+    .wrap { grid-template-columns: 1fr; }
+    nav.side { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    nav.side a { display: inline-block; }
+    main { padding: 32px 22px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="side">
+    <div class="brand">Claude Code 메커니즘</div>
+    <div class="sub">rules · skills · subagents · hooks → LLM API</div>
+    <div class="grp">기초</div>
+    <a href="#overview">0. 개요 — 확장 시스템</a>
+    <a href="#big">1. 큰 그림 — 요청 라우팅</a>
+    <a href="#api">2. LLM API 요청 구조</a>
+    <a href="#loop">3. 에이전틱 루프</a>
+    <div class="grp">컨텍스트 주입</div>
+    <a href="#memory">4. Memory & Rules</a>
+    <a href="#skills">5. Skills</a>
+    <div class="grp">실행 & 제어</div>
+    <a href="#subagents">6. Subagents (Task)</a>
+    <a href="#hooks">7. Hooks (24 이벤트)</a>
+    <a href="#teams">8. Agent Teams</a>
+    <div class="grp">종합</div>
+    <a href="#scenario">9. End-to-End 시나리오</a>
+    <a href="#auth">10. 인증 & 과금</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="repo-pill">Claude Code <b>v2.1.85+</b> · 출처 <b>code.claude.com/docs</b> · 작성 2026-05-25</div>
+      <h1>Claude Code 동작 메커니즘</h1>
+      <p>Memory(rules) / Skills / Subagents / Hooks가 각각 어떤 경로로 <b>Anthropic Messages API 요청</b>에 도달하는지,
+      그리고 한 번의 사용자 입력이 어떻게 여러 번의 LLM 호출로 전개되는지를 공식 정의 기준으로 시각화한 문서.</p>
+    </header>
+
+    <div class="note">
+      <b>정확도 기준.</b> 확장 메커니즘(Skills·Subagents·Hooks·Memory·Rules)은 <b>공식 문서</b>(<code>code.claude.com/docs</code>, ccbuilder v2.22.0 / CC v2.1.85)
+      기준입니다. 와이어 레벨(<code>system</code> 블록·<code>cache_control</code>·<code>tools</code> 직렬화)은 <b>Anthropic Messages API</b> 표준 동작과
+      <code>claude-code-system-prompts</code> 공개 자료 기준이며, 시스템 프롬프트의 정확한 조립 순서 등 일부는 비공개 구현 영역이라 <span class="tag">구현 영역</span> 표시로 구분했습니다.
+    </div>
+
+    <!-- ===== 0. OVERVIEW ===== -->
+    <section id="overview">
+      <h2><span class="n">0</span>개요 — Claude Code 확장 시스템</h2>
+      <p class="lead">Claude Code는 LLM(Claude)을 감싸는 <b>에이전트 하네스</b>입니다. 7가지 확장 요소가 각자 다른 방식으로
+      "모델에게 무엇을 보여줄지(컨텍스트)"와 "모델이 무엇을 할 수 있는지(도구)", "언제 개입할지(제어)"를 결정합니다.</p>
+
+      <table>
+        <tr><th>요소</th><th>역할</th><th>LLM에 닿는 방식</th><th>위치</th></tr>
+        <tr><td><b>Memory / Rules</b></td><td>지속 지식·규칙</td><td><code>system</code>에 텍스트 주입</td><td>CLAUDE.md, <code>.claude/rules/</code></td></tr>
+        <tr><td><b>Skills</b></td><td>지식·워크플로 주입</td><td>progressive disclosure (메타데이터→본문)</td><td><code>.claude/skills/</code></td></tr>
+        <tr><td><b>Subagents</b></td><td>격리된 독립 작업</td><td><code>Task</code> 도구 → 별도 컨텍스트</td><td><code>.claude/agents/</code></td></tr>
+        <tr><td><b>Hooks</b></td><td>워크플로 제어·검증</td><td>도구/세션 라이프사이클 개입</td><td><code>settings.json</code></td></tr>
+        <tr><td><b>MCP</b></td><td>외부 도구·데이터</td><td><code>tools</code> 배열에 합류</td><td><code>.mcp.json</code></td></tr>
+        <tr><td><b>Agent Teams</b></td><td>멀티 에이전트 협업</td><td>지속 Teammate + 메시징</td><td><code>~/.claude/teams/</code></td></tr>
+        <tr><td><b>Slash / Built-in Tools</b></td><td>명령·동작</td><td>Skills 통합 / <code>tools</code> 정의</td><td><code>.claude/commands/</code></td></tr>
+      </table>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  subgraph CC["Claude Code 하네스"]
+    CTX["컨텍스트 조립<br/>system + tools + messages"]
+    LOOP["에이전틱 루프"]
+    HKE["Hook 엔진"]
+  end
+  MEM["Memory/Rules"] --> CTX
+  SK["Skills"] --> CTX
+  MCP["MCP 서버"] --> CTX
+  CTX --> LOOP
+  LOOP ==>|"HTTPS"| ANT(["Anthropic Messages API"])
+  ANT ==>|"tool_use / text"| LOOP
+  LOOP --> TOOLS["내장 도구 실행<br/>Read/Edit/Bash/…"]
+  LOOP --> TASK["Task → Subagent<br/>(별도 200k 컨텍스트)"]
+  HKE -.->|"Pre/Post/Stop 등 개입"| LOOP
+        </pre>
+        <span class="cap">굵은 화살표 = 실제 LLM 호출. 점선 = 훅이 라이프사이클에 개입.</span>
+      </div>
+    </section>
+
+    <!-- ===== 1. BIG PICTURE ===== -->
+    <section id="big">
+      <h2><span class="n">1</span>큰 그림 — 무엇이 요청의 어디로</h2>
+      <p class="lead">핵심: 각 요소는 LLM 요청의 <b>서로 다른 부분</b>에 도달합니다. rules/memory와 skill 본문은 컨텍스트로,
+      도구·MCP는 <code>tools</code>로, subagent는 별도 요청으로, hook은 요청을 만들기 전후에 개입합니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  subgraph SRC["입력 소스"]
+    ID["Claude Code 정체성/지침"]
+    ENV["환경 컨텍스트(cwd·OS·git·날짜)"]
+    MEM["Memory: CLAUDE.md · rules · Auto Memory"]
+    SKB["활성화된 Skill 본문"]
+    TD["내장 도구 + MCP 도구 정의"]
+    HIST["대화 히스토리 + tool_result"]
+  end
+  subgraph REQ["Anthropic Messages 요청"]
+    SYS["system (블록 + cache_control)"]
+    TOOLS["tools (배열 + cache_control)"]
+    MSG["messages (user/assistant/tool_result)"]
+  end
+  ID --> SYS
+  ENV --> SYS
+  MEM --> SYS
+  SKB --> SYS
+  TD --> TOOLS
+  HIST --> MSG
+  REQ ==> LLM(["Claude (LLM)"])
+  HOOK["Hooks"] -. "UserPromptSubmit · PreToolUse 등으로 개입" .-> REQ
+  SUB["Subagent (Task 도구)"] -.->|"별도 200k 컨텍스트의 독립 요청"| REQ2["새 Messages 요청"]
+        </pre>
+        <span class="cap">Skill의 본문은 활성화 시 컨텍스트(system 또는 대화)로 주입됨 = progressive disclosure (§5).</span>
+      </div>
+    </section>
+
+    <!-- ===== 2. API ===== -->
+    <section id="api">
+      <h2><span class="n">2</span>LLM API 요청 구조 <span class="tag">Anthropic Messages API</span></h2>
+      <p class="lead">Claude Code는 매 턴마다 Anthropic <code>POST /v1/messages</code>를 호출합니다. 요청은 크게 <code>system</code> · <code>tools</code> ·
+      <code>messages</code> 세 덩어리이며, 큰 안정 구간(system+tools+memory)은 <b>prompt caching</b>으로 재사용합니다.</p>
+
+      <h3>요청 body 골격</h3>
+      <pre class="code">{
+  <span class="k">"model"</span>: "claude-opus-4-6",
+  <span class="k">"max_tokens"</span>: 64000,
+  <span class="k">"system"</span>: [                       <span class="c">// 블록 배열 — cache_control 지원</span>
+    { "type":"text", "text":"&lt;정체성 + 도구사용 지침 + 환경 컨텍스트&gt;",
+      "cache_control": {"type":"ephemeral"} },           <span class="c">// ← breakpoint</span>
+    { "type":"text", "text":"&lt;CLAUDE.md / rules 메모리&gt;" }
+  ],
+  <span class="k">"tools"</span>: [                        <span class="c">// 내장 + MCP 도구</span>
+    { "name":"Read", "description":"…", "input_schema":{…} },
+    { "name":"Edit", "…":"…",
+      "cache_control": {"type":"ephemeral"} }            <span class="c">// ← 마지막 도구에 breakpoint</span>
+  ],
+  <span class="k">"tool_choice"</span>: {"type":"auto"},
+  <span class="k">"messages"</span>: [
+    { "role":"user",      "content":[ {"type":"text","text":"…"} ] },
+    { "role":"assistant", "content":[ {"type":"thinking",…}, {"type":"tool_use",…} ] },
+    { "role":"user",      "content":[ {"type":"tool_result","tool_use_id":"…","content":[…],
+                                        "cache_control":{"type":"ephemeral"}} ] }  <span class="c">// ← rolling</span>
+  ],
+  <span class="k">"thinking"</span>: {"type":"enabled","budget_tokens": …},   <span class="c">// extended thinking 시</span>
+  <span class="k">"stream"</span>: true
+}</pre>
+
+      <h3>Prompt Caching — 최대 4개 breakpoint</h3>
+      <p>Anthropic API는 요청당 <b>최대 4개</b>의 <code>cache_control: {"type":"ephemeral"}</code> 마커를 허용합니다(TTL 기본 5분, 옵션 1시간).
+      Claude Code는 변하지 않는 큰 prefix를 캐시해 반복 턴 비용을 줄입니다. 전형적 배치:</p>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  A["system blocks<br/>(정체성+지침+메모리)"] -->|"breakpoint 1~2"| B["tools 배열"]
+  B -->|"breakpoint 3"| C["대화 히스토리 prefix"]
+  C -->|"breakpoint 4 (rolling)"| D["최신 tool_result / user turn"]
+  classDef cached fill:#eef1fd,stroke:#2347d9,color:#1b1b18;
+  classDef fresh fill:#fbf0e6,stroke:#b54708,color:#1b1b18;
+  class A,B,C cached;
+  class D fresh;
+        </pre>
+        <span class="cap">파란 = 캐시 적중(저비용 재사용), 주황 = 매 턴 새로 들어가는 부분. 캐시 적중 시 <code>cache_read_input_tokens</code>로 청구.</span>
+      </div>
+
+      <h3>헤더 · 인증 · 스트리밍</h3>
+      <table>
+        <tr><th>항목</th><th>내용</th></tr>
+        <tr><td>엔드포인트</td><td><code>POST https://api.anthropic.com/v1/messages</code></td></tr>
+        <tr><td>인증</td><td><code>x-api-key</code> (API 키) 또는 OAuth <code>Authorization: Bearer</code> (Claude 구독 로그인)</td></tr>
+        <tr><td>버전/베타</td><td><code>anthropic-version</code> + <code>anthropic-beta</code>(prompt caching·context 등 기능 플래그)</td></tr>
+        <tr><td>스트리밍</td><td>SSE: <code>message_start → content_block_start/delta/stop → message_delta → message_stop</code></td></tr>
+        <tr><td>thinking</td><td>extended thinking 시 <code>thinking</code> 블록이 응답에 포함, 다음 턴 컨텍스트로 유지</td></tr>
+      </table>
+
+      <div class="warn"><b>구현 영역 주의.</b> <code>cache_control</code> breakpoint의 정확한 개수·위치, <code>system</code> 텍스트 원문은 비공개 구현이며 버전마다 달라질 수 있습니다.
+      위 골격은 Anthropic Messages API 규격 + 공개된 prompt-caching 모범 패턴에 근거한 <b>대표 구조</b>입니다.</div>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li>Anthropic Messages API · Prompt Caching · Extended Thinking 공식 문서</li>
+          <li>ccbuilder <span class="srcref">official/tools.md</span> (Built-in Tools, 토큰 비용)</li>
+          <li><span class="srcref">claude-code-system-prompts</span> 공개 레포 (system prompt·tool 스펙)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 3. LOOP ===== -->
+    <section id="loop">
+      <h2><span class="n">3</span>에이전틱 루프 — "1 입력 → N회 LLM 호출"</h2>
+      <p class="lead">사용자 입력 한 번은 모델이 도구를 그만 쓸 때(<code>end_turn</code>)까지 여러 번의 LLM 호출로 전개됩니다.
+      매 호출마다 <code>system</code>·<code>tools</code>는 (대개 캐시로) 재사용되고 <code>messages</code>만 누적됩니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  U["사용자 입력"] --> UPS["UserPromptSubmit 훅<br/>(차단·컨텍스트 주입 가능)"]
+  UPS --> SC["스킬 자동 활성화 판단<br/>(description 매칭)"]
+  SC --> BR
+  subgraph LOOP["에이전틱 루프"]
+    BR["요청 조립: system + tools + messages<br/>(prompt caching)"]
+    BR --> CALL["Claude 호출 (stream)"]
+    CALL --> Q{"응답에 tool_use 있나?"}
+    Q -- "없음 (end_turn)" --> BREAK["루프 종료"]
+    Q -- "있음" --> FOR
+    subgraph FOR["각 tool_use 처리"]
+      PRE["PreToolUse 훅<br/>allow/deny/ask · updatedInput"]
+      PRE --> PERM["권한 검사 (PermissionRequest 훅)"]
+      PERM --> EX["도구 실행 (또는 Task→Subagent)"]
+      EX --> POST["PostToolUse / PostToolUseFailure 훅"]
+      POST --> APP["tool_result를 messages에 추가"]
+    end
+    FOR --> CC{"컨텍스트 한도 근접?"}
+    CC -- "예" --> CMP["auto-compact<br/>(PreCompact → 요약 → PostCompact)"]
+    CC -- "아니오" --> BR
+    CMP --> BR
+  end
+  BREAK --> STOP["Stop 훅<br/>(작업 계속 강제 가능)"]
+        </pre>
+        <span class="cap">종료 조건: 모델이 tool_use 없이 응답(end_turn). Stop 훅이 <code>decision:"block"</code>이면 계속 작업하도록 되돌릴 수 있음.</span>
+      </div>
+
+      <div class="note"><b>Auto-compaction.</b> 컨텍스트가 한도에 근접하면 오래된 대화를 요약본으로 치환해 토큰을 회수합니다.
+      트리거 비율은 <code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code>로 조정 가능하며, <code>PreCompact</code>/<code>PostCompact</code> 훅이 전후에 발화합니다.</p></div>
+    </section>
+
+    <!-- ===== 4. MEMORY ===== -->
+    <section id="memory">
+      <h2><span class="n">4</span>Memory & Rules — <code>system</code>으로 주입</h2>
+      <p class="lead">지속 지식은 5계층으로 로드되어 시스템 컨텍스트에 합쳐집니다. 상위 계층이 우선합니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  M1["① Managed Policy<br/>(조직 배포 · 최고 우선순위)"]
+  M2["② Project Memory<br/>CLAUDE.md + @path imports (5hop 재귀)"]
+  M3["③ Project Rules<br/>.claude/rules/*.md (paths: frontmatter)"]
+  M4["④ User Memory<br/>~/.claude/CLAUDE.md + ~/.claude/rules/"]
+  M5["⑤ Project Local<br/>CLAUDE.local.md (자동 gitignore)"]
+  M1 --> M2 --> M3 --> M4 --> M5 --> OUT["병합 → system 컨텍스트로 주입"]
+  AM["Auto Memory<br/>~/.claude/projects/&lt;p&gt;/memory/MEMORY.md<br/>(매 세션 자동 로드 · 200줄/25KB)"] --> OUT
+  classDef hi fill:#eef1fd,stroke:#2347d9,color:#1b1b18;
+  class M1,M2 hi;
+        </pre>
+        <span class="cap">CLAUDE.md 로드 시 <code>InstructionsLoaded</code> 훅 발화. Rules의 <code>paths:</code>는 해당 글로브에 맞을 때만 활성.</span>
+      </div>
+
+      <h3>@import & Modular Rules</h3>
+      <pre class="code"><span class="c"># CLAUDE.md — 다른 문서 가져오기 (최대 5hop, 순환 자동 감지)</span>
+@docs/architecture.md
+@../shared/guidelines.md
+
+<span class="c"># .claude/rules/api.md — 경로 한정 규칙</span>
+---
+paths:
+  - "src/api/**"
+  - "*.test.ts"
+---
+# API 코딩 규칙 …</pre>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li><span class="srcref">code.claude.com/docs/en/memory</span></li>
+          <li>ccbuilder <span class="srcref">official/memory-rules.md</span> (5계층 · @imports · Auto Memory)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 5. SKILLS ===== -->
+    <section id="skills">
+      <h2><span class="n">5</span>Skills — Progressive Disclosure</h2>
+      <p class="lead">Skill의 핵심은 <b>점진적 공개</b>입니다. 메타데이터(name+description)는 항상 로드되어 카탈로그를 이루고,
+      본문은 <b>활성화될 때만</b> 컨텍스트에 주입되며, 보조 리소스는 필요할 때 도구로 읽힙니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  subgraph LOAD["3단계 로딩 (토큰 절약)"]
+    L1["① 메타데이터: name + description<br/>(항상 컨텍스트에 존재 = 카탈로그)"]
+    L2["② 본문: SKILL.md (≤500줄)<br/>(활성화 시 주입)"]
+    L3["③ 리소스: references/ scripts/<br/>(필요 시 Read 도구로 로드)"]
+    L1 --> L2 --> L3
+  end
+  TRIG{"활성화 트리거"}
+  T1["모델 자동 호출<br/>(description 매칭)"] --> TRIG
+  T2["사용자 / 슬래시 호출"] --> TRIG
+  T3["Skill 도구 호출"] --> TRIG
+  TRIG --> L2
+  L2 --> CTX["본문 + 치환된 ARGUMENTS<br/>+ 백틱 명령 동적 컨텍스트 → 대화에 주입"]
+  CTX --> FORK{"context: fork?"}
+  FORK -- "예" --> SUB["별도 서브에이전트에서 실행"]
+  FORK -- "아니오" --> MAIN["현재 대화에서 실행"]
+        </pre>
+        <span class="cap">우선순위: Enterprise &gt; Personal(~/.claude/skills) &gt; Project(.claude/skills) &gt; Plugin. 동명 스킬은 상위가 덮어씀.</span>
+      </div>
+
+      <h3>SKILL.md frontmatter & 치환</h3>
+      <table>
+        <tr><th>필드</th><th>의미</th></tr>
+        <tr><td><code>name</code> / <code>description</code></td><td>필수. description은 <b>자동 활성화 키워드</b> 역할</td></tr>
+        <tr><td><code>userInvocable</code></td><td><code>false</code>면 사용자 메뉴에서 숨김(모델 전용)</td></tr>
+        <tr><td><code>disable-model-invocation</code></td><td><code>true</code>면 자동 호출 끔(수동 <code>/</code>만)</td></tr>
+        <tr><td><code>allowed-tools</code></td><td>스킬 내 사용 도구 제한</td></tr>
+        <tr><td><code>context: fork</code></td><td>별도 서브에이전트 컨텍스트에서 실행</td></tr>
+        <tr><td><code>model</code> / <code>argument-hint</code> / <code>hooks</code> / <code>skills</code></td><td>모델 오버라이드 / 자동완성 / 스코프 훅 / 함께 로드</td></tr>
+      </table>
+      <p>치환: <code>$ARGUMENTS</code>, <code>$1</code>·<code>$2</code>, <code>$ARGUMENTS[0]</code>, <code>${CLAUDE_SESSION_ID}</code>. 동적 주입: <code>!`git status --short`</code>처럼 백틱 명령 결과를 실행 시점에 삽입.</p>
+
+      <div class="note"><b>슬래시 커맨드 = Skills.</b> 커스텀 슬래시 명령은 Skills 시스템으로 통합되었습니다. <code>.claude/commands/*.md</code>도 여전히 동작하지만 <code>skills/</code>가 권장됩니다.</div>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li><span class="srcref">code.claude.com/docs/en/skills</span></li>
+          <li>ccbuilder <span class="srcref">official/skills.md</span>, <span class="srcref">skills-guide.md</span> (frontmatter · 치환 · progressive disclosure)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 6. SUBAGENTS ===== -->
+    <section id="subagents">
+      <h2><span class="n">6</span>Subagents — <code>Task</code> 도구 / 별도 200k 컨텍스트</h2>
+      <p class="lead">서브에이전트는 <code>Task</code> 도구로 호출되어 <b>독립된 200k 컨텍스트 창</b>에서 자기만의 에이전틱 루프를 돌고,
+      기본적으로 <b>최종 결과를 동기 <code>tool_result</code>로 부모에게 반환</b>합니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+sequenceDiagram
+  participant P as 메인 대화
+  participant A as Claude (부모)
+  participant SUB as Subagent (별도 200k)
+  participant SA as Claude (서브)
+  P->>A: 사용자 작업
+  A-->>P: Task 도구 호출 {subagent_type, prompt, model?, run_in_background?}
+  Note over SUB,SA: 부모 히스토리 비상속 · 자체 system + 제한된 tools
+  loop 서브 에이전틱 루프 (≤ maxTurns)
+    SUB->>SA: 요청 (자체 컨텍스트)
+    SA-->>SUB: tool_use / 텍스트
+  end
+  alt 기본 (동기)
+    SUB-->>A: 최종 결과를 tool_result로 반환
+  else run_in_background:true
+    SUB-->>A: output_file 경로 → Read로 회수
+  end
+        </pre>
+        <span class="cap">제약: 최대 동시 10개 · 중첩 불가(서브가 또 서브 호출 X) · 서브에이전트도 auto-compaction 지원.</span>
+      </div>
+
+      <h3>정의 (<code>.claude/agents/&lt;name&gt;.md</code>) & 내장 타입</h3>
+      <table>
+        <tr><th>frontmatter</th><th>의미</th></tr>
+        <tr><td><code>name</code>/<code>description</code></td><td>필수. description으로 자동 위임 판단</td></tr>
+        <tr><td><code>model</code></td><td><code>sonnet·opus·haiku·inherit</code> 또는 전체 모델 ID</td></tr>
+        <tr><td><code>tools</code> / <code>disallowedTools</code></td><td>허용/차단 도구(미지정 시 전체 상속)</td></tr>
+        <tr><td><code>permissionMode</code></td><td><code>default·acceptEdits·dontAsk·bypassPermissions·plan</code></td></tr>
+        <tr><td><code>maxTurns</code> / <code>skills</code> / <code>mcpServers</code> / <code>hooks</code> / <code>memory</code></td><td>턴 상한 / 프리로드 스킬 / MCP / 스코프 훅 / 영속 메모리</td></tr>
+      </table>
+      <p><b>내장 타입</b>: <code>Explore</code>(Haiku·읽기전용)·<code>Plan</code>(읽기전용)·<code>general-purpose</code>(전체)·<code>Bash</code>·<code>statusline-setup</code>·<code>claude-code-guide</code>.
+      <b>모델 선택</b>: Task 입력의 <code>model</code> &gt; 에이전트 정의 <code>model</code> &gt; 상속. <b>재개</b>: <code>SendMessage({to: agentId})</code> (v2.1.77에서 <code>resume</code> 제거).</p>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li><span class="srcref">code.claude.com/docs/en/sub-agents</span></li>
+          <li>ccbuilder <span class="srcref">official/subagents.md</span>, <span class="srcref">subagents-guide.md</span> (200k·동기반환·제약·내장타입)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 7. HOOKS ===== -->
+    <section id="hooks">
+      <h2><span class="n">7</span>Hooks — 24개 라이프사이클 이벤트</h2>
+      <p class="lead">훅은 셸/HTTP/프롬프트/에이전트 핸들러로 라이프사이클에 개입해 도구를 차단·수정하거나 컨텍스트를 주입합니다.
+      LLM 요청을 직접 만들진 않지만, 요청 전후와 도구 실행 전후에 끼어듭니다.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  S["SessionStart"] --> U["UserPromptSubmit<br/>(exit 2로 차단)"]
+  U --> P1["PreToolUse<br/>permissionDecision: allow/deny/ask · updatedInput"]
+  P1 --> PR["PermissionRequest<br/>(권한 대화상자)"]
+  PR --> EXE["도구 실행"]
+  EXE --> SS["SubagentStart/Stop<br/>(Task인 경우)"]
+  SS --> P2["PostToolUse / PostToolUseFailure<br/>(decision: block)"]
+  P2 --> ML{"도구 더 있나?"}
+  ML -- "예" --> P1
+  ML -- "아니오" --> ST["Stop / StopFailure<br/>(decision: block → 계속)"]
+  CMP["PreCompact / PostCompact"] -.-> P1
+  IL["InstructionsLoaded"] -.-> S
+        </pre>
+        <span class="cap">전체 24개 이벤트 중 한 턴에서 자주 발화하는 순서. 그 외: Notification·TeammateIdle·TaskCreated/Completed·CwdChanged·FileChanged·Worktree*·Elicitation* 등.</span>
+      </div>
+
+      <h3>설정 · 핸들러 · 결정 제어</h3>
+      <pre class="code">{
+  <span class="k">"hooks"</span>: {
+    <span class="k">"PreToolUse"</span>: [{
+      <span class="k">"matcher"</span>: "Bash|Edit|Write",          <span class="c">// tool_name 정규식 (없거나 * = 전체)</span>
+      <span class="k">"hooks"</span>: [{ "type":"command", "command":"./hooks/validate.sh" }]
+    }],
+    <span class="k">"Stop"</span>: [{ "type":"command", "command":"./hooks/on-stop.sh" }]
+  }
+}</pre>
+      <table>
+        <tr><th>핸들러 <code>type</code></th><th>동작</th></tr>
+        <tr><td><code>command</code></td><td>셸 스크립트. <b>stdin에 JSON</b>, exit code + stdout JSON 응답</td></tr>
+        <tr><td><code>http</code></td><td>URL로 JSON POST(셸 불필요)</td></tr>
+        <tr><td><code>prompt</code></td><td>단일 LLM 호출 → <code>{ok, reason}</code></td></tr>
+        <tr><td><code>agent</code></td><td>서브에이전트(도구 접근)</td></tr>
+        <tr><td><code>async: true</code></td><td>백그라운드(command). 차단 안 함, 다음 턴에 결과 주입</td></tr>
+      </table>
+      <table>
+        <tr><th>제어 필드</th><th>효과</th></tr>
+        <tr><td><code>hookSpecificOutput.permissionDecision</code></td><td>PreToolUse: <code>allow / deny / ask</code></td></tr>
+        <tr><td><code>hookSpecificOutput.updatedInput</code></td><td>도구 입력 교체 (PreToolUse)</td></tr>
+        <tr><td><code>hookSpecificOutput.additionalContext</code></td><td>컨텍스트 주입</td></tr>
+        <tr><td>top-level <code>decision: "block"</code></td><td>PostToolUse·Stop 등: 차단/계속 강제</td></tr>
+        <tr><td>exit code</td><td><code>0</code>=성공, <code>2</code>=차단, 기타=비차단</td></tr>
+      </table>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li><span class="srcref">code.claude.com/docs/en/hooks</span></li>
+          <li>ccbuilder <span class="srcref">official/hooks.md</span> (24 events · 핸들러 4종 · decision control)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 8. TEAMS ===== -->
+    <section id="teams">
+      <h2><span class="n">8</span>Agent Teams <span class="tag">실험적</span></h2>
+      <p class="lead">단발성 <code>Task</code>와 달리, Agent Team은 <b>지속적인 Teammate</b>들이 공유 Task List와 메시징으로 협업합니다.
+      활성화: <code>settings.json → env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"</code>.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  TC["TeamCreate"] --> TK["TaskCreate (공유 작업)"]
+  TK --> T1["Task(subagent_type, team_name, name)"]
+  T1 --> TM1["Teammate A"]
+  T1 --> TM2["Teammate B"]
+  TM1 <-->|"SendMessage (DM/브로드캐스트)"| TM2
+  TM1 --> TD["TeamDelete (완료 후)"]
+  TM2 --> TD
+        </pre>
+        <span class="cap">Task 단독: 작업 끝나면 종료·결과만 반환. Team: 해체까지 지속·상태 공유·상호 메시징(활성 시간 과금).</span>
+      </div>
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li><span class="srcref">code.claude.com/docs/en/agent-teams</span></li>
+          <li>ccbuilder <span class="srcref">agent-teams-guide.md</span>, <span class="srcref">subagents-guide.md</span> (Task vs Teams 비교)</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <!-- ===== 9. SCENARIO ===== -->
+    <section id="scenario">
+      <h2><span class="n">9</span>End-to-End 시나리오</h2>
+      <p class="lead">사용자가 프롬프트를 보내고, 그게 스킬을 자동 활성화시키고, 모델이 서브에이전트를 호출하고, 훅이 도구를 검증하는 전 과정.</p>
+
+      <div class="diagram">
+        <pre class="mermaid">
+sequenceDiagram
+  participant U as 사용자
+  participant CC as Claude Code 하네스
+  participant A as Claude (메인)
+  participant SUB as Subagent (별도 200k)
+  U->>CC: 프롬프트 입력
+  CC->>CC: UserPromptSubmit 훅 (차단·컨텍스트 주입)
+  CC->>CC: description 매칭 → Skill 활성화 → 본문 주입 (progressive disclosure)
+  CC->>A: 요청 #1 · system[정체성+환경+CLAUDE.md+스킬본문] / tools / messages
+  A-->>CC: Task 도구 호출 (subagent_type, prompt)
+  CC->>CC: PreToolUse 훅 → 권한 검사
+  CC->>SUB: 별도 200k 컨텍스트에서 서브 루프 실행
+  SUB-->>CC: 최종 결과
+  CC->>CC: PostToolUse 훅 → tool_result 구성
+  CC->>A: 요청 #2 · messages에 tool_result 누적
+  A-->>CC: 최종 답변 (tool_use 없음 = end_turn)
+  CC->>CC: Stop 훅 (계속 강제 가능) · 한도 근접 시 compact
+  CC-->>U: 응답
+        </pre>
+      </div>
+
+      <ol class="steps">
+        <li><b>Memory/Rules</b> — 매 요청의 <code>system</code>에 주입(상위 계층 우선, @import·rules 포함).</li>
+        <li><b>Skill</b> — description 매칭으로 활성화되면 본문이 컨텍스트로 주입(progressive disclosure). <code>context:fork</code>면 서브에이전트로.</li>
+        <li><b>Subagent</b> — <code>Task</code> 도구로 별도 200k 컨텍스트에서 독립 루프, 기본 동기 <code>tool_result</code> 반환.</li>
+        <li><b>Hook</b> — UserPromptSubmit·PreToolUse·PostToolUse·Stop 등 라이프사이클에 개입해 차단·수정·주입.</li>
+        <li><b>Prompt caching</b> — system+tools+메모리 prefix를 캐시해 반복 호출 비용 절감(최대 4 breakpoint).</li>
+      </ol>
+    </section>
+
+    <!-- ===== 10. AUTH ===== -->
+    <section id="auth">
+      <h2><span class="n">10</span>인증 &amp; 과금 — API 키 vs OAuth 구독</h2>
+      <p class="lead">CLI를 구독(Claude Pro/Max)으로 쓰든 API 키로 쓰든 <b>요청 body·도구·에이전틱 루프는 100% 동일</b>합니다.
+      달라지는 건 ① 인증 헤더 ② 과금 ③ rate limit 체계, 단 3가지입니다.</p>
+
+      <h3>인증 모드 3가지</h3>
+      <table>
+        <tr><th>실행</th><th>계정 / 경로</th><th>과금</th></tr>
+        <tr><td><code>claude auth login</code> / <code>/login</code> (기본)</td><td>Claude.ai 구독 (Pro/Max) · OAuth</td><td>구독 한도 — <b>크레딧 소진 안 함</b></td></tr>
+        <tr><td><code>claude auth login --console</code></td><td>Anthropic Console · OAuth</td><td>토큰당 API 과금</td></tr>
+        <tr><td><code>ANTHROPIC_API_KEY=…</code></td><td>API 키 (헤드리스/CI)</td><td>토큰당 API 과금</td></tr>
+      </table>
+      <div class="note"><b>본질은 "OAuth냐 API키냐"가 아닙니다.</b> 구독도 내부적으로 OAuth 토큰을 씁니다. 진짜 갈림길은
+      <b>구독 한도로 쓰느냐 vs 토큰당 과금하느냐</b>입니다. 그냥 <code>claude</code> 실행 = 구독(①)이 기본.</div>
+
+      <h3>OAuth 흐름 (PKCE)</h3>
+      <div class="diagram">
+        <pre class="mermaid">
+sequenceDiagram
+  participant U as 사용자
+  participant CLI as claude CLI
+  participant B as 브라우저
+  participant AUTH as Anthropic 인증 서버
+  U->>CLI: claude /login
+  CLI->>CLI: PKCE 챌린지 생성
+  CLI->>B: 인증 페이지 열기 (claude.ai)
+  U->>B: "승인" 클릭
+  B->>CLI: authorization code (로컬 콜백 포트)
+  CLI->>AUTH: code → 토큰 교환
+  AUTH-->>CLI: access_token + refresh_token
+  CLI->>CLI: 로컬 보관 (macOS Keychain / ~/.claude/.credentials.json)
+  Note over CLI: 이후 매 호출 Authorization: Bearer access_token
+  CLI->>AUTH: access_token 만료 시 refresh_token으로 자동 갱신
+        </pre>
+        <span class="cap">access token은 단기 만료 → refresh token으로 백그라운드 자동 갱신(재로그인 불필요). <code>claude auth status/logout</code>으로 상태 확인·폐기. <span class="tag">저장 경로는 구현 영역</span></span>
+      </div>
+
+      <h3>매 요청에서 달라지는 것 / 그대로인 것</h3>
+      <pre class="code">POST https://api.anthropic.com/v1/messages          <span class="c">// 엔드포인트 동일</span>
+  anthropic-version: 2023-06-01                       <span class="c">// 동일</span>
+  anthropic-beta: &lt;기능 플래그&gt;                        <span class="c">// 동일 (+OAuth 식별 플래그)</span>
+<span class="c">- x-api-key: sk-ant-...           (API 키 모드)</span>
+<span class="k">+ Authorization: Bearer &lt;oauth&gt;   (구독 모드)</span>          <span class="c">// ← 여기만 교체</span>
+  body: { model, system[], tools[], messages[] }      <span class="c">// 완전히 동일</span></pre>
+      <table>
+        <tr><th>그대로 (변화 없음)</th><th>달라짐</th></tr>
+        <tr><td>system / tools / messages 구조</td><td>인증 헤더 (Bearer ↔ x-api-key)</td></tr>
+        <tr><td>prompt caching (최대 4 breakpoint)</td><td>과금 (구독 한도 ↔ API 크레딧)</td></tr>
+        <tr><td>에이전틱 루프 · Hook · Subagent</td><td>rate limit (5h/주간 ↔ API rate limit)</td></tr>
+      </table>
+      <div class="note"><b>시스템 프롬프트가 구독 등급을 인지합니다.</b> 공개된 <code>claude-code-system-prompts</code>에는 <code>GET_SUBSCRIPTION_TYPE_FN()</code>으로
+      분기하는 부분이 있어(예: Task 도구 설명이 <code>pro</code> 여부로 달라짐) 같은 버전이라도 구독 등급에 따라 프롬프트가 미세하게 다를 수 있습니다.</div>
+
+      <h3>구독 모드의 Rate Limit</h3>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  USE["요청마다 사용량 누적"] --> W{"5시간 롤링 윈도우 한도?"}
+  W -- "여유" --> OK["정상 진행<br/>statusline rate_limits: used_percentage · resets_at"]
+  W -- "초과" --> SF["요청 거부 → StopFailure 훅 발동"]
+  SF --> WAIT["resets_at까지 대기 → 재개"]
+  OK --> WK{"(Max) 주간 한도?"}
+  WK -- "초과" --> WAIT
+  WK -- "여유" --> GO["계속"]
+  CACHE["prompt caching 적중<br/>cache_read_input_tokens"] -. "토큰 사용량 ↓ = 한도 소모 지연" .-> USE
+        </pre>
+        <span class="cap">Pro/Max 모두 5시간 롤링 윈도우, Max는 추가 주간 한도. 캐시 적중은 토큰 사용량을 줄여 구독 한도 소모를 늦춤.</span>
+      </div>
+
+      <h3>CI / 헤드리스</h3>
+      <p>브라우저 OAuth가 불가능한 환경에서는 <code>claude setup-token</code>으로 장기 토큰을 발급하거나 <code>ANTHROPIC_API_KEY</code>(API 결제)를 사용합니다.
+      <code>--bare</code>(-p 경량 모드)는 API 키가 필수입니다.</p>
+
+      <details class="cite">
+        <summary>📎 출처</summary>
+        <div><ul class="clean">
+          <li>ccbuilder <span class="srcref">version-sync.md</span> — <code>claude auth login/status/logout</code>, <code>--console</code>(Console=API결제), <code>rate_limits</code> statusline(5시간/7일 used_percentage·resets_at), OAuth 토큰 갱신</li>
+          <li>ccbuilder <span class="srcref">official/hooks.md</span> — StopFailure(rate limit·인증 실패로 턴 종료)</li>
+          <li><span class="srcref">claude-code-system-prompts</span> — GET_SUBSCRIPTION_TYPE_FN 구독 분기</li>
+          <li>Anthropic Messages API — Bearer/x-api-key 인증 · prompt caching</li>
+        </ul></div>
+      </details>
+    </section>
+
+    <footer>
+      Claude Code 동작 메커니즘 · 작성 2026-05-25 · Claude Code v2.1.85+<br/>
+      확장 메커니즘은 공식 문서(<code>code.claude.com/docs</code>) 및 ccbuilder v2.22.0 레퍼런스 기준.
+      와이어 레벨은 Anthropic Messages API 규격 기준이며 <span class="tag">구현 영역</span> 항목은 버전별로 달라질 수 있습니다.
+      Mermaid 다이어그램은 인터넷 연결 시 CDN으로 렌더링됩니다.
+    </footer>
+  </main>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true, theme: 'base', securityLevel: 'loose',
+    flowchart: { curve: 'basis', useMaxWidth: true },
+    themeVariables: {
+      fontFamily: 'SF Mono, JetBrains Mono, Menlo, monospace', fontSize: '13px',
+      primaryColor: '#eef1fd', primaryBorderColor: '#2347d9', primaryTextColor: '#1b1b18',
+      lineColor: '#8a8a82', secondaryColor: '#ffffff', tertiaryColor: '#f6f6f3',
+      noteBkgColor: '#fbf0e6', noteBorderColor: '#b54708',
+      actorBkg: '#eef1fd', actorBorder: '#2347d9', actorTextColor: '#1b1b18',
+      signalColor: '#5d5d56', signalTextColor: '#1b1b18',
+      labelBoxBkgColor: '#f6f6f3', labelBoxBorderColor: '#cfcfc7'
+    }
+  });
+  const links = [...document.querySelectorAll('nav.side a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = map.get(e.target.id); if (a) a.classList.add('active');
+    }});
+  }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+  document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
