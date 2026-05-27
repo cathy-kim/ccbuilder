@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.152 (2026-05-27 동기화)
+
+**새로운 기능:**
+- `/code-review --fix` — 리뷰 결과 워킹 트리 자동 적용, 재사용·단순화·효율성 제안 표시; `/simplify`가 `/code-review --fix` 호출
+- Skills·슬래시 명령 `disallowed-tools` frontmatter — 스킬 활성 중 특정 도구 모델에서 제거 가능
+- `/reload-skills` 명령 — 세션 재시작 없이 스킬 디렉토리 재스캔
+- `SessionStart` Hook `reloadSkills: true` 반환 — 훅이 설치한 스킬을 동일 세션에서 즉시 사용 가능
+- `SessionStart` Hook `hookSpecificOutput.sessionTitle` — 세션 시작·재개 시 제목 설정 지원
+- `MessageDisplay` Hook 이벤트 (신규 #26) — 어시스턴트 메시지 텍스트 표시 시 변환·숨김 처리 가능
+- `pluginSuggestionMarketplaces` 관리형 설정 — 조직 마켓플레이스 컨텍스트 팁 제안 허용 목록
+- `claude plugin marketplace remove --scope user|project|local` 지원
+- `--fallback-model` — 기본 모델 미발견 시 세션 내 폴백 모델 자동 사용
+- Auto mode 옵트인 동의 불필요
+
+**주요 버그 수정:**
+- 장기 세션 터미널 스타일 저하 — 렌더러 스타일 풀 재활용으로 수정
+- condensed startup 모드 sandbox 경고 미표시 수정
+- Plugin MCP 서버 동일 명령·다른 환경변수 시 잘못된 중복 제거 수정
+- `/doctor` 제거된 마켓플레이스·플러그인 참조 "not found" 오류 수정
+- `cache_creation_input_tokens` 중첩 `cache_creation` 분석 시 0 보고 수정
+- 모델·로그인 전환 후 stale thinking-block 서명으로 세션 고착 수정
+
+---
+
 ### v2.1.150 (2026-05-23 동기화)
 
 **새로운 기능:**

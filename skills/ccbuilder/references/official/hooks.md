@@ -10,7 +10,7 @@
 
 | # | Event | 용도 | 차단 가능 |
 |---|-------|------|-----------|
-| 1 | `SessionStart` | 세션 시작/재개 | - |
+| 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 가능; `hookSpecificOutput.sessionTitle`로 제목 설정 가능 (v2.1.152) | - |
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
 | 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
 | 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
@@ -35,6 +35,7 @@
 | 23 | `FileChanged` | 파일 변경 감지 시 (v2.1.83) | - |
 | 24 | `TaskCreated` | `TaskCreate` 호출로 태스크 생성 시 (v2.1.84) | - |
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
+| 26 | `MessageDisplay` | 어시스턴트 메시지 텍스트 표시 시 변환·숨김 처리 가능 (v2.1.152) | transform/hide |
 
 ## Handler 타입
 

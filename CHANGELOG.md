@@ -15,6 +15,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.39.0] - 2026-05-27
+
+### Added
+- **Claude Code v2.1.152 sync**
+  - `/code-review --fix` — 리뷰 결과 워킹 트리 자동 적용, 재사용·단순화·효율성 제안 표시; `/simplify`가 `/code-review --fix` 호출로 동작 변경
+  - Skills·슬래시 명령 `disallowed-tools` frontmatter — 스킬 활성 중 특정 도구를 모델에서 제거 가능
+  - `/reload-skills` 명령 — 세션 재시작 없이 스킬 디렉토리 재스캔
+  - `SessionStart` Hook `reloadSkills: true` 반환 — 훅이 설치한 스킬을 동일 세션에서 즉시 사용 가능
+  - `SessionStart` Hook `hookSpecificOutput.sessionTitle` — 세션 시작·재개 시 제목 설정 지원 (기존 `UserPromptSubmit`에서 확장)
+  - `MessageDisplay` Hook 이벤트 — 어시스턴트 메시지 텍스트 표시 시 변환·숨김 처리 가능 (신규 Hook #26)
+  - `pluginSuggestionMarketplaces` 관리형 설정 — 어드민이 조직 마켓플레이스를 컨텍스트 팁 제안 허용 목록으로 지정
+  - `claude plugin marketplace remove --scope user|project|local` — marketplace add/install/uninstall과 대칭적 scope 옵션 지원
+  - `--fallback-model` — 기본 모델 미발견 시 나머지 세션에서 폴백 모델 자동 사용 (요청 실패 대신 전환)
+  - Auto mode 옵트인 동의 불필요 (자동 활성화)
+  - Vim NORMAL 모드 `/` — 역방향 히스토리 검색 실행 (bash/zsh vi-mode와 동일)
+  - `/usage` 대용량 세션 파일 포함 분석 — 스트리밍 읽기로 메모리 사용량 일정하게 유지
+  - 세션 엔트리포인트 OTEL 메트릭 속성 추가 (`app.entrypoint`, `OTEL_METRICS_INCLUDE_ENTRYPOINT=true` 옵트인)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.150 → v2.1.152 업데이트
+  - Hook 이벤트: `MessageDisplay` 추가, SessionStart 신규 기능, 총 이벤트 수 25 → 26 업데이트
+  - CLI 섹션: `/code-review --fix`, `--fallback-model`, `pluginSuggestionMarketplaces`, auto mode 변경 추가
+  - Plugin 섹션: `claude plugin marketplace remove --scope`, `disallowed-tools` frontmatter 추가
+  - 신규 명령: `/reload-skills` 추가
+- `references/version-sync.md`: v2.1.152 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: `MessageDisplay` Hook 이벤트 추가, SessionStart 신규 기능 반영
+- `references/official/hooks.md`: `MessageDisplay` Hook 이벤트 (#26) 추가, SessionStart 업데이트
+
+### Fixed
+- 장기 세션 터미널 스타일 저하 — 렌더러 스타일 풀 재활용으로 수정
+- 압축 시작 모드(condensed startup)에서 sandbox 경고 미표시 수정
+- 로딩 스피너 도구 실행 중 "still thinking"/"almost done thinking" 표시 수정
+- 포커스 모드 스퓨리어스 "N messages hidden" 카운트 수정
+- 확장된 도구 결과 내 링크 클릭 시 섹션 축소 수정
+- 마크다운 테이블 셀 인라인 코드 색상 상속, 계속 라인 스타일 유실 수정
+- Plugin MCP 서버 동일 명령·다른 환경변수 조합 잘못된 중복 제거 수정
+- `/doctor` 제거된 마켓플레이스·플러그인 참조 "not found" 오류 수정
+- git 브랜치 추적 플러그인 레지스트리 재빌드 후 업데이트 미수신 수정
+- Claude Code Remote 세션 egress proxy 환경 원격 MCP 서버 연결 실패 수정
+- `cache_creation_input_tokens` 중첩 `cache_creation` 분석 시 0으로 보고되던 수정
+- PushNotification 도구 Remote Control 활성 SDK 세션에서 "Mobile push not sent" 오류 수정
+- 모델·로그인 전환 후 stale thinking-block 서명으로 세션 고착 수정
+
+---
+
 ## [2.38.0] - 2026-05-23
 
 ### Added
