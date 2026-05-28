@@ -77,6 +77,44 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.153 (2026-05-28 동기화)
+
+**새로운 기능:**
+- (v2.1.153) `skipLfs` 옵션 — `github`/`git` 플러그인 마켓플레이스 소스의 git LFS 다운로드 스킵
+- (v2.1.153) npm 글로벌 설치 자동 업데이트 불가 시 일회성 안내 + `/doctor`에서 수정 방법 목록 표시
+- (v2.1.153) status line 명령에 `COLUMNS`·`LINES` 환경변수 제공 — 터미널 폭 기반 출력 사이징 가능
+- (v2.1.153) `claude agents` dispatch 자동완성에 네이티브 슬래시 명령·번들 스킬 포함
+- (v2.1.153) `claude agents` PR 컬럼: 단일 PR `PR #N` / 복수 `N PRs` 형식 표시
+- (v2.1.153) `claude doctor` 마지막 업데이트 시도 결과 표시
+- (v2.1.153) MCP·커넥터 인증 필요 시작 알림 단일 메시지로 통합
+- (v2.1.153) macOS 백그라운드 에이전트 Privacy & Security에서 "Claude Code"로 표시, 업그레이드 후 권한 유지
+- (v2.1.153) `/model` 선택 신규 세션 기본값 저장 (현재 세션만: 피커 `s`키)
+- (v2.1.152) `/code-review --fix` — 리뷰 후 재사용·단순화·효율화 수정 워킹 트리 자동 적용; `/simplify` 호출 시 자동 실행
+- (v2.1.152) Skills·슬래시 명령 `disallowed-tools` frontmatter — 스킬 활성화 중 지정 도구 제거
+- (v2.1.152) `/reload-skills` 명령 — 세션 재시작 없이 스킬 디렉토리 재스캔
+- (v2.1.152) `SessionStart` 훅 `reloadSkills: true` 반환 → 훅이 설치한 스킬 같은 세션에서 즉시 사용 가능
+- (v2.1.152) `SessionStart` 훅 `hookSpecificOutput.sessionTitle` — 재개 시에도 세션 제목 설정 지원
+- (v2.1.152) `MessageDisplay` Hook 이벤트 — 어시스턴트 메시지 텍스트 표시 전 변환·숨김 처리
+- (v2.1.152) `pluginSuggestionMarketplaces` 관리형 설정 — 조직 마켓플레이스 팁 제안 허용 목록
+- (v2.1.152) `claude plugin marketplace remove --scope user|project|local`
+- (v2.1.152) `--fallback-model` — primary model 미발견 시 세션 나머지 fallback 모델로 전환
+- (v2.1.152) auto mode 옵트인 동의 불필요
+
+**Breaking Changes:**
+- `modelPicker:setAsDefault` 키바인딩 → `modelPicker:thisSessionOnly` 리네임 (v2.1.153)
+
+**주요 버그 수정:**
+- stateful MCP 서버 GET SSE 스트림 선택 사항 시 `tools/list` 재연결 루프 수정 (v2.1.147 회귀, v2.1.153)
+- 커스텀 API 게이트웨이 사용자 Anthropic OAuth 자격증명 수신 수정 (v2.1.153)
+- 서브에이전트 frontmatter MCP 서버 `--strict-mcp-config`·`--bare`·엔터프라이즈 정책 무시 수정 (v2.1.153)
+- `subagent_type: 'claude'` 임시 worktree 실행으로 gitignore 경로 출력 유실 수정 (v2.1.153)
+- Windows PowerShell 인스톨러 실패 시 "완료" 오보 수정 (v2.1.153)
+- `claude update` npm 최신 버전 대신 릴리스 채널 버전 설치하도록 수정 (v2.1.153)
+- 세션 파일 재개 시 다수 세션 보유 머신 메모리 과다 사용 (수십 GB) 수정 (v2.1.153)
+- `/bg` 응답 중 사용 시 백그라운드에서 응답 계속 (기존: 드롭) (v2.1.153)
+
+---
+
 ### v2.1.150 (2026-05-23 동기화)
 
 **새로운 기능:**

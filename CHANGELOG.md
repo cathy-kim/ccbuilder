@@ -15,6 +15,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.39.0] - 2026-05-28
+
+### Added
+- **Claude Code v2.1.153 sync**
+  - `skipLfs` 옵션 — `github`/`git` 플러그인 마켓플레이스 소스의 git LFS 다운로드 스킵
+  - npm 글로벌 설치 자동 업데이트 불가 시 일회성 안내 + `/doctor`에서 수정 방법 목록 표시
+  - status line 명령에 `COLUMNS`·`LINES` 환경변수 제공 — 터미널 폭 기반 출력 사이징 가능
+  - `claude agents` dispatch 자동완성에 네이티브 슬래시 명령·번들 스킬 포함
+  - `claude agents` PR 컬럼: 단일 PR `PR #N` / 복수 `N PRs` 형식 표시
+  - `claude doctor` 마지막 업데이트 시도 결과 표시
+  - MCP·커넥터 인증 필요 시작 알림 단일 메시지로 통합
+  - macOS 백그라운드 에이전트 Privacy & Security에서 "Claude Code"로 표시, 업그레이드 후 권한 유지
+  - `/model` 선택 신규 세션 기본값 저장 (현재 세션만 전환: 피커 `s`키)
+- **Claude Code v2.1.152 sync**
+  - `/code-review --fix` — 리뷰 후 워킹 트리에 재사용·단순화·효율화 수정 자동 적용; `/simplify`는 `/code-review --fix` 호출로 변경
+  - Skills·슬래시 명령 `disallowed-tools` frontmatter — 스킬 활성화 중 지정 도구 제거 가능
+  - `/reload-skills` 명령 — 세션 재시작 없이 스킬 디렉토리 재스캔
+  - `SessionStart` 훅 `reloadSkills: true` 반환 → 훅이 설치한 스킬을 같은 세션에서 즉시 사용 가능
+  - `SessionStart` 훅 `hookSpecificOutput.sessionTitle` — 재개(`resume`) 시에도 세션 제목 설정 지원
+  - `MessageDisplay` Hook 이벤트 — 어시스턴트 메시지 텍스트 표시 전 변환·숨김 처리 가능
+  - `pluginSuggestionMarketplaces` 관리형 설정 — 조직 마켓플레이스에서 팁 제안 허용 목록 정의
+  - `claude plugin marketplace remove --scope user|project|local` — 범위별 마켓플레이스 제거
+  - `--fallback-model` — primary model 미발견 시 세션 나머지를 fallback 모델로 전환
+  - auto mode 옵트인 동의 불필요 — 모든 사용자 즉시 사용 가능
+  - Vim mode: NORMAL 모드에서 `/`가 역방향 히스토리 검색(Ctrl+R 동작) 실행
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.150 → v2.1.153 업데이트
+  - Hook 섹션: `MessageDisplay` Hook 이벤트, `SessionStart` `reloadSkills`/`sessionTitle` resume 지원 추가; 이벤트 수 25 → 26개
+  - CLI 섹션: `/code-review --fix`, auto mode 옵트인 불필요, `--fallback-model`, `/model` 기본값 저장, status line `COLUMNS`/`LINES`, `claude agents` 자동완성 개선 추가
+  - Plugin 섹션: `disallowed-tools` frontmatter, `pluginSuggestionMarketplaces`, `marketplace remove --scope`, `skipLfs` 추가
+  - 신규 명령: `/reload-skills` 추가
+  - Breaking Changes: `modelPicker:setAsDefault` → `modelPicker:thisSessionOnly` 리네임 추가
+- `references/version-sync.md`: v2.1.153 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: `MessageDisplay` Hook 이벤트 추가
+- `references/official/hooks.md`: `MessageDisplay` Hook 이벤트 (#26) 추가
+
+### Fixed
+- stateful MCP 서버 GET SSE 스트림 선택 사항 시 `tools/list` 재연결 루프 수정 (v2.1.147 회귀, v2.1.153)
+- 커스텀 API 게이트웨이가 사용자 Anthropic OAuth 자격증명을 받던 버그 수정 (v2.1.153)
+- 서브에이전트 frontmatter MCP 서버가 `--strict-mcp-config`·`--bare`·엔터프라이즈 MCP 정책 무시하던 버그 수정 (v2.1.153)
+- `subagent_type: 'claude'` Agent 도구가 임시 worktree에서 실행되어 gitignore 경로 출력 유실되던 버그 수정 (v2.1.153)
+- Windows PowerShell 인스톨러 실패 시 "설치 완료" 오보 수정 (v2.1.153)
+- `claude update` npm 설치 시 최신 버전 대신 릴리스 채널 버전 설치하도록 수정 (v2.1.153)
+- 세션 파일 재개 시 다수 세션 보유 머신에서 메모리 과다 사용 (수십 GB) 수정 (v2.1.153)
+- `/bg` 응답 중 사용 시 응답이 백그라운드에서 계속되도록 수정 (기존: 드롭, v2.1.153)
+
+### Breaking Changes
+- `modelPicker:setAsDefault` 키바인딩 → `modelPicker:thisSessionOnly`로 리네임 (v2.1.153)
+
+---
+
 ## [2.38.0] - 2026-05-23
 
 ### Added

@@ -34,6 +34,7 @@
 | **ElicitationResult** | Elicitation 응답 전송 전 오버라이드 (v2.1.76) | Yes (override) | `result`, `server` |
 | **StopFailure** | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | No | `stop_reason`, `error` |
 | **PermissionDenied** | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 가능 (v2.1.88) | Yes (retry) | `tool_name`, `denial_reason` |
+| **MessageDisplay** | 어시스턴트 메시지 텍스트 표시 전 발동 — 변환·숨김 처리 가능 (v2.1.152) | Yes (transform/hide) | `message_text`, `role` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
@@ -50,6 +51,8 @@
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
+
+**SessionStart reloadSkills (v2.1.152)**: `SessionStart` 훅 출력에 `{"reloadSkills": true}`를 포함하면 훅 실행 후 스킬 디렉토리를 재스캔 — 훅이 설치한 스킬을 세션 재시작 없이 즉시 사용 가능. `hookSpecificOutput.sessionTitle`은 이제 startup뿐만 아니라 resume 시에도 세션 제목 설정 지원.
 
 ---
 
