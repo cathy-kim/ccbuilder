@@ -121,6 +121,16 @@ Stdio MCP 서버는 `CLAUDE_PROJECT_DIR` 환경변수를 자동으로 수신합�
 
 > **주의**: `workspace`는 MCP 예약 서버 이름 (v2.1.128+) — 해당 이름으로 서버 등록 시 경고 후 스킵됨
 
+### 추가 stdio 서버 자동 환경변수 (v2.1.154+)
+
+Stdio MCP 서버 서브프로세스는 다음 환경변수도 자동으로 수신합니다:
+
+| 환경변수 | 값 | 용도 |
+|---------|-----|------|
+| `CLAUDE_CODE_SESSION_ID` | 현재 세션 ID | 세션별 상태 추적 |
+| `CLAUDECODE` | `1` | Claude Code 실행 환경 감지 |
+| `CLAUDE_PROJECT_DIR` | 프로젝트 루트 경로 | 프로젝트 파일 접근 (v2.1.139+) |
+
 ---
 
 ## OAuth 인증
