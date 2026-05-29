@@ -1,6 +1,6 @@
 {
   "name": "ccbuilder",
-  "version": "2.38.0",
+  "version": "2.39.0",
   "description": "Build and deploy Claude Code extensions (skills, hooks, agents, agent teams, graph workflows) with comprehensive guides, official docs, and real-world examples.",
   "author": {
     "name": "cathy-kim",
