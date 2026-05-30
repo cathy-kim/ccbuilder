@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-05-23
+**최종 동기화**: 2026-05-29
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.156 (2026-05-29 동기화)
+
+**새로운 기능:**
+- (v2.1.154) Opus 4.8 모델 출시 — xhigh effort 기본값, Fast Mode 2x 비용·2.5x 속도
+- (v2.1.154) Dynamic Workflows (`/workflows`) — 수십~수백 에이전트 백그라운드 오케스트레이션
+- (v2.1.154) `claude agents` `! <command>` — 셸 명령 백그라운드 세션 실행
+- (v2.1.154) Plugin `defaultEnabled: false` — 기본 비활성화 선언 지원
+- (v2.1.154) Stdio MCP 서버 서브프로세스에 `CLAUDE_CODE_SESSION_ID`·`CLAUDECODE=1` env 자동 제공
+- (v2.1.154) `claude mcp list`/`get` — 미승인 서버 `⏸ Pending approval` 표시
+- (v2.1.152) `MessageDisplay` Hook 이벤트 — 어시스턴트 메시지 텍스트 변환·숨김
+- (v2.1.152) Skills/슬래시 명령 `disallowed-tools` frontmatter 지원
+- (v2.1.152) `/reload-skills` 명령; `SessionStart` Hook `reloadSkills: true` + `sessionTitle` 지원
+- (v2.1.152) Auto mode 옵트인 동의 불필요
+- (v2.1.153) `skipLfs` — github/git 플러그인 소스 LFS 건너뛰기
+- (v2.1.153) `/model` 선택 기본값 저장; `s`로 현재 세션만 전환
+
+**주요 버그 수정:**
+- Opus 4.8 thinking block 수정으로 API 400 오류 수정 (v2.1.156)
+- 백그라운드 세션 subagent worktree isolation 우회 버그 수정 (v2.1.154)
+- `worktree.baseRef: "head"` linked worktree에서 잘못된 HEAD 반환 수정 (v2.1.154)
+- managed settings 단일 잘못된 항목으로 전체 정책 무시되던 버그 수정 (v2.1.154)
+- Agent tool frontmatter MCP 서버 `--strict-mcp-config`·managed 정책 무시 수정 (v2.1.153)
+
+---
 
 ### v2.1.150 (2026-05-23 동기화)
 

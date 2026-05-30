@@ -15,6 +15,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.39.0] - 2026-05-29
+
+### Added
+- **Claude Code v2.1.156 sync**
+  - (v2.1.154) **Opus 4.8** 모델 출시 — xhigh effort 기본값, Fast Mode 2x 비용·2.5x 속도
+  - (v2.1.154) **Dynamic Workflows** — `/workflows` 명령으로 수십~수백 에이전트 백그라운드 오케스트레이션
+  - (v2.1.154) Lean system prompt 기본값 전환 (Haiku·Sonnet·Opus 4.7 이하 제외)
+  - (v2.1.154) `claude agents` `! <command>` — 셸 명령을 백그라운드 세션으로 실행 (`claude --bg --exec '<command>'` 동등)
+  - (v2.1.154) Plugin `defaultEnabled: false` 선언 지원 — `/plugin` 또는 `claude plugin enable`로 명시 활성화; 의존 플러그인은 자동 활성화
+  - (v2.1.154) `/plugin` Discover 탭 현재 디렉토리 연관 플러그인 고정 표시 (`suggested for this directory` 어노테이션)
+  - (v2.1.154) Stdio MCP 서버 서브프로세스에 `CLAUDE_CODE_SESSION_ID`·`CLAUDECODE=1` env 자동 제공
+  - (v2.1.154) `claude mcp list`/`get` — 미승인 `.mcp.json` 서버 `⏸ Pending approval` 표시 (파이프 출력 시 자동 승인 방지)
+  - (v2.1.152) `MessageDisplay` Hook 이벤트 — 어시스턴트 메시지 텍스트 변환·숨김 가능
+  - (v2.1.152) Skills/슬래시 명령 `disallowed-tools` frontmatter — 스킬 활성 중 모델에서 특정 도구 제거
+  - (v2.1.152) `/reload-skills` 명령 — 세션 재시작 없이 스킬 디렉토리 재스캔
+  - (v2.1.152) `SessionStart` Hook `reloadSkills: true` 반환 — 훅이 설치한 스킬 동일 세션 내 즉시 사용 가능
+  - (v2.1.152) `SessionStart` Hook `hookSpecificOutput.sessionTitle` — 시작·재개 시 세션 제목 설정 지원
+  - (v2.1.152) Auto mode 옵트인 동의 불필요
+  - (v2.1.152) `pluginSuggestionMarketplaces` managed 설정 — 관리자용 조직 마켓플레이스 컨텍스트 팁 허용 리스트
+  - (v2.1.153) `skipLfs` 옵션 — `github`/`git` 플러그인 마켓플레이스 소스 Git LFS 다운로드 건너뛰기
+  - (v2.1.153) `/model` 선택 신규 세션 기본값으로 저장; `s` 키로 현재 세션만 변경
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.150 → v2.1.156 업데이트
+  - 신규 Hook 이벤트 테이블: `MessageDisplay` 추가 (총 26개)
+  - Hook 인라인 노트: v2.1.152 `MessageDisplay`, `SessionStart` `reloadSkills`/`sessionTitle` 추가
+  - MCP 섹션: Stdio 서버 `CLAUDE_CODE_SESSION_ID`·`CLAUDECODE=1` env, Pending approval 표시 추가
+  - CLI 섹션: Opus 4.8, Dynamic Workflows, `/reload-skills`, `disallowed-tools`, `! <command>`, Lean system prompt 전환, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` deprecated 추가
+  - Plugin 섹션: `defaultEnabled: false`, `pluginSuggestionMarketplaces`, Discover 탭 디렉토리 고정 추가
+  - Breaking Changes: `modelPicker:setAsDefault` → `modelPicker:thisSessionOnly` 리네임, Lean system prompt 기본값 추가
+  - 주요 이벤트 카운트 25 → 26개 업데이트
+- `references/version-sync.md`: v2.1.156 변경사항 추적 엔트리 추가
+- `references/official/hooks.md`: `MessageDisplay` Hook 이벤트 (#26) 추가
+- `references/hooks-guide.md`: `MessageDisplay` Hook 이벤트 + `SessionStart` 신규 필드 추가
+- `references/mcp-guide.md`: Stdio 서버 `CLAUDE_CODE_SESSION_ID`·`CLAUDECODE=1` env 섹션 추가
+
+### Fixed
+- Opus 4.8 thinking block 수정으로 API 400 오류 발생하던 버그 수정 (v2.1.156)
+- 백그라운드 세션 subagent가 worktree isolation 우회하여 shared checkout에 직접 쓰던 버그 수정 (v2.1.154)
+- `worktree.baseRef: "head"` linked worktree 내부에서 current worktree HEAD 대신 main checkout HEAD 반환하던 버그 수정 (v2.1.154)
+- 핀된 백그라운드 세션이 Claude Code 업데이트 후 매분 respawn으로 알림·프로세스 낭비하던 버그 수정 (v2.1.154)
+- managed settings에서 단일 잘못된 `allowedMcpServers`/`deniedMcpServers` 항목이 전체 정책을 무시하던 버그 수정 (v2.1.154)
+- stateful MCP 서버 optional GET SSE stream 없을 때 `tools/list` 재연결 루프 버그 수정 (v2.1.153 회귀)
+- Agent tool frontmatter MCP 서버가 `--strict-mcp-config`·`--bare`·managed 정책 무시하던 버그 수정 (v2.1.153)
+
+### Breaking Changes
+- `modelPicker:setAsDefault` keybinding → `modelPicker:thisSessionOnly` 리네임 (v2.1.153); `/model` 선택 기본값 저장, `s`로 현재 세션만 전환
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` deprecated — 2026-06-01 제거 예정; `/model claude-opus-4-6[1m]` 후 `/fast on` 사용 (v2.1.154)
+
+---
+
 ## [2.38.0] - 2026-05-23
 
 ### Added
