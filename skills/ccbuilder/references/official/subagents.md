@@ -67,6 +67,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **Skill 프리로드**: `skills` 필드로 Skill 전체 내용을 agent에 주입
 - **Resume (v2.1.77 제거)**: Agent tool `resume` 파라미터 제거됨 → `SendMessage({to: agentId})` 로 대체
 - **병렬 실행**: 독립적인 리서치는 여러 agent 동시 실행
-- **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72)
+- **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72); Claude 관리 worktree 간 mid-session 전환 지원 (v2.1.157)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
+- **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)

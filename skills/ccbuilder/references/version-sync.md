@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.158 (2026-05-30 동기화)
+
+**새로운 기능:**
+- (v2.1.158) Auto mode Bedrock·Vertex·Foundry 지원 — Opus 4.7·4.8 대상; `CLAUDE_CODE_ENABLE_AUTO_MODE=1` 옵트인
+- (v2.1.157) `.claude/skills` 디렉토리 플러그인 자동 로드 — 마켓플레이스 설치 불필요
+- (v2.1.157) `claude plugin init <name>` — `.claude/skills`에 새 플러그인 스캐폴딩
+- (v2.1.157) `/plugin` 인자 자동완성 — 서브커맨드·설치된 플러그인·알려진 마켓플레이스 목록 서브스트링 매칭
+- (v2.1.157) `settings.json` `agent` 필드 — dispatched 세션 기본 에이전트 지정; `--agent <name>` 오버라이드
+- (v2.1.157) `EnterWorktree` Claude 관리 worktree 간 mid-session 전환 지원
+- (v2.1.157) `OTEL_LOG_TOOL_DETAILS=1` — `tool_decision` 이벤트에 `tool_parameters` 포함 (bash commands, MCP/skill names)
+- (v2.1.157) Workflow keyword trigger 설정 (`/config`) — "workflow" 단어 Dynamic Workflow 자동 트리거 비활성화
+- (v2.1.157) Claude 관리 worktree 작업 완료 후 잠금 해제 → `git worktree remove`/`prune` 가능
+
+**주요 버그 수정:**
+- 처리 불가 이미지(zero-byte, 손상) 요청 크래시 → 텍스트 플레이스홀더 처리 (v2.1.157)
+- auto/bypass-permissions 모드 sandbox 네트워크 권한 프롬프트 불필요 표시 수정 (v2.1.157)
+- `claude agents` 완료 세션 유휴 서브에이전트 남아 정리 안 되던 버그 수정 (v2.1.157)
+- 백그라운드 에이전트 worktree 30일 정리 시 고아로 남는 버그 수정 (v2.1.157)
+- sleep/wake 재연결 후 모델 잘못된 날짜 사용 버그 수정 (v2.1.157)
+- VS Code/Cursor/Windsurf 통합 터미널 우클릭 붙여넣기 중복 수정 (v2.1.157)
+- WSL 이미지 붙여넣기·Windows 11 스크린샷·Windows Explorer 이미지 드래그 지원 (v2.1.157)
+
+---
+
 ### v2.1.156 (2026-05-29 동기화)
 
 **새로운 기능:**

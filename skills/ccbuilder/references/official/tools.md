@@ -42,7 +42,7 @@
 |------|--------|------|--------|
 | `EnterPlanMode` | 878 | Plan 모드 진입 | 낮음 |
 | `ExitPlanMode` | 417 | Plan 모드 종료/승인 요청 | 낮음 |
-| `EnterWorktree` | - | 격리된 git worktree 세션 진입; `path` 파라미터로 기존 worktree 재사용 가능 (v2.1.105) | 낮음 |
+| `EnterWorktree` | - | 격리된 git worktree 세션 진입; `path` 파라미터로 기존 worktree 재사용 가능 (v2.1.105); Claude 관리 worktree 간 mid-session 전환 지원 (v2.1.157) | 낮음 |
 | `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
