@@ -15,6 +15,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.40.0] - 2026-05-30
+
+### Added
+- **Claude Code v2.1.158 sync**
+  - (v2.1.158) Auto mode Bedrock·Vertex·Foundry 지원 — Opus 4.7·4.8 대상; `CLAUDE_CODE_ENABLE_AUTO_MODE=1`로 옵트인
+  - (v2.1.157) `.claude/skills` 디렉토리 플러그인 자동 로드 — 마켓플레이스 설치 불필요
+  - (v2.1.157) `claude plugin init <name>` — `.claude/skills`에 새 플러그인 스캐폴딩
+  - (v2.1.157) `/plugin` 인자 자동완성 — 서브커맨드·설치된 플러그인·마켓플레이스 목록 서브스트링 매칭
+  - (v2.1.157) `settings.json` `agent` 필드 — dispatched 세션 기본 에이전트 지정; `--agent <name>` 오버라이드
+  - (v2.1.157) `EnterWorktree` Claude 관리 worktree 간 mid-session 전환 지원
+  - (v2.1.157) `OTEL_LOG_TOOL_DETAILS=1` — `tool_decision` 이벤트에 `tool_parameters` 포함 (bash commands, MCP/skill names)
+  - (v2.1.157) Workflow keyword trigger 설정 (`/config`) — "workflow" 단어로 Dynamic Workflow 자동 트리거 비활성화 가능
+  - (v2.1.157) Claude 관리 worktree 작업 완료 후 잠금 해제 → `git worktree remove`/`prune` 직접 정리 가능
+  - (v2.1.157) `claude agents` dispatch 입력 슬래시 명령 자동완성 서브스트링 매칭
+  - (v2.1.157) `/terminal-setup` — VS Code/Cursor/Windsurf 통합 터미널 GPU 가속 비활성화 (텍스트 깨짐 방지)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.156 → v2.1.158 업데이트
+  - Plugin 섹션: `.claude/skills` 자동 로드, `claude plugin init`, `/plugin` 자동완성 추가
+  - CLI 섹션: Auto mode Bedrock/Vertex/Foundry, Workflow keyword trigger, `OTEL_LOG_TOOL_DETAILS` 추가
+  - Agent 섹션: `settings.json` `agent` 필드, `EnterWorktree` worktree 전환 추가
+- `references/version-sync.md`: v2.1.158 변경사항 추적 엔트리 추가
+- `references/official/subagents.md`: `agent` 필드 settings.json, EnterWorktree worktree 전환 추가
+- `references/official/tools.md`: `EnterWorktree` Claude 관리 worktree 전환 설명 추가
+
+### Fixed
+- 처리 불가 이미지(zero-byte, 손상) 첨부 시 요청 크래시 → 텍스트 플레이스홀더 처리 (v2.1.157)
+- auto·bypass-permissions 모드에서 sandbox 네트워크 권한 프롬프트 불필요하게 표시되던 버그 수정 (v2.1.157)
+- `claude agents` 완료 세션이 유휴 서브에이전트 남아 있을 때 정리되지 않던 버그 수정 (v2.1.157)
+- 백그라운드 에이전트 worktree가 30일 정리 시 고아로 남는 버그 수정 (v2.1.157)
+- sleep/wake 후 재연결된 백그라운드 세션에서 모델이 잘못된 날짜를 사용하던 버그 수정 (v2.1.157)
+- `--resume` 이전 프로세스 종료 시 실행 중이던 백그라운드 서브에이전트 미보고 수정 (v2.1.157)
+- VS Code/Cursor/Windsurf 통합 터미널에서 우클릭 붙여넣기 중복 버그 수정 (v2.1.157)
+- WSL 이미지 붙여넣기(`alt+v`), Windows 11 스크린샷 붙여넣기, Windows Explorer 이미지 드래그 지원 (v2.1.157)
+
+---
+
 ## [2.39.0] - 2026-05-29
 
 ### Added
