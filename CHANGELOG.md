@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-01
+
+### Added
+- **Claude Code v2.1.159 sync**
+  - (v2.1.159) 내부 인프라 개선 (사용자 가시 변경 없음)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.159 업데이트
+- `references/version-sync.md`: v2.1.159 변경사항 추적 엔트리 추가
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added
