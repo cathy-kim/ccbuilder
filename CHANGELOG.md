@@ -15,6 +15,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-02
+
+### Added
+- **Claude Code v2.1.160 sync**
+  - (v2.1.160) 셸 시작 파일(`.zshenv`, `.zlogin`, `.bash_login`) 및 `~/.config/git/` 쓰기 전 프롬프트 추가 — 의도치 않은 명령 실행 방지
+  - (v2.1.160) acceptEdits 모드: `.npmrc`, `.yarnrc*`, `bunfig.toml`, `.bazelrc`, `.pre-commit-config.yaml`, `.devcontainer/` 등 빌드 도구 설정 파일 쓰기 전 프롬프트
+  - (v2.1.160) 단일 파일 `grep`/`egrep`/`fgrep` 명령이 read-before-edit 조건 충족 — Edit 전 별도 `Read` 불필요
+  - (v2.1.160) WSL Windows 클립보드 복사 수정 — PowerShell interop으로 OSC 52 대체 (MobaXterm 등 미지원 터미널 수정)
+  - (v2.1.160) auto mode 분류기 레이턴시 개선 — 일상 작업 reasoning 감소, "could not evaluate this action" 차단 빈도 감소
+  - (v2.1.160) 백그라운드 세션 teardown(`claude rm`/`stop`, idle reap): SIGTERM → SIGKILL 순서 전환으로 cleanup 핸들러 실행 보장
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.160 업데이트
+  - CLI 섹션: 셸 시작 파일·빌드 도구 설정 파일 쓰기 프롬프트, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거, JetBrains 제안 제거 추가
+  - 신규 도구·env 섹션: 단일 파일 grep read-before-edit 조건 충족 추가
+  - Breaking Changes: Dynamic Workflow 트리거 키워드 `workflow` → `ultracode`, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 추가
+- `references/version-sync.md`: v2.1.160 변경사항 추적 엔트리 추가
+
+### Fixed
+- 완료된 세션 `claude agents`에서 복원 시 채팅 이력 소실·원본 프롬프트 재실행 수정 (v2.1.160)
+- 야간 retire 후 재연결된 백그라운드 세션 대화 소실·원본 프롬프트 재실행 수정 (v2.1.160)
+- `claude --bg` "socket missing" 오류 수정 — 부하 상태 데몬 cold-start 시 (v2.1.160)
+- Windows: `claude rm` 후 데몬 종료 전까지 시작 디렉토리 삭제 불가 수정 (v2.1.160)
+- 재개된 백그라운드 에이전트가 Completed 목록에 잘못 표시되던 버그 수정 (v2.1.160)
+- `claude agents` 세션 목록 복귀 시 수 초간 프리즈 수정 (auto-updater 중복 실행, v2.1.160)
+- Windows 부하 시 Esc·화살표키·입력 무응답 수정 (백그라운드 세션 또는 agent view, v2.1.160)
+- Apple Terminal·tmux 터미널 동기화 마커 방출로 렌더 아티팩트 수정 (v2.1.160)
+- `claude agents` view CJK IME 조합 입력 커서 위치 수정 — 화면 좌하단 대신 입력 캐럿에 표시 (v2.1.160)
+- Windows 유효한 `file:///C:/...` 링크 깨진 경로로 재작성 수정 (v2.1.160)
+- 비ASCII/특수문자 포함 프로젝트 디렉토리·브랜치에서 voice mode 연결 실패 수정 (v2.1.160)
+- `/effort ultracode` Dynamic Workflows 설정 탓으로 잘못 오류 표시하던 버그 수정 (v2.1.160)
+- vim mode `p` 커서 아래 줄에 붙여넣기 버그 수정 (레지스터 `v$` 얀크 시, v2.1.160)
+
+### Breaking Changes
+- **Dynamic Workflow 트리거 키워드 변경** — `workflow` → `ultracode`; "workflow" 단어 더 이상 Dynamic Workflow 트리거 안 함; 자연어 요청은 계속 작동 (v2.1.160)
+- **`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거** — v2.1.154에서 deprecated, v2.1.160에서 no-op으로 제거 (v2.1.160)
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added
