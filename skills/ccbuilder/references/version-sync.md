@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.161 (2026-06-03 동기화)
+
+**새로운 기능:**
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값이 메트릭 데이터포인트에 레이블로 포함 — team·repo 등 커스텀 차원으로 사용량 메트릭 슬라이싱 가능
+- (v2.1.161) `claude agents` 팬아웃 행에 `done/total` 진행 상태 표시; peek로 가장 오래 실행 중인 항목 확인
+- (v2.1.161) `/mcp`에서 미로그인 claude.ai 커넥터를 "Show unused connectors"로 축소
+- (v2.1.161) 병렬 툴 호출 시 Bash 실패해도 같은 배치 내 다른 호출 취소 없음
+- (v2.1.160) `acceptEdits` 모드에서 빌드 도구 설정 파일 쓰기 전 프롬프트 추가 (`.npmrc`, `.yarnrc*`, `bunfig.toml` 등)
+- (v2.1.160) 셸 시작 파일(`.zshenv`, `.zlogin`, `.bash_login`)·`~/.config/git/` 쓰기 전 프롬프트 추가
+- (v2.1.160) grep/egrep/fgrep 단일 파일 조회 후 별도 Read 없이 Edit 가능 (read-before-edit 조건 충족)
+
+**Breaking Changes:**
+- 동적 워크플로우 트리거 키워드 `workflow` → `ultracode` 변경 (v2.1.160); 자연어 요청("use a workflow")은 여전히 동작
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 — no-op (v2.1.160)
+
+**주요 버그 수정:**
+- `forceLoginOrgUUID`/`forceLoginMethod` 정책이 서드파티 provider 세션 차단하던 버그 수정 (v2.1.161, v2.1.146 회귀)
+- 백그라운드 서브에이전트 출력이 `claude -p` stdout 오염하던 버그 수정 (v2.1.161)
+- Workflow `isolation: "worktree"` 백그라운드 세션 파일 편집 차단 버그 수정 (v2.1.161)
+- `claude mcp` list/get/add 시크릿 터미널 노출 수정 — `${VAR}` 확장 비활성, credential 헤더·URL 시크릿 redact (v2.1.161)
+- WSL Windows 클립보드 copy-on-select PowerShell interop으로 수정 (v2.1.160)
+- 완료 세션 `claude agents`에서 복원 시 채팅 히스토리 소실·원래 프롬프트 재실행 수정 (v2.1.160)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**

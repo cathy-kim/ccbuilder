@@ -409,6 +409,10 @@ claude mcp reset                      # 모든 서버 초기화
 /mcp                                  # MCP 관리 인터페이스
 ```
 
+> **보안 (v2.1.161)**: `claude mcp list`/`get`/`add`가 터미널에 시크릿을 노출하던 버그 수정 — `${VAR}` 참조 확장 비활성, credential 헤더 및 URL 내 시크릿 redact 처리됨.
+
+> **v2.1.161**: `/mcp`에서 로그인한 적 없는 claude.ai 커넥터는 기본으로 숨겨짐 — "Show unused connectors"로 확장 가능.
+
 ---
 
 ## Hook에서 MCP 도구 매칭
