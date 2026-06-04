@@ -77,6 +77,40 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.162 (2026-06-04 동기화)
+
+**새로운 기능:**
+- (v2.1.162) `claude agents --json`에 `waitingFor` 필드 추가 — 대기 세션 차단 원인 표시
+- (v2.1.162) `--tools` Grep/Glob 명시 시 네이티브 빌드 임베디드 검색 도구 정상 제공
+- (v2.1.162) `/effort` 레벨 선택 시 새 세션 기본값 저장됨 확인 메시지
+- (v2.1.162) 슬래시 커맨드 자동완성 클릭 → 즉시 실행 대신 입력 필드 채움
+- (v2.1.162) Remote Control 영구 푸터 필로 표시
+- (v2.1.162) Windsurf → Devin Desktop 리브랜딩 (`/ide`, `/terminal-setup`, `/scroll-speed`)
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값이 메트릭 데이터포인트 레이블로 포함
+- (v2.1.161) `claude agents` 팬아웃 작업 시 `done/total` 진행 상황 표시
+- (v2.1.161) 병렬 도구 호출 독립성 — Bash 실패가 동일 배치 다른 호출 취소 안 함
+- (v2.1.161) `/mcp` 미사용 claude.ai 커넥터 접기
+- (v2.1.160) 쉘 시작 파일/git config 쓰기 전 확인 프롬프트
+- (v2.1.160) `acceptEdits` 빌드 도구 설정 파일 쓰기 확인
+- (v2.1.160) grep 후 Edit 시 별도 Read 불필요
+- (v2.1.160) 다이나믹 워크플로우 트리거 키워드 `workflow` → `ultracode` 변경
+
+**Breaking Changes:**
+- 다이나믹 워크플로우 트리거 키워드 `workflow` → `ultracode` (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` env var 제거 (v2.1.160)
+
+**주요 버그 수정:**
+- WebFetch 권한 규칙 사전 승인 도메인보다 우선 적용 수정
+- MCP timeout < 1000ms 값 무시(MCP_TOOL_TIMEOUT 폴백), `claude mcp get` 주석 표시
+- LSP `workspaceSymbol` `query` 파라미터 지원 추가
+- `SendMessage` `CLAUDE_CODE_TMPDIR` 깊은 경로 작동 오류 수정
+- background 서브에이전트 `claude -p` stdout 오염 수정 (v2.1.161)
+- `isolation: "worktree"` Workflow 에이전트 파일 편집 수정 (v2.1.161)
+- `claude mcp` 시크릿 터미널 노출 수정 (v2.1.161)
+- `claude agents` 다수 안정성 개선
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**

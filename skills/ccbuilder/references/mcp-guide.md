@@ -293,6 +293,8 @@ MCP 서버 설정에 `alwaysLoad: true`를 추가하면, 해당 서버의 모든
 MCP_TOOL_TIMEOUT=120000  # 120초
 ```
 
+> **v2.1.162 수정**: 서버별 `timeout` 설정값이 1000ms 미만이면 무시되고 `MCP_TOOL_TIMEOUT` 또는 기본값으로 폴백합니다. 이전에는 1초 watchdog으로 floor 처리되었으나, 이제 해당 값 자체를 사용하지 않습니다. `claude mcp get` 출력 시 1000ms 미만 값에 경고 어노테이션이 표시됩니다.
+
 ---
 
 ## MCP 서버 시작 자동 재시도 (v2.1.121 신규)
@@ -408,6 +410,10 @@ claude mcp reset                      # 모든 서버 초기화
 # /mcp 슬래시 명령 (세션 내)
 /mcp                                  # MCP 관리 인터페이스
 ```
+
+> **v2.1.161 수정 — 시크릿 미출력**: `claude mcp list`/`get`/`add` 실행 시 터미널에 시크릿이 노출되지 않습니다. `${VAR}` 환경 변수 참조가 확장되지 않으며, credential 헤더와 URL에 포함된 시크릿이 자동으로 redact됩니다.
+
+> **v2.1.161 수정 — `/mcp` 미사용 커넥터 접기**: `/mcp` 인터페이스에서 한 번도 로그인하지 않은 claude.ai 커넥터는 "Show unused connectors" 행으로 접혀 표시됩니다.
 
 ---
 

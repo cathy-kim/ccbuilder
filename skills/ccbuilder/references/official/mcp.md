@@ -58,6 +58,12 @@
 | **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 
+> **v2.1.162 수정**: 서버별 `timeout` 설정이 1000ms 미만이면 해당 값을 무시하고 `MCP_TOOL_TIMEOUT` 또는 기본값으로 폴백합니다 (이전: 1초 watchdog으로 floor 처리). `claude mcp get`이 1000ms 미만 값에 경고 어노테이션을 표시합니다.
+
+> **v2.1.161 수정**: `claude mcp list`/`get`/`add`에서 `${VAR}` 환경 변수가 확장되지 않고, credential 헤더 및 URL 시크릿이 redact되어 터미널에 시크릿이 노출되지 않습니다.
+
+> **v2.1.161 수정**: `/mcp` 인터페이스에서 한 번도 로그인하지 않은 claude.ai 커넥터가 "Show unused connectors" 행으로 접혀 표시됩니다.
+
 ## Managed MCP (조직 관리)
 
 **방법 1**: `managed-mcp.json` - 관리자 전용 제어 (사용자 커스터마이징 불가)

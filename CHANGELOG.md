@@ -15,6 +15,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-04
+
+### Added
+- **Claude Code v2.1.162 동기화**
+  - `claude agents --json`에 `waitingFor` 필드 추가 — 대기 중인 세션이 차단된 원인 표시 (예: 권한 프롬프트)
+  - `--tools`에 Grep/Glob 명시 지정 시 네이티브 빌드의 임베디드 검색 도구 제공 (이전에는 무시됨)
+  - `/effort` 레벨 선택 시 새 세션의 기본값으로 저장됨을 확인 메시지 표시
+  - 슬래시 커맨드 자동완성 메뉴에서 클릭 시 즉시 실행 대신 입력 필드에 채워짐
+  - Remote Control이 시작 메시지 대신 영구 푸터 필로 표시
+  - `/ide` 메뉴, `/terminal-setup`, `/scroll-speed`에서 Windsurf → Devin Desktop으로 명칭 변경
+  - `OTEL_RESOURCE_ATTRIBUTES` 값이 메트릭 데이터포인트의 레이블로 포함됨 (v2.1.161)
+  - `claude agents` 행에 팬아웃 작업 시 `done/total` 진행 상황 표시 (v2.1.161)
+  - 병렬 도구 호출: Bash 명령 실패 시 동일 배치의 다른 호출 취소 방지 (v2.1.161)
+  - `/mcp`에서 로그인한 적 없는 claude.ai 커넥터를 "Show unused connectors" 행 뒤로 접기 (v2.1.161)
+  - 쉘 시작 파일(`.zshenv`, `.bash_login` 등) 및 `~/.config/git/` 쓰기 전 확인 프롬프트 추가 (v2.1.160)
+  - `acceptEdits` 모드에서 빌드 도구 설정 파일(`.npmrc`, `.yarnrc`, `bunfig.toml` 등) 쓰기 전 확인 (v2.1.160)
+  - `grep`으로 파일 조회 후 Edit 시 별도 Read 불필요 (v2.1.160)
+  - 다이나믹 워크플로우 트리거 키워드 `workflow` → `ultracode`로 변경 (v2.1.160)
+
+### Fixed
+- WebFetch 권한 규칙이 사전 승인 도메인보다 우선 적용되도록 수정
+- Windows에서 백슬래시/대소문자 변형 경로의 권한 규칙 매칭 오류 수정
+- 설정 디렉토리 읽기 전용 시 무음 시작 중단 → 인메모리 설정으로 시작하고 오류 표시
+- MCP 서버 `timeout` 설정값이 1000ms 미만일 때 1초로 강제 적용되던 문제 수정; `claude mcp get`에 주석 표시
+- LSP `workspaceSymbol` 결과 없음 문제 수정 — `query` 파라미터 지원 추가
+- `SendMessage`가 `CLAUDE_CODE_TMPDIR`이 깊은 경로일 때 작동하지 않던 문제 수정
+- background 서브에이전트 출력이 `claude -p` stdout을 오염시키던 문제 수정 (v2.1.161)
+- `isolation: "worktree"` Workflow 에이전트가 자신의 worktree 파일 편집 불가 문제 수정 (v2.1.161)
+- `claude mcp` list/get/add에서 시크릿이 터미널에 출력되던 문제 수정 (v2.1.161)
+- 다수의 `claude agents` 안정성 개선 (연결, 백그라운드 세션 복구, 응답 큐잉)
+
+### Changed
+- 시작 출력 간소화: 심각도별 그룹화, 세션 정보와 공지사항 한 줄로 통합
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 환경변수 제거 (v2.1.160)
+- JetBrains 플러그인 설치 제안 시작 메시지 제거 (v2.1.160)
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added

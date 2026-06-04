@@ -255,13 +255,14 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 ---
 
-## Breaking Changes (v2.8-2.9)
+## Breaking Changes (v2.8-2.9, v2.1.160)
 
 | 변경 | 이전 | 이후 |
 |------|------|------|
 | Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
+| 동적 Workflow 트리거 키워드 | `"workflow"` | `"ultracode"` **(v2.1.160 Breaking)** |
 
 ## claude agents 플래그 (v2.1.142 신규)
 
@@ -278,12 +279,20 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--effort <level>` | effort 레벨 설정 |
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
 
+> **v2.1.162**: `claude agents --json` 출력에 `waitingFor` 필드 추가 — 세션이 무엇을 기다리고 있는지(차단 원인)를 JSON으로 확인 가능
+
 ---
 
 ## 버그 수정 (v2.1.101)
 
 - **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속
 - **isolation: worktree 파일 접근**: 격리된 worktree에서 실행 중인 서브에이전트가 자신의 worktree 내 파일에 Read/Edit 접근이 거부되던 버그 수정 — 이제 자신의 worktree 내 파일에 정상 접근 가능
+
+## 버그 수정 (v2.1.161)
+
+- **`isolation: "worktree"` 파일 편집**: Workflow 에이전트가 자신의 worktree 내 파일을 편집할 수 없던 버그 수정 — 이제 격리된 worktree 내 파일 편집 정상 동작
+- **병렬 도구 호출 독립성**: 같은 배치 내 Bash 명령 하나가 실패해도 나머지 병렬 도구 호출이 취소되지 않도록 수정
+- **백그라운드 서브에이전트 출력**: 백그라운드 서브에이전트 출력이 `claude -p` stdout을 오염시키던 버그 수정
 
 ---
 
