@@ -19,9 +19,9 @@
 | **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
-| **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason`, `background_tasks`, `session_crons` (v2.1.145) |
+| **Stop** | Claude 응답 완료 — `hookSpecificOutput.additionalContext` 반환 시 피드백 제공 후 훅 오류 없이 턴 유지 (v2.1.163) | Yes (block) | `stop_reason`, `background_tasks`, `session_crons` (v2.1.145) |
 | **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
-| **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `background_tasks`, `session_crons` (v2.1.145) |
+| **SubagentStop** | 서브에이전트 완료 — `hookSpecificOutput.additionalContext` 반환 시 피드백 제공 후 훅 오류 없이 턴 유지 (v2.1.163) | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `background_tasks`, `session_crons` (v2.1.145) |
 | **TeammateIdle** | 팀메이트 유휴 상태 (v2.7 신규) | No | `teammate_name`, `agent_id` |
 | **PreCompact** | 컨텍스트 압축 전 — exit code 2 또는 `{"decision":"block"}` 반환으로 압축 차단 가능 (v2.1.105) | Yes (block) | - |
 | **Notification** | 알림 발생 | No | `notification` |
@@ -51,6 +51,10 @@
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
+
+**hookSpecificOutput.additionalContext (Stop·SubagentStop, v2.1.163)**: Stop·SubagentStop Hook이 `hookSpecificOutput.additionalContext` 필드를 반환하면 Claude에게 피드백 텍스트를 제공하면서 턴을 계속 유지할 수 있음 — 훅 오류로 레이블되지 않음. 기존 block 결정(`{"decision": "block"}`)과 달리 턴을 중단하지 않고 추가 컨텍스트만 주입함.
+
+**if 조건 수정 (v2.1.163)**: `if: "Bash(...)"` 조건이 `$()` 또는 `$VAR`를 포함하는 모든 Bash 명령에서 잘못 발동하던 버그 수정 — 이제 서브셸·백틱 내 명령에 대해서도 패턴을 정확히 매칭함
 
 ---
 

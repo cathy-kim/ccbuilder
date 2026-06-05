@@ -15,6 +15,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-05
+
+### Added
+- **Claude Code v2.1.165 동기화** (v2.1.159~v2.1.165)
+  - (v2.1.163) `requiredMinimumVersion`/`requiredMaximumVersion` managed settings — 버전 범위 외 Claude Code 시작 거부 + 승인 버전으로 안내
+  - (v2.1.163) `/plugin list` 명령 — `--enabled`/`--disabled` 필터 지원
+  - (v2.1.163) `/btw` "c to copy" 단축키 — raw markdown 클립보드 복사 (붙여넣기 시 포맷 유지)
+  - (v2.1.163) Stop·SubagentStop Hook `hookSpecificOutput.additionalContext` 반환 지원 — 피드백 제공 후 훅 오류 없이 턴 유지
+  - (v2.1.163) Skills `\$` 이스케이프 구문 — 명령 본문에서 숫자 앞 리터럴 `$` 표현 가능
+  - (v2.1.163) stdio MCP 서버 `--resume` 시 hooks/Bash와 동일한 `CLAUDE_CODE_SESSION_ID` 수신
+  - (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 중 세션의 블로킹 원인(권한 프롬프트 등) 표시
+  - (v2.1.162) `/effort` 레벨 영속화 시 확인 메시지 표시
+  - (v2.1.162) 슬래시 명령 자동완성 — 선택 시 즉시 실행 아닌 입력창 채우기, Enter로 실행
+  - (v2.1.162) Remote Control 지속 표시 — 시작 메시지 대신 하단 상태바 pill + 링크
+  - (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값을 메트릭 데이터포인트 레이블로 포함 — 팀/레포별 사용량 분석 가능
+  - (v2.1.161) `claude agents` 팬아웃 작업 시 `done/total` 진행 표시
+  - (v2.1.161) `/mcp` 미로그인 claude.ai 커넥터 "Show unused connectors" 행으로 접기
+  - (v2.1.160) 셸 시작 파일(`.zshenv`, `.zlogin`, `.bash_login`) 및 `~/.config/git/` 수정 전 프롬프트
+  - (v2.1.160) `acceptEdits` 모드 빌드 도구 설정 파일(`.npmrc`, `.yarnrc*`, `bunfig.toml`, `.bazelrc`, `.pre-commit-config.yaml`, `.devcontainer/`) 수정 전 프롬프트
+  - (v2.1.160) Edit 도구 단일 파일 grep/egrep/fgrep 후 별도 Read 없이 편집 가능
+  - (v2.1.162) 병렬 도구 호출 중 Bash 실패 시 같은 배치의 다른 호출 취소 안 함
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.165 업데이트
+  - Hook 인라인 노트: Stop/SubagentStop `additionalContext`, `if: "Bash(...)"` 수정, Skills `\$` 이스케이프 추가 (v2.1.163)
+  - CLI 섹션: `requiredMinimumVersion/Max`, `/plugin list`, `claude agents --json waitingFor`, `acceptEdits` 강화, Edit grep 후 Read 불필요 추가
+  - Breaking Changes: "workflow" → "ultracode" 트리거 키워드, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 추가
+- `references/version-sync.md`: v2.1.165 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Stop/SubagentStop `hookSpecificOutput.additionalContext` 반환 설명 추가
+- `references/official/hooks.md`: Stop/SubagentStop `additionalContext` 반환 설명 추가
+- `references/official/tools.md`: Edit 단일 파일 grep 후 Read 불필요, 병렬 Bash 실패 격리 설명 추가
+
+### Fixed
+- `claude -p` backgrounded 명령 미종료 시 최종 결과 후 영구 hang 수정 — 결과 후 stdin 닫히면 ~5s 후 백그라운드 셸 정리 (v2.1.163)
+- Bash 명령 bazel/EDR 환경 실패 수정 — `$TMPDIR` 샌드박스 전용 설정으로 복원 (v2.1.154 회귀 수정, v2.1.163)
+- `if: "Bash(...)"` 조건이 `$()` 또는 `$VAR` 포함 모든 Bash 명령에서 발동하던 버그 수정 (v2.1.163)
+- 홈 디렉토리 경로 deny 규칙(`Read(~/Desktop/**)`)이 `$HOME` 참조 Bash 명령을 차단 못하던 버그 수정 (v2.1.163)
+- 백그라운드 에이전트 세션이 Claude Code 업데이트 후 배경에서 갱신 — 재연결 시 콜드 재시작 대기 없음 (v2.1.163)
+- `claude agents` `isolation: "worktree"` 에이전트가 자신의 worktree 내 파일 편집 차단되던 버그 수정 (v2.1.161)
+- WebFetch 권한 규칙이 사전승인 도메인에도 적용 — 명시적 deny/ask/allow 규칙이 사전승인 자동허용보다 우선 (v2.1.162)
+- 완료된 서브에이전트가 오류 발생 시 "running"으로 고착되던 버그 수정 (v2.1.161)
+- 재연결된 백그라운드 세션이 대화 유실 후 원래 프롬프트 재실행하던 버그 수정 (v2.1.160)
+
+### Breaking Changes
+- **Dynamic Workflow 트리거 키워드 변경**: `workflow` → `ultracode` (v2.1.160) — "workflow" 단어 더 이상 동작하지 않음; 자연어 요청은 계속 작동
+- **`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거**: 더 이상 효과 없음 (v2.1.163) — `/model claude-opus-4-6[1m]` + `/fast on` 사용
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added

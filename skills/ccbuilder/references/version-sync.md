@@ -77,6 +77,37 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.165 (2026-06-05 동기화)
+
+**새로운 기능:**
+- (v2.1.163) `requiredMinimumVersion`/`requiredMaximumVersion` managed settings — 버전 범위 외 시작 거부 + 승인 버전 안내
+- (v2.1.163) `/plugin list` `--enabled`/`--disabled` 필터 지원
+- (v2.1.163) `/btw` "c to copy" 단축키 — raw markdown 클립보드 복사
+- (v2.1.163) Stop·SubagentStop Hook `hookSpecificOutput.additionalContext` 반환 — 피드백 후 턴 유지 (훅 오류 없음)
+- (v2.1.163) Skills `\$` 이스케이프 — 명령 본문 리터럴 `$` 표현
+- (v2.1.163) stdio MCP 서버 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 동기 수신
+- (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 원인 표시
+- (v2.1.162) 병렬 도구 호출 중 Bash 실패 시 다른 호출 취소 안 함
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 메트릭 데이터포인트 레이블 포함
+- (v2.1.161) `claude agents` 팬아웃 `done/total` 진행 표시
+- (v2.1.160) `acceptEdits` 빌드 도구 설정 파일 수정 전 프롬프트
+- (v2.1.160) Edit 단일 파일 grep 후 별도 Read 없이 편집 가능
+
+**Breaking Changes:**
+- Dynamic Workflow 트리거 키워드: `workflow` → `ultracode` (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 (no-op, v2.1.163)
+
+**주요 버그 수정:**
+- `claude -p` backgrounded 명령 hang 수정 — stdin 닫힘 후 ~5s 백그라운드 셸 정리 (v2.1.163)
+- `$TMPDIR` bazel/EDR 환경 실패 수정 — 샌드박스 전용 설정으로 복원 (v2.1.163, v2.1.154 회귀)
+- `if: "Bash(...)"` 조건 서브셸·백틱 내 명령 정확 매칭 수정 (v2.1.163)
+- 홈 디렉토리 deny 규칙 `$HOME` 참조 Bash 명령 차단 수정 (v2.1.163)
+- `isolation: "worktree"` 에이전트 자신의 worktree 내 파일 편집 차단 수정 (v2.1.161)
+- WebFetch 명시적 deny/ask/allow 규칙이 사전승인보다 우선 (v2.1.162)
+- 재연결 백그라운드 세션 대화 유실 후 원래 프롬프트 재실행 수정 (v2.1.160)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**
