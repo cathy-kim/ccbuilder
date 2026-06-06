@@ -77,6 +77,40 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.167 (2026-06-06 동기화)
+
+**새로운 기능:**
+- (v2.1.167) 버그 수정 및 안정성 개선
+- (v2.1.166) `fallbackModel` 설정 — 기본 모델 과부하/불가 시 최대 3개 폴백 모델 순차 시도 (interactive 포함)
+- (v2.1.166) Deny 규칙 툴 이름에 glob 패턴 지원 (`"*"`로 모든 툴 차단); allow 규칙은 비MCP glob 거부
+- (v2.1.166) SendMessage 교차 세션 메시지 보안 강화 — 릴레이 메시지 사용자 권한 차단, auto mode 차단
+- (v2.1.166) `MAX_THINKING_TOKENS=0`·`--thinking disabled` — 기본 thinking 모델 비활성화 지원
+- (v2.1.165) 버그 수정 및 안정성 개선
+- (v2.1.163) `requiredMinimumVersion`·`requiredMaximumVersion` 관리형 설정 — 버전 범위 외 시작 거부
+- (v2.1.163) `/plugin list` 커맨드 (`--enabled`/`--disabled` 필터)
+- (v2.1.163) Stop·SubagentStop 훅 `hookSpecificOutput.additionalContext` — 에러 없이 피드백 후 턴 계속
+- (v2.1.163) Skills `\$` 이스케이프 문법 — 커맨드 바디에 리터럴 `$` 사용
+- (v2.1.163) stdio MCP 서버 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 동일 제공
+- (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 세션 차단 원인 표시
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값을 메트릭 데이터포인트 레이블로 포함
+- (v2.1.160) `acceptEdits` 모드 빌드툴 설정 파일 쓰기 전 확인 프롬프트
+- (v2.1.159) 내부 인프라 개선 (사용자 가시 변경 없음)
+
+**Breaking Changes:**
+- Dynamic Workflow 트리거 키워드 `workflow` → `ultracode` 변경 (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` env var 제거 (v2.1.160)
+
+**주요 버그 수정:**
+- 관리형 설정 `allowedMcpServers`/`deniedMcpServers` `${VAR}` 참조 매칭 수정 (v2.1.166)
+- 백그라운드 에이전트 git worktree 진입 후 크래시 루프 수정 (v2.1.166)
+- Hook `if: "Bash(...)"` 조건 `$()` 또는 `$VAR` 포함 시 잘못 발동하던 버그 수정 (v2.1.163)
+- MCP per-server `timeout` 1000ms 미만 값이 1초로 고정되던 버그 수정 (v2.1.162)
+- WebFetch 권한 규칙이 사전 승인 도메인에 미적용되던 버그 수정 (v2.1.162)
+- JetBrains IDE 터미널 플리커 수정 (v2.1.166)
+- Kitty 키보드 프로토콜 Shift+비ASCII 문자 드롭 수정 (v2.1.166)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**

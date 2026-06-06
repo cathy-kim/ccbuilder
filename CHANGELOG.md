@@ -15,6 +15,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-06
+
+### Added
+- **Claude Code v2.1.167 동기화** (v2.1.158 → v2.1.167)
+  - (v2.1.166) `fallbackModel` 설정: 기본 모델 과부하/불가 시 최대 3개 폴백 모델 순차 시도 (interactive 세션 포함)
+  - (v2.1.166) Deny 규칙 툴 이름에 glob 패턴 지원 (`"*"`로 모든 툴 차단; allow 규칙은 비MCP glob 거부)
+  - (v2.1.166) SendMessage 교차 세션 메시지 보안 강화 — 릴레이된 메시지의 사용자 권한 차단, auto mode 차단
+  - (v2.1.166) `MAX_THINKING_TOKENS=0`, `--thinking disabled` — 기본 thinking 모델의 thinking 비활성화 지원
+  - (v2.1.163) `requiredMinimumVersion` / `requiredMaximumVersion` 관리형 설정 — 허용 버전 범위 외 시작 거부
+  - (v2.1.163) `/plugin list` 커맨드 추가 (`--enabled`/`--disabled` 필터 포함)
+  - (v2.1.163) Stop/SubagentStop 훅: `hookSpecificOutput.additionalContext` 반환으로 클로드에게 피드백 후 턴 계속
+  - (v2.1.163) Skills: `\$` 이스케이프 문법 — 커맨드 바디에 리터럴 `$` 사용 가능
+  - (v2.1.163) stdio MCP 서버: `--resume` 시 `CLAUDE_CODE_SESSION_ID` 동일 제공
+  - (v2.1.163) `/btw` "c to copy" 단축키 추가 (raw markdown 클립보드 복사)
+  - (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 중 세션의 차단 원인 표시
+  - (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값을 메트릭 데이터포인트 레이블로 포함
+  - (v2.1.160) `acceptEdits` 모드: 코드 실행 권한 부여하는 빌드툴 설정 파일 쓰기 전 확인 프롬프트
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.167 업데이트
+  - MCP 섹션: `${VAR}` 참조 매칭 수정 추가
+  - Hook 섹션: Stop/SubagentStop `additionalContext`, deny glob 패턴, SendMessage 보안 강화, `fallbackModel` 추가
+  - CLI 섹션: `fallbackModel`, `requiredMinimumVersion`/`requiredMaximumVersion`, `/plugin list`, `waitingFor`, `acceptEdits` 추가
+  - Breaking Changes: workflow → ultracode 키워드 변경, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 추가
+- `references/version-sync.md`: v2.1.167 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Stop/SubagentStop `hookSpecificOutput.additionalContext` 설명 추가
+- `references/official/hooks.md`: Stop/SubagentStop `additionalContext` 업데이트
+- `references/mcp-guide.md`: stdio MCP `CLAUDE_CODE_SESSION_ID` on `--resume` 추가
+
+### Fixed
+- 관리형 설정 `allowedMcpServers`/`deniedMcpServers` `${VAR}` 참조 매칭 수정 (v2.1.166)
+- Hook `if: "Bash(...)"` 조건이 `$()` 또는 `$VAR` 포함 모든 Bash 명령에 잘못 발동되던 버그 수정 (v2.1.163)
+- MCP per-server `timeout` 1000ms 미만 값이 1초로 고정되던 버그 수정 (v2.1.162)
+- WebFetch 권한 규칙이 사전 승인 도메인에 미적용되던 버그 수정 (v2.1.162)
+- 백그라운드 에이전트 git worktree 진입 후 "No conversation found" 크래시 루프 수정 (v2.1.166)
+- JetBrains IDE 터미널 플리커 수정, Kitty 키보드 프로토콜 Shift+비ASCII 드롭 수정 (v2.1.166)
+
+### Breaking Changes
+- Dynamic Workflow 트리거 키워드 `workflow` → `ultracode` 변경 (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` env var 제거 (v2.1.160, 2026-05-30 deprecated)
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added

@@ -52,6 +52,10 @@
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
 
+**hookSpecificOutput.additionalContext (Stop·SubagentStop, v2.1.163)**: Stop 또는 SubagentStop 훅에서 `hookSpecificOutput.additionalContext` 반환 시 — hook error로 표시되지 않고 해당 컨텍스트를 클로드에게 피드백하며 턴을 계속 진행 (기존: block만 지원)
+
+**Hook if 조건 수정 (v2.1.163)**: `if: "Bash(...)"` 조건이 `$()` 서브쉘 또는 `$VAR` 참조를 포함하는 모든 Bash 명령에 잘못 발동되던 버그 수정; 이제 서브쉘·백틱 내부 명령에도 올바르게 매칭
+
 ---
 
 ## Hook 타입 (v2.12)
