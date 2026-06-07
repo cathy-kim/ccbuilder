@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.168 (2026-06-07 동기화)
+
+**새로운 기능:**
+- (v2.1.166) `fallbackModel` 설정 — 기본 모델 과부하·불가 시 최대 3개 폴백 모델 순서 시도; `--fallback-model` 대화형 세션 적용
+- (v2.1.166) Deny 규칙 tool-name에 glob 패턴 지원 (`"*"`로 전체 도구 차단)
+- (v2.1.166) `SendMessage` 보안 강화 — 릴레이 메시지의 사용자 권한 거부
+- (v2.1.166) `MAX_THINKING_TOKENS=0`·`--thinking disabled`로 기본 thinking 비활성화
+- (v2.1.163) 관리 설정 `requiredMinimumVersion`/`requiredMaximumVersion` 추가
+- (v2.1.163) `/plugin list [--enabled|--disabled]` 커맨드 신규
+- (v2.1.163) Stop·SubagentStop 훅: `hookSpecificOutput.additionalContext` 지원
+- (v2.1.163) Skills `\$` 이스케이프 구문; stdio MCP 서버 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 수신
+- (v2.1.162) `claude agents --json` `waitingFor` 필드
+- (v2.1.161) 병렬 도구 호출: Bash 실패 시 다른 호출 취소 안 함
+- (v2.1.160) `acceptEdits`·쉘 시작 파일 작성 전 확인 프롬프트
+
+**Breaking Changes:**
+- Dynamic workflow 트리거 키워드 `workflow` → `ultracode` (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` env var 제거 (v2.1.160)
+
+**주요 버그 수정:**
+- hook `if:` 조건 `$()`·`$VAR` 오발동 버그 수정 (v2.1.163)
+- MCP 서버 timeout 1000ms 미만 1초 강제 올림 버그 수정 (v2.1.161)
+- WebFetch 권한 규칙 프리승인 도메인 미적용 버그 수정 (v2.1.161)
+- `claude mcp` 비밀 값 터미널 출력 버그 수정 (v2.1.161)
+- background agent worktree 진입 후 크래시 루프 수정 (v2.1.166)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**

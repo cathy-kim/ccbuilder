@@ -194,6 +194,18 @@ Hook에서 MCP 도구를 직접 실행합니다:
 }
 ```
 
+**`additionalContext` (v2.1.163, Stop·SubagentStop)**: 훅 오류로 처리되지 않고 Claude에 피드백을 제공하며 턴을 계속 진행합니다:
+
+```json
+{
+  "hookSpecificOutput": {
+    "additionalContext": "테스트가 실패했습니다. 수정 후 다시 실행하세요."
+  }
+}
+```
+
+`decision: "block"` 없이 `additionalContext`만 반환하면 Claude가 피드백을 받고 작업을 이어갑니다.
+
 ---
 
 ## Exit Codes

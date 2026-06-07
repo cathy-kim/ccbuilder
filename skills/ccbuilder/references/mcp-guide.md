@@ -131,6 +131,12 @@ Stdio MCP 서버 서브프로세스는 다음 환경변수도 자동으로 수�
 | `CLAUDECODE` | `1` | Claude Code 실행 환경 감지 |
 | `CLAUDE_PROJECT_DIR` | 프로젝트 루트 경로 | 프로젝트 파일 접근 (v2.1.139+) |
 
+> **v2.1.163**: `--resume` 세션에서도 Hooks/Bash와 동일한 `CLAUDE_CODE_SESSION_ID`를 수신합니다.
+
+### MCP 서버 timeout 설정 주의사항 (v2.1.161+)
+
+per-server `timeout` 값이 **1000ms 미만이면 무시**되고 `MCP_TOOL_TIMEOUT` 또는 기본값으로 폴백합니다 (이전에는 1초 watchdog으로 강제 올려 모든 도구 호출이 즉시 취소되는 버그 있었음). `claude mcp get`으로 해당 서버의 timeout 어노테이션을 확인하세요.
+
 ---
 
 ## OAuth 인증

@@ -13,6 +13,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `seongsu-kang/tycono` 서브모듈 추가 — tycono.ai 플랫폼 레퍼런스 (`references/github/repos/`)
 - `yeachan-heo/oh-my-claudecode` 서브모듈 추가 — OMC orchestration layer 레퍼런스 (`references/github/repos/`)
 
+## [2.41.0] - 2026-06-07
+
+### Added
+- **Claude Code v2.1.168 sync** (v2.1.159 → v2.1.168)
+  - (v2.1.166) `fallbackModel` 설정 — 기본 모델 과부하·불가 시 최대 3개 폴백 모델 순서 시도; `--fallback-model`이 대화형 세션에도 적용
+  - (v2.1.166) Deny 규칙 tool-name에 glob 패턴 지원 (`"*"`로 전체 도구 차단); allow 규칙은 비MCP glob 거부
+  - (v2.1.166) `SendMessage` 보안 강화 — 릴레이 메시지의 사용자 권한 거부; auto mode 차단
+  - (v2.1.166) `MAX_THINKING_TOKENS=0`·`--thinking disabled`·모델별 토글로 Claude API 기본 thinking 비활성화
+  - (v2.1.166) 비재시도 오류 시 폴백 모델로 1회 재시도; `claude update` 다운로드 전 대상 버전 표시
+  - (v2.1.163) 관리 설정 `requiredMinimumVersion`/`requiredMaximumVersion` — 허용 범위 외 버전 시작 거부
+  - (v2.1.163) `/plugin list [--enabled|--disabled]` 커맨드 신규
+  - (v2.1.163) Stop·SubagentStop 훅 `hookSpecificOutput.additionalContext` 지원 — 훅 오류 없이 Claude에 피드백 후 턴 계속
+  - (v2.1.163) Skills `\$` 이스케이프 구문 — 명령 본문에 리터럴 `$` 포함 가능
+  - (v2.1.163) stdio MCP 서버: `--resume` 시 `CLAUDE_CODE_SESSION_ID` 수신
+  - (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 중 세션 블로킹 원인 표시
+  - (v2.1.162) `--tools`: `Grep`/`Glob` 명시 시 내장 검색 도구 정상 제공
+  - (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값을 메트릭 데이터포인트 레이블로 포함
+  - (v2.1.161) 병렬 도구 호출 개선 — Bash 실패 시 같은 배치의 다른 호출 취소 안 함
+  - (v2.1.160) `acceptEdits` 모드: 빌드 도구 설정 파일(.npmrc·.yarnrc*·bunfig.toml·.bazelrc·.pre-commit-config.yaml·.devcontainer/) 작성 전 확인 프롬프트
+  - (v2.1.160) 쉘 시작 파일(.zshenv·.zlogin·.bash_login)·`~/.config/git/` 작성 전 확인 프롬프트
+  - (v2.1.160) `Edit`: 단일 파일 `grep`/`egrep`/`fgrep` 후 별도 Read 없이 편집 가능
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.168 업데이트
+  - Hook 인라인 노트: Stop·SubagentStop `additionalContext`, hook `if:` 조건 버그 수정 추가
+  - CLI 섹션: `fallbackModel`, `requiredMinimumVersion`/`requiredMaximumVersion`, `/plugin list`, Skills `\$` 이스케이프, `waitingFor`, 병렬 도구 호출 개선, acceptEdits 프롬프트 추가
+  - Breaking Changes: `workflow` → `ultracode` 트리거 키워드 변경, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 추가
+- `references/version-sync.md`: v2.1.168 변경사항 추적 엔트리 추가
+
+### Changed (Breaking)
+- **Dynamic workflow 트리거 키워드 `workflow` → `ultracode`** — "workflow" 단어 더 이상 Dynamic Workflow 미트리거 (v2.1.160)
+- Windsurf → Devin Desktop 이름 변경 (`/ide`·`/terminal-setup`·`/scroll-speed`, v2.1.162)
+
+### Fixed
+- hook `if: "Bash(...)"` 조건이 `$()`·`$VAR` 포함 모든 Bash 명령에 오발동하던 버그 수정 (v2.1.163)
+- MCP 서버 `timeout` 1000ms 미만 값이 1초 watchdog으로 강제 올림되던 버그 수정 (v2.1.161)
+- `claude mcp list`/`get`/`add`에서 비밀 값 터미널 출력 버그 수정 (v2.1.161)
+- WebFetch 권한 규칙이 프리승인 도메인에 적용 안 되던 버그 수정 (v2.1.161)
+- managed-settings `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 참조 미매칭 버그 수정 (v2.1.166)
+- background agent 세션 git worktree 진입 후 "No conversation found" 크래시 루프 수정 (v2.1.166)
+- 다수 UX 개선 (claude agents 너비, 시작 알림 간소화, 오류 블록 단축 등)
+
 ---
 
 ## [2.40.0] - 2026-05-30

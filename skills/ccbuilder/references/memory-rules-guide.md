@@ -24,6 +24,17 @@
 
 조직 차원에서 배포하는 정책 파일. 시스템 디렉토리에 위치하며 최고 우선순위.
 
+### 버전 제한 (v2.1.163+)
+
+`managed-settings.json`에서 허용 버전 범위를 지정할 수 있습니다. 범위를 벗어난 버전은 시작을 거부하고 승인 버전으로 안내합니다:
+
+```json
+{
+  "requiredMinimumVersion": "2.1.163",
+  "requiredMaximumVersion": "2.2.0"
+}
+```
+
 ---
 
 ## 2. Project Memory (CLAUDE.md)
