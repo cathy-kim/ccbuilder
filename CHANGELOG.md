@@ -15,6 +15,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-08
+
+### Added
+- **Claude Code v2.1.168 동기화** (v2.1.159 → v2.1.168)
+  - (v2.1.166) `fallbackModel` 설정 추가 — 최대 3개 폴백 모델을 순서대로 시도 (오버로드/불가 시); `--fallback-model`이 대화형 세션에도 적용
+  - (v2.1.166) `deny` 룰 툴 이름 위치에 glob 패턴 지원 — `"*"`으로 모든 툴 차단; allow 룰은 비-MCP glob 거부
+  - (v2.1.166) `MAX_THINKING_TOKENS=0` / `--thinking disabled` / 모델별 thinking 토글로 기본 thinking 모델 비활성화 가능
+  - (v2.1.166) 예기치 않은 non-retryable API 오류 시 폴백 모델로 자동 재시도
+  - (v2.1.163) `requiredMinimumVersion` / `requiredMaximumVersion` 관리형 설정 — 허용 버전 범위 외 시 시작 거부
+  - (v2.1.163) `/plugin list` 명령어 추가 (`--enabled` / `--disabled` 필터 지원)
+  - (v2.1.163) Hooks: Stop·SubagentStop 훅이 `hookSpecificOutput.additionalContext` 반환 가능 — 오류 없이 턴 유지하며 Claude에게 피드백 제공
+  - (v2.1.163) Skills: 커맨드 바디에서 숫자 앞 리터럴 `$`를 위한 `\$` 이스케이프 문법 추가
+  - (v2.1.163) stdio MCP 서버가 `--resume` 시 훅·Bash와 동일한 `CLAUDE_CODE_SESSION_ID` 수신
+  - (v2.1.162) `claude agents --json`에 `waitingFor` 필드 추가 — 대기 중 세션이 블로킹된 이유 표시
+  - (v2.1.162) `--tools`에서 Grep·Glob 명시 지정 시 전용 내장 검색 툴 제공 (네이티브 빌드)
+  - (v2.1.162) `/effort` 설정 레벨이 새 세션의 기본값으로 지속 저장
+  - (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값이 메트릭 데이터포인트 레이블에 포함 — 팀·레포 기준 사용량 분류 가능
+  - (v2.1.161) 병렬 툴 호출: Bash 실패 시 동일 배치의 다른 호출 취소하지 않음
+
+### Changed
+- 다이나믹 워크플로우 트리거 키워드 `workflow` → `ultracode` 변경 (v2.1.160); `/config`에서 비활성화 가능
+- 쉘 시작 파일(`.zshenv`, `.bash_login` 등) 및 `acceptEdits` 모드에서 빌드 툴 설정 파일 쓰기 전 확인 프롬프트 추가 (v2.1.160)
+- 크로스 세션 메시징 보안 강화 — `SendMessage` 릴레이 메시지가 유저 권한 미보유, auto mode 블로킹 (v2.1.166)
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.168 업데이트
+  - Hook 인라인 노트: Stop·SubagentStop `additionalContext`, Skills `\$` 이스케이프 추가
+  - Agent 섹션: `requiredMinimumVersion`/`requiredMaximumVersion`, `fallbackModel`, glob deny 패턴, thinking 비활성화 추가
+  - Breaking Changes: `workflow` → `ultracode`, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거, 쓰기 확인 프롬프트 추가
+- `references/version-sync.md`: v2.1.168 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Stop·SubagentStop `hookSpecificOutput.additionalContext` 지원 추가
+- `references/official/hooks.md`: Stop·SubagentStop `additionalContext` 지원 추가
+- `references/mcp-guide.md`: stdio MCP 서버 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 세션 연속성 추가
+
+### Deprecated
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 환경변수 제거 (no-op, v2.1.160)
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added

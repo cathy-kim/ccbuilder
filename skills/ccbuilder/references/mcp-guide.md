@@ -127,7 +127,7 @@ Stdio MCP 서버 서브프로세스는 다음 환경변수도 자동으로 수�
 
 | 환경변수 | 값 | 용도 |
 |---------|-----|------|
-| `CLAUDE_CODE_SESSION_ID` | 현재 세션 ID | 세션별 상태 추적 |
+| `CLAUDE_CODE_SESSION_ID` | 현재 세션 ID | 세션별 상태 추적 — `--resume` 시에도 훅·Bash와 동일한 ID 수신 (v2.1.163+) |
 | `CLAUDECODE` | `1` | Claude Code 실행 환경 감지 |
 | `CLAUDE_PROJECT_DIR` | 프로젝트 루트 경로 | 프로젝트 파일 접근 (v2.1.139+) |
 

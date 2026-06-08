@@ -18,8 +18,8 @@
 | 6 | `PostToolUseFailure` | 도구 실패 후 — `duration_ms` 포함 (v2.1.119) | block |
 | 7 | `Notification` | 알림 발송 시 | - |
 | 8 | `SubagentStart` | 서브에이전트 생성 | - |
-| 9 | `SubagentStop` | 서브에이전트 완료 — `background_tasks`·`session_crons` 입력 필드 포함 (v2.1.145) | block |
-| 10 | `Stop` | Claude 응답 완료 — `background_tasks`·`session_crons` 입력 필드 포함 (v2.1.145) | block |
+| 9 | `SubagentStop` | 서브에이전트 완료 — `background_tasks`·`session_crons` 포함 (v2.1.145); `hookSpecificOutput.additionalContext` 반환으로 오류 없이 턴 유지 (v2.1.163) | block |
+| 10 | `Stop` | Claude 응답 완료 — `background_tasks`·`session_crons` 포함 (v2.1.145); `hookSpecificOutput.additionalContext` 반환으로 오류 없이 턴 유지 (v2.1.163) | block |
 | 11 | `TeammateIdle` | 팀메이트 유휴 상태 | exit 2 |
 | 12 | `TaskCompleted` | 태스크 완료 | exit 2 |
 | 13 | `PreCompact` | 컨텍스트 압축 전 — exit code 2 또는 `{"decision":"block"}` 반환으로 차단 가능 (v2.1.105) | block |

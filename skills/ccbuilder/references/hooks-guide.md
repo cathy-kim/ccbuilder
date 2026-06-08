@@ -19,9 +19,9 @@
 | **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
-| **Stop** | Claude 응답 완료 | Yes (block) | `stop_reason`, `background_tasks`, `session_crons` (v2.1.145) |
+| **Stop** | Claude 응답 완료 — `hookSpecificOutput.additionalContext` 반환으로 오류 없이 턴 유지하며 Claude에게 피드백 제공 (v2.1.163) | Yes (block) | `stop_reason`, `background_tasks`, `session_crons` (v2.1.145) |
 | **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
-| **SubagentStop** | 서브에이전트 완료 | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `background_tasks`, `session_crons` (v2.1.145) |
+| **SubagentStop** | 서브에이전트 완료 — `hookSpecificOutput.additionalContext` 반환으로 오류 없이 턴 유지하며 Claude에게 피드백 제공 (v2.1.163) | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `background_tasks`, `session_crons` (v2.1.145) |
 | **TeammateIdle** | 팀메이트 유휴 상태 (v2.7 신규) | No | `teammate_name`, `agent_id` |
 | **PreCompact** | 컨텍스트 압축 전 — exit code 2 또는 `{"decision":"block"}` 반환으로 압축 차단 가능 (v2.1.105) | Yes (block) | - |
 | **Notification** | 알림 발생 | No | `notification` |

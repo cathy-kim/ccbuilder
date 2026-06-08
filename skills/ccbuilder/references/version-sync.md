@@ -77,6 +77,36 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.168 (2026-06-08 동기화)
+
+**새로운 기능:**
+- (v2.1.166) `fallbackModel` 설정 — 최대 3개 폴백 모델 순서대로 시도 (오버로드/불가 시); `--fallback-model` 대화형 세션 적용
+- (v2.1.166) `deny` 룰 툴 이름에 glob 패턴 지원 (`"*"` 전체 차단); allow 룰은 비-MCP glob 거부
+- (v2.1.166) `MAX_THINKING_TOKENS=0` / `--thinking disabled` / 모델별 thinking 토글 — 기본 thinking 모델 비활성화
+- (v2.1.163) `requiredMinimumVersion` / `requiredMaximumVersion` 관리형 설정 — 버전 범위 외 시작 거부
+- (v2.1.163) `/plugin list --enabled/--disabled` 명령어
+- (v2.1.163) Stop·SubagentStop 훅 `hookSpecificOutput.additionalContext` 반환 지원 — 오류 없이 턴 유지
+- (v2.1.163) Skills `\$` 이스케이프 — 커맨드 바디에서 숫자 앞 리터럴 달러
+- (v2.1.163) stdio MCP 서버 `--resume` 시 훅·Bash와 동일한 `CLAUDE_CODE_SESSION_ID` 수신
+- (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 세션 블로킹 이유
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 메트릭 레이블 포함; 병렬 툴 Bash 실패 시 동일 배치 취소 안 함
+
+**Breaking Changes:**
+- 트리거 키워드 `workflow` → `ultracode` (v2.1.160); `/config`에서 비활성화 가능
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 (no-op, v2.1.160)
+- 쉘 시작 파일·빌드 툴 설정 파일 쓰기 전 확인 프롬프트 추가 (v2.1.160)
+
+**보안 강화:**
+- SendMessage 릴레이 권한 격리 — 다른 세션 릴레이 메시지 유저 권한 미보유 (v2.1.166)
+
+**주요 버그 수정:**
+- hook `if: "Bash(...)"` 조건이 `$()` / `$VAR` 포함 모든 명령에 발동하던 버그 수정 (v2.1.163)
+- MCP per-server `timeout` 1000ms 미만 값 잘못된 watchdog으로 모든 호출 중단하던 버그 수정 (v2.1.162)
+- 백그라운드 에이전트 worktree에서 "No conversation found" 크래시 루프 수정 (v2.1.166)
+- JetBrains 2026.1+ 터미널 플리커 수정, Shift+비ASCII 문자 드롭 수정 (v2.1.166)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**
