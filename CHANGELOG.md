@@ -15,6 +15,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.41.0] - 2026-06-09
+
+### Added
+- **Claude Code v2.1.169 sync**
+  - (v2.1.169) `--safe-mode` 플래그 및 `CLAUDE_CODE_SAFE_MODE` env var — CLAUDE.md·플러그인·스킬·훅·MCP 서버 모두 비활성화하여 시작 (트러블슈팅용)
+  - (v2.1.169) `/cd` 명령 — 프롬프트 캐시를 유지하면서 세션 작업 디렉토리 변경
+  - (v2.1.169) `disableBundledSkills` 설정 및 `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` env var — 번들 스킬·워크플로우·내장 슬래시 명령 숨김
+  - (v2.1.169) `claude agents --json` — 차단된 세션 및 방금 파견된 세션 포함; `--all`로 완료 세션 포함; 신규 `id`·`state` 필드
+  - (v2.1.169) CLAUDE.md 너무 길다는 경고 임계값이 모델 컨텍스트 창 크기에 따라 자동 조정
+  - (v2.1.169) Vertex/Foundry 5분 기본 유휴 타임아웃 복원 — 스톨 스트림 자동 중단; `API_FORCE_IDLE_TIMEOUT=0`으로 비활성화
+  - (v2.1.169) 백그라운드 세션이 retire→wake 후 `--ide`, `--chrome`, `--bare`, `--remote-control` 등 플래그 유지
+  - (v2.1.169) `TaskCreate` 안정성 개선 — 잘못된 입력 자동 수정, 미로드 도구 검증 오류 시 스키마 포함
+  - (v2.1.166) `fallbackModel` 설정 — 기본 모델 과부하/불가 시 순서대로 시도할 최대 3개 폴백 모델; `--fallback-model` 대화형 세션 지원
+  - (v2.1.166) deny 규칙 tool-name 위치 glob 패턴 지원 — `"*"`로 전체 도구 거부; allow 규칙은 MCP 외 glob 거부
+  - (v2.1.166) `MAX_THINKING_TOKENS=0`, `--thinking disabled`, 모델별 thinking 토글 — Claude API 기본 thinking 모델 비활성화 (3rd-party 제공자 미변경)
+  - (v2.1.166) 예기치 않은 non-retryable 오류 시 폴백 모델로 1회 재시도
+  - (v2.1.163) `requiredMinimumVersion` 및 `requiredMaximumVersion` managed settings — 허용 버전 범위 밖 Claude Code 시작 거부
+  - (v2.1.163) `/plugin list` 명령 — 설치된 플러그인 목록; `--enabled`/`--disabled` 필터 지원
+  - (v2.1.163) Skills `\$` 이스케이프 문법 — 명령 본문에서 숫자 앞 리터럴 달러 기호 표기
+  - (v2.1.163) Stop·SubagentStop Hook `hookSpecificOutput.additionalContext` 반환 — hook error 레이블 없이 Claude에 피드백 전달하며 턴 계속
+  - (v2.1.163) stdio MCP 서버가 `--resume` 시에도 `CLAUDE_CODE_SESSION_ID` 수신
+  - (v2.1.162) `claude agents --json` `waitingFor` 필드 — 대기 세션이 블록된 이유(e.g. 권한 프롬프트) 표시
+  - (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값을 메트릭 데이터포인트 레이블로 포함 — 팀·레포 등 커스텀 차원으로 사용량 메트릭 슬라이싱
+  - (v2.1.161) 병렬 도구 호출: Bash 명령 실패가 같은 배치의 다른 호출 취소하지 않음
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.158 → v2.1.169 업데이트
+  - 섹션 제목 v2.1.169로 변경
+  - MCP 섹션: `--resume` 시 stdio MCP 서버 `CLAUDE_CODE_SESSION_ID` 전달 추가
+  - Hook 섹션: Stop·SubagentStop `hookSpecificOutput.additionalContext` 반환 추가
+  - CLI 섹션: `--safe-mode`, `/cd`, `disableBundledSkills`, `fallbackModel`, deny rule glob, thinking disable, `requiredMinimumVersion`/`requiredMaximumVersion`, `/plugin list`, Skills `\$` 이스케이프, Dynamic Workflow 트리거 `ultracode` 리네임, `claude agents --json` `--all` 추가
+  - Breaking Changes: Dynamic Workflow 트리거 리네임, `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거, acceptEdits 빌드 도구 파일 프롬프트 추가
+- `references/version-sync.md`: v2.1.169 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Stop·SubagentStop `hookSpecificOutput.additionalContext` 반환 기능 추가
+- `references/official/hooks.md`: Stop·SubagentStop `hookSpecificOutput.additionalContext` 추가
+- `references/mcp-guide.md`: `--resume` 시 stdio MCP 서버 `CLAUDE_CODE_SESSION_ID` 전달 추가
+
+### Fixed
+- MCP `allowedMcpServers`/`deniedMcpServers` 정책이 재연결·IDE 설정·`--mcp-config` 서버·원격 설정 로드 전 세션에서 미적용되던 버그 수정 (v2.1.169)
+- macOS claude.ai 자격증명 로그인 시 매 턴 시작 시 ~30-50ms UI 스톨 수정 (v2.1.169)
+- Windows에서 `claude -p` 슬래시 명령/스킬 스캔 대기로 느리거나 행어 현상 수정 (v2.1.169, v2.1.161 회귀)
+- Remote Control 세션 재개 중 OAuth 토큰 갱신 동시 발생 시 "reconnecting" 고착 수정 (v2.1.169)
+- Windows Git Credential Manager의 "Connect to GitHub" 팝업이 시작 시 표시되던 버그 수정 (v2.1.169)
+- 커스텀 statusline 사용 시 footer 힌트(예: "esc to interrupt") 미표시 수정 (v2.1.169)
+- 백그라운드 세션이 project-level settings `env` 값(예: `ANTHROPIC_MODEL`) 무시하던 버그 수정 (v2.1.169)
+- MCPB 플러그인 캐시 Windows에서 불필요하게 무효화·재추출되던 버그 수정 (v2.1.169)
+- 신뢰되지 않은 project settings에서 신뢰 확인 없이 OTEL 클라이언트 인증서 경로 설정 가능하던 보안 수정 (v2.1.169)
+
+### Breaking Changes
+- **Dynamic Workflow 트리거 `workflow` → `ultracode`** — "workflow" 단어는 더 이상 트리거하지 않음; 직접 요청은 계속 작동 (v2.1.160)
+- **`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거** — no-op 환경변수로 변경; 대안: `/model claude-opus-4-6[1m]` 후 `/fast on` (v2.1.160)
+- **acceptEdits 모드** — 코드 실행을 허용하는 빌드 도구 설정 파일(`.npmrc`, `.yarnrc*`, `bunfig.toml`, `.bazelrc`, `.pre-commit-config.yaml`, `.devcontainer/` 등) 쓰기 전 프롬프트 (v2.1.160)
+
+---
+
 ## [2.40.0] - 2026-05-30
 
 ### Added
