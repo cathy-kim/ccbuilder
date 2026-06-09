@@ -77,6 +77,45 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.169 (2026-06-09 동기화)
+
+**새로운 기능:**
+- (v2.1.169) `--safe-mode` 플래그 및 `CLAUDE_CODE_SAFE_MODE` — 모든 커스터마이제이션(CLAUDE.md·플러그인·스킬·훅·MCP) 비활성화 시작 (트러블슈팅)
+- (v2.1.169) `/cd` 명령 — 프롬프트 캐시 유지하며 세션 작업 디렉토리 변경
+- (v2.1.169) `disableBundledSkills` 설정 + `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` env var — 번들 스킬·워크플로우·내장 슬래시 명령 숨김
+- (v2.1.169) `claude agents --json` — 차단·방금파견 세션 포함; `--all`로 완료 세션 포함; 신규 `id`·`state` 필드
+- (v2.1.169) CLAUDE.md 경고 임계값 모델 컨텍스트 창 크기에 따라 자동 조정
+- (v2.1.169) Vertex/Foundry 기본 5분 유휴 타임아웃 복원; `API_FORCE_IDLE_TIMEOUT=0`으로 비활성화
+- (v2.1.169) 백그라운드 세션 retire→wake 후 `--ide`·`--chrome`·`--bare`·`--remote-control` 등 플래그 유지
+- (v2.1.169) `TaskCreate` 안정성 개선 — 잘못된 입력 자동 수정, 미로드 도구 스키마 포함 오류 메시지
+- (v2.1.166) `fallbackModel` 최대 3개 폴백 모델 순서 지정; `--fallback-model` 대화형 세션 지원
+- (v2.1.166) deny rule tool-name 위치 glob 패턴 — `"*"`로 전체 도구 거부
+- (v2.1.166) `MAX_THINKING_TOKENS=0`/`--thinking disabled`/모델별 토글 — Claude API 기본 thinking 모델 비활성화
+- (v2.1.163) `requiredMinimumVersion`/`requiredMaximumVersion` managed settings — 버전 범위 밖 시작 거부
+- (v2.1.163) `/plugin list` `--enabled`/`--disabled` 필터
+- (v2.1.163) Skills `\$` 이스케이프 — 명령 본문 숫자 앞 리터럴 달러 기호
+- (v2.1.163) Stop·SubagentStop Hook `hookSpecificOutput.additionalContext` 반환 지원
+- (v2.1.163) stdio MCP 서버 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 수신
+- (v2.1.162) `claude agents --json` `waitingFor` 필드 (차단 세션 대기 이유)
+- (v2.1.161) `OTEL_RESOURCE_ATTRIBUTES` 값 → 메트릭 데이터포인트 레이블
+- (v2.1.161) 병렬 도구 호출: 개별 실패가 같은 배치 다른 호출 취소하지 않음
+- (v2.1.160) acceptEdits 모드 빌드 도구 설정 파일 쓰기 전 프롬프트 추가
+
+**Breaking Changes:**
+- Dynamic Workflow 트리거 `workflow` → `ultracode` 리네임 (v2.1.160)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 제거 → no-op (v2.1.160)
+- acceptEdits 빌드 도구 설정 파일(`.npmrc`, `.yarnrc*`, `bunfig.toml`, `.bazelrc`, `.pre-commit-config.yaml`, `.devcontainer/`) 쓰기 전 프롬프트 (v2.1.160)
+
+**주요 버그 수정:**
+- MCP `allowedMcpServers`/`deniedMcpServers` 재연결·IDE·`--mcp-config`·원격 설정 로드 전 미적용 수정 (v2.1.169)
+- macOS claude.ai 자격증명 로그인 시 매 턴 ~30-50ms UI 스톨 수정 (v2.1.169)
+- Windows `claude -p` 슬래시 명령/스킬 스캔 행어 수정 (v2.1.169, v2.1.161 회귀)
+- Remote Control OAuth 토큰 갱신 동시 발생 시 "reconnecting" 고착 수정 (v2.1.169)
+- 신뢰되지 않은 project settings의 OTEL 클라이언트 인증서 경로 신뢰 확인 없이 설정 가능하던 보안 수정 (v2.1.169)
+- 백그라운드 세션 project-level settings `env` 값 무시 수정 (v2.1.169)
+
+---
+
 ### v2.1.158 (2026-05-30 동기화)
 
 **새로운 기능:**
