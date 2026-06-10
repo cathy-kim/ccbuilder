@@ -15,6 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.42.0] - 2026-06-10
+
+### Added
+- **Claude Code v2.1.170 sync**
+  - (v2.1.170) **Claude Fable 5** 모델 출시 — Mythos-class 모델, 일반 공개; 기존 공개 모델 대비 최고 성능 (모델 ID: `claude-fable-5`)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.169 → v2.1.170 업데이트
+  - 섹션 제목 v2.1.170으로 변경
+  - CLI 섹션: Claude Fable 5 Mythos-class 모델 출시 추가
+- `references/version-sync.md`: v2.1.170 변경사항 추적 엔트리 추가
+
+### Fixed
+- VS Code 통합 터미널 또는 Claude Code 환경 변수를 상속한 셸에서 실행 시 세션 트랜스크립트 미저장 및 `--resume` 미표시 버그 수정 (v2.1.170)
+
+---
+
 ## [2.41.0] - 2026-06-09
 
 ### Added
