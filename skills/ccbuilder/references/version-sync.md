@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.173 (2026-06-11 동기화)
+
+**새로운 기능:**
+- (v2.1.170) Claude Fable 5 출시 — Mythos 클래스 모델, 일반 사용 가능; v2.1.170 이상 업데이트 필요
+- (v2.1.172) 서브에이전트 재귀 파견 최대 5레벨 — 서브에이전트가 자체 서브에이전트 파견 가능
+- (v2.1.172) Amazon Bedrock `~/.aws` config에서 `AWS_REGION` 미설정 시 리전 자동 읽기; `/status` 리전 출처 표시
+- (v2.1.172) `/plugin` 마켓플레이스 플러그인 브라우저 검색창 추가
+- (v2.1.172) `claude_code.lines_of_code.count` OTEL 메트릭 `model` 속성 추가
+- (v2.1.173) Fable 5 모델명 `[1m]` 접미사 자동 제거 — 1M 컨텍스트 기본 포함
+
+**주요 버그 수정:**
+- Windows sandbox 활성화 시 불필요한 "sandbox dependencies missing" 경고 수정 (v2.1.173)
+- 1M 컨텍스트 사용 세션이 크레딧 없을 때 영구 중단되던 버그 수정 (v2.1.172)
+- 백그라운드 에이전트가 다른 디렉토리 `.mcp.json` 승인·trust project settings 읽던 버그 수정 (v2.1.172)
+- `availableModels` 제한이 서브에이전트 모델 오버라이드·에이전트 디스패치에 미적용되던 버그 수정 (v2.1.172)
+- `WebFetch(domain:*.example.com)` 와일드카드 서브도메인 매칭 안 되던 버그 수정 (v2.1.172)
+- 원격 세션에서 `CLAUDE_MEMORY_STORES` 마운트된 메모리 스토어 리콜 미동작 수정 (v2.1.172)
+- VS Code 통합 터미널 세션 트랜스크립트 미저장 버그 수정 (v2.1.170)
+
+---
+
 ### v2.1.169 (2026-06-09 동기화)
 
 **새로운 기능:**

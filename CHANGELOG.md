@@ -15,6 +15,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.42.0] - 2026-06-11
+
+### Added
+- **Claude Code v2.1.173 sync**
+  - (v2.1.170) **Claude Fable 5** 출시 — Mythos 클래스 모델, 일반 사용 가능; v2.1.170 이상 업데이트 필요
+  - (v2.1.172) **서브에이전트 재귀 파견 최대 5레벨** — 서브에이전트가 자체 서브에이전트 파견 가능 (최대 5단계 깊이)
+  - (v2.1.172) Amazon Bedrock `~/.aws` config에서 `AWS_REGION` 미설정 시 리전 자동 읽기; `/status`에 리전 출처 표시
+  - (v2.1.172) `/plugin` 마켓플레이스 플러그인 브라우저 검색창 추가
+  - (v2.1.172) `claude_code.lines_of_code.count` OTEL 메트릭에 `model` 속성 추가
+  - (v2.1.173) Fable 5 모델명 `[1m]` 접미사 자동 제거 — Fable 5는 1M 컨텍스트 기본 포함
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.169 → v2.1.173 업데이트
+  - 섹션 제목 v2.1.173으로 변경
+  - Agent 섹션: 서브에이전트 재귀 파견 최대 5레벨 추가
+  - CLI 섹션: Claude Fable 5, Bedrock `~/.aws` 리전 읽기, Fable 5 `[1m]` 접미사 정규화 추가
+  - Plugin 섹션: `/plugin` 마켓플레이스 검색창 추가
+- `references/version-sync.md`: v2.1.173 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`: 서브에이전트 재귀 파견 5레벨 추가
+- `references/official/subagents.md`: 서브에이전트 최대 중첩 깊이 추가
+
+### Fixed
+- Windows에서 sandbox 활성화 시 불필요한 "sandbox dependencies missing" 경고 수정 (v2.1.173)
+- Fable 5 모델명 `[1m]` 접미사 중복 표기 정규화 (v2.1.173)
+- 1M 컨텍스트 사용 세션이 사용 크레딧 없을 때 영구 중단되던 버그 수정 (v2.1.172)
+- 백그라운드 에이전트가 다른 디렉토리 project settings (`.mcp.json` 승인·trust) 읽던 버그 수정 (v2.1.172)
+- `availableModels` 제한이 서브에이전트 모델 오버라이드·에이전트 디스패치 모델 피커에 미적용되던 버그 수정 (v2.1.172)
+- `WebFetch(domain:*.example.com)` 와일드카드 도메인 규칙이 서브도메인과 매칭되지 않던 버그 수정 (v2.1.172)
+- 원격 세션에서 마운트된 팀 메모리 스토어 (`CLAUDE_MEMORY_STORES`) 메모리 리콜 미동작 수정 (v2.1.172)
+- VS Code 통합 터미널에서 실행된 세션 트랜스크립트 미저장 버그 수정 (v2.1.170)
+
+---
+
 ## [2.41.0] - 2026-06-09
 
 ### Added
