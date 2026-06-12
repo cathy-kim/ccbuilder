@@ -77,6 +77,28 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.175 (2026-06-12 동기화)
+
+**새로운 기능:**
+- (v2.1.175) `enforceAvailableModels` managed 설정 — 활성화 시 `availableModels` 허용 목록이 Default 모델도 제한 (허용 목록에 없는 모델로 resolve 시 첫 번째 허용 모델로 폴백); 사용자·프로젝트 설정이 관리형 `availableModels` 목록 확장 불가
+- (v2.1.174) `wheelScrollAccelerationEnabled` 설정 — 풀스크린 모드 마우스 휠 스크롤 가속 비활성화
+- [VSCode] (v2.1.174) `/usage` Account & usage 다이얼로그 사용량 기여 분석 — cache miss·장문 컨텍스트·서브에이전트·스킬/에이전트/플러그인/MCP 별 비용 (최근 24h·7d)
+
+**주요 버그 수정:**
+- `/model` 피커에서 Default resolve 모델 패밀리 숨기던 버그 수정 — Max/Team Premium/Enterprise Opus, Pro/Team Sonnet, PAYG Opus 각자 행 표시 (v2.1.174)
+- `ANTHROPIC_DEFAULT_SONNET_MODEL` 고정 시 `/model` 피커 하드코딩된 Sonnet 버전 레이블 표시 수정 (v2.1.174)
+- Enterprise 사용량 기반 결제 계정에서 Fable 5 크레딧 배너 잘못 표시 수정 (v2.1.174)
+- Bedrock GovCloud 리전(`us-gov-*`) 잘못된 inference profile 접두사(`global`→`us-gov`) 파생으로 400 오류 수정 (v2.1.174)
+- 백그라운드 데몬 시작 셸에서 다른 세션의 `ANTHROPIC_*` 환경변수 상속 버그 수정 (v2.1.174)
+- macOS/Linux 셸 명령 중단 직후 Claude Code 종료 시 1-2초 일시 중지 수정 (v2.1.174)
+- 일부 모델에서 git 커밋 co-author 표기에 잘못된 모델명 표시 수정 (v2.1.174)
+- `/advisor` 다이얼로그가 `availableModels` 차단 모델을 저장된 advisor로 사전 선택하던 버그 수정 (v2.1.174)
+- 스킬 hot-reload 시 단일 스킬 변경에도 전체 스킬 목록 재전송하던 버그 수정 — 변경된 스킬만 재공지 (v2.1.174)
+- Workflow tool `agent()` 서브에이전트 per-agent attribution 헤더 누락 수정 (v2.1.174)
+- 유휴 후 클레임된 사전 예열 백그라운드 워커 "Could not resolve authentication method" 실패 수정 (v2.1.174)
+
+---
+
 ### v2.1.173 (2026-06-11 동기화)
 
 **새로운 기능:**
