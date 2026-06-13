@@ -15,6 +15,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.43.0] - 2026-06-13
+
+### Added
+- **Claude Code v2.1.176 sync**
+  - (v2.1.176) 세션 제목 대화 언어로 자동 생성 — `language` 설정으로 특정 언어 고정 (예: `"ko"`)
+  - (v2.1.176) `footerLinksRegexes` 설정 — footer row 정규식 매칭 링크 배지, user/managed settings에서 설정
+  - (v2.1.175) `enforceAvailableModels` managed 설정 — `availableModels` 허용리스트 Default 모델에도 적용; user/project settings에서 목록 확장 불가
+  - (v2.1.174) `wheelScrollAccelerationEnabled` 설정 — 풀스크린 모드 마우스 휠 가속도 비활성화 옵션
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.173 → v2.1.176 업데이트
+  - 섹션 제목 v2.1.176으로 변경
+  - CLI 섹션: `language`, `footerLinksRegexes`, `wheelScrollAccelerationEnabled`, `enforceAvailableModels`, Bedrock `awsCredentialExport` 캐시 개선 추가
+  - Hook 섹션: `if` 조건 경로 패턴 수정 내용 추가
+- `references/version-sync.md`: v2.1.176 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Hook `if` 조건 경로 패턴 매칭 수정 사항 추가
+
+### Fixed
+- `availableModels` 강제 적용 — alias 모델이 `ANTHROPIC_DEFAULT_*_MODEL`로 차단 모델로 리다이렉트되던 버그 수정; `/fast` 허용리스트 외 모델 전환 시 거부 (v2.1.176)
+- Auto mode Fable 5 + Opus 4.8 미활성화 환경 오류 수정 — 사용 가능한 최적 Opus 모델로 폴백 (v2.1.176)
+- Hook `if` 조건 Read/Edit/Write 경로 패턴 수정 — `Edit(src/**)`, `Read(~/.ssh/**)`, `Read(.env)` 등 문서화된 패턴 정상 매칭 (v2.1.176)
+- Linux sandbox `.claude/settings.json` 절대경로 심볼릭 링크 시 시작 실패 수정 (v2.1.176)
+- tmux SSH 환경 `/copy`·마우스 선택 복사 클립보드 미전달, tmux 3.2 미만 paste buffer 미로드 수정 (v2.1.176)
+- Remote Control 웹/모바일 연결 시 세션 모델 무음 전환, 연결 해제 알림 불명확 코드 표시, 다른 계정 로그인 시 세션 미해제 수정 (v2.1.176)
+- Bedrock `awsCredentialExport` 자격증명 고정 1시간 → `Expiration` 기반 캐시 (v2.1.176)
+- `/model` 피커 Default 해석 모델 패밀리 숨김 수정 — 구독 플랜별 Opus/Sonnet 별도 표시 (v2.1.174)
+- Bedrock GovCloud `us-gov-*` 리전 inference profile prefix `global` → `us-gov` 오류 수정 (v2.1.174)
+- 백그라운드 세션이 다른 세션의 `ANTHROPIC_*` provider env 상속하던 버그 수정 (v2.1.174)
+
+---
+
 ## [2.42.0] - 2026-06-11
 
 ### Added

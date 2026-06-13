@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.176 (2026-06-13 동기화)
+
+**새로운 기능:**
+- (v2.1.176) 세션 제목 대화 언어로 자동 생성 — `language` 설정으로 특정 언어 고정 (예: `"ko"`)
+- (v2.1.176) `footerLinksRegexes` 설정 — footer row 정규식 매칭 링크 배지, user/managed settings에서 설정
+- (v2.1.175) `enforceAvailableModels` managed 설정 — `availableModels` 허용리스트 Default 모델에도 적용; user/project settings에서 목록 확장 불가
+- (v2.1.174) `wheelScrollAccelerationEnabled` 설정 — 풀스크린 모드 마우스 휠 가속도 비활성화 옵션
+
+**주요 버그 수정:**
+- Hook `if` 조건 Read/Edit/Write 경로 패턴 정상 매칭 수정 — `Edit(src/**)`, `Read(~/.ssh/**)`, `Read(.env)` 등 문서화된 패턴 이제 올바르게 동작 (v2.1.176)
+- `availableModels` 강제 적용 — alias 모델의 `ANTHROPIC_DEFAULT_*_MODEL` 환경변수 우회 차단; `/fast` 허용리스트 외 모델 전환 거부 (v2.1.176)
+- Auto mode Fable 5 + Opus 4.8 미활성화 환경 오류 수정 — 사용 가능한 최적 Opus 모델로 폴백 (v2.1.176)
+- Linux sandbox `.claude/settings.json` 절대경로 심볼릭 링크 시 시작 실패 수정 (v2.1.176)
+- tmux SSH 환경 `/copy`·마우스 선택 복사 클립보드 미전달, tmux 3.2 미만 paste buffer 미로드 수정 (v2.1.176)
+- Remote Control 웹/모바일 연결 시 세션 모델 무음 전환, 연결 해제 알림 불명확 코드, 다른 계정 로그인 시 세션 미해제 수정 (v2.1.176)
+- Bedrock `awsCredentialExport` 자격증명 고정 1시간 → `Expiration` 기반 캐시 (v2.1.176)
+- Bedrock GovCloud `us-gov-*` 리전 inference profile prefix `global` → `us-gov` 수정 (v2.1.174)
+- 백그라운드 세션이 다른 세션의 `ANTHROPIC_*` provider env 상속하던 버그 수정 (v2.1.174)
+
+---
+
 ### v2.1.173 (2026-06-11 동기화)
 
 **새로운 기능:**
