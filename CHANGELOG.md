@@ -15,6 +15,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.43.0] - 2026-06-14
+
+### Added
+- **Claude Code v2.1.176 sync**
+  - (v2.1.174) `wheelScrollAccelerationEnabled` 설정 — 풀스크린 모드 마우스 휠 가속도 비활성화
+  - (v2.1.174) [VSCode] `/usage` 계정 사용량 세부 통계 — 캐시 미스·롱 컨텍스트·서브에이전트·스킬/에이전트/플러그인/MCP 비용 24h/7d 세분화
+  - (v2.1.175) `enforceAvailableModels` managed setting — `availableModels` 허용 리스트를 Default 모델에도 적용; user·project 설정이 managed 리스트 확장 불가
+  - (v2.1.176) 세션 제목 대화 언어 자동 생성 (`language` 설정으로 특정 언어 고정 가능)
+  - (v2.1.176) `footerLinksRegexes` 설정 — footer row 링크 배지를 regex로 설정 (user·managed settings)
+  - (v2.1.176) Bedrock `awsCredentialExport` 자격증명 캐시 개선 — `Expiration` 시각까지 캐시 (기존 고정 1시간)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.173 → v2.1.176 업데이트
+  - 섹션 제목 v2.1.176으로 변경
+  - Hook 섹션: `if` 조건 Read/Edit/Write 경로 패턴 매칭 수정 추가
+  - CLI 섹션: `wheelScrollAccelerationEnabled`, VSCode `/usage` 세부 통계, `enforceAvailableModels`, 세션 제목 언어, `footerLinksRegexes`, Bedrock 자격증명 캐시 개선 추가
+- `references/version-sync.md`: v2.1.176 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`: Hook `if` 경로 패턴 수정 노트 추가
+
+### Fixed
+- Hook `if` 조건 Read/Edit/Write 경로 패턴 매칭 수정 — `Edit(src/**)`, `Read(~/.ssh/**)`, `Read(.env)` 등 문서화된 패턴 정상 동작 (v2.1.176)
+- `availableModels` 적용 강화 — 별칭 모델이 `ANTHROPIC_DEFAULT_*_MODEL` env로 차단 모델 우회 불가; `/fast`가 허용 리스트 외 모델 전환 거부 (v2.1.176)
+- Auto mode Fable 5 폴백 수정 — Opus 4.8 없는 조직에서 최선 Opus 모델로 폴백 (v2.1.176)
+- Linux sandbox `.claude/settings.json` 심볼릭 링크(절대 경로 대상) 시 시작 실패 수정 (v2.1.176)
+- `/cd`·worktree 이동 후 이전 디렉토리 git 브랜치 표시하던 버그 수정 (v2.1.176)
+- `claude agents` 한 창에서 뒤로가기 시 같은 세션에 연결된 다른 창 분리되던 버그 수정 (v2.1.176)
+- 백그라운드 세션이 다른 세션의 `ANTHROPIC_*` provider env 상속하던 버그 수정 (v2.1.174)
+- Bedrock GovCloud 리전 (`us-gov-*`) 잘못된 inference profile 접두사(`global` → `us-gov`) 수정 (v2.1.174)
+- 스킬 핫 리로드 시 전체 스킬 목록 재전송하던 버그 수정 → 변경된 스킬만 재공지 (v2.1.174)
+- macOS/Linux Claude Code 종료 시 1-2초 대기 현상 수정 (v2.1.174)
+
+---
+
 ## [2.42.0] - 2026-06-11
 
 ### Added

@@ -316,6 +316,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
 
 `if` 값은 `Bash(git *)`, `Write(src/*)` 처럼 permission rule syntax를 사용합니다.
 
+> **v2.1.176 수정**: Read/Edit/Write 도구의 경로 패턴 매칭이 수정되어 `Edit(src/**)`, `Read(~/.ssh/**)`, `Read(.env)` 등 문서화된 패턴이 이제 정상 동작합니다.
+
 ---
 
 ## 주의사항
