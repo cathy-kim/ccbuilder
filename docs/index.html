@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ccbuilder — Claude Code Extension Builder</title>
+  <meta name="description" content="Claude Code 확장 기능(Skills, Hooks, Agents, Agent Teams, Graph Workflows)을 만들고 배포하는 빌더. 공식 문서 레퍼런스와 구현 가이드 포함.">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #6b6b6b;
+      --line: #e5e5e5;
+      --bg: #ffffff;
+      --accent: #2347d9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 96px 24px 64px; }
+    header { border-bottom: 1px solid var(--line); padding-bottom: 32px; margin-bottom: 40px; }
+    .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin-top: 12px; }
+    .lead { font-size: 17px; color: var(--muted); margin-top: 16px; max-width: 600px; }
+    .version { display: inline-block; margin-top: 20px; font-size: 13px; color: var(--muted); border: 1px solid var(--line); padding: 4px 10px; border-radius: 2px; }
+    h2 { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 40px 0 16px; }
+    .cards { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .card { display: block; background: var(--bg); padding: 20px 24px; text-decoration: none; color: inherit; transition: background 0.15s ease; }
+    .card:hover { background: #fafafa; }
+    .card-title { font-size: 17px; font-weight: 600; color: var(--accent); }
+    .card-desc { font-size: 14px; color: var(--muted); margin-top: 4px; }
+    .feature-list { list-style: none; font-size: 15px; }
+    .feature-list li { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; gap: 12px; }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list .k { font-weight: 600; min-width: 130px; }
+    .feature-list .v { color: var(--muted); }
+    footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">Claude Code Plugin</div>
+      <h1>ccbuilder</h1>
+      <p class="lead">Claude Code 확장 기능 — Skills · Hooks · Agents · Agent Teams · Ralph Loops · Graph Workflows — 을 만들고 배포하는 빌더. P1 공식 문서 레퍼런스와 구현 가이드를 포함합니다.</p>
+      <span class="version">v2.45.0 · Claude Code v2.1.181+</span>
+    </header>
+
+    <h2>문서</h2>
+    <nav class="cards">
+      <a class="card" href="./claude-code-mechanism.html">
+        <div class="card-title">Claude Code 동작 메커니즘 →</div>
+        <div class="card-desc">에이전틱 루프, 컨텍스트 관리, Skill·Subagent·Hook 동작 원리 시각화</div>
+      </a>
+      <a class="card" href="https://github.com/cathy-kim/ccbuilder">
+        <div class="card-title">GitHub 저장소 →</div>
+        <div class="card-desc">SKILL.md, 레퍼런스 가이드, CHANGELOG, version-sync</div>
+      </a>
+    </nav>
+
+    <h2>구성 요소</h2>
+    <ul class="feature-list">
+      <li><span class="k">Skill</span><span class="v">지식·가이드 주입 + 슬래시 명령</span></li>
+      <li><span class="k">Subagent</span><span class="v">독립 컨텍스트 에이전트 정의</span></li>
+      <li><span class="k">Agent Team</span><span class="v">멀티 에이전트 병렬 협업</span></li>
+      <li><span class="k">Hook</span><span class="v">워크플로우 제어 (24개 이벤트)</span></li>
+      <li><span class="k">Ralph Loop</span><span class="v">Fresh Context 자율 개발 루프</span></li>
+      <li><span class="k">Graph Workflow</span><span class="v">구조화된 DAG 실행 계획</span></li>
+    </ul>
+
+    <footer>
+      설치: <code>/plugin marketplace add cathy-kim/ccbuilder</code> · 사용: <code>/ccbuilder:ccbuilder</code><br>
+      <a href="https://github.com/cathy-kim/ccbuilder">cathy-kim/ccbuilder</a> · MIT License
+    </footer>
+  </main>
+</body>
+</html>
