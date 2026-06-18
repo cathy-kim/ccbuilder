@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-06-17
+**최종 동기화**: 2026-06-18
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,20 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.181 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `/config key=value` 문법 추가 — 프롬프트에서 모든 설정 즉시 변경 (interactive, `-p`, Remote Control 지원)
+- `sandbox.allowAppleEvents` opt-in 설정 추가 (macOS 샌드박스 명령이 Apple Events 전송 허용)
+- `CLAUDE_CLIENT_PRESENCE_FILE` 환경변수 추가 (마커 파일로 모바일 푸시 알림 억제)
+
+**주요 버그 수정:**
+- foreground subagent가 무제한 중첩 체인 생성하던 버그 수정 → background와 동일하게 5단계 깊이 제한 적용
+- 커스텀 `ANTHROPIC_BASE_URL` / Foundry에서 prompt caching이 동작하지 않던 버그 수정
+- `claude mcp get`/`list`가 tools/list 실패 시에도 `✓ Connected` 표시하던 버그 → `! Connected · tools fetch failed`로 수정
+
+---
 
 ### v2.1.173 (2026-06-11 동기화)
 

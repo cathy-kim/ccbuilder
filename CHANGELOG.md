@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [2.45.0] - 2026-06-18
+
+### Added
+- **Claude Code v2.1.181 sync** (v2.1.179 → v2.1.181; v2.1.180 미발행)
+  - `/config key=value` — 프롬프트에서 모든 설정 즉시 변경 (interactive·`-p`·Remote Control)
+  - `sandbox.allowAppleEvents` opt-in 설정 (macOS 샌드박스 명령 Apple Events 전송 허용)
+  - `CLAUDE_CLIENT_PRESENCE_FILE` 환경변수 (마커 파일로 모바일 푸시 알림 억제)
+
+### Changed
+- SKILL.md: 핵심 변경 섹션 v2.1.173 → v2.1.181, footer v2.1.179+ → v2.1.181+, 신규 명령(`/config`)·env(`sandbox.allowAppleEvents`/`CLAUDE_CLIENT_PRESENCE_FILE`) 추가
+- version-sync.md: v2.1.181 엔트리 추가
+- plugin.json/marketplace.json/README → v2.45.0 / Claude Code v2.1.181+
+
+### Fixed (Claude Code v2.1.181 주요 수정)
+- foreground subagent 무제한 중첩 체인 → background와 동일 5단계 깊이 제한
+- 커스텀 `ANTHROPIC_BASE_URL`/Foundry prompt caching 미동작 수정
+- `claude mcp get`/`list`가 tools/list 실패 시에도 `✓ Connected` 표시 → `! Connected · tools fetch failed`
+
+---
+
 ## [2.44.0] - 2026-06-17
 
 ### Changed
