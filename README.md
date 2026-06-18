@@ -200,7 +200,7 @@ Contributions welcome! Here's how you can help:
 
 ## Version
 
-Current: **v2.44.0** (2026-06-17) — Claude Code v2.1.63+ compatible. See [CHANGELOG.md](CHANGELOG.md) for full history.
+Current: **v2.45.0** (2026-06-18) — Claude Code v2.1.181+ compatible. See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 ## License
 
