@@ -11,7 +11,8 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(dirname "$SCRIPT_DIR")"
+REPO_DIR="$(dirname "$SCRIPT_DIR")"
+SKILL_DIR="$REPO_DIR/skills/ccbuilder"
 SKILL_FILE="$SKILL_DIR/SKILL.md"
 CHANGELOG_URL="https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
 OFFICIAL_DOCS_DIR="$SKILL_DIR/references/official-docs"
@@ -53,9 +54,9 @@ echo -e "${BLUE}       Claude Code Extension Builder - Update Checker       ${NC
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
 echo ""
 
-# 현재 스킬 버전 추출
-CURRENT_VERSION=$(grep "Claude Code Version" "$SKILL_FILE" | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" | head -1 || echo "unknown")
-echo -e "📌 Current Skill Version: ${GREEN}$CURRENT_VERSION${NC}"
+# 현재 동기화된 Claude Code 버전 추출 (SKILL.md 푸터의 "**Claude Code**: vX.Y.Z+")
+CURRENT_VERSION=$(grep -E "\*\*Claude Code\*\*: v[0-9]" "$SKILL_FILE" | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" | head -1 || echo "unknown")
+echo -e "📌 Current Sync Version: ${GREEN}$CURRENT_VERSION${NC}"
 
 # 공식 CHANGELOG에서 최신 버전 추출
 echo -e "🔍 Fetching latest version from GitHub..."

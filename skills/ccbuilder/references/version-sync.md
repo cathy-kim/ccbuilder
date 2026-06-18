@@ -2,8 +2,8 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-04-01
-**현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
+**최종 동기화**: 2026-06-18
+**현재 지원 버전**: v2.1.181+ (SKILL.md v2.25.0)
 
 ---
 
@@ -76,6 +76,311 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.181 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `/config key=value` 문법 추가 — 프롬프트에서 모든 설정 즉시 변경 (interactive, `-p`, Remote Control 지원)
+- `sandbox.allowAppleEvents` opt-in 설정 추가 (macOS 샌드박스 명령이 Apple Events 전송 허용)
+- `CLAUDE_CLIENT_PRESENCE_FILE` 환경변수 추가 (마커 파일로 모바일 푸시 알림 억제)
+
+**주요 버그 수정:**
+- foreground subagent가 무제한 중첩 체인 생성하던 버그 수정 → background와 동일하게 5단계 깊이 제한 적용
+- 커스텀 `ANTHROPIC_BASE_URL` / Foundry에서 prompt caching이 동작하지 않던 버그 수정
+- `claude mcp get`/`list`가 tools/list 실패 시에도 `✓ Connected` 표시하던 버그 → `! Connected · tools fetch failed`로 수정
+
+### v2.1.178 (2026-06-18 동기화)
+
+**새로운 기능:**
+- 권한 규칙에 `Tool(param:value)` 문법 추가 — 도구 입력 파라미터 매칭 (`*` 와일드카드), 예: `Agent(model:opus)`로 Opus subagent 차단
+- 중첩 `.claude/skills` 디렉토리 스킬 자동 로드 — 이름 충돌 시 `<dir>:<name>`로 둘 다 유지
+- 중첩 `.claude/`: 작업 디렉토리에 가장 가까운 agent/workflow/output-style이 이름 충돌 시 우선
+
+**주요 버그 수정:**
+- subagent `disallowedTools`에서 MCP 서버 레벨 스펙(`mcp__server`, `mcp__*`)이 무시되던 버그 수정
+- compaction이 `--fallback-model`을 무시하던 버그 수정 (overload 시 fallback 체인으로 폴백)
+
+### v2.1.176 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `footerLinksRegexes` 설정 추가 (footer에 regex 매칭 링크 배지, user/managed settings 구성 가능)
+- 세션 제목이 대화 언어로 생성 (`language` 설정으로 고정 가능)
+
+**주요 버그 수정:**
+- hook `if` 조건의 Read/Edit/Write 경로 패턴(`Edit(src/**)`, `Read(.env)` 등)이 올바르게 매칭되도록 수정
+- `availableModels` 우회 차단 — alias 모델 선택이 `ANTHROPIC_DEFAULT_*_MODEL`로 차단 모델로 리다이렉트되지 않도록
+
+### v2.1.175 / v2.1.172 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `enforceAvailableModels` managed 설정 추가 (v2.1.175) — `availableModels` allowlist가 Default 모델까지 제약, user/project가 managed 리스트를 확장 불가
+- Sub-agent가 자체 sub-agent를 spawn 가능 (최대 5단계 깊이) (v2.1.172)
+- `model` 속성이 `claude_code.lines_of_code.count` OTEL 메트릭에 추가 (v2.1.172)
+
+**주요 버그 수정:**
+- `availableModels` 제약이 subagent 모델 override / agent dispatch 모델 picker / advisor 모델에 미적용되던 버그 수정 (v2.1.172)
+- `WebFetch(domain:*.example.com)` 와일드카드 규칙이 서브도메인 매칭 안 되던 버그, mid-pattern 와일드카드 파일 규칙(`Read(secrets-*/config.json)`) 거부 버그 수정 (v2.1.172)
+
+### v2.1.169 / v2.1.166 / v2.1.163 (2026-06-18 동기화)
+
+**새로운 기능:**
+- Self-hosted runner: `post-session` 라이프사이클 hook 추가 (세션 종료 후 workspace 삭제 전 실행) (v2.1.169)
+- `--safe-mode` 플래그 + `CLAUDE_CODE_SAFE_MODE` 추가 — 모든 커스터마이징(CLAUDE.md, plugins, skills, hooks, MCP) 비활성화로 troubleshooting (v2.1.169)
+- `/cd` 명령 추가 — 프롬프트 캐시 깨지 않고 작업 디렉토리 이동 (v2.1.169)
+- `disableBundledSkills` 설정 + `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` 환경변수 추가 — 번들 스킬/워크플로우/빌트인 슬래시 커맨드 숨김 (v2.1.169)
+- `fallbackModel` 설정 추가 — 최대 3개 fallback 모델 순서대로 시도 (v2.1.166)
+- deny rule 도구명 위치에 glob 패턴 지원(`"*"`로 모든 도구 차단) (v2.1.166)
+- `SendMessage`로 다른 세션이 릴레이한 메시지는 user authority 미보유 (권한 요청 거부, auto mode 차단) (v2.1.166)
+- `requiredMinimumVersion`/`requiredMaximumVersion` managed 설정 추가 — 버전 범위 밖이면 시작 거부 (v2.1.163)
+- `/plugin list` 명령 추가 (`--enabled`/`--disabled` 필터) (v2.1.163)
+- Stop/SubagentStop hook이 `hookSpecificOutput.additionalContext` 반환 가능 — hook error 없이 피드백 주며 턴 계속 (v2.1.163)
+- Skills: 커맨드 본문에서 숫자 앞 리터럴 `$`를 위한 `\$` 이스케이프 문법 추가 (v2.1.163)
+- stdio MCP 서버가 `--resume` 시 hooks/Bash와 동일한 `CLAUDE_CODE_SESSION_ID` 수신 (v2.1.163)
+
+**주요 버그 수정:**
+- enterprise managed MCP 정책(`allowedMcpServers`/`deniedMcpServers`)이 reconnect/IDE config/`--mcp-config`에서 미적용되던 버그 수정 (v2.1.169)
+- managed-settings predicate가 `${VAR}` 참조 시 미매칭되던 버그 수정 (v2.1.166)
+- hook `if: "Bash(...)"` 조건이 subshell/backtick 내 명령도 매칭되도록 수정 (v2.1.163)
+
+### v2.1.157 / v2.1.158 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `.claude/skills` 디렉토리 내 플러그인 자동 로드 (marketplace 불필요) (v2.1.157)
+- `claude plugin init <name>` 추가 — `.claude/skills`에 새 플러그인 스캐폴드 (v2.1.157)
+- `/plugin` 인자 자동완성 추가 (서브커맨드/설치된 플러그인/marketplace 플러그인) (v2.1.157)
+- `settings.json`의 `agent` 필드가 dispatch 세션에 적용, `--agent <name>`로 override (v2.1.157)
+- `EnterWorktree`가 Claude 관리 worktree 간 mid-session 전환 가능 (v2.1.157)
+- `tool_decision` 텔레메트리에 `tool_parameters` 포함 (`OTEL_LOG_TOOL_DETAILS=1`) (v2.1.157)
+- Auto mode가 Bedrock/Vertex/Foundry의 Opus 4.7/4.8에서 사용 가능 (`CLAUDE_CODE_ENABLE_AUTO_MODE=1`) (v2.1.158)
+
+### v2.1.154 (2026-06-18 동기화)
+
+**새로운 기능:**
+- 동적 워크플로우(dynamic workflows) 도입 — Claude가 백그라운드에서 수십~수백 agent에 작업 오케스트레이션, `/workflows`로 조회
+- 플러그인이 `plugin.json`/marketplace 엔트리에서 `defaultEnabled: false` 선언 가능 — `/plugin`/`claude plugin enable`로 활성화
+- stdio MCP 서버 서브프로세스가 `CLAUDE_CODE_SESSION_ID` + `CLAUDECODE=1` 환경변수 수신
+- `claude mcp list`/`get`이 미승인 `.mcp.json` 서버를 `⏸ Pending approval`로 표시 (파이프 출력 시 auto-approve 안 함)
+- `lean system prompt`가 Haiku/Sonnet/Opus 4.7 이전 외 모든 모델의 기본값
+
+**Breaking Changes:**
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` deprecated (06/01 제거 예정)
+
+**주요 버그 수정:**
+- managed settings의 단일 잘못된 `allowedMcpServers`/`deniedMcpServers` 엔트리가 전체 정책을 폐기하던 버그 수정 (bad 엔트리만 drop + doctor 경고)
+- background 세션 subagent가 worktree-isolation 가드 우회해 shared checkout에 쓰던 버그 수정
+
+### v2.1.153 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `github`/`git` 플러그인 marketplace 소스에 `skipLfs` 옵션 추가 (Git LFS 다운로드 건너뜀)
+- 상태줄 명령이 `COLUMNS`/`LINES` 환경변수 수신
+
+**주요 버그 수정:**
+- subagent(Agent tool) frontmatter MCP 서버가 `--strict-mcp-config`/`--bare`/remote/enterprise managed MCP/allow-deny 정책 무시하던 버그 수정
+- `--strict-mcp-config`가 명시 전달된 agent 정의(`--agents`/SDK)의 inline `mcpServers`를 strip하던 버그 수정 (차단된 subagent MCP는 경고 표시)
+
+**Breaking Changes:**
+- `/model`이 선택을 새 세션 기본값으로 저장 (IDE와 일치). 현재 세션만 변경하려면 picker에서 `s`. `keybindings.json`에서 `modelPicker:setAsDefault`를 `modelPicker:thisSessionOnly`로 rename 필요
+
+### v2.1.152 (2026-06-18 동기화)
+
+**새로운 기능:**
+- Skills/슬래시 커맨드가 frontmatter에 `disallowed-tools` 설정 가능 — 스킬 활성 동안 모델에서 도구 제거
+- `/reload-skills` 명령 추가 — 재시작 없이 스킬 디렉토리 재스캔
+- `SessionStart` hook이 `reloadSkills: true` 반환 가능 (hook이 설치한 스킬을 같은 세션에서 사용), `hookSpecificOutput.sessionTitle`로 세션 제목 설정 가능
+- `MessageDisplay` hook 이벤트 추가 — 표시되는 assistant 메시지 텍스트를 변환/숨김
+- `pluginSuggestionMarketplaces` managed 설정 추가 (admin이 제안 가능 org marketplace allowlist)
+- `claude plugin marketplace remove`가 `--scope user|project|local` 수용
+
+**주요 버그 수정:**
+- plugin MCP 서버가 동일 command·다른 환경변수일 때 잘못 dedup되던 버그 수정
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 agent team teammate 프로세스에 미적용되던 버그 수정 (v2.1.147)
+
+### v2.1.149 / v2.1.147 / v2.1.145 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `/usage`가 skills/subagents/plugins/MCP 서버별 limit 사용량 분해 표시 (v2.1.149)
+- `claude agents --json`으로 라이브 세션을 JSON 나열 (v2.1.145)
+- `claude_code.tool` OTEL span에 `agent_id`/`parent_agent_id` 속성 추가, background subagent span이 dispatching Agent span 하위로 nest (v2.1.145)
+- Stop/SubagentStop hook 입력에 `background_tasks` + `session_crons` 필드 추가 (v2.1.145)
+- `/plugin` Discover/Browse가 설치 전 commands/agents/skills/hooks/MCP·LSP 서버 표시 (v2.1.145)
+
+**Breaking Changes:**
+- `/simplify` → `/code-review`로 rename (correctness 버그 보고, `--comment`로 PR inline 코멘트). 기존 cleanup-and-fix 동작 제거 (v2.1.147)
+
+**주요 버그 수정:**
+- 플러그인 agent가 `tools:` frontmatter에 여러 `Agent(...)` 타입 선언 시 마지막 외 전부 drop되던 버그 수정 (v2.1.147)
+- hook `if` 조건 `PowerShell(git push*)`가 매칭 안 되던 버그 수정 (v2.1.147)
+- `context: fork` 스킬이 자기 자신을 무한 재호출하던 버그 수정 (v2.1.145)
+- `claude plugin validate`가 파일을 가리키는 `skills:` 엔트리를 미검출하던 버그 수정 (v2.1.145)
+- Agent Teams teammate가 non-ASCII 이름일 때 헤더 인코딩 오류로 모든 API 호출 실패하던 버그 수정 (v2.1.145)
+
+### v2.1.144 / v2.1.143 / v2.1.142 (2026-06-18 동기화)
+
+**새로운 기능:**
+- 플러그인 의존성 강제: `claude plugin disable`이 의존 플러그인 있으면 거부, `enable`은 전이 의존성 force-enable (v2.1.143)
+- `worktree.bgIsolation: "none"` 설정 추가 — background 세션이 `EnterWorktree` 없이 working copy 직접 편집 (v2.1.143)
+- PowerShell 도구가 `-ExecutionPolicy Bypass` 전달 (opt-out: `CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1`) (v2.1.143)
+- `claude agents`가 `--add-dir`/`--settings`/`--mcp-config`/`--plugin-dir`/`--permission-mode`/`--model`/`--effort`/`--dangerously-skip-permissions` 수용 (v2.1.143/142)
+- 루트 레벨 `SKILL.md`만 있고 `skills/` 서브디렉토리 없는 플러그인이 skill로 노출 (v2.1.142)
+
+**주요 버그 수정:**
+- stop hook이 반복 차단 시 영원히 루프하던 버그 수정 — 8회 연속 차단 후 경고와 함께 턴 종료 (`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`로 override) (v2.1.143)
+- `--agent <name>`가 `plugin:` prefix 없이 plugin agent를 못 찾던 버그 수정 (v2.1.143)
+- prompt-/agent-type hook을 `SessionStart`/`Setup`/`SubagentStart`에 구성 시 "command-type hook 사용" 명확한 에러 표시 (v2.1.142)
+- `MCP_TOOL_TIMEOUT`이 remote HTTP/SSE 서버 fetch timeout을 못 올리던 버그(60초 cap) 수정 (v2.1.142)
+
+### v2.1.141 / v2.1.140 (2026-06-18 동기화)
+
+**새로운 기능:**
+- hook JSON 출력에 `terminalSequence` 필드 추가 — controlling terminal 없이 desktop 알림/window 제목/벨 emit (v2.1.141)
+- `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` 추가 — GitHub plugin 소스를 HTTPS로 clone (v2.1.141)
+- `ANTHROPIC_WORKSPACE_ID` 환경변수 추가 (workload identity federation) (v2.1.141)
+- Agent tool `subagent_type` 매칭이 대소문자·구분자 무시 (`"Code Reviewer"` → `code-reviewer`) (v2.1.140)
+
+**주요 버그 수정:**
+- settings hot-reload에서 symlink 설정 파일이 spurious `ConfigChange` hook 유발하던 회귀 수정 (v2.1.140)
+- `/goal`이 `disableAllHooks`/`allowManagedHooksOnly` 설정 시 무한 hang하던 버그 수정 (v2.1.140)
+- managed `extraKnownMarketplaces` auto-update 정책이 `known_marketplaces.json`에 미저장되던 버그 수정 (v2.1.140)
+
+### v2.1.139 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `claude agents` agent view (Research Preview) 추가
+- `/goal` 명령 추가 — 완료 조건 설정 후 충족까지 턴 넘어 계속 작업 (interactive, `-p`, Remote Control)
+- hook `args: string[]` 필드(exec form) 추가 — shell 없이 직접 spawn, path placeholder 따옴표 불필요
+- `PostToolUse` hook `continueOnBlock` config 옵션 추가 — `true`로 hook 거부 사유를 Claude에 피드백하고 턴 계속
+- MCP stdio 서버가 `CLAUDE_PROJECT_DIR` 환경변수 수신 (hooks와 일치), plugin config에서 `${CLAUDE_PROJECT_DIR}` 참조 가능
+- subagent API 요청이 `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더 carry, OTEL span에 동일 속성
+
+**주요 버그 수정:**
+- hook이 terminal에 쓸 때 on-screen 프롬프트를 손상시키던 버그 수정 (hook은 이제 terminal access 없이 실행)
+- `Skill(name *)` 권한 규칙의 와일드카드가 prefix 매칭하도록 수정
+- settings hot-reload가 symlink `~/.claude/settings.json` 편집을 미감지하던 버그 수정
+- skill argument 이름에 regex 메타문자 포함 시 argument 치환 깨지던 버그 수정
+
+### v2.1.136 / v2.1.133 / v2.1.132 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `settings.autoMode.hard_deny` 추가 — user intent/allow 예외 무관하게 무조건 차단하는 auto mode classifier 규칙 (v2.1.136)
+- `allowAllClaudeAiMcps` managed 설정 추가 (claude.ai cloud MCP connector를 managed-mcp.json과 함께 로드) (v2.1.136)
+- `worktree.baseRef` 설정(`fresh`|`head`) 추가 — worktree branch 기준 선택 (v2.1.133)
+- `sandbox.bwrapPath`/`sandbox.socatPath` managed 설정 추가 (Linux/WSL) (v2.1.133)
+- `parentSettingsBehavior` admin-tier 키(`'first-wins'|'merge'`) 추가 (v2.1.133)
+- hook이 effort level을 `effort.level` JSON 입력 필드 + `$CLAUDE_EFFORT` 환경변수로 수신, Bash 도구도 `$CLAUDE_EFFORT` 읽기 가능 (v2.1.133)
+- `CLAUDE_CODE_SESSION_ID` 환경변수가 Bash 도구 서브프로세스 환경에 추가 (hooks와 일치) (v2.1.132)
+
+**Breaking Changes:**
+- `worktree.baseRef` 기본값 `fresh`가 `EnterWorktree`의 base를 `origin/<default>`로 되돌림 (2.1.128부터 local HEAD였음) — unpushed 커밋 유지하려면 `head` 설정 (v2.1.133)
+
+**주요 버그 수정:**
+- MCP 서버(`.mcp.json`/plugins/connector)가 `/clear` 후 VS Code/JetBrains/SDK에서 사라지던 버그 수정 (v2.1.136)
+- plan 모드가 매칭 `Edit(...)` allow 규칙 있을 때 파일 쓰기를 미차단하던 버그 수정 (v2.1.136)
+- subagent가 project/user/plugin skills를 Skill 도구로 발견 못 하던 버그 수정 (v2.1.133)
+- `plugin.json`의 `skills` 엔트리가 default `skills/` 디렉토리를 숨기던 버그, `CLAUDE_ENV_FILE` SessionStart hook env가 `/resume`·`/clear` 후 stale되던 버그 수정 (v2.1.136)
+
+### v2.1.129 / v2.1.128 / v2.1.126 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `--plugin-url <url>` 플래그 추가 — URL에서 plugin `.zip` 가져옴 (v2.1.129)
+- `skillOverrides` 설정 동작(`off`/`user-invocable-only`/`name-only`) (v2.1.129)
+- `claude_code.skill_activated` OTEL 이벤트에 `invocation_trigger` 속성 추가 (v2.1.126)
+- `--plugin-dir`가 `.zip` plugin 아카이브 수용 (v2.1.128)
+- SDK 호스트가 Bash 권한 프롬프트에 persistent `localSettings` 제안 → "Always allow"가 `.claude/settings.local.json`에 기록 (v2.1.128)
+- `claude project purge [path]` 추가 — 프로젝트의 모든 Claude Code state 삭제 (v2.1.126)
+
+**Breaking Changes:**
+- Plugin manifest: `themes`/`monitors`는 `"experimental": { ... }` 하위로 선언해야 함 (top-level은 동작하나 validate 경고) (v2.1.129)
+- MCP: `workspace`가 예약된 서버명 — 동일 이름 기존 서버는 경고와 함께 skip (v2.1.128)
+- `EnterWorktree`가 local HEAD에서 브랜치 생성하도록 변경 (이전 `origin/<default-branch>`) (v2.1.128)
+
+**주요 버그 수정:**
+- deferred tools(WebSearch/WebFetch 등)가 `context: fork` 스킬·subagent의 첫 턴에서 미사용되던 버그 수정 (v2.1.126)
+
+### v2.1.122 / v2.1.121 / v2.1.119 / v2.1.118 (2026-06-18 동기화)
+
+**새로운 기능:**
+- MCP 서버 config에 `alwaysLoad` 옵션 추가 — `true`면 해당 서버 모든 도구가 tool-search deferral 건너뛰고 항상 사용 가능 (v2.1.121)
+- `claude plugin prune` 추가 (orphaned auto-installed 의존성 제거), `plugin uninstall --prune` cascade (v2.1.121)
+- PostToolUse hook이 `hookSpecificOutput.updatedToolOutput`로 모든 도구 출력 교체 가능 (이전 MCP 전용) (v2.1.121)
+- `--print` 모드가 agent `tools:`/`disallowedTools:` frontmatter 존중, `--agent`가 빌트인 agent의 `permissionMode` 존중 (v2.1.119)
+- PostToolUse/PostToolUseFailure hook 입력에 `duration_ms` 추가 (v2.1.119)
+- 상태줄 stdin JSON에 `effort.level`/`thinking.enabled` 추가 (v2.1.119)
+- Hook이 `type: "mcp_tool"`로 MCP 도구 직접 호출 가능 (v2.1.118)
+- `DISABLE_UPDATES` env var 추가 (수동 `claude update`까지 차단), `wslInheritsWindowsSettings` 정책 키 추가 (v2.1.118)
+- auto mode `autoMode.allow`/`soft_deny`/`environment`에 `"$defaults"` 포함해 빌트인에 커스텀 규칙 추가, `claude plugin tag` 추가 (v2.1.118)
+- `ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 추가 (v2.1.122)
+
+**주요 버그 수정:**
+- `ToolSearch`가 nonblocking 모드에서 세션 시작 후 연결된 MCP 도구를 놓치던 버그, 잘못된 hooks 엔트리가 전체 `settings.json`을 무효화하던 버그 수정 (v2.1.122)
+- agent-type hook이 `Stop`/`SubagentStop` 외 이벤트에 구성 시 "Messages are required" 실패, `prompt` hook이 verifier subagent 도구 호출에 재발화하던 버그 수정 (v2.1.118)
+
+### v2.1.113 / v2.1.110 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `sandbox.network.deniedDomains` 설정 추가 — `allowedDomains` 와일드카드가 허용해도 특정 도메인 차단 (v2.1.113)
+- `/tui` 명령 + `tui` 설정 추가 (v2.1.110)
+- push notification 도구 추가 — Remote Control + config 활성 시 Claude가 모바일 푸시 전송 (v2.1.110)
+- `autoScrollEnabled` config 추가, SDK/headless가 환경에서 `TRACEPARENT`/`TRACESTATE` 읽어 분산 trace 연결 (v2.1.110)
+
+**Breaking Changes:**
+- CLI가 번들 JavaScript 대신 네이티브 바이너리(플랫폼별 optional dependency) spawn (v2.1.113)
+
+**주요 버그 수정:**
+- `Bash` `dangerouslyDisableSandbox`가 권한 프롬프트 없이 샌드박스 밖 실행하던 버그 수정 (v2.1.113)
+- `PermissionRequest` hook의 `updatedInput`이 `permissions.deny` 규칙에 재검사 안 되던 버그 수정; `setMode:'bypassPermissions'`가 `disableBypassPermissionsMode` 존중 (v2.1.110)
+- `PreToolUse` hook `additionalContext`가 도구 호출 실패 시 drop되던 버그, skills `disable-model-invocation: true`가 `/<skill>`로 호출 시 실패하던 버그 수정 (v2.1.110)
+
+### v2.1.108 / v2.1.105 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `ENABLE_PROMPT_CACHING_1H` env var 추가 (API/Bedrock/Vertex/Foundry 1시간 캐시 TTL), `FORCE_PROMPT_CACHING_5M` 추가 (v2.1.108)
+- 모델이 빌트인 슬래시 커맨드(`/init`, `/review`, `/security-review`)를 Skill 도구로 발견·호출 가능 (v2.1.108)
+- `EnterWorktree` 도구에 `path` 파라미터 추가 (기존 worktree로 전환) (v2.1.105)
+- PreCompact hook 지원 추가 — exit code 2 또는 `{"decision":"block"}`으로 compaction 차단 (v2.1.105)
+- 플러그인 background monitor 지원 — top-level `monitors` manifest 키 (세션 시작/스킬 호출 시 auto-arm) (v2.1.105)
+- skill description 리스팅 cap 250→1,536자로 상향 (v2.1.105)
+
+**주요 버그 수정:**
+- stdio MCP 서버가 stray non-JSON 출력 시 첫 줄에서 disconnect되던 버그 수정 (v2.1.105)
+
+### v2.1.101 / v2.1.98 / v2.1.97 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `/team-onboarding` 명령 추가 (로컬 사용 기반 teammate 램프업 가이드 생성) (v2.1.101)
+- Monitor 도구 추가 (background 스크립트 이벤트 스트리밍) (v2.1.98)
+- `workspace.git_worktree`를 상태줄 JSON 입력에 추가 (linked worktree 내일 때) (v2.1.98/97)
+- `CLAUDE_CODE_PERFORCE_MODE` env var 추가 (read-only 파일에서 Edit/Write 실패 + `p4 edit` 힌트) (v2.1.98)
+- `--exclude-dynamic-system-prompt-sections` print 모드 플래그 추가 (cross-user 캐싱) (v2.1.98)
+- `refreshInterval` 상태줄 설정 추가 (N초마다 재실행) (v2.1.97)
+
+**주요 버그 수정:**
+- `permissions.deny` 규칙이 PreToolUse hook의 `permissionDecision: "ask"`를 override 못 하던 버그 수정 (hook이 deny를 prompt로 다운그레이드 가능했음) (v2.1.101)
+- 컴파운드 Bash 명령이 auto/bypass 모드에서 강제 권한 프롬프트를 우회하던 버그 수정 (보안) (v2.1.98)
+- subagent가 dynamically-injected 서버의 MCP 도구를 미상속하던 버그, prompt-type Stop/SubagentStop hook이 긴 세션에서 실패하던 버그 수정 (v2.1.101/98/97)
+
+### v2.1.94 / v2.1.92 / v2.1.91 / v2.1.90 (2026-06-18 동기화)
+
+**새로운 기능:**
+- `hookSpecificOutput.sessionTitle`을 `UserPromptSubmit` hook에 추가 (세션 제목 설정) (v2.1.94)
+- `keep-coding-instructions` frontmatter 필드 지원 (plugin output styles) (v2.1.94)
+- 플러그인 스킬 `"skills": ["./"]`이 directory basename 대신 frontmatter `name`을 invocation 이름으로 사용 (v2.1.94)
+- `forceRemoteSettingsRefresh` 정책 설정 추가 (remote managed settings 신선 fetch까지 시작 차단, fail-closed) (v2.1.92)
+- MCP `_meta["anthropic/maxResultSizeChars"]` 어노테이션으로 결과 persistence override(최대 500K) (v2.1.91)
+- `disableSkillShellExecution` 설정 추가 (skills/슬래시 커맨드/plugin 커맨드의 inline shell 실행 비활성화) (v2.1.91)
+- 플러그인이 `bin/` 하위 실행파일을 bare 명령으로 Bash 도구에서 호출 가능 (v2.1.91)
+- `.husky`를 protected 디렉토리에 추가 (acceptEdits) (v2.1.90)
+
+**Breaking Changes:**
+- `/tag` 명령 제거, `/vim` 명령 제거(`/config` → Editor mode로 토글) (v2.1.92)
+
+**주요 버그 수정:**
+- 플러그인 스킬 hook이 YAML frontmatter에 정의 시 무시되던 버그, `CLAUDE_PLUGIN_ROOT` 미설정 시 "No such file" 실패, `${CLAUDE_PLUGIN_ROOT}`가 marketplace source로 resolve되던 버그 수정 (v2.1.94)
+- `PreToolUse` hook이 JSON을 stdout에 emit하고 exit code 2일 때 도구 호출을 올바로 차단하도록 수정 (v2.1.90)
+- prompt-type Stop hook이 small fast 모델이 `ok:false` 반환 시 잘못 실패하던 버그, `preventContinuation:true` 의미 복원 (v2.1.92)
+- `permissions.defaultMode: "auto"`의 JSON 스키마 검증 수정 (v2.1.91)
+
+---
 
 ### v2.1.89 (2026-04-01 동기화)
 

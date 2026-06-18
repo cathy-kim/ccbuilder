@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.25.0] - 2026-06-18
+
+### Added
+- **Claude Code v2.1.90 → v2.1.181 대규모 동기화** (약 70개 버전, version-sync.md에 21개 버전 블록 신규 추가)
+  - **신규 Hook 이벤트**: `PreCompact` (압축 차단, v2.1.105), `MessageDisplay` (assistant 메시지 변환/숨김, v2.1.152)
+  - **신규 Hook 필드/출력**: `args: string[]` exec form·`continueOnBlock` (v2.1.139), `updatedToolOutput`·`type: "mcp_tool"` (v2.1.118/121), `duration_ms`·`effort.level`·`$CLAUDE_EFFORT`·`background_tasks`/`session_crons` 입력, `reloadSkills`·`sessionTitle`·`additionalContext`·`terminalSequence` 출력
+  - **Agent/Subagent**: sub-agent가 자체 sub-agent spawn (5단계 깊이, v2.1.172), 권한 규칙 `Tool(param:value)` 문법 — `Agent(model:opus)` 차단 (v2.1.178), `subagent_type` 대소문자 무시 매칭 (v2.1.140)
+  - **Plugin**: `.claude/skills` 자동 로드 + `claude plugin init` (v2.1.157), `defaultEnabled: false` (v2.1.154), 의존성 강제·`prune` (v2.1.143/121), `--plugin-url`/`--plugin-dir` .zip (v2.1.128/129)
+  - **MCP**: `alwaysLoad` (v2.1.121), stdio 환경변수 주입 (v2.1.139/154), `workspace` 예약 서버명 (v2.1.128)
+  - **신규 명령**: `/goal` (v2.1.139), `/cd` (v2.1.169), `/reload-skills` (v2.1.152), `/config key=value` (v2.1.181), `/tui` (v2.1.110), `/team-onboarding` (v2.1.101), `claude project purge` (v2.1.126)
+  - **신규 도구·settings·env**: `Monitor`·push notification 도구, `fallbackModel`·`enforceAvailableModels`·`worktree.baseRef`·`autoMode.hard_deny`·`disableSkillShellExecution`·`skillOverrides` settings, `--safe-mode`·`ENABLE_PROMPT_CACHING_1H`·`DISABLE_UPDATES` env
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.89 → v2.1.181 업데이트 (Hook 이벤트 표·MCP 표·Agent/CLI/Plugin·신규 명령·신규 도구·env·Breaking·Deprecated 통합)
+- 버전 헤더·Status·README·plugin.json·marketplace.json → v2.25.0 / Claude Code v2.1.181+
+
+### Breaking Changes (Claude Code 측)
+- `/simplify` → `/code-review` rename (v2.1.147), `/model` 선택이 새 세션 기본값으로 저장 (v2.1.153), CLI 네이티브 바이너리 spawn 전환 (v2.1.113), `EnterWorktree` base 변경 후 `worktree.baseRef:fresh` 복귀 (v2.1.128/133), `/tag`·`/vim` 제거 (v2.1.92), `permissions.deny`가 PreToolUse hook `ask` override (v2.1.101)
+
+### Deprecated (Claude Code 측)
+- `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` (v2.1.154 → v2.1.160 no-op)
+
+---
+
 ## [2.24.0] - 2026-04-01
 
 ### Added
