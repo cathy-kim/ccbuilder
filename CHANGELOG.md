@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [2.52.0] - 2026-07-07
+
+### Changed
+- Claude Code compatibility updated: v2.1.181 -> v2.1.202
+- Note: AI content analysis was skipped — manual review recommended
+
 ## [2.51.0] - 2026-07-06
 
 ### Changed
