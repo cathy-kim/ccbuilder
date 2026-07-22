@@ -10,7 +10,7 @@
 
 | # | Event | 용도 | 차단 가능 |
 |---|-------|------|-----------|
-| 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔; `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152) | - |
+| 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔; `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); `source: "fork"` — fork로 시작한 세션 구분 (이전: `"resume"`, v2.1.216) | - |
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
 | 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
 | 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
@@ -96,3 +96,10 @@
 ## Deprecation
 
 - `PreToolUse` decision: top-level `decision`/`reason` → `hookSpecificOutput.permissionDecision`/`permissionDecisionReason`으로 변경
+
+## Breaking Changes & 버그 수정 (v2.1.210-217)
+
+- **Breaking (v2.1.214)**: 단일 세그먼트 `dir/**` 형태의 `if` 조건은 `<cwd>/dir`에만 매칭 — 임의 깊이는 `**/dir/**` 사용 (`deny`/`ask` 권한 규칙은 영향 없음)
+- exit code 2 hook이 stdout JSON 스키마 검증 실패 시 문서대로 차단하지 않던 버그 수정 (v2.1.214)
+- auto mode가 unsandboxed Bash에 대한 `PreToolUse` hook `ask` 결정을 무시하던 버그 수정 (v2.1.211)
+- hook 콜백 타임아웃이 사용자 거부로 오분류되던 버그 수정 (v2.1.210)

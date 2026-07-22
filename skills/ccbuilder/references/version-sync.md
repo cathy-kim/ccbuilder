@@ -77,6 +77,67 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.217 (2026-07-22 동기화)
+
+**새로운 기능:**
+- (v2.1.217) 서브에이전트 동시 실행 상한 (기본 20, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`) — 한 메시지가 무제한 백그라운드 에이전트로 팬아웃하지 못하도록 제한
+- (v2.1.217) `EndConversation` 도구 (v2.1.214 도입) 연계 서브에이전트 정책; `--max-budget-usd` 도달 시 신규 서브에이전트 파견 거부 + 실행 중인 백그라운드 에이전트 중단
+- (v2.1.217) 이모지 숏코드 자동완성 — `:heart:` → ❤️, `:hea`로 후보 표시; `emojiCompletionEnabled`로 비활성화
+- (v2.1.217) 트랜스크립트 쓰기 실패(디스크 풀 등) 또는 세션 저장 비활성화 시 경고 표시 (이전에는 조용히 유실)
+- (v2.1.217) 로그인 만료 경고 5일 전 → 3일 전으로 변경; `FORCE_HYPERLINK=0` — 풋터 PR 배지 하이퍼링크 강제 비활성화
+- (v2.1.216) `sandbox.filesystem.disabled` 설정 — 네트워크 egress 제어는 유지하며 파일시스템 격리만 생략
+- (v2.1.216) `SessionStart` hook이 세션이 fork로 시작 시 source `"fork"` 보고 (이전: `"resume"`)
+- (v2.1.215) Claude가 더 이상 `/verify`·`/code-review` 스킬을 자동으로 실행하지 않음
+- (v2.1.214) **`EndConversation`** 신규 도구 — 고도로 학대적이거나 탈옥 시도하는 사용자와의 세션 종료
+- (v2.1.214) 메모리 파일 프론트매터에 ISO `modified` 타임스탬프 추가
+- (v2.1.214) `subagentStatusLine` 페이로드에 reasoning effort 추가 — 커스텀 에이전트 행에 모델·effort 표시
+- (v2.1.214) `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` — OTel 콘텐츠 속성 60KB 절단 한도 설정 가능
+- (v2.1.214) docker(Podman `docker` shim 포함) 데몬 리다이렉트 플래그(`--url`, `--connection`, `--identity` 등)에 권한 프롬프트 추가
+- (v2.1.212) `/fork`가 대화를 새 백그라운드 세션(`claude agents`의 독립 행)으로 복사; 기존 in-session 서브에이전트 방식은 **`/subtask`**로 개명
+- (v2.1.212) `claude auto-mode reset` — 기본 auto mode 설정 복원 (확인 프롬프트, `--yes`로 스킵)
+- (v2.1.212) 세션당 WebSearch 호출 상한 (기본 200, `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`)
+- (v2.1.212) 세션당 서브에이전트 파견 상한 (기본 200, `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋)
+- (v2.1.212) MCP 도구 호출 2분 초과 시 자동 백그라운드 전환 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`
+- (v2.1.212) `claude agents`에서 `/resume` — 삭제된 세션 포함 과거 세션 피커 후 백그라운드 재개
+- (v2.1.211) `--forward-subagent-text` / `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` — 서브에이전트 text·thinking을 stream-json 출력에 포함
+- (v2.1.210) `Write(path)`/`NotebookEdit(path)`/`Glob(path)` 권한 규칙 시작 경고 — `Edit(path)`/`Read(path)` 사용 권장
+- (v2.1.207) Bedrock·Vertex·Claude Platform on AWS 기본 모델 Opus 4.8로 전환
+- (v2.1.206) `/cd` 디렉토리 경로 자동완성; `/commit-push-pr`가 `remote.pushDefault` 리모트도 자동 허용
+- (v2.1.205) `/doctor`/`/checkup` 통합 — 진단·수정 가능한 전체 설정 점검 도구
+- (v2.1.203) 로그인 만료 경고 배지; 수동 권한 모드 풋터 회색 ⏸ 배지 상시 표시; 세션 추가 작업 디렉토리 MCP `roots/list` 전달
+
+**Breaking Changes:**
+- (v2.1.215) `/verify`·`/code-review` 자동 실행 중지 — 명시적 슬래시 명령 필요
+- (v2.1.214) 단일 세그먼트 `dir/**` hook `if:` 조건이 `<cwd>/dir`에만 매칭 — 임의 깊이는 `**/dir/**` 사용 (`deny`/`ask` 권한 규칙은 기존과 동일 임의 깊이 매칭 유지)
+- (v2.1.214) `SessionStart` hook source `"fork"` 신규 값 — 기존 `"resume"`과 구분 필요
+- (v2.1.212) Task tool `mode` 파라미터 무시됨 — 서브에이전트는 부모 세션 권한 모드 상속
+- (v2.1.207) auto mode가 `.claude/settings.local.json`(프로젝트 내) 대신 `~/.claude/settings.json`에서만 `autoMode` 읽음
+- (v2.1.207) 플러그인 option 값(`pluginConfigs`)이 프로젝트 레벨 `.claude/settings.json`에서 더 이상 읽히지 않음 — user/`--settings`/managed settings만 유효
+- (v2.1.217) 서브에이전트가 기본적으로 중첩 서브에이전트를 파견하지 않음 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`로 깊이 허용
+
+**주요 버그 수정:**
+- `isolation: 'worktree'` 서브에이전트가 격리 worktree 대신 메인 레포 checkout에 git-mutating 명령 실행 가능하던 버그 (v2.1.210); `git -C`/`--git-dir`/`GIT_DIR`/`GIT_WORK_TREE`로 공유 checkout 우회하던 버그 (v2.1.216)
+- Agent tool을 서브에이전트가 읽은 콘텐츠를 통한 간접 프롬프트 인젝션에 대해 강화 (v2.1.210)
+- `claude agents` 화면 복귀 시 실행 중 서브에이전트가 조용히 중단되고 처음부터 재실행되던 버그 — 작업 내용 이제 이어서 유지 (v2.1.203)
+- 재개된 백그라운드 에이전트 세션이 기본 에이전트로 되돌아가던 버그 — 에이전트 프롬프트·도구 제한 복원 (v2.1.216)
+- 명시적 모델 오버라이드로 파견된 서브에이전트가 재개·후속 메시지 시 부모 모델로 되돌아가던 버그 (v2.1.211)
+- 시작 대기 중 우선순위 높은 메시지 도착 시 백그라운드 서브에이전트가 취소되던 버그 (v2.1.216)
+- 백그라운드 에이전트 결과 보고가 실행 중인 에이전트 상태를 조작(fabricate)하지 않고 실제 완료를 기다리도록 개선 (v2.1.211)
+- exit code 2 hook이 stdout JSON 스키마 검증 실패 시 문서대로 차단하지 않던 버그 (v2.1.214)
+- auto mode가 unsandboxed Bash에 대한 PreToolUse hook의 `ask` 결정을 무시하던 버그 — hook `ask`가 프롬프트를 최소 하한으로 강제 (v2.1.211)
+- hook 콜백 타임아웃이 사용자 거부로 오분류되어 무인 세션이 멈추던 버그 (v2.1.210)
+- OAuth MCP 재인증 시 신규 로그인 성공 전 기존 자격증명을 폐기하던 버그 (v2.1.216)
+- truncated MCP 도구 결과가 세션 종료까지 전체 미절단 결과를 메모리에 유지하던 누수 (v2.1.217)
+- 유휴 웹 세션 각성 후 플러그인 MCP 서버 재연결 안 되던 버그 (v2.1.211)
+- `--mcp-config`/`.mcp.json` 서버 per-server `request_timeout_ms` 미적용 버그 (v2.1.206)
+- 메모리 프론트매터 값이 인라인 `#`에서 잘리던 버그 (v2.1.214); MEMORY.md 200줄 초과 시 침묵 절단 대신 명시적 오류 (v2.1.210)
+- Windows 자동 업데이트 실패 시 `claude.exe` 소실 버그 — 실패한 업데이트가 이제 보존된 실행 파일 자동 복원 (v2.1.217)
+- 배경 세션 격리가 심볼릭 링크된 작업 디렉토리를 정규화하지 않아 세션이 워크스페이스 폴더를 벗어날 수 있던 보안 버그 (v2.1.217)
+- Claude Opus 4.8 on Bedrock에서 auto-compact가 트리거되지 않던 버그; 한도 초과 후 `/compact` 실패 버그 (v2.1.217)
+- 기업 mTLS·TLS-verify·OAuth scope·프록시 설정이 Claude Desktop 세션에서 무시되던 버그 (v2.1.217)
+
+---
+
 ### v2.1.181 (2026-06-18 동기화)
 
 **새로운 기능:**

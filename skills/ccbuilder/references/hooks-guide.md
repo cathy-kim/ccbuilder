@@ -12,7 +12,7 @@
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
-| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152) | No | `session_id`, `agent_type` |
+| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); `source` 필드가 fork로 시작한 세션에서 `"resume"` 대신 `"fork"` 보고 (v2.1.216) | No | `session_id`, `agent_type`, `source` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
@@ -315,6 +315,14 @@ Hook에서 MCP 도구를 직접 실행합니다:
 ```
 
 `if` 값은 `Bash(git *)`, `Write(src/*)` 처럼 permission rule syntax를 사용합니다.
+
+> **Breaking Change (v2.1.214)**: 단일 세그먼트 `dir/**` 형태의 `if` 조건은 이제 `<cwd>/dir`에만 매칭됩니다. 임의 깊이 매칭이 필요하면 `**/dir/**`를 사용하세요. `permissions.deny`/`permissions.ask` 권한 규칙의 `dir/**`는 기존과 동일하게 임의 깊이로 매칭됩니다 (영향 없음).
+
+> **v2.1.214 버그 수정**: exit code 2를 반환한 hook이 stdout JSON이 스키마 검증에 실패할 경우 문서대로 차단하지 않던 버그가 수정되었습니다 — 이제 항상 차단됩니다.
+
+> **v2.1.211 버그 수정**: auto mode가 unsandboxed Bash 명령에 대해 `PreToolUse` hook의 `ask` 결정을 무시하고 자동 실행하던 버그 수정 — hook `ask`가 이제 최소 하한(floor)으로 프롬프트를 강제합니다.
+
+> **v2.1.210 버그 수정**: hook 콜백 타임아웃이 모델에게 사용자 거부로 잘못 보고되어 무인(unattended) 세션이 멈춰 대기하던 버그가 수정되었습니다.
 
 ---
 

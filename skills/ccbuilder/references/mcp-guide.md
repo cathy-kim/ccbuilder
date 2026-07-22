@@ -462,6 +462,20 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
+## 안정성 개선 (v2.1.203-217)
+
+| 기능/수정 | 설명 |
+|-----------|------|
+| **roots/list 확장 (v2.1.203)** | 세션의 추가 작업 디렉토리(`--add-dir`)가 MCP `roots/list`에 포함; 집합 변경 시 `notifications/roots/list_changed` 전송 |
+| **request_timeout_ms 적용 (v2.1.206)** | `--mcp-config`/`.mcp.json`으로 설정된 서버가 per-server `request_timeout_ms`를 무시하고 60s 기본값에 걸리던 버그 수정 |
+| **예약 서버 이름 확대 (v2.1.205)** | `"Claude Browser"`가 `"Claude Preview"`와 함께 예약됨 — 사용자 설정 MCP 서버가 해당 이름으로 등록 불가 |
+| **자동 백그라운드 전환 (v2.1.212)** | 2분 이상 걸리는 MCP 도구 호출이 자동으로 백그라운드로 이동 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값 설정/비활성화 |
+| **OAuth 재연결 (v2.1.211)** | 유휴 웹 세션이 각성 후 플러그인 MCP 서버가 재연결되지 않아 다음 메시지까지 MCP 호출이 실패하던 버그 수정 |
+| **OAuth 재인증 순서 (v2.1.216)** | 재인증 시 신규 로그인 성공 전에 기존 자격증명을 폐기하던 버그 수정 |
+| **메모리 누수 수정 (v2.1.217)** | truncated MCP 도구 결과가 세션 종료까지 전체 미절단 결과를 메모리에 유지하던 누수 수정 |
+
+---
+
 ## 공식 문서
 
 - **MCP Reference**: https://code.claude.com/docs/en/mcp

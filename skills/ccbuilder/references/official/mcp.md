@@ -89,3 +89,13 @@ claude mcp list                        # 서버 목록
 claude mcp serve                       # Claude Code를 MCP 서버로
 claude mcp add-from-claude-desktop     # Claude Desktop에서 가져오기
 ```
+
+## 안정성 개선 (v2.1.203-217)
+
+- 세션의 추가 작업 디렉토리가 `roots/list`에 포함되고 변경 시 `notifications/roots/list_changed` 전송 (v2.1.203)
+- `--mcp-config`/`.mcp.json` 서버의 per-server `request_timeout_ms` 미적용 버그 수정 (v2.1.206)
+- `"Claude Browser"` 서버 이름 예약 — 사용자 설정 서버 등록 불가 (v2.1.205)
+- 2분 이상 걸리는 MCP 도구 호출 자동 백그라운드 전환 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (v2.1.212)
+- 유휴 웹 세션 각성 후 플러그인 MCP 서버 재연결 안 되던 버그 수정 (v2.1.211)
+- OAuth 재인증이 신규 로그인 성공 전 기존 자격증명을 폐기하던 버그 수정 (v2.1.216)
+- truncated 도구 결과 메모리 누수 수정 (v2.1.217)

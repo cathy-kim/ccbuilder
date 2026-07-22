@@ -16,6 +16,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [2.53.0] - 2026-07-22
+
+### Added
+- **Claude Code v2.1.217 sync** (v2.1.181 → v2.1.217)
+  - `EndConversation` 도구 — 학대적 사용자·탈옥 시도 세션 종료 (v2.1.214)
+  - 서브에이전트 동시 실행 상한 (기본 20, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) + 세션당 파견 상한 (기본 200, `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212)
+  - `/fork`가 대화를 새 백그라운드 세션으로 복사; 기존 in-session 서브에이전트 방식은 `/subtask`로 개명 (v2.1.212)
+  - `sandbox.filesystem.disabled` 설정 — 네트워크 egress 제어 유지하며 파일시스템 격리 생략 (v2.1.216)
+  - `--forward-subagent-text` / `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` — 서브에이전트 text·thinking을 stream-json에 포함 (v2.1.211)
+  - MCP 도구 호출 2분 초과 시 자동 백그라운드 전환 (`CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`, v2.1.212)
+  - 이모지 숏코드 자동완성 (`:heart:` → ❤️, v2.1.217)
+  - 로그인 만료 경고 5일 → 3일 전으로 변경 (v2.1.217)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 v2.1.181 → v2.1.217 — MCP 안정성, Memory 안정성, Hook 조건부 실행 Breaking Change, Agent 동시성·`/fork`/`/subtask` 개편, EndConversation 도구, `sandbox.filesystem.disabled` 반영
+- Breaking Changes: `/verify`·`/code-review` 자동 실행 중지(v2.1.215), 단일 세그먼트 `dir/**` hook `if:` 조건이 `<cwd>/dir`에만 매칭(v2.1.214), 서브에이전트 기본 중첩 파견 비활성화(v2.1.217), Task tool `mode` 파라미터 무시(v2.1.212)
+- version-sync.md: v2.1.217 엔트리 추가
+
+### Fixed (Claude Code v2.1.203-217 주요 수정)
+- `isolation: 'worktree'` 서브에이전트가 메인 레포 checkout에 git-mutating 명령 실행 가능하던 버그, `git -C`/`--git-dir`/`GIT_DIR`/`GIT_WORK_TREE`로 공유 checkout 우회하던 버그
+- Agent tool을 서브에이전트가 읽은 콘텐츠를 통한 간접 프롬프트 인젝션에 대해 강화
+- OAuth MCP 재인증이 신규 로그인 성공 전 기존 자격증명을 폐기하던 버그; truncated MCP 도구 결과 메모리 누수
+- exit code 2 hook이 stdout JSON 스키마 검증 실패 시 문서대로 차단하지 않던 버그; auto mode가 PreToolUse hook의 `ask` 결정을 무시하던 버그
+- 메모리 프론트매터 값이 인라인 `#`에서 잘리던 버그; MEMORY.md 200줄 초과 시 침묵 절단 대신 명시적 오류
+
 ## [2.52.0] - 2026-07-08
 
 ### Changed

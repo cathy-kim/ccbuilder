@@ -150,6 +150,8 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
 
 `.claude/rules/*.md` 파일은 매 세션 자동 로드됩니다.
 
+> **v2.1.211 버그 수정**: setting sources 설정으로 project settings를 제외해도 중첩된 `.claude/rules/*.md` 파일이 계속 로드되던 버그가 수정되었습니다.
+
 ```
 .claude/rules/
 ├── coding-rules.md        # 전역 코딩 규칙
@@ -311,6 +313,11 @@ Git에 커밋하지 않을 개인 설정:
 > **v2.1.74**: `autoMemoryDirectory` 설정으로 Auto Memory 저장 디렉토리를 커스텀 경로로 지정할 수 있습니다. 기본값은 `~/.claude/projects/<project-path>/memory/`.
 
 `/memory` 명령으로 Auto Memory를 관리할 수 있습니다 (v2.1.59+).
+
+> **v2.1.205**: 메모리 파일 프론트매터에 ISO 형식 `modified` 타임스탬프가 추가되어 최종 수정 시각을 더 정교하게 기록합니다.
+> **v2.1.214 버그 수정**: 메모리 프론트매터 값이 저장 시 인라인 `#` 문자에서 침묵 절단(silent truncation)되던 버그 수정 — 이제 값이 그대로 보존됩니다.
+> **v2.1.210 버그 수정**: 메모리 저장으로 MEMORY.md 인덱스가 읽기 제한(200줄)을 초과하면 침묵 절단 대신 명시적 오류가 발생합니다.
+> **v2.1.211 개선**: MEMORY.md 과다 경고가 프론트매터·HTML 주석을 제외한 실제 로드되는 콘텐츠만 측정하도록 개선되었습니다.
 
 ### MEMORY.md 작성 원칙
 

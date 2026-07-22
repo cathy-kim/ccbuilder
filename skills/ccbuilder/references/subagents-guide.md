@@ -174,8 +174,27 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 |------|-----|
 | 최대 동시 Task | 10개 |
 | Task 컨텍스트 | 200k 토큰 |
-| 중첩 | 불가 (Subagent가 다른 Subagent 호출 불가) |
+| 중첩 | 재귀 파견 최대 5레벨 (v2.1.172); **v2.1.217부터 기본적으로 중첩 파견 비활성화** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`로 깊이 허용 |
+| **동시 실행 상한 (v2.1.217)** | 기본 20 — `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드. 한 메시지가 무제한 백그라운드 에이전트로 팬아웃하지 못하도록 제한 |
+| **세션당 파견 상한 (v2.1.212)** | 기본 200 — `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`. `/clear`로 리셋 |
+| **세션당 WebSearch 상한 (v2.1.212)** | 기본 200 — `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION` |
+| **예산 상한 (v2.1.217)** | `--max-budget-usd` 도달 시 신규 서브에이전트 파견 거부 + 실행 중인 백그라운드 에이전트 중단 |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
+
+---
+
+## `/fork` → 백그라운드 세션, `/subtask` 개편 (v2.1.212)
+
+- `/fork`는 이제 대화를 **새 백그라운드 세션**으로 복사합니다 — `claude agents`에 독립된 행으로 표시되며, 원본 세션은 계속 작업할 수 있습니다.
+- 기존에 `/fork`가 사용하던 in-session 서브에이전트 launch 방식은 **`/subtask`**로 이름이 바뀌었습니다.
+- Task tool `mode` 파라미터는 **무시됩니다** (deprecated) — 서브에이전트는 기본적으로 부모 세션의 permission mode를 상속합니다.
+
+## 보안 강화 (v2.1.210-216)
+
+- **Agent tool 간접 프롬프트 인젝션 강화 (v2.1.210)**: 서브에이전트가 읽은 콘텐츠(파일·웹 페이지 등)를 통한 인젝션 시도에 대해 방어 강화
+- **`isolation: 'worktree'` 격리 우회 수정**: 격리 worktree 대신 메인 레포 checkout에 git-mutating 명령을 실행할 수 있던 버그 수정 (v2.1.210); `git -C`, `--git-dir`, `GIT_DIR`/`GIT_WORK_TREE` 환경변수로 공유 checkout을 우회하던 버그 수정 (v2.1.216)
+- **백그라운드 서브에이전트 취소 방지 (v2.1.216)**: 시작 대기 중 우선순위 높은 메시지가 도착하면 취소되던 버그 수정
+- **결과 조작 방지 (v2.1.211)**: 백그라운드 에이전트 결과 보고 시 실행 중인 에이전트 상태를 조작(fabricate)하지 않고 실제 완료를 기다리도록 개선
 
 ---
 
@@ -282,10 +301,19 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 ---
 
-## 버그 수정 (v2.1.101)
+## 스트리밍 & 상태 표시 (v2.1.211-214)
+
+- **`--forward-subagent-text` / `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` (v2.1.211)**: 서브에이전트의 text·thinking 콘텐츠를 stream-json 출력에 포함
+- **`subagentStatusLine` reasoning effort (v2.1.214)**: 커스텀 에이전트 상태줄 페이로드에 effort 레벨 추가 — 모델·effort를 함께 표시 가능
+- **토큰 절감 (v2.1.212)**: `SendMessage` 본문이 재생 히스토리·도구 결과에 중복 저장되지 않도록 개선
+
+## 버그 수정 (v2.1.101-216)
 
 - **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속
 - **isolation: worktree 파일 접근**: 격리된 worktree에서 실행 중인 서브에이전트가 자신의 worktree 내 파일에 Read/Edit 접근이 거부되던 버그 수정 — 이제 자신의 worktree 내 파일에 정상 접근 가능
+- **작업 유실 방지 (v2.1.203)**: `claude agents` 화면 복귀 시 실행 중인 서브에이전트가 조용히 중단되고 처음부터 재실행되던 버그 수정 — 진행 중이던 작업 내용이 이제 이어서 유지됨
+- **모델 오버라이드 유지 (v2.1.211)**: 명시적 모델 오버라이드로 파견된 서브에이전트가 재개(resume)·후속 메시지 시 부모의 모델로 되돌아가던 버그 수정
+- **재개 시 에이전트 정의 복원 (v2.1.216)**: 재개된 백그라운드 에이전트 세션이 기본 에이전트로 되돌아가던 버그 수정 — 에이전트의 프롬프트·도구 제한이 이제 정상 복원됨
 
 ---
 

@@ -61,7 +61,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 
 ## 고급 기능
 
-- **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이
+- **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`로 재활성화
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Tool Search**: MCP 도구가 컨텍스트 10% 초과 시 자동 활성화
@@ -72,3 +72,20 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
+- **`/fork` → 백그라운드 세션 (v2.1.212)**: `/fork`가 대화를 새 백그라운드 세션(`claude agents`의 독립 행)으로 복사; 기존 in-session 서브에이전트 launch 방식은 **`/subtask`**로 개명
+- **`--forward-subagent-text` (v2.1.211)**: `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` env var — 서브에이전트 text·thinking을 stream-json 출력에 포함
+
+## 동시성 & 예산 제한 (v2.1.212-217)
+
+| 제한 | 기본값 | 오버라이드 |
+|------|--------|-----------|
+| 동시 실행 서브에이전트 | 20 | `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` (v2.1.217) |
+| 세션당 파견 서브에이전트 | 200 (`/clear`로 리셋) | `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` (v2.1.212) |
+| 중첩 파견 깊이 | 0 (비활성화) | `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` (v2.1.217, Breaking) |
+| 세션당 WebSearch 호출 | 200 | `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION` (v2.1.212) |
+
+`--max-budget-usd` 도달 시 신규 서브에이전트 파견이 거부되고 실행 중인 백그라운드 에이전트가 중단됩니다 (v2.1.217).
+
+## Deprecated
+
+- Task tool `mode` 파라미터 — 무시됨 (v2.1.212). 서브에이전트는 기본적으로 부모 세션의 permission mode를 상속
