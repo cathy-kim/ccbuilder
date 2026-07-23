@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-03-26 (Claude Code v2.1.84+)
+**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
 
 ---
 
@@ -26,7 +26,7 @@
 |------|--------|------|--------|
 | `Bash` | 1,067 | Shell 명령 실행 | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
-| `Task` | 1,214 | 서브에이전트 실행 | 중간 |
+| `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 
 ### Communication Tools
@@ -78,6 +78,7 @@
 | `LSP` | 255 | Language Server Protocol | 낮음 |
 | `ToolSearch` | 144+690 | MCP 도구 검색/로드 | 낮음 |
 | `Sleep` | 154 | 대기 (사용자 입력 시 깨어남) | 낮음 |
+| `EndConversation` | - | 심각한 악용·탈옥 시도 세션 자체 종료 (v2.1.214, claude.ai와 동일 정책) | 낮음 |
 
 ---
 
