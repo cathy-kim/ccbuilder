@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.11.0
-**Last Updated**: 2026-02-25
-**Claude Code Version**: v2.1.53+
+**Version**: 2.12.0
+**Last Updated**: 2026-07-23
+**Claude Code Version**: v2.1.218+
 
 ---
 
@@ -21,6 +21,8 @@
 > **v2.1.140+**: `subagent_type`은 대소문자·구분자 무관 매칭 — `"Code Reviewer"`, `"code_reviewer"`, `"code-reviewer"` 모두 동일하게 해석됨
 
 > **v2.1.172+**: 서브에이전트 재귀 파견 지원 — 서브에이전트가 자체 서브에이전트를 파견 가능, 최대 5레벨 깊이
+>
+> **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 
 ---
 
@@ -152,7 +154,18 @@ Task({
 // output_file로 결과 확인
 ```
 
-### 5. 에이전트 재개
+### 5. 백그라운드 세션 분기 (`/fork`) vs 인라인 서브에이전트 (`/subtask`)
+
+> **v2.1.212 Breaking Change**: `/fork`가 현재 대화를 **새 백그라운드 세션**(`claude agents` 자체 행)으로 복제하는 방식으로 변경되었습니다. 기존에 `/fork`가 하던 인라인 서브에이전트 launch 방식은 **`/subtask`**로 이름이 분리되었습니다.
+
+```
+/subtask   # 기존 /fork 방식 — 현재 세션 내 인라인 서브에이전트 실행
+/fork      # 신규 — 대화 전체를 백그라운드 세션으로 복제, 원 세션은 계속 작업 가능
+```
+
+또한 Task tool의 `mode` 파라미터는 제거(무시)되었습니다 — 서브에이전트는 이제 부모 세션의 permission mode를 기본 상속합니다 (v2.1.212).
+
+### 6. 에이전트 재개
 
 > ⚠️ **v2.1.77 Breaking Change**: Agent tool의 `resume` 파라미터가 제거되었습니다.
 > 이전 에이전트 재개 시 `SendMessage({to: agentId})` 를 사용하세요.
@@ -172,9 +185,11 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 | 제약 | 값 |
 |------|-----|
-| 최대 동시 Task | 10개 |
+| 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
+| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
-| 중첩 | 불가 (Subagent가 다른 Subagent 호출 불가) |
+| 중첩 | **기본 비허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 재귀 파견 허용 (v2.1.217) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
 
 ---
@@ -264,6 +279,15 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
+
+## Breaking Changes (v2.1.212-2.1.218)
+
+| 변경 | 이전 | 이후 |
+|------|------|------|
+| 서브에이전트 중첩 파견 | 기본 허용 (최대 5레벨) | **기본 비허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 필요 (v2.1.217) |
+| Task tool `mode` 파라미터 | 지정 가능 | **제거(무시)** — 부모 세션 permission mode 상속 (v2.1.212) |
+| `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
+| agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

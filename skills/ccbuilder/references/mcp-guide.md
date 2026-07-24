@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.18.0
-**Last Updated**: 2026-03-17
-**Claude Code Version**: v2.1.77+
+**Version**: 2.19.0
+**Last Updated**: 2026-07-23
+**Claude Code Version**: v2.1.218+
 
 ---
 
@@ -298,6 +298,20 @@ MCP_TOOL_TIMEOUT=120000  # 120초
 ## MCP 서버 시작 자동 재시도 (v2.1.121 신규)
 
 MCP 서버가 시작 시 일시적 오류를 만나면 연결 끊긴 채로 유지되지 않고, 최대 3회 자동 재시도합니다.
+
+---
+
+## MCP 도구 호출 자동 백그라운드 전환 (v2.1.212 신규)
+
+MCP 도구 호출이 2분 이상 실행되면 자동으로 백그라운드로 이동하여 세션이 계속 사용 가능한 상태를 유지합니다.
+
+```bash
+# 임계값 변경 또는 비활성화 (ms 단위)
+CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=300000  # 5분으로 변경
+CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=0       # 비활성화
+```
+
+> **용도**: 장시간 실행되는 MCP 도구(대용량 데이터 처리, 외부 배치 작업 등) 호출 중에도 세션이 멈추지 않고 다른 작업을 계속할 수 있습니다.
 
 ---
 

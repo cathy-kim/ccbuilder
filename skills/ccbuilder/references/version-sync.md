@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-07-08
+**최종 동기화**: 2026-07-23
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,51 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.218 (2026-07-23 동기화)
+
+**새로운 기능:**
+- (v2.1.218) `/code-review`가 백그라운드 서브에이전트로 실행 — 대화 컨텍스트 미점유, 스택된 슬래시 명령을 리뷰 대상 유지
+- (v2.1.218) `/deep-research`는 수동 호출 시에만 시작 — Claude 자율 실행 안 함
+- (v2.1.218) Skill·플러그인 frontmatter boolean에 `yes`/`no`/`on`/`off`/`1`/`0`(대소문자 무관) 허용
+- (v2.1.218) agent frontmatter 이름에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
+- (v2.1.218) auto mode 개선 — dangerous-rm·background-`&`·suspicious-Windows-path 검사가 권한 다이얼로그 대신 auto-mode 분류기가 판단
+- (v2.1.217) 동시 실행 서브에이전트 상한 (기본 20, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`)
+- (v2.1.217) **서브에이전트 기본 중첩 파견 비활성화** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`로만 허용
+- (v2.1.217) emoji shortcode 자동완성 (`:heart:` → ❤️, `emojiCompletionEnabled` 설정으로 비활성화)
+- (v2.1.217) `--max-budget-usd` 한도 도달 시 신규 백그라운드 서브에이전트 스폰 거부 + 실행 중 에이전트 중단
+- (v2.1.216) `sandbox.filesystem.disabled` 설정 — 네트워크 egress 제어 유지하며 파일시스템 격리만 스킵
+- (v2.1.215) Claude가 `/verify`·`/code-review`를 더 이상 자율적으로 실행하지 않음 — 명시적 호출 필요
+- (v2.1.214) **`EndConversation` 도구 추가** — 심각한 악용·탈옥 시도 세션 자체 종료 (claude.ai와 동일)
+- (v2.1.214) 장시간 도구 호출 진행 heartbeat, `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH`, docker 데몬 리다이렉트 플래그 권한 프롬프트, 메모리 frontmatter ISO `modified` 타임스탬프
+- (v2.1.212) **`/fork`가 백그라운드 세션 생성으로 변경** — 기존 인라인 서브에이전트 launch는 `/subtask`로 분리
+- (v2.1.212) `claude auto-mode reset`, WebSearch 세션 한도(기본 200, `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`), 서브에이전트 파견 세션 한도(기본 200, `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋)
+- (v2.1.212) MCP 도구 호출 2분 초과 시 자동 백그라운드 전환 (`CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`)
+- (v2.1.212) Task tool `mode` 파라미터 제거(deprecated) — 서브에이전트는 부모 세션 permission mode 상속
+- (v2.1.211) `--forward-subagent-text`/`CLAUDE_CODE_FORWARD_SUBAGENT_TEXT`, "always allow" 권한 규칙 레포 루트 저장(worktree 간 공유), vim `s`/`S` NORMAL mode
+- (v2.1.210) 도구 호출 실시간 경과 시간 카운터, `Write(path)`/`NotebookEdit(path)`/`Glob(path)` 권한 규칙 시작 경고
+- (v2.1.208) 스크린리더 모드(`--ax-screen-reader`, `CLAUDE_AX_SCREEN_READER=1`), `vimInsertModeRemaps` 설정, `CLAUDE_CODE_PROCESS_WRAPPER`
+- (v2.1.207) Auto mode Bedrock·Vertex·Foundry opt-in 불필요(`disableAutoMode`로 비활성화); 해당 플랫폼 기본 모델 Opus 4.8 전환
+- (v2.1.206) `/cd` 디렉토리 경로 자동완성, `/doctor` CLAUDE.md 트리밍 제안, `/commit-push-pr` push remote 자동 허용 확장, `EnterWorktree` `.claude/worktrees/` 외부 진입 확인
+
+**Breaking Changes:**
+- 서브에이전트 기본 중첩 파견 비활성화 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`로만 허용, 기존 5레벨 재귀 파견 기본 동작 대체 (v2.1.217)
+- Task tool `mode` 파라미터 제거 — 서브에이전트는 부모 세션 permission mode 상속 (v2.1.212)
+- `/fork`가 백그라운드 세션 생성으로 변경 — 기존 인라인 서브에이전트 launch는 `/subtask` (v2.1.212)
+- Claude가 `/verify`·`/code-review`를 자동 실행하지 않음 — 명시적 호출 필요 (v2.1.215)
+- `context: fork` 스킬 기본 백그라운드 실행 — opt out: `background: false` (v2.1.218)
+
+**주요 버그 수정:**
+- Windows 경로(`\u` 접두 세그먼트)가 도구 입력에서 CJK 문자로 손상되던 버그 수정 (v2.1.218)
+- `Edit(src/**)` 등 단일 세그먼트 `dir/**` allow 규칙이 트리 전체 중첩 `dir/`에 잘못 자동 승인되던 보안 버그 수정 (v2.1.214)
+- Windows PowerShell 5.1 세션 권한 검사 우회 취약점 수정 (v2.1.214)
+- 10,000자 초과 Bash 명령 검사 없이 자동 실행되던 버그 수정 — 항상 프롬프트로 변경 (v2.1.214)
+- MCP 대형 tool output 트런케이션 시 전체 결과가 세션 종료까지 메모리에 남던 누수 수정 (v2.1.217)
+- 장기 세션 메시지 정규화 비용 이차 증가로 인한 수 초 단위 지연·재개 지연 수정 (v2.1.216)
+- worktree 격리 서브에이전트가 `git -C`/`--git-dir`/`GIT_DIR`로 공유 체크아웃에 git 명령 우회하던 버그 수정 (v2.1.216)
+- `ultracode` 키워드 옵트인이 웹훅 페이로드·릴레이된 PR 코멘트 등 비사용자 입력에서 발동하던 버그 수정 (v2.1.210)
+
+---
 
 ### v2.1.181 (2026-06-18 동기화)
 
