@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-23 (v2.1.218)
+**Last Synced**: 2026-07-25 (v2.1.220)
 
 ---
 
@@ -58,6 +58,7 @@
 | **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 | **자동 백그라운드 전환** | 도구 호출 2분 초과 시 자동 백그라운드 이동 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값 조정/비활성화 (v2.1.212) |
+| **헤드리스 진단** | `mcp_server_errors` — stream-json init 이벤트에 `--mcp-config` 검증 실패 서버 나열(터미널은 시작 경고); `claude mcp list`/`/mcp` 연결 실패 시 HTTP 상태·오류 텍스트 표시, 설정값 숨은 공백 경고 (v2.1.219) |
 
 ## Managed MCP (조직 관리)
 
@@ -72,6 +73,7 @@
 ```
 - 필터: `serverName`, `serverCommand`, `serverUrl` (와일드카드 지원)
 - **차단 목록이 항상 우선**
+- `${VAR}` 항목은 시작 환경·managed-settings env에서 해석 (settings 파일 env 아님, v2.1.219)
 
 ## 출력 제한
 

@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [2.54.0] - 2026-07-25
+
+### Added
+- **Claude Code v2.1.220 sync** (v2.1.218 → v2.1.220 콘텐츠 반영)
+  - (v2.1.219) **Claude Opus 5** (`claude-opus-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, Fast Mode $10/$50 per Mtok
+  - (v2.1.219) `sandbox.network.strictAllowlist` 설정 — 샌드박스 명령이 미허용 호스트 접근 시 프롬프트 없이 거부
+  - (v2.1.219) **`DirectoryAdded` Hook 신규** — `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 발동
+  - (v2.1.219) 헤드리스 stream-json init 이벤트 `mcp_server_errors` 필드 — `--mcp-config` 검증 스킵 서버 목록(터미널은 시작 경고)
+  - (v2.1.219) `workflowSizeGuideline` 설정 — Dynamic workflow 크기 가이드라인을 모든 설정 파일에서 지정 가능; Dynamic workflow 기본 크기 가이드라인 medium(15 에이전트 미만) 전환
+  - (v2.1.219) stream-json 중첩 서브에이전트 포워딩 — `--forward-subagent-text` 설정 시 depth-2+ 서브에이전트도 파견한 Agent tool_use id로 키잉되어 표시
+  - (v2.1.219) `claude mcp list`/`/mcp` 연결 실패 시 HTTP 상태·오류 텍스트 표시, MCP 설정값 숨은 공백 경고
+  - (v2.1.219) **서브에이전트 중첩 파견 기본값 재변경** — 기본 depth 3까지 파견 가능(v2.1.217의 "기본 비허용"에서 복원), `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
+  - (v2.1.219) Fast Mode에서 Opus 4.7 제거 — Opus 5·Opus 4.8만 지원
+  - (v2.1.219) `claude-api` 스킬 Opus 5 기본 전환(Opus 4.8 마이그레이션 경로 포함)
+  - (v2.1.219) `claude --teleport` 현재 체크아웃이 세션 레포와 다를 때 가리키는 레포 표시
+  - (v2.1.219) Managed MCP allowlist/denylist `${VAR}` 항목 해석 방식 변경 — 시작 환경·managed-settings env 기준 (기존: settings 파일 env)
+  - (v2.1.220) 버그 수정·안정성 개선
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.218 → v2.1.220; MCP·Agent/CLI·Hook·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 수 26 → 27개
+- `references/version-sync.md`: v2.1.220 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `DirectoryAdded` Hook 이벤트 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 중첩 파견 기본값 depth 3 복원, stream-json 중첩 포워딩 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: 헤드리스 진단(`mcp_server_errors`, HTTP 상태 표시), managed allowlist env 해석 변경 반영
+
+### Fixed (Claude Code v2.1.219~220 주요 수정)
+- `claude -p` 텍스트 출력이 턴 중간 API 오류로 종료될 때 이미 생성된 답변을 누락하던 버그 수정 (v2.1.219)
+- Fable 모델 행이 캐시된 라벨로 인해 "Requires usage credits"를 잘못 표시하던 버그 수정 (v2.1.219)
+- GNU screen 내 copy-on-select가 base64를 터미널에 출력하던 버그 수정 (v2.1.219)
+- Remote Control 클라이언트가 모델 전환·재연결·조직 확인 실패 후 오래된 fast-mode 상태를 유지하던 버그 수정 (v2.1.219)
+- Windows `CLAUDE_CODE_GIT_BASH_PATH`가 bash/sh 바이너리가 아닌 경로일 때 종료되거나 bash로 오용되던 버그 수정 — 경고와 함께 무시 (v2.1.219)
+- Vim 모드에서 빈 프롬프트에 ← 입력 시 NORMAL 모드에서 에이전트 뷰로 복귀하지 않던 버그 수정 (v2.1.219)
+- 스크린리더 모드가 매 키 입력마다 전체 입력 줄을 다시 쓰던 버그 수정 — 입력한 문자만 에코 (v2.1.219)
 
 
 

@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-03-26
+**Last Synced**: 2026-07-25 (v2.1.220)
 
 ---
 
@@ -36,6 +36,7 @@
 | 24 | `TaskCreated` | `TaskCreate` 호출로 태스크 생성 시 (v2.1.84) | - |
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 | 26 | `MessageDisplay` | 어시스턴트 메시지 텍스트 변환·숨김 — 출력 transform 또는 hide 가능 (v2.1.152) | transform/hide |
+| 27 | `DirectoryAdded` | `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | - |
 
 ## Handler 타입
 

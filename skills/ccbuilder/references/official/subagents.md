@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-23 (v2.1.218)
+**Last Synced**: 2026-07-25 (v2.1.220)
 
 ---
 
@@ -61,7 +61,8 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 
 ## 고급 기능
 
-- **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용
+- **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 기본 depth 3으로 복원** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 가능
+- **서브에이전트 텍스트 포워딩 (v2.1.211+)**: `--forward-subagent-text`/`CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` 설정 시 서브에이전트 텍스트·thinking이 stream-json 출력에 포함; **v2.1.219부터 depth-2+ 중첩 서브에이전트도 포함** — 파견한 Agent `tool_use` id로 키잉되어 표시
 - **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한

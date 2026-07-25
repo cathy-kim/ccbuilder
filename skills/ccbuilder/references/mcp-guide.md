@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.19.0
-**Last Updated**: 2026-07-23
-**Claude Code Version**: v2.1.218+
+**Version**: 2.20.0
+**Last Updated**: 2026-07-25
+**Claude Code Version**: v2.1.220+
 
 ---
 
@@ -315,6 +315,14 @@ CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=0       # 비활성화
 
 ---
 
+## 헤드리스 진단 강화 (v2.1.219 신규)
+
+`--mcp-config`로 지정한 서버 중 설정 검증에서 스킵된 항목은 헤드리스 stream-json init 이벤트의 `mcp_server_errors` 필드에 나열됩니다. 터미널에서 직접 실행 시에는 시작 시 경고가 출력됩니다.
+
+`claude mcp list`와 `/mcp`는 서버 연결 실패 시 HTTP 상태 코드와 오류 텍스트를 함께 표시합니다. 설정 값에 숨겨진 선행·후행 공백이 있으면 경고가 표시됩니다.
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.
@@ -403,6 +411,8 @@ MAX_MCP_OUTPUT_TOKENS=50000
   "deniedMcpServers": ["*"]
 }
 ```
+
+> **v2.1.219 변경**: `allowedMcpServers`/`deniedMcpServers` 항목의 `${VAR}` 참조가 이제 시작 환경(startup environment)과 managed-settings env에서 해석됩니다 (이전: settings 파일 자체의 env).
 
 제한 방식:
 - **Command-based**: 실행 명령어 기반

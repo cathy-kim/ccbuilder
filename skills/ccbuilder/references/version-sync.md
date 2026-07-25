@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.220 (2026-07-25 동기화)
+
+**새로운 기능:**
+- (v2.1.219) **Claude Opus 5** (`claude-opus-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, Fast Mode $10/$50 per Mtok
+- (v2.1.219) `sandbox.network.strictAllowlist` 설정 — 샌드박스 명령이 미허용 호스트 접근 시 프롬프트 없이 거부
+- (v2.1.219) **`DirectoryAdded` Hook 추가** — `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 발동
+- (v2.1.219) 헤드리스 stream-json init 이벤트 `mcp_server_errors` 필드 — `--mcp-config` 검증 스킵 서버 목록 나열; 터미널 실행 시 시작 경고
+- (v2.1.219) `workflowSizeGuideline` 설정 키 — Dynamic workflow 크기 가이드라인을 모든 설정 파일에서 지정 가능 (다른 설정에서 지정 시 `/config` 행 숨김)
+- (v2.1.219) stream-json 중첩 서브에이전트 포워딩 — `--forward-subagent-text` 설정 시 depth-2+에서 파견된 서브에이전트도 표시, 파견한 Agent `tool_use` id로 키잉
+- (v2.1.219) `claude mcp list`/`/mcp` 서버 연결 실패 시 HTTP 상태·오류 텍스트 표시; MCP 설정 값 숨은 선행/후행 공백 경고
+- (v2.1.219) 실행 중 워크플로우 상태줄에 현재 기본 workflow 크기 가이드라인 표시, `/config`로 변경 안내
+- (v2.1.219) `claude --teleport` 개선 — 현재 체크아웃이 세션 레포와 다를 때 가리키는 레포 표시
+- (v2.1.219) `claude-api` 스킬 Opus 5 기본 전환 — Opus 4.8 마이그레이션 경로 포함
+- (v2.1.220) 버그 수정·안정성 개선 (세부 변경 사항 비공개)
+
+**Breaking Changes:**
+- **서브에이전트 중첩 파견 기본값 재변경** — v2.1.217의 "기본 비허용"에서 **기본 depth 3 허용**으로 복원, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 가능 (v2.1.219)
+- **Fast Mode에서 Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219)
+- Managed MCP `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목 해석 기준 변경 — 시작 환경·managed-settings env (기존: settings 파일 자체의 env) (v2.1.219)
+
+**주요 버그 수정:**
+- `claude -p` 텍스트 출력이 턴 중간 API 오류로 종료될 때 이미 생성된 답변을 누락하던 버그 수정 (v2.1.219)
+- Fable 모델 행이 캐시된 라벨로 인해 "Requires usage credits"를 잘못 표시하던 버그 수정 (v2.1.219)
+- `/model` 피커가 병합된 Opus 행을 "Opus"로만 표시하고 "Opus (1M context)"로 표시하지 않던 버그 수정 (v2.1.219)
+- GNU screen 내 copy-on-select가 선택 영역 대신 base64를 터미널에 출력하던 버그 수정 (v2.1.219)
+- Remote Control 클라이언트가 모델 전환·재연결·조직 확인 실패 후 오래된 fast-mode 상태를 유지하던 버그 수정 (v2.1.219)
+- Windows `CLAUDE_CODE_GIT_BASH_PATH`가 bash/sh 바이너리가 아닌 경로를 가리킬 때 종료되거나 bash로 오용되던 버그 수정 — 경고와 함께 무시 (v2.1.219)
+- Vim 모드에서 빈 프롬프트에 ← 입력 시 NORMAL 모드에서 에이전트 뷰로 복귀하지 않던 버그 수정 (v2.1.219)
+- 스크린리더 모드가 매 키 입력마다 전체 입력 줄을 다시 쓰던 버그 수정 — 입력한 문자만 에코 (v2.1.219)
+
+---
+
 ### v2.1.218 (2026-07-23 동기화)
 
 **새로운 기능:**
