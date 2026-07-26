@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.12.0
-**Last Updated**: 2026-07-23
-**Claude Code Version**: v2.1.218+
+**Version**: 2.13.0
+**Last Updated**: 2026-07-26
+**Claude Code Version**: v2.1.220+
 
 ---
 
@@ -23,6 +23,8 @@
 > **v2.1.172+**: 서브에이전트 재귀 파견 지원 — 서브에이전트가 자체 서브에이전트를 파견 가능, 최대 5레벨 깊이
 >
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
+>
+> **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
 
 ---
 
@@ -189,7 +191,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
-| 중첩 | **기본 비허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 재귀 파견 허용 (v2.1.217) |
+| 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
 
 ---
@@ -280,14 +282,15 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
-## Breaking Changes (v2.1.212-2.1.218)
+## Breaking Changes (v2.1.212-2.1.219)
 
 | 변경 | 이전 | 이후 |
 |------|------|------|
-| 서브에이전트 중첩 파견 | 기본 허용 (최대 5레벨) | **기본 비허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 필요 (v2.1.217) |
+| 서브에이전트 중첩 파견 | 기본 허용 (최대 5레벨) | **기본 비허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 필요 (v2.1.217) → **다시 기본 depth 3 허용** (v2.1.219) |
 | Task tool `mode` 파라미터 | 지정 가능 | **제거(무시)** — 부모 세션 permission mode 상속 (v2.1.212) |
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
+| Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

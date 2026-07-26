@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-23 (v2.1.218)
+**Last Synced**: 2026-07-26 (v2.1.220)
 
 ---
 
@@ -72,6 +72,12 @@
 ```
 - 필터: `serverName`, `serverCommand`, `serverUrl` (와일드카드 지원)
 - **차단 목록이 항상 우선**
+- **v2.1.219**: `${VAR}` 항목은 settings 파일 자체의 `env` 대신 시작 시 환경변수·managed-settings env에서 해석
+
+## Headless 진단 (v2.1.219)
+
+- stream-json init 이벤트 `mcp_server_errors` — `--mcp-config` 검증 실패로 스킵된 서버 목록 (터미널 실행 시 시작 경고로도 표시)
+- `claude mcp list`/`/mcp` — 연결 실패 시 HTTP 상태·오류 텍스트 표시; 값에 숨은 공백 경고
 
 ## 출력 제한
 

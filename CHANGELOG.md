@@ -8,6 +8,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.54.0] - 2026-07-26
+
+### Added
+- **Claude Code v2.1.220 sync** (v2.1.218 → v2.1.220 콘텐츠 반영)
+  - (v2.1.219) **Claude Opus 5** (`claude-opus-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, Fast Mode $10/$50 per Mtok
+  - (v2.1.219) **서브에이전트 중첩 파견 기본값 재변경** — depth 3까지 기본 허용 (v2.1.217 "기본 비허용" 대체), `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 가능
+  - (v2.1.219) `sandbox.network.strictAllowlist` 설정 — 샌드박스 명령 미허용 호스트를 프롬프트 없이 거부
+  - (v2.1.219) **`DirectoryAdded` Hook 신규** — `/add-dir` 또는 SDK `register_repo_root`로 세션 중 새 작업 디렉토리 등록 시 발동
+  - (v2.1.219) 헤드리스 stream-json init 이벤트 `mcp_server_errors` — `--mcp-config` 검증 실패 스킵 서버 목록, 터미널 시작 경고
+  - (v2.1.219) `workflowSizeGuideline` 설정 키 — Dynamic workflow 권장 크기 지정; 기본값 medium(15개 미만 에이전트)으로 변경, 상태줄에 현재 크기 표시
+  - (v2.1.219) stream-json depth-2+ 중첩 서브에이전트 전달 — `--forward-subagent-text` 설정 시 파견 Agent `tool_use` id로 키 지정
+  - (v2.1.219) `claude mcp list`/`/mcp` HTTP 상태·오류 텍스트 표시, MCP 설정 값 숨은 공백 경고
+  - (v2.1.219) managed MCP allowlist/denylist `${VAR}` — 시작 환경변수·managed-settings env에서 해석 (설정 파일 env 대신)
+  - (v2.1.219) `/model` 피커 신규 모델명만 하이라이트, `claude --teleport` 레포 불일치 표시, Remote Control 오류 메시지에 원인 설정명 명시
+  - (v2.1.219) claude-api 스킬 기본 모델 Opus 5 전환 (Opus 4.8 마이그레이션 경로 포함)
+  - (v2.1.220) 버그 수정 및 안정성 개선
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.218 → v2.1.220; MCP·Hook·Agent/CLI·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `DirectoryAdded` 추가(27개)
+- `references/version-sync.md`: v2.1.220 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 중첩 파견 기본값 재변경(depth 3 복원), Fast Mode 대상 모델 변경 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: managed MCP `${VAR}` 해석 변경, headless `mcp_server_errors` 진단 필드 반영
+- `references/hooks-guide.md`, `references/official/hooks.md`: `DirectoryAdded` Hook 이벤트 추가
+
+### Breaking Changes (Claude Code v2.1.219)
+- 서브에이전트 중첩 파견 기본값이 depth 3 허용으로 복원 — v2.1.217의 "기본 비허용"을 대체
+- Fast Mode에서 Opus 4.7 제거 — Opus 5·Opus 4.8에만 적용
+
+### Fixed (Claude Code v2.1.219 주요 수정)
+- `claude -p` 중간 스트림 API 오류 시 이미 생성된 텍스트 응답 유실 수정
+- Fable 모델 행 stale 캐시로 인한 "Requires usage credits" 오표시 수정
+- `/model` 피커 병합 Opus 행 "Opus (1M context)" 표시 복원
+- GNU screen copy-on-select가 base64를 터미널에 출력하던 버그 수정
+- Remote Control 클라이언트 stale fast-mode 상태 표시 수정
+- Windows `CLAUDE_CODE_GIT_BASH_PATH` 비-bash 바이너리 지정 시 경고 후 무시로 변경
+- vim NORMAL 모드 빈 프롬프트 ← 키 에이전트 뷰 복귀 버그 수정
+- 화면낭독기 모드 매 키 입력마다 전체 줄 재작성하던 버그 수정
+
 
 
 
