@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.19.0
-**Last Updated**: 2026-03-19
-**Claude Code Version**: v2.1.79+
+**Version**: 2.20.0
+**Last Updated**: 2026-07-26
+**Claude Code Version**: v2.1.220+
 
 ---
 
@@ -35,6 +35,7 @@
 | **StopFailure** | API 오류(rate limit·인증 실패)로 턴 종료 시 (v2.1.78) | No | `stop_reason`, `error` |
 | **PermissionDenied** | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 가능 (v2.1.88) | Yes (retry) | `tool_name`, `denial_reason` |
 | **MessageDisplay** | 어시스턴트 메시지 텍스트 변환·숨김 — `hookSpecificOutput.displayText` 또는 `{"decision":"hide"}` 반환 (v2.1.152) | Yes (transform/hide) | `message`, `role` |
+| **DirectoryAdded** | `/add-dir` 실행 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | No | `directory` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
