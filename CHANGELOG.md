@@ -8,6 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-04
+
+### Added
+- **Claude Code v2.1.221 sync**
+  - VSCode **Focus view** — 채팅 메뉴 토글로 도구 활동을 턴별 요약 뒤로 숨기고 실행 중인 도구를 실시간 표시(`Ctrl+Alt+F` 또는 "Claude Code: Toggle Focus view" 커맨드)
+  - **Sandbox credential file `mode: "mask"`** (Linux/WSL) — 샌드박스 명령이 센티널 사본(전체 파일 또는 `extract` 정규식으로 캡처한 구간만)을 읽고, 샌드박스 프록시가 egress 시 실제 값으로 치환; macOS는 `deny`로 폴백
+  - `claude plugin validate` — 마켓플레이스·플러그인 이름이 Claude Desktop managed marketplace sync에서 거부될 패턴일 때 경고 추가
+  - `claude-api` 스킬에 `prompt-audit` 서브커맨드 추가 — 구형 모델용으로 작성된 프롬프트·도구 설명 패턴 감사
+  - 배경 세션(background sessions) 동작 변경 — 완료 시 커밋+푸시로 작업 보존, 작업 성격에 맞을 때만 draft PR 생성, CLAUDE.md git 지침 준수, 작업 위치를 항상 보고
+  - `/plugin install` — 오래된 마켓플레이스 카탈로그를 새로고침 후 재시도 (플러그인 찾을 수 없음 보고 전)
+  - `/plugin`으로 설치한 플러그인이 안전할 때 즉시 활성화 (`/reload-plugins` 불필요)
+  - 플러그인 `skills` 경로에 `"."` 허용, 루트 레벨 `SKILL.md` 검증 오류가 플러그인 루트 사용을 안내
+  - `/status` — 세션 종류 표시(`interactive`, 또는 백그라운드 작업의 `attached`/`unattended`)
+  - emoji 자동완성이 `:thumbsup:`, `:thumbsdown:`, `:love:` 등 대체 shortcode 허용
+  - `/fork`로 포크된 세션이 원본 세션의 체크아웃 대신 자체 worktree 생성
+  - Claude in Chrome이 더 이상 필요 없는 브라우저 탭 자동 종료
+  - fast mode가 세션 중 사용량 크레딧 소진 시 조용히 실패하지 않고 스트림에 보고
+  - Monitor 도구 — 출력 없이 종료된 watch가 "stream ended" 대신 명시적으로 보고
+  - Gateway `model` 필드 검증 강화 — 비문자열 값을 전달 대신 400으로 거부
+  - Stats 패널 — 캐시 토큰을 총계에 포함하고 입력/출력/캐시읽기/캐시쓰기로 분해 표시
+  - `/ultrareview` — 베이스와 히스토리 공유 없는 레포를 사전 거부(브랜치 생성 안내), 이미 완전한 클론에는 `git fetch --unshallow` 제안하지 않음
+  - Windows 시작 시 프로세스 생성 시각을 kernel32 네이티브 호출로 조회 — PowerShell 스폰 제거로 엔드포인트 보안 도구의 오탐 프롬프트 방지
+  - Vertex AI tool search를 Claude 4.5+ 세대 모델에 재활성화
+  - auto mode 병렬 도구 호출 권한 검사 캐시 효율화, 모드 전환 중 검사 대기 시 stale 결과 미적용; 권한 검사 프롬프트 캐시 재사용으로 auto-mode 비용 절감
+  - **보안 수정**: zsh `[[ ]]` 정규식 조건문 내 숨은 명령 실행으로 Bash 도구 권한 검사가 우회되던 취약점 수정 — 이제 권한 프롬프트 발생
+  - **보안 수정**: Windows PowerShell 권한 검사가 따옴표 포함 경로를 잘못 처리하던 버그 수정 — 이제 승인 프롬프트 발생
+
+### Changed
+- `skills/ccbuilder/SKILL.md`: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.221; MCP·Agent/CLI/Plugin·Plugin·env 섹션에 위 항목 반영 (라인 수 증가 없이 기존 항목에 병합)
+- `skills/ccbuilder/references/version-sync.md`: v2.1.221 변경사항 추적 엔트리 추가
+
+### Fixed (Claude Code v2.1.221 주요 수정)
+- MCP 서버로부터 `--mcp-config` 서버가 print 모드(`-p`) 첫 턴 전 연결되지 않아 모델이 도구 호출을 리터럴 텍스트로 출력하던 버그 수정
+- 세션 시작 시 thinking이 꺼져 있으면 세션 내내 thinking 토글이 무효였던 버그 수정; MCP 서버 연결 중 비활성화가 조용히 되돌아가던 버그 수정
+- @-멘션 파일이 Esc로 프롬프트를 되돌린 후 재제출 시 유실되던 버그 수정
+- `constructor` 등 내장 객체 속성 이름을 가진 SDK MCP 도구의 API 요청 준비 중 크래시 수정
+- thinking 비활성화 상태에서 effort `xhigh`/`max`일 때 WebSearch가 400 오류로 실패하던 버그 수정
+- 샌드박스 프록시를 통한 대용량 업로드가 TLS 오류로 실패하던 버그 수정
+- Team·Enterprise 지출 한도 메시지가 개인 지출 한도 대신 조직 월간 한도를 잘못 지목하던 버그 수정
+- Windows에서 떠도는 `HOME` 환경변수를 설정한 머신의 데스크탑 관리 세션에서 AWS SSO named profile Bedrock 인증이 실패하던 버그 수정
+- `CLAUDE_CODE_RESUME_INTERRUPTED_TURN=0`이 중단된 턴 자동 재개를 비활성화하지 못하던 버그 수정 — falsy 값 정상 처리
+- 잠에서 깨어날 때(wake-from-sleep) 두 Claude Code 프로세스가 동일 MCP 커넥터·WIF OAuth 토큰을 동시에 갱신해 재인증을 강제하던 희귀 레이스 컨디션 수정
+- Claude Code Desktop·claude.ai에서 세션 이름 변경이 CLI 세션 이름에 반영되지 않던 버그 수정 — 모든 리네임 경로의 세션 이름 새니타이즈
+- `/help`, `/feedback` 등 터미널 전용 내장 명령과 이름이 같은 플러그인·조직 배포 스킬이 비대화형 세션에서 호출 불가였던 버그 수정
+- "Plugins changed" 알림이 플러그인 재로드 후에도 남아있던 버그 수정
+- Vim 모드 — yank 레지스터가 다이얼로그·히스토리 검색·트랜스크립트 뷰에서 조용히 비워지던 버그 수정
+- Vim 모드 — 빈 프롬프트로 undo 시 에이전트 뷰 복귀 전 "press ← again" 확인이 이제 정상 작동
+- 반복되던 "Permission mode changed while the auto-mode classifier call was queued" 승인 프롬프트 안내 제거
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
