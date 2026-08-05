@@ -77,6 +77,76 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.222 (2026-08-05 동기화)
+
+**새로운 기능:**
+- (v2.1.221) [VSCode] Focus view — 챗 메뉴 토글로 도구 활동을 턴별 접힌 요약 뒤로 숨기고 실행 중 도구 실시간 표시; `Ctrl+Alt+F` 또는 "Claude Code: Toggle Focus view" 커맨드
+- (v2.1.221) `mode: "mask"` sandbox 자격증명 파일 설정(Linux/WSL) — 샌드박스 명령이 sentinel 사본(전체 또는 `extract` 정규식으로 캡처한 구간만) 읽고, 샌드박스 프록시가 egress 시 실값 치환; macOS는 파일 마스킹 불가 시 `deny` 폴백
+- (v2.1.221) `claude plugin validate` — 마켓플레이스·플러그인 이름이 Claude Desktop 관리형 마켓플레이스 동기화에서 거부될 경우 경고 추가
+- (v2.1.221) claude-api 스킬 `prompt-audit` 서브커맨드 — 구형 모델向으로 작성된 프롬프트·도구 설명 감사
+- (v2.1.221) 백그라운드 세션 동작 변경 — 커밋·푸시로 작업 보존, 태스크 성격에 따라 필요할 때만 draft PR 생성, CLAUDE.md git 지침 준수, 종료 시 항상 작업 위치 보고
+- (v2.1.221) `/plugin install` — stale 마켓플레이스 카탈로그 새로고침 후 재시도(플러그인 not found 보고 전)
+- (v2.1.221) `/plugin`에서 설치한 플러그인이 안전할 때 즉시 활성화 — 항상 `/reload-plugins` 필요하던 것에서 변경
+- (v2.1.221) `/status` 세션 종류 표시 — `interactive`, 또는 백그라운드 작업 `attached`/`unattended`
+- (v2.1.221) 이모지 자동완성이 `:thumbsup:`, `:thumbsdown:`, `:love:` 등 대체 shortcode 허용
+- (v2.1.221) `/fork`로 포크된 세션이 원본 세션 체크아웃 대신 고유한 새 worktree 생성
+- (v2.1.221) Claude in Chrome이 더 이상 필요 없는 브라우저 탭을 스스로 닫음
+- (v2.1.221) fast mode가 세션 중 usage credit 소진 시 스트림에서 보고(조용히 실패하지 않음)
+- (v2.1.221) Monitor — 출력 없이 종료된 watch가 "stream ended" 대신 그 사실을 보고
+- (v2.1.221) Gateway `model` 필드 검증 — non-string 값을 400으로 거부(포워딩 대신)
+- (v2.1.221) Vertex AI tool search — Claude 4.5세대 이상 모델에서 재활성화
+- (v2.1.221) auto mode 병렬 도구 호출 권한 확인 캐시 효율화; 확인 대기 중 모드 전환 시 stale 결과 적용 대신 항상 프롬프트
+- (v2.1.221) auto-mode 권한 확인 프롬프트 캐시 재사용으로 캐시 비용 절감
+- (v2.1.221) Stats 패널 — 캐시 토큰 합산 + input/output/cache read/write 세분화 표시
+- (v2.1.221) `/ultrareview` — base와 공유 히스토리 없는 레포 오류 메시지 개선(브랜치 없는 체크아웃 사전 거부 + 안내; 이미 완전한 클론에는 `git fetch --unshallow` 제안 안 함)
+- (v2.1.221) Windows 시작 — 프로세스 생성 시각을 PowerShell 스폰 대신 네이티브 kernel32 호출로 읽음(엔드포인트 보안 툴의 `powershell.exe` 게이팅 회피)
+- (v2.1.222) **worktree 격리 보안 수정** — 격리 세션·서브에이전트가 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 취약점 수정; 파일 편집·Bash 격리가 모든 세션 유형에 적용
+- (v2.1.222) PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크(요약·압축·리네임)에서 도구 제한을 우회하던 버그 수정
+- (v2.1.222) org 제한 `model: opus` 등 서브에이전트·팀메이트 패밀리 별칭이 부모 모델로 폴백하는 대신 패밀리 내 org 허용 최신 모델로 단계적 하향
+- (v2.1.222) auto mode 안전성 강화 — `SendMessage`로 다른 에이전트 세션에 전송되는 메시지도 발송 전 권한 분류기 평가
+- (v2.1.222) `disable-model-invocation` 스킬 호출 거부 개선 — Claude가 워크플로우를 복제하는 대신 사용자에게 직접 스킬 실행을 요청하도록 안내
+- (v2.1.222) `/diff` 뷰·Remote Control workspace diff·웹 세션 파일 편집 diff — 워크스페이스 설정 diff driver/textconv 무시, raw git blob 콘텐츠 사용
+- (v2.1.222) **Remote Control 자동시작 변경** — 레포-로컬 설정(`.claude/settings.json`/`.claude/settings.local.json`)으로는 활성화 불가(비활성화는 계속 가능); 사용자 스코프 `/config`에서 활성화
+- (v2.1.222) **ultraplan 기능 제거**
+
+**Breaking Changes:**
+- **ultraplan 기능 제거** (v2.1.222)
+- **Remote Control 자동시작** — 레포-로컬 설정으로 활성화 불가, 사용자 스코프 `/config`에서만 활성화 가능 (v2.1.222)
+
+**주요 버그 수정:**
+- Bash 도구 권한 검사 우회 — zsh가 `[[ ]]` 정규식 조건 내 숨은 명령을 실행 가능하던 버그 수정, 이제 권한 프롬프트 발생 (v2.1.221)
+- PowerShell 권한 검사가 따옴표 문자 포함 Windows 경로를 잘못 처리하던 버그 수정 — 이제 승인 프롬프트 (v2.1.221)
+- thinking 토글이 thinking 꺼진 채 시작한 세션 나머지 동안 효과 없던 버그 수정; MCP 서버 연결 중 비활성화 시 조용히 되돌아가던 문제 수정 (v2.1.221)
+- `--mcp-config`의 MCP 서버가 print 모드(`-p`) 첫 턴 전에 연결되지 않아 모델이 도구 호출을 리터럴 텍스트로 출력하던 버그 수정 (v2.1.221)
+- Esc로 프롬프트 철회 후 재제출 시 @-멘션 파일이 조용히 누락되던 버그 수정 (v2.1.221)
+- `constructor` 등 내장 객체 프로퍼티와 동명인 SDK MCP 도구의 API 요청 준비 중 크래시 수정 (v2.1.221)
+- effort `xhigh`/`max`에서 thinking 비활성화 시 WebSearch가 400 오류로 실패하던 버그 수정 (v2.1.221)
+- 샌드박스 프록시 경유 대용량 업로드가 TLS 오류로 실패하던 버그 수정 (v2.1.221)
+- Team/Enterprise spend-limit 메시지가 개인 지출 한도 대신 조직 월간 한도를 잘못 지목하던 버그 수정 (v2.1.221)
+- Windows 데스크탑 관리 세션에서 stray `HOME` 환경변수 설정 시 AWS SSO named profile Bedrock 인증 실패 수정 (v2.1.221)
+- `CLAUDE_CODE_RESUME_INTERRUPTED_TURN=0`이 중단된 턴 자동 재개를 비활성화하지 못하던 버그 수정 — falsy 값 인식 (v2.1.221)
+- wake-from-sleep 시 두 Claude Code 프로세스가 동시에 같은 MCP 커넥터·WIF OAuth 토큰을 갱신해 재인증을 강제하던 드문 레이스 수정 (v2.1.221)
+- Desktop/claude.ai에서 세션 리네임이 CLI 세션 이름에 반영되지 않던 버그 수정 (v2.1.221)
+- 터미널 전용 내장 명령(`/help`, `/feedback`)과 동명인 플러그인·조직 배포 스킬이 비대화형 세션에서 호출 불가하던 버그 수정 (v2.1.221)
+- "Plugins changed" 알림이 플러그인 재로드 후에도 남아있던 버그 수정 (v2.1.221)
+- vim yank register가 다이얼로그·히스토리 검색·트랜스크립트 뷰에서 조용히 비워지던 버그 수정 (v2.1.221)
+- vim 빈 프롬프트로 undo 시 "press ← again" 확인이 무장되지 않던 버그 수정 (v2.1.221)
+- `/usage-credits`에서 이전 요청이 dismiss된 Team/Enterprise 멤버가 신규 요청을 보내지 못하던 버그 수정 (v2.1.222)
+- HTTPS 프록시 뒤에서 시작 연결성 검사가 hang 후 실패하던 버그 수정 — API 요청과 동일 프록시 인지 transport 사용 (v2.1.222)
+- 정상 완료된 응답에 "Connection closed mid-response" 오류가 잘못 표시되던 버그 수정 (v2.1.222)
+- `/usage`가 MCP 서버 사용량을 과다 귀속하던 버그 수정 — 실제 도구 결과를 소비한 요청만 반영 (v2.1.222)
+- 브랜치 푸시 후 생성된 PR이 세션에 연결되지 않던 버그 수정, GitHub REST API 경유 포함 (v2.1.222)
+- 커스텀 `ANTHROPIC_BASE_URL` 게이트웨이에서 서버 keep-alive ping 수신 중에도 stream idle timeout이 발동하던 버그 수정 (v2.1.222)
+- claude.ai 커넥터가 세션 토큰 무효 시 "authorization 필요"로 잘못 표시되던 버그 → `/login` 힌트로 변경 (v2.1.222)
+- MCP 서버 제거 등으로 로컬에서 더 이상 사용 불가한 도구의 오류가 표시되지 않던 버그 수정 (v2.1.222)
+- `SendMessage`가 긴 요약을 문자수 제한으로 거부하던 버그 수정 — 이제 자동 truncate (v2.1.222)
+- 서브에이전트 트랜스크립트 스피너 effort 라벨이 세션 effort 대신 서브에이전트 자체 `effort:` 설정을 표시하도록 수정 (v2.1.222)
+- 파일 watcher 오류·해체 중 발생하던 드문 크래시 수정 (v2.1.222)
+- `--ax-screen-reader` 모드 백스페이스마다 전체 입력 줄이 재낭독되던 버그 수정 — 삭제된 문자만 에코 (v2.1.222)
+- `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 설정 시 host 모델 선택 키가 stale on-disk `managed-settings.json`보다 우선하지 않던 버그 수정 (v2.1.222)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

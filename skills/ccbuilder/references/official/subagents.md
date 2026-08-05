@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-05 (v2.1.222)
 
 ---
 
@@ -77,3 +77,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **모델 패밀리 별칭 폴백 수정 (v2.1.222)**: org 제한 환경에서 `model: opus` 등 패밀리 별칭이 부모 모델로 폴백하는 대신, 패밀리 내 org가 허용하는 최신 모델로 단계적 하향
+- **worktree 격리 보안 수정 (v2.1.222)**: 격리 세션·서브에이전트가 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 취약점 수정 — 파일 편집·Bash 모두에 격리 적용

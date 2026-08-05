@@ -8,6 +8,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-05
+
+### Added
+- **Claude Code v2.1.222 sync** (v2.1.220 → v2.1.222 콘텐츠 반영)
+  - (v2.1.222) **worktree 격리 보안 수정** — 격리 세션·서브에이전트가 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 취약점 수정; 모든 세션 유형에서 파일 편집·Bash에 격리 적용
+  - (v2.1.222) **PreToolUse auto-allow 훅 우회 버그 수정** — 백그라운드 에이전트 태스크(요약·압축·리네임)에서 도구 제한을 우회하던 문제 수정
+  - (v2.1.222) org 제한 `model: opus` 서브에이전트·팀메이트 패밀리 별칭이 부모 모델로 폴백 대신 패밀리 내 최신 허용 모델로 단계적 하향
+  - (v2.1.222) `/usage-credits` Team/Enterprise 이전 요청 dismiss 후에도 신규 요청 차단되던 버그 수정
+  - (v2.1.222) HTTPS 프록시 환경 시작 연결성 검사 hang 수정 — API 요청과 동일한 프록시 인지 transport 사용, 명확한 타임아웃 메시지
+  - (v2.1.222) 정상 완료된 응답에 "Connection closed mid-response" 오류 잘못 표시되던 버그 수정
+  - (v2.1.222) `/usage` MCP 서버 사용량 과다 귀속 수정 — 실제 도구 결과를 소비한 요청만 반영
+  - (v2.1.222) 브랜치 푸시 후 생성된 PR이 세션에 연결되지 않던 버그 수정 (GitHub REST API 경유 포함)
+  - (v2.1.222) 커스텀 `ANTHROPIC_BASE_URL` 게이트웨이에서 서버 keep-alive에도 stream idle timeout 발동하던 버그 수정
+  - (v2.1.222) claude.ai 커넥터 세션 토큰 무효 시 "authorization 필요"로 오표시되던 버그 → `/login` 힌트로 변경
+  - (v2.1.222) MCP 서버 제거 등으로 로컬에서 사용 불가해진 도구의 오류 미표시 버그 수정
+  - (v2.1.222) `SendMessage` 긴 요약 거부 대신 자동 truncate
+  - (v2.1.222) 서브에이전트 트랜스크립트 스피너 effort 라벨이 세션 effort 대신 서브에이전트 자체 `effort:` 표시하도록 수정
+  - (v2.1.222) `/diff`·Remote Control workspace diff·웹 세션 파일 편집 diff — 워크스페이스 diff driver/textconv 무시, raw git blob 사용
+  - (v2.1.222) **Remote Control 자동시작 변경** — 레포-로컬 설정으로는 활성화 불가(비활성화는 계속 가능), 사용자 스코프 `/config`에서 활성화
+  - (v2.1.222) **ultraplan 기능 제거**
+  - (v2.1.221) [VSCode] Focus view — `Ctrl+Alt+F` 토글, 도구 활동을 턴별 접힌 요약 뒤로 숨김
+  - (v2.1.221) `mode: "mask"` sandbox 자격증명 파일 설정(Linux/WSL) — sentinel 사본 노출, 프록시가 egress 시 실값 치환
+  - (v2.1.221) `claude plugin validate` Claude Desktop 관리형 마켓플레이스 동기화 거부 이름 경고
+  - (v2.1.221) claude-api 스킬 `prompt-audit` 서브커맨드 추가
+  - (v2.1.221) 백그라운드 세션이 커밋·푸시로 작업 보존, 필요 시에만 draft PR 생성, CLAUDE.md git 지침 준수, 작업 위치 보고
+  - (v2.1.221) `/fork`로 포크된 세션이 원본 대신 고유 새 worktree 생성
+  - (v2.1.221) `/plugin install` stale 마켓플레이스 카탈로그 새로고침 후 재시도; `/plugin` 설치 즉시 활성화(안전할 때)
+  - (v2.1.221) `/status` 세션 종류 표시(`interactive`/백그라운드 `attached`·`unattended`)
+  - (v2.1.221) Stats 패널 캐시 토큰 합산 + input/output/cache read/write 세분화
+  - (v2.1.221) 다수 보안·안정성 버그 수정 — zsh `[[ ]]` 정규식 Bash 권한 우회, Windows PowerShell 경로 따옴표 처리, vim yank register 유실 등
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.222; Agent/CLI·Agent·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.222 변경사항 추적 엔트리 추가
+
+### Breaking Changes (Claude Code v2.1.222)
+- **ultraplan 기능 제거**
+- **Remote Control 자동시작** — 레포-로컬 설정(`.claude/settings.json`)으로 활성화 불가, 사용자 스코프 `/config`에서 활성화 (비활성화는 계속 레포-로컬 설정으로 가능)
+
+### Fixed (Claude Code v2.1.221-222 주요 수정)
+- worktree 격리 세션·서브에이전트의 메인 체크아웃 대상 파괴적 git 명령 실행 취약점 수정
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크에서 도구 제한 우회하던 버그 수정
+- MCP 서버 사용량 귀속 오류, PR-세션 연결 누락, stream idle timeout 오탐 등 다수 수정
+- zsh `[[ ]]` 정규식 조건에서 Bash 권한 검사 우회 가능하던 보안 버그 수정 (v2.1.221)
+- Windows PowerShell 권한 검사 따옴표 포함 경로 오처리 수정 (v2.1.221)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

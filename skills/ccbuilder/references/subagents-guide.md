@@ -316,6 +316,14 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 ---
 
+## 보안·버그 수정 (v2.1.222)
+
+- **isolation: worktree 보안 수정**: worktree 격리 세션·서브에이전트가 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 취약점 수정 — 이제 모든 세션 유형에서 파일 편집·Bash 명령 모두에 격리가 적용됨
+- **모델 패밀리 별칭 폴백 수정**: org 제한 환경에서 `model: opus` 등 패밀리 별칭이 부모 모델로 폴백하는 대신, 해당 패밀리 내 org가 허용하는 최신 모델로 단계적 하향하도록 수정
+- **effort 라벨 표시 수정**: 서브에이전트 트랜스크립트 뷰의 스피너 effort 라벨이 세션 effort 대신 서브에이전트 자체 `effort:` 설정을 표시하도록 수정
+
+---
+
 ## 공식 문서
 
 - **Subagents Reference**: https://code.claude.com/docs/en/sub-agents
