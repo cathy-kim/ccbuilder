@@ -8,6 +8,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-06
+
+### Added
+- **Claude Code v2.1.223 sync** (v2.1.220 → v2.1.223 콘텐츠 반영)
+  - (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 `"owner/*"` 와일드카드 추가 — GitHub org 산하 전체 마켓플레이스 레포 허용/차단
+  - (v2.1.223) 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트의 요청 서브에이전트 모델이 제한되어 부모 모델로 대체 실행될 때 경고 표시
+  - (v2.1.223) 클라우드 세션 `/teleport` 힌트 — `claude --teleport <session id>`로 로컬에서 세션 이어가기
+  - (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경** — 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`), `/code-review ultra` 클라우드 딥 리뷰, effort 미지정 시 마지막 입력 레벨 재사용
+  - (v2.1.223) `CLAUDE_CODE_DISABLE_1M_CONTEXT` — 네이티브 1M 컨텍스트 모델 전체를 200K auto-compaction으로 제한(고정 목록 아님), 미충족 시 시작 경고
+  - (v2.1.223) auto-compact가 미인식 모델 ID 세션도 가정 컨텍스트창 내로 유지 — `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1`로 이전 동작 복원
+  - (v2.1.223) **보안 수정**: 조작된 명령이 권한 검사에서 일부 숨겨지는 Bash 권한 우회, tab·비가시 유니코드로 패딩된 명령의 승인 다이얼로그 은닉, 워크플로우 스크립트 동적 `import()`로 샌드박스 이탈, agent definition `bypassPermissions`가 조직 bypass-permissions 비활성화 정책을 무시하던 취약점 수정
+  - (v2.1.223) 게이트웨이 모델 탐색이 `vertex_ai/claude-*`·`bedrock/anthropic.claude-*` 등 provider-prefixed ID 모델을 숨기던 버그, `modelOverrides`의 비-Anthropic 모델 ID 키가 세션 표준 모델로 오인되던 버그(이제 무시), managed settings 서버 배포 설정이 머신로컬 env 블록을 비활성화하던 버그(이제 키별 병합) 수정
+  - (v2.1.222) **worktree 격리 보안 강화** — 격리 세션·서브에이전트의 메인 체크아웃 대상 파괴적 git 명령 실행 차단, 파일 편집·Bash 모두에 적용
+  - (v2.1.222) org-restricted `model: opus`류 서브에이전트·팀메이트 패밀리 별칭이 부모 모델 대신 조직 허용 최신 모델로 폴백하도록 수정
+  - (v2.1.222) `/diff`·Remote Control workspace diff·파일편집 diff가 raw git blob 콘텐츠 사용(diff driver·textconv 무시)
+  - (v2.1.222) **Remote Control 자동 시작 변경** — 레포 로컬 설정으로 켜기 불가(끄기는 가능), 사용자 스코프 `/config`에서 활성화
+  - (v2.1.222) **ultraplan 기능 제거**
+  - (v2.1.221) `mode: "mask"` sandbox 자격증명 파일 마스킹(Linux/WSL, macOS는 deny 폴백), `claude plugin validate` Claude Desktop 마켓플레이스 동기화 거부 이름 경고, claude-api 스킬 `prompt-audit` 서브커맨드
+  - (v2.1.221) zsh `[[ ]]` 정규식 조건문 Bash 권한 우회, Windows PowerShell 따옴표 경로 권한 검사 우회 등 보안 수정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.223; CLI·Plugin·Agent·Breaking Changes 섹션에 위 항목 반영(신규 Hook 이벤트 없음)
+- `references/version-sync.md`: v2.1.223 변경사항 추적 엔트리 추가
+
+### Breaking Changes (Claude Code v2.1.221-223)
+- `/review`가 `/code-review` 별칭으로 통합 — PR 리뷰도 `/code-review <level> <pr#>`로 수행 (v2.1.223)
+- Remote Control이 레포 로컬 설정으로 자동 시작될 수 없음 — 사용자 스코프 `/config`에서만 활성화 (v2.1.222)
+- ultraplan 기능 제거 (v2.1.222)
+
+### Fixed (Claude Code v2.1.221-222 주요 수정)
+- `/usage-credits`(Team/Enterprise) 이전 요청 dismiss 후 재요청 차단되던 버그 수정 (v2.1.222)
+- 시작 커넥티비티 체크가 HTTPS 프록시 뒤에서 행(hang)되던 버그 수정 (v2.1.222)
+- 완료된 응답에 "Connection closed mid-response" 오류가 잘못 표시되던 버그 수정 (v2.1.222)
+- `/usage` MCP 서버 사용량 과대 귀속 수정 — 실제 도구 결과를 소비한 요청만 반영 (v2.1.222)
+- push 이후 생성된 PR이 세션에 연결되지 않던 버그 수정 (v2.1.222)
+- `SendMessage` 긴 요약 전송 시 거부되던 버그 수정 — 이제 truncate (v2.1.222)
+- 백그라운드 세션이 커밋·푸시로 작업 보존, 필요 시에만 draft PR 생성하도록 변경 (v2.1.221)
+- MCP `--mcp-config` 서버가 print 모드(`-p`) 첫 턴 전에 연결되지 않아 모델이 도구 호출을 텍스트로 방출하던 버그 수정 (v2.1.221)
+- Esc로 프롬프트 철회 후 재제출 시 @-멘션 파일이 유실되던 버그 수정 (v2.1.221)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

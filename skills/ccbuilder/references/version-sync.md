@@ -77,6 +77,65 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.223 (2026-08-06 동기화)
+
+**새로운 기능:**
+- (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 `"owner/*"` 와일드카드 항목 추가 — GitHub org 산하 전체 마켓플레이스 레포 허용/차단
+- (v2.1.223) 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트의 요청 서브에이전트 모델이 제한되어 부모 모델이 대신 실행될 때 경고 표시
+- (v2.1.223) 클라우드 세션에 `/teleport` 힌트 표시 — `claude --teleport <session id>`로 로컬에서 세션 이어가기
+- (v2.1.223) `CLAUDE_CODE_DISABLE_1M_CONTEXT` — 네이티브 1M 컨텍스트를 가진 모든 Claude 모델을 auto-compaction으로 200K 유지(기존 고정 목록 방식 대체); auto-compaction이 세션을 200K로 유지하지 못할 때 시작 경고 표시
+- (v2.1.223) auto-compact가 미인식 모델 ID의 세션도 가정 컨텍스트 창 내에 유지하도록 변경 — `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1`로 이전 동작(무제한 증가) 복원 가능
+- (v2.1.223) **`/review`가 `/code-review`의 별칭으로 변경** — 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`); `/code-review ultra`로 클라우드 딥 리뷰
+- (v2.1.223) `/code-review` effort 레벨 미지정 시 마지막으로 입력한 레벨 재사용; `/code-review high`처럼 레벨을 명시하면 변경
+- (v2.1.222) **worktree 격리 보안 강화** — worktree 격리 세션과 그 서브에이전트가 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 취약점 수정; 격리가 모든 세션 종류에서 파일 편집·Bash 모두에 적용
+- (v2.1.222) org-restricted `model: opus`류 서브에이전트·팀메이트 패밀리 별칭이 부모 모델로 강등되지 않고 조직이 허용한 최신 모델로 폴백하도록 수정
+- (v2.1.222) `/diff` 뷰, Remote Control workspace diff, 파일 편집 diff가 워크스페이스에 설정된 diff driver·textconv를 무시하고 raw git blob 콘텐츠 사용
+- (v2.1.222) **Remote Control 자동 시작 변경** — 레포 로컬 설정(`.claude/settings.json`·`.claude/settings.local.json`)으로는 더 이상 켤 수 없음(끄는 것은 계속 가능); 사용자 스코프 `/config`에서 활성화
+- (v2.1.222) **ultraplan 기능 제거**
+- (v2.1.221) `mode: "mask"` — Linux/WSL sandbox 자격증명 파일 마스킹(전체 파일 또는 `extract` 정규식으로 캡처한 구간만); 샌드박스 프록시가 egress 시 실제 값으로 치환; macOS는 `deny` 폴백
+- (v2.1.221) `claude plugin validate` — 마켓플레이스·플러그인 이름이 Claude Desktop 관리형 마켓플레이스 동기화에서 거부될 경우 경고
+- (v2.1.221) claude-api 스킬 `prompt-audit` 서브커맨드 — 구형 모델 대상 프롬프트·도구 설명 패턴 감사
+
+**Breaking Changes:**
+- `/review`가 `/code-review` 별칭으로 통합 — PR 리뷰도 `/code-review <level> <pr#>`로 수행 (v2.1.223)
+- Remote Control이 레포 로컬 설정으로 자동 시작될 수 없음 — 사용자 스코프 `/config`에서만 활성화 (v2.1.222)
+- ultraplan 기능 제거 (v2.1.222)
+
+**주요 버그 수정:**
+- 조작된 명령이 권한 검사에서 일부를 숨길 수 있던 Bash 권한 우회 수정 (v2.1.223)
+- tab 또는 비가시 유니코드로 패딩된 명령이 승인 다이얼로그에서 일부 숨겨지던 버그 수정 (v2.1.223)
+- 워크플로우 스크립트가 동적 `import()`로 워크플로우 샌드박스 밖 코드를 실행할 수 있던 버그 수정 (v2.1.223)
+- agent definition의 `bypassPermissions` 모드가 조직의 bypass-permissions 비활성화 정책을 무시하던 권한 격차 수정 (v2.1.223)
+- 중간 세션 `/cd` 이후 세션 재개 시 빈 화면으로 복귀하던 버그 수정 (v2.1.223)
+- 게이트웨이 모델 탐색이 `vertex_ai/claude-*`·`bedrock/anthropic.claude-*` 같은 provider-prefixed ID로 등록된 Claude 모델을 숨기던 버그 수정 (v2.1.223)
+- Anthropic 모델 ID가 아닌 `modelOverrides` 키가 세션의 표준 모델 ID로 취급되던 버그 수정 — 문서화된 대로 알 수 없는 키는 이제 무시 (v2.1.223)
+- 서버 배포 managed settings가 머신로컬 `managed-settings.json`/MDM 프로필의 env 블록을 비활성화하던 버그 수정 — admin env가 이제 키별로 병합 (v2.1.223)
+- Linux에서 `sandbox.filesystem.denyWrite`가 작업 디렉토리를 포함할 때 샌드박스 명령이 시작되지 못하던 버그 수정 (v2.1.223)
+- forked 백그라운드 에이전트가 세션 재개 중 fork의 부모 프롬프트 재구성 실패 시 나머지 세션 동안 "already resuming" 상태로 고착되던 버그 수정 (v2.1.223)
+- 손상된 진단 첨부파일이 히스토리에 있을 때 재개된 세션이 매 턴 실패하거나 인터랙티브 앱이 응답 없는 오류 화면에 멈추던 버그 수정 (v2.1.223)
+- 특이한 `git push` 출력 파싱 시 발생하던 드문 hang 수정 (v2.1.223)
+- worktree 격리 세션·서브에이전트가 `git -C`/`--git-dir`/`GIT_DIR`로 공유 체크아웃에 파괴적 git 명령을 우회 실행하던 버그 수정 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크(요약·압축·리네임)에서 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- `/usage-credits`(Team/Enterprise) 이전 요청 dismiss 후 재요청이 차단되던 버그 수정 (v2.1.222)
+- 시작 커넥티비티 체크가 HTTPS 프록시 뒤에서 hang 후 실패하던 버그 수정 — API 요청과 동일한 proxy-aware transport 사용 (v2.1.222)
+- 이미 완료된 응답에 "Connection closed mid-response" 오류가 잘못 표시되던 버그 수정 (v2.1.222)
+- `/usage`가 MCP 서버 사용량을 과대 귀속하던 버그 수정 — 실제 도구 결과를 소비한 요청만 반영 (v2.1.222)
+- 브랜치 푸시 이후 GitHub REST API 등으로 생성된 PR이 세션에 연결되지 않던 버그 수정 (v2.1.222)
+- 커스텀 `ANTHROPIC_BASE_URL` 게이트웨이에서 서버 keep-alive 핑이 도착함에도 스트림 유휴 타임아웃이 발동하던 버그 수정 (v2.1.222)
+- 세션 토큰이 유효하지 않을 때 claude.ai 커넥터가 잘못 "인증 필요"로 표시되던 버그 수정 — 이제 `/login` 힌트 표시 (v2.1.222)
+- MCP 서버 제거 등으로 로컬에서 더 이상 사용할 수 없는 도구의 오류가 표시되지 않던 버그 수정 (v2.1.222)
+- `SendMessage`가 긴 요약 전송 시 문자 제한으로 거부되던 버그 수정 — 이제 truncate (v2.1.222)
+- 서브에이전트 트랜스크립트 뷰의 스피너 effort 레이블이 세션 effort 대신 서브에이전트 고유 `effort:` 설정을 표시하도록 수정 (v2.1.222)
+- 파일 워처 오류·해제 시 발생하던 드문 크래시 수정 (v2.1.222)
+- `--ax-screen-reader` 모드에서 백스페이스마다 입력 줄 전체를 재낭독하던 버그 수정 — 삭제된 문자만 에코 (v2.1.222)
+- zsh `[[ ]]` 정규식 조건문에 숨겨진 명령을 실행할 수 있던 Bash 권한 검사 우회 수정 — 이제 권한 프롬프트 발생 (v2.1.221)
+- Windows PowerShell 권한 검사가 따옴표 포함 경로를 잘못 처리하던 버그 수정 — 이제 승인 프롬프트 발생 (v2.1.221)
+- thinking 토글이 thinking 비활성 상태로 시작한 세션 내내 효과 없던 버그 수정 (v2.1.221)
+- `--mcp-config`의 MCP 서버가 print 모드(`-p`) 첫 턴 전에 연결되지 않아 모델이 도구 호출을 일반 텍스트로 출력하던 버그 수정 (v2.1.221)
+- Esc로 프롬프트 철회 후 재제출 시 @-멘션 파일이 유실되던 버그 수정 (v2.1.221)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**
