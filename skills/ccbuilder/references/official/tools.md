@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-07 (Claude Code v2.1.224+)
 
 ---
 
@@ -34,7 +34,8 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
-| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams); 크로스세션 메시징 — 같은/다른 머신의 모든 Claude Code 세션에 전송 가능, 실패한 전송은 오류로 보고 (v2.1.224, macOS·Linux) | 낮음 |
+| `ListAgents` | - | 메시지 보낼 수 있는 로컬/원격 Claude Code 세션 탐색 — 이름을 `SendMessage({to})` 주소로 사용 (v2.1.224) | 낮음 |
 
 ### Planning Tools
 

@@ -188,11 +188,13 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 제거 (v2.1.224)** — 장시간 세션도 신규 파견 거부 없음; 동시성·깊이 제한은 유지 (구 기본 200개, `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212, 현재 no-op) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
+
+**보안 (v2.1.222)**: worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용 — 격리된 세션·서브에이전트가 메인 체크아웃 대상 파괴적 git 명령 실행 불가
 
 ---
 

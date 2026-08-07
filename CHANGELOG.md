@@ -8,6 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-07
+
+### Added
+- **Claude Code v2.1.224 sync** (v2.1.221 → v2.1.224 콘텐츠 반영)
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 등록 (Team·Enterprise)
+  - (v2.1.224) **`archive` 플러그인 소스** 신규 — git/npm 없이 HTTPS zip 설치, SHA-256 pinning 옵션
+  - (v2.1.224) `ANTHROPIC_BEDROCK_REGION_PREFIX` — Bedrock cross-region inference profile 리전 접두사 우선 지정
+  - (v2.1.224) `crossSessionInbound`/`dialogExpiry` 설정 — bypass-permissions로 실행 중인 세션에 보내는 크로스세션 메시지를 승인 대기시키고, 다른 세션으로의 메시지는 자동 전달
+  - (v2.1.224) 샌드박스 자격증명 마스킹 확장 — `extract`/`onExtractNoMatch`(구조화된 env 값), `decode:"jwt"`+`maskClaims`(JWT 인식 마스킹), `awsPairs`/`sigv4`(AWS SigV4 재서명); `network.tlsTerminate` 필요, user·managed·`--settings`에서만 적용
+  - (v2.1.224) **크로스세션 `SendMessage`** — 여러 머신의 Claude Code 세션 간 메시지 전송 가능, `ListAgents`로 세션 탐색 (macOS·Linux)
+  - (v2.1.224) **200-서브에이전트 세션 스폰 상한 제거** — 장시간 세션에서 신규 에이전트 파견 거부되지 않음 (동시성·깊이 제한은 유지)
+  - (v2.1.224) 붙여넣기 텍스트 변경으로 명령이 바뀔 때 취소-확인 단계 추가
+  - (v2.1.224) Remote Control 개선 — 압축 진행 상황·`/clear` 리셋이 연결된 웹·모바일 클라이언트에 전파; 연결 실패 시 지속 실패 표시+재연결 단축키; 서버 세션 만료 후 재생성된 세션이 이전 로컬 히스토리를 재업로드하지 않음
+  - (v2.1.223) **`/review`가 `/code-review` alias로 통합** — 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`), `ultra`로 클라우드 딥리뷰; effort 미지정 시 마지막 사용값 재사용
+  - (v2.1.223) `/teleport` 힌트 — 클라우드 세션에서 `claude --teleport <session id>`로 로컬 이어가기 안내
+  - (v2.1.223) owner wildcard 항목(`"owner/*"`) — `strictKnownMarketplaces`/`blockedMarketplaces`에서 GitHub org 전체 마켓플레이스 허용·차단
+  - (v2.1.223) `CLAUDE_CODE_DISABLE_1M_CONTEXT`가 네이티브 1M 컨텍스트를 가진 모든 Claude 모델을 200K로 강제 (고정 목록 → 전체); auto-compaction이 200K를 유지하지 못하면 시작 경고
+  - (v2.1.223) auto-compact가 인식되지 않는 모델 ID도 가정 컨텍스트 창 내로 유지; `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1`로 이전 동작 복원
+  - (v2.1.222) worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용 — 메인 체크아웃 대상 파괴적 git 명령 차단 (보안)
+  - (v2.1.222) PreToolUse auto-allow hook이 백그라운드 태스크(요약·압축·rename)에서 도구 제한을 우회하던 버그 수정 (보안)
+  - (v2.1.222) **`ultraplan` 기능 제거**
+  - (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"` 추가 (Linux·WSL) — 센티널 복사본 노출, 프록시가 egress 시 실제 값으로 치환
+  - (v2.1.221) `claude-api` 스킬에 `prompt-audit` 서브커맨드 추가 — 구버전 모델용으로 작성된 프롬프트·도구 설명 감사
+  - (v2.1.221) 백그라운드 세션이 작업을 커밋+푸시로 보존, 필요할 때만 draft PR 생성, CLAUDE.md git 지침 준수, 종료 시 결과 위치 보고
+  - (v2.1.221) `/fork`로 분기한 세션이 원본 세션 체크아웃 대신 자체 worktree 생성
+  - (v2.1.221) `/plugin install`이 오래된 마켓플레이스 카탈로그 자동 새로고침 후 재시도; 플러그인 설치 시 안전하면 즉시 활성화(`/reload-plugins` 불필요)
+  - (v2.1.221) `/status`에 세션 종류 표시 — `interactive`, 백그라운드 `attached`/`unattended`
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.224; CLI/Plugin, 신규 도구·env, Agent 파견, Breaking Changes 섹션에 self-hosted-runner, archive 소스, 샌드박스 자격증명 마스킹, 크로스세션 SendMessage/ListAgents, 200-스폰 상한 제거, `/review`→`/code-review` 통합, `ultraplan` 제거 반영
+- `references/version-sync.md`: v2.1.224 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 200-서브에이전트 세션 스폰 상한 제거, worktree 격리 보안 강화(모든 세션 타입) 반영
+- `references/official/tools.md`: `SendMessage` 크로스세션 메시징 설명 업데이트, `ListAgents` 도구 항목 추가, Last Synced 갱신
+
+### Breaking Changes (Claude Code v2.1.221~224)
+- `ultraplan` 기능 제거 (v2.1.222)
+- `/review`가 `/code-review` alias로 통합 — 기존 `/review` 단독 동작 대신 `/code-review` 옵션(`<level> <pr#>`) 체계 적용 (v2.1.223)
+
+### Fixed (Claude Code v2.1.221~224 주요 수정)
+- Bash 도구 권한 검사 우회(크래프트 명령이 검사에서 일부 은닉) 보안 수정 (v2.1.223)
+- 탭·유니코드로 패딩된 명령이 승인 다이얼로그에서 일부 은닉되던 보안 수정 (v2.1.223)
+- workflow 스크립트가 동적 `import()`로 샌드박스 밖 코드 실행 가능했던 보안 수정 (v2.1.223)
+- worktree 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령 실행 가능했던 보안 수정 (v2.1.222)
+- PreToolUse auto-allow hook이 백그라운드 에이전트 태스크에서 도구 제한을 우회하던 보안 수정 (v2.1.222)
+- 200자 초과 프로젝트 경로가 공유 sanitized prefix 아래 다른 프로젝트 세션 디렉토리로 잘못 연결되던 버그 수정 (v2.1.224)
+- `SendMessage`가 팀원 inbox 쓰기 실패 시에도 "Message sent"로 잘못 보고하던 버그 수정 — 실패 시 오류로 보고 (v2.1.224)
+- 샌드박스 파일시스템 deny 항목에 후행 슬래시(`denyRead: "~/.aws/"`)가 있을 때 Linux·macOS에서 우회 가능했던 보안 수정 (v2.1.224)
+- Bash 도구 결과에 샌드박스 위반 상세(거부된 파일·네트워크 접근과 사유)가 표시되지 않던 버그 수정 (v2.1.224)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
