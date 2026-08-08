@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-08
+**Claude Code Version**: v2.1.226+
 
 ---
 
@@ -25,6 +25,10 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+>
+> **v2.1.223+**: 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트가 요청한 서브에이전트 모델이 조직 정책으로 제한된 경우, 부모 모델로 대체 실행되며 경고가 표시됨.
+>
+> **v2.1.224+**: 세션당 서브에이전트 파견 총량 200개 상한(`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`)이 제거되어, 장시간 세션도 신규 서브에이전트 파견을 거부하지 않음 (동시 실행 상한·중첩 깊이 제한은 그대로 적용).
 
 ---
 
@@ -188,7 +192,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 없음** — `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` 200개 상한 제거, 장시간 세션도 신규 파견 거부 안 함 (v2.1.224; 동시성·중첩 깊이 제한은 유지) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |

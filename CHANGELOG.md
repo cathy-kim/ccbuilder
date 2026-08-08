@@ -8,6 +8,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-08
+
+### Added
+- **Claude Code v2.1.226 sync** (v2.1.220 → v2.1.226 콘텐츠 반영)
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 전환 (Team·Enterprise)
+  - (v2.1.224) **`archive` 플러그인 소스** — git/npm 없이 zip(HTTPS)에서 플러그인 설치, SHA-256 pinning 옵션
+  - (v2.1.224) **크로스 세션 `SendMessage`** — 여러 머신의 Claude Code 세션 간 메시지 전송(macOS·Linux), `ListAgents`로 세션 탐색
+  - (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass 권한 세션 수신 메시지 승인 보류, 일반 세션은 자동 전달
+  - (v2.1.224) sandbox 자격증명 마스킹 확장 — `extract`/`onExtractNoMatch`(구조화 env 값), `decode: "jwt"`(`maskClaims`), `awsPairs`/`sigv4`(AWS SigV4 재서명)
+  - (v2.1.224) **세션당 서브에이전트 파견 200개 상한 제거** — 장시간 세션에서 신규 에이전트 파견 거부 안 함(동시성·깊이 제한은 유지)
+  - (v2.1.225) 게이트웨이 spend-limit 지원 — 한도 도달 메시지에 한도·리셋 시각·운영자 메시지 표시
+  - (v2.1.225) `claude agents` 워크스페이스 신뢰 프롬프트 추가(미신뢰 디렉토리, `claude`와 동일 동작)
+  - (v2.1.225) `SendMessage`로 다른 머신의 Remote Control 세션에 이름으로 먼저 메시지 시작 가능(`ListAgents`에 `name [ref]`로 표시)
+  - (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 오너 와일드카드(`"owner/*"`) 지원
+  - (v2.1.223) 워크플로우 에이전트·forked skill·서브에이전트 요청 모델이 제한되어 부모 모델로 대체 실행 시 경고
+  - (v2.1.223) 클라우드 세션 `/teleport <session id>` 힌트
+  - (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경** — 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`), `/code-review ultra` 클라우드 심층 리뷰; 인자 없이 호출 시 마지막 effort 레벨 재사용
+  - (v2.1.223) `CLAUDE_CODE_DISABLE_1M_CONTEXT`가 네이티브 1M 윈도우 모든 모델에 자동 압축 적용; auto-compact가 미인식 모델 ID도 가정 컨텍스트 윈도우 내로 유지
+  - (v2.1.222) worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용 — 메인 체크아웃 대상 파괴적 git 명령 차단
+  - (v2.1.221) VSCode Focus view(`Ctrl+Alt+F`) — 도구 활동 접어 요약 표시
+  - (v2.1.221) sandbox 자격증명 파일 `mode: "mask"` — 센티널 값 읽고 프록시 egress 시 실제값 치환(Linux/WSL)
+  - (v2.1.221) `claude-api` 스킬 `prompt-audit` 서브커맨드 추가
+  - (v2.1.221) 백그라운드 세션 작업 보존 위해 커밋·푸시, 필요 시에만 draft PR 생성
+  - (v2.1.220) 버그 수정 및 안정성 개선
+  - (v2.1.226) 버그 수정 및 안정성 개선
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.226; Agent/CLI/Plugin 강화·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.226 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 세션당 서브에이전트 파견 200개 상한 제거 반영
+- `references/official/tools.md`: `SendMessage` 도구 설명에 크로스 세션·크로스 머신 메시징 반영
+
+### Breaking Changes (Claude Code v2.1.221 → v2.1.226)
+- ultraplan 기능 제거 (v2.1.222)
+- Remote Control auto-start를 레포-로컬 설정으로 켤 수 없음 — 끄기는 가능, 켜기는 user-scope `/config` 필요 (v2.1.222)
+- `/review`가 `/code-review` 별칭으로 변경 (v2.1.223)
+- 세션당 서브에이전트 파견 200개 상한 제거 — 동시성·깊이 제한은 유지 (v2.1.224)
+
+### Fixed (Claude Code v2.1.221 → v2.1.226 주요 수정)
+- Bash 권한 검사 우회(크래프트된 명령이 스스로를 검사에서 숨김) 및 permission 프롬프트 탭·비가시 유니코드 패딩 우회 보안 수정 (v2.1.223)
+- workflow 스크립트가 동적 `import()`로 워크플로우 샌드박스를 이탈할 수 있던 취약점 수정 (v2.1.223)
+- PreToolUse auto-allow 훅이 백그라운드 태스크(요약·압축·리네임)에서 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- MCP OAuth 서버가 macOS에서 키체인 읽기 타임아웃 후 401 오류 다발 발생하던 버그 수정 (v2.1.225)
+- 전이(transient) 401이 장기 `CLAUDE_CODE_OAUTH_TOKEN`을 저장된 로그인의 단기 토큰으로 교체해 재시작 전까지 헤드리스 세션이 깨지던 버그 수정 (v2.1.225)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
