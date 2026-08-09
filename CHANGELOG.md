@@ -8,6 +8,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-09
+
+### Added
+- **Claude Code v2.1.226 sync** (v2.1.220 → v2.1.226 콘텐츠 반영)
+  - (v2.1.221) VSCode **Focus view** — `Ctrl+Alt+F`로 도구 활동을 접고 턴별 요약·실행 중 도구 표시기만 노출
+  - (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"` (Linux/WSL) — 센티널 복사본을 읽게 하고 egress 시 실제 값으로 치환
+  - (v2.1.221) `claude-api` 스킬 `prompt-audit` 서브커맨드 — 구형 모델 대상 작성된 프롬프트·도구 설명 감사
+  - (v2.1.222) **worktree 격리 세션의 파괴적 git 명령 차단** — 파일 편집·Bash 격리가 모든 세션 타입에 적용 (보안)
+  - (v2.1.222) **PreToolUse auto-allow 훅의 도구 제한 우회 차단** — 백그라운드 에이전트(요약·압축·리네임) 대상 (보안)
+  - (v2.1.222) `/diff`, Remote Control diff, 파일 편집 diff가 워크스페이스 diff driver·textconv 무시하고 raw git blob 콘텐츠 사용
+  - (v2.1.222) **`ultraplan` 기능 제거**
+  - (v2.1.223) **`/review`가 `/code-review` alias로 변경** — 현재 diff 또는 `<pr#>` 리뷰, `/code-review ultra`는 클라우드 딥리뷰
+  - (v2.1.223) `/code-review` effort 레벨 미지정 시 마지막 입력값 재사용
+  - (v2.1.223) **Bash 권한 프롬프트 우회 취약점 수정** — 크래프팅된 명령이 승인 검사에서 일부를 숨기던 문제, 탭·비가시 유니코드로 패딩된 명령 은닉 차단 (보안)
+  - (v2.1.223) 워크플로우 스크립트의 동적 `import()`로 샌드박스 밖 코드 실행 가능하던 취약점 수정 (보안)
+  - (v2.1.223) `owner/*` 와일드카드 항목 — `strictKnownMarketplaces`/`blockedMarketplaces`에서 GitHub 조직 전체 마켓플레이스 허용·차단
+  - (v2.1.223) `/teleport` 힌트 — 클라우드 세션에서 `claude --teleport <session id>`로 로컬 이어가기 안내
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 등록 (Team·Enterprise)
+  - (v2.1.224) **`archive` 플러그인 소스** — git/npm 없이 HTTPS zip으로 플러그인 설치, SHA-256 pinning 옵션
+  - (v2.1.224) **크로스 세션 `SendMessage`** — 어느 머신에서든 Claude Code 세션 간 메시지 전송, `ListAgents`로 탐색 가능 (macOS·Linux)
+  - (v2.1.224) `crossSessionInbound`/`dialogExpiry` 설정 — bypass 권한 세션으로 전송된 크로스 세션 메시지는 승인 대기, 그 외 세션은 자동 전달
+  - (v2.1.224) 샌드박스 자격증명 마스킹 옵션 확장 — 구조화 값 `extract`/`onExtractNoMatch`, `decode: "jwt"` + `maskClaims`, AWS `awsPairs`/`sigv4` 재서명 (`network.tlsTerminate` 필요)
+  - (v2.1.224) **세션당 서브에이전트 파견 200개 상한 제거** — 장시간 세션도 신규 에이전트 파견 거부되지 않음 (동시 실행·중첩 depth 상한은 유지)
+  - (v2.1.224) `ANTHROPIC_BEDROCK_REGION_PREFIX` — `AWS_REGION` 기반 리전 대신 특정 cross-region inference profile 우선 지정
+  - (v2.1.225) `claude agents`에 워크스페이스 신뢰 프롬프트 추가 — 미신뢰 디렉토리에서 `claude`와 동일 동작
+  - (v2.1.225) 게이트웨이 spend-limit 사용량 경고 — 한도 도달 메시지에 한도값·리셋 시각·운영자 메시지 표시 (게이트웨이 2.1.225 필요)
+  - (v2.1.225) `SendMessage`로 이름 지정해 다른 머신의 Remote Control 세션에 먼저 메시지 전송 가능 (`ListAgents`가 `name [ref]`로 표시)
+  - (v2.1.226) 버그 수정 및 안정성 개선
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.226; CLI/Plugin/Agent·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.226 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 세션당 서브에이전트 파견 200개 상한 제거 반영
+- `references/official/tools.md`: `SendMessage` 설명에 크로스 세션 메시징 지원 반영
+
+### Breaking Changes (Claude Code v2.1.221-226)
+- `ultraplan` 기능 제거 (v2.1.222)
+- `/diff`·diff 뷰가 워크스페이스 diff driver·textconv를 무시하고 raw git blob 콘텐츠 사용 (v2.1.222)
+- `/review`가 `/code-review` alias로 변경 (v2.1.223)
+
+### Fixed (Claude Code v2.1.221-225 주요 수정)
+- 게이트웨이의 안정적인 `CLAUDE_CODE_OAUTH_TOKEN`이 일시적 401로 저장된 로그인의 단명 토큰으로 대체되어 헤드리스 세션이 재시작 전까지 깨지던 버그 수정
+- macOS MCP OAuth 서버가 키체인 읽기 타임아웃 후 인증된 적 없는 것처럼 401 폭주하던 버그 수정
+- auto mode의 권한 자체 검사 안전 필터 거부가 연속 차단 한도에 잘못 집계되던 버그 수정
+- 헤드리스 세션·시작 중 크로스 세션 메시지가 알림·만료 없이 계속 대기하던 버그 수정
+- 대규모 압축 후 Remote Control 세션 재개 시 대화 히스토리가 깨지던 버그 수정
+- `claude self-hosted-runner`가 `--base-dir` 생성·쓰기 실패 시 매 세션 실패하던 버그 수정 — 이제 시작 시 명확한 오류로 종료
+- 워크플로우 스크립트의 동적 `import()`로 샌드박스 밖 코드 실행 가능하던 취약점 수정
+- gateway model discovery가 provider-prefixed ID(`vertex_ai/claude-*`, `bedrock/anthropic.claude-*`)로 등록된 Claude 모델을 숨기던 버그 수정
+- worktree 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령 실행 가능하던 버그 수정
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 작업에서 도구 제한을 우회하던 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

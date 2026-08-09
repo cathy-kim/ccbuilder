@@ -62,7 +62,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 ## 고급 기능
 
 - **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 다시 기본 depth 3 허용**으로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
-- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 200개 상한은 **v2.1.224에서 제거** — 장시간 세션도 신규 에이전트 파견 계속 가능(동시 실행·중첩 depth 상한은 유지); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Task tool `mode` 파라미터 제거 (v2.1.212)**: 서브에이전트는 부모 세션 permission mode 기본 상속
