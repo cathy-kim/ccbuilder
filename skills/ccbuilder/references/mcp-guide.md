@@ -169,6 +169,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
 
+> **v2.1.225 수정**: macOS에서 MCP OAuth 서버가 keychain 읽기 타임아웃 후 마치 한 번도 인증되지 않은 것처럼 401 오류가 연쇄적으로 발생하며 간헐적으로 실패하던 버그 수정.
+
 ---
 
 ## headersHelper 다중 서버 지원 (v2.1.85 신규)

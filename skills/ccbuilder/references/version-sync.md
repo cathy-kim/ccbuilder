@@ -77,6 +77,70 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.226 (2026-08-10 동기화)
+
+**새로운 기능:**
+- (v2.1.225) 게이트웨이 spend-limit 지원 — usage 경고 메시지에 한도·리셋 시각·운영자 메시지 표시 (게이트웨이 2.1.225+ 필요)
+- (v2.1.225) `claude agents`에 워크스페이스 신뢰 프롬프트 추가 — 미신뢰 디렉토리 대상, `claude`와 동일 동작
+- (v2.1.225) `SendMessage`로 이름을 지정해 다른 머신의 Remote Control 세션에 먼저 메시지 전송 가능 (`ListAgents`가 `name [ref]`로 표시)
+- (v2.1.225) SendMessage — 이미 확인된 Remote Control 수신자가 자기 목록 확인 실패 시 동명의 로컬 세션으로 교체되지 않음
+- (v2.1.225) Remote Control: Claude 앱에서 첨부한 사진을 디스크에서 별도 도구 호출로 읽지 않고 Claude에 직접 전달
+- (v2.1.224) **`claude self-hosted-runner`** 신규 — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 전환 (Team/Enterprise)
+- (v2.1.224) **`archive` 플러그인 소스** 추가 — git/npm 없이 HTTPS zip 설치, SHA-256 pinning 옵션
+- (v2.1.224) **세션당 서브에이전트 200개 스폰 하드 캡 제거** — 장시간 세션에서 신규 에이전트 파견이 거부되지 않음 (동시성·깊이 제한은 유지); 기존 `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`(파견 총량, `/clear` 리셋)과는 별개
+- (v2.1.224) **크로스세션 `SendMessage`** — 같은 사용자 소유의 모든 머신에서 Claude Code 세션 간 메시지 교환 (`ListAgents`로 탐색, macOS/Linux)
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass-permissions 세션으로 오는 크로스세션 메시지 승인 보류, 다른 세션 메시지는 자동 전달
+- (v2.1.224) 샌드박스 자격증명 마스킹 확장 — 구조화된 env 값용 `extract`/`onExtractNoMatch`, `decode: "jwt"`(`maskClaims`), AWS SigV4 재서명용 `awsPairs`/`sigv4` (`network.tlsTerminate` 필요, user/managed/`--settings` 설정에서만 적용)
+- (v2.1.224) `ANTHROPIC_BEDROCK_REGION_PREFIX` env var — `AWS_REGION` 파생 리전 대신 특정 cross-region inference profile 선호
+- (v2.1.224) 붙여넣기 취소 시 명령 텍스트 변경에 확인 단계 추가
+- (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경** — 현재 diff 또는 PR 리뷰 (`/code-review <level> <pr#>`); effort 레벨 생략 시 마지막 사용값 재사용
+- (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 owner wildcard(`"owner/*"`) 지원 — GitHub org 전체 마켓플레이스 레포 허용/차단
+- (v2.1.223) 클라우드 세션에 `claude --teleport <session id>` 로컬 이어가기 힌트 표시
+- (v2.1.223) workflow agent·forked skill·슬래시 명령·재개된 백그라운드 에이전트의 요청 subagent 모델이 제한되어 부모 모델로 실행될 때 경고 표시
+- (v2.1.222) **`/ultraplan` 기능 제거**
+- (v2.1.222) auto mode 안전성 강화 — `SendMessage`로 다른 에이전트 세션에 보내는 메시지도 권한 분류기 검사 후 발송
+- (v2.1.222) `disable-model-invocation` 스킬 호출 시도 시 거부 메시지 개선 — 워크플로우를 직접 재현하지 말고 사용자에게 스킬 실행을 요청하도록 안내
+- (v2.1.222) `/diff` 뷰, Remote Control workspace diff, Claude Code on the web 파일 편집 diff가 워크스페이스 diff 드라이버·textconv 무시하고 raw git blob 사용
+- (v2.1.221) VSCode Focus view — 채팅 메뉴 토글(`Ctrl+Alt+F`, "Claude Code: Toggle Focus view")로 도구 활동을 턴별 접기 요약 + 실행 중 표시로 숨김
+- (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"`(Linux/WSL) — 센티널 사본 노출 + 프록시가 egress 시 실제 값으로 치환 (macOS는 `deny`로 폴백)
+- (v2.1.221) `claude plugin validate` — 마켓플레이스·플러그인 이름이 Claude Desktop managed marketplace sync에서 거부될 경우 경고
+- (v2.1.221) `claude-api` 스킬에 `prompt-audit` 서브커맨드 추가 — 구형 모델용으로 작성된 프롬프트·도구 설명 패턴 감사
+- (v2.1.226) 버그 수정 및 안정성 개선 (세부 사항 미공개)
+
+**Breaking Changes:**
+- `/ultraplan` 기능 제거 (v2.1.222)
+- `/review`가 `/code-review`의 별칭으로 변경 (v2.1.223)
+- Remote Control 자동 시작을 repo-local settings(`.claude/settings.json`/`.claude/settings.local.json`)로 켤 수 없음 — user scope `/config`에서만 활성화, 끄는 것은 계속 가능 (v2.1.222)
+
+**주요 버그 수정:**
+- 401 임시 오류가 장기 `CLAUDE_CODE_OAUTH_TOKEN`을 저장된 로그인의 단기 토큰으로 교체해 헤드리스 세션이 재시작까지 깨지던 버그 수정 (v2.1.225)
+- macOS MCP OAuth 서버가 keychain 읽기 타임아웃 후 마치 미인증인 것처럼 401 버스트로 간헐적 실패하던 버그 수정 (v2.1.225)
+- auto mode가 자체 권한 검사에 대한 safety-filter 거부를 연속 차단 한도에 집계하던 버그 수정 — 액션은 계속 거부되지만 모델에는 재시도 대신 다음으로 넘어가라고 안내 (v2.1.225)
+- 헤드리스 세션·시작 중 크로스세션 메시지가 알림·만료 없이 대기 상태로 방치되던 버그 수정 (v2.1.225)
+- 매우 큰 대화가 압축된 후 Remote Control 세션 재개 시 대화 히스토리가 깨지던 버그 수정 (v2.1.225)
+- `claude self-hosted-runner`가 `--base-dir`을 생성·쓰기 못할 때 매 세션 등록 후 실패하던 버그 수정 — 이제 시작 시 명확한 오류로 종료 (v2.1.225)
+- 200자 초과 긴 프로젝트 경로가 공유 sanitized prefix 아래 다른 프로젝트의 세션 디렉토리로 해석되던 버그 수정 — 세션 목록·rename·fork·delete·`/resume` 영향 (v2.1.224)
+- `SendMessage`가 팀원 inbox 쓰기가 실제로 실패했을 때도 "Message sent"로 보고하던 버그 수정 (v2.1.224)
+- 샌드박스 파일시스템 deny 항목에 trailing slash가 있으면(`denyRead: "~/.aws/"`) Linux·macOS에서 조용히 우회 가능하던 버그 수정 (v2.1.224)
+- 샌드박스 위반 상세 정보가 Bash 도구 결과에 전혀 나타나지 않던 버그 수정 — 어떤 파일·네트워크 접근이 왜 거부됐는지 이제 표시 (v2.1.224)
+- 게이트웨이 모델 탐색이 `vertex_ai/claude-*`·`bedrock/anthropic.claude-*` 등 provider-prefixed ID로 등록된 Claude 모델을 숨기던 버그 수정 (v2.1.223)
+- 신뢰되지 않은 조직의 크래프트된 명령이 권한 검사에서 명령 일부를 숨길 수 있던 Bash 권한 우회 취약점 수정 (v2.1.223)
+- 탭·비가시 유니코드로 패딩된 명령이 승인 다이얼로그에서 일부를 숨길 수 있던 버그 수정 (v2.1.223)
+- workflow 스크립트가 dynamic `import()`로 워크플로우 샌드박스 밖 코드를 실행할 수 있던 버그 수정 (v2.1.223)
+- agent 정의의 `bypassPermissions` 모드가 org의 bypass-permissions 비활성화 정책을 무시하던 권한 격차 수정 (v2.1.223)
+- worktree 격리 세션·서브에이전트가 파일 편집·Bash로 메인 체크아웃 대상 파괴적 git 명령을 실행할 수 있던 격리 우회 수정 — 모든 세션 종류에 격리 적용 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크(요약·압축·rename)에서 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- HTTPS 프록시 뒤에서 시작 연결성 검사가 멈춘 후 실패하던 버그 수정 — API 요청과 동일한 proxy-aware transport 사용, 명확한 타임아웃 메시지 (v2.1.222)
+- 이미 완료된 응답에 "Connection closed mid-response" 오류가 잘못 보고되던 버그 수정 (v2.1.222)
+- `/usage`가 MCP 서버 사용량을 과대 귀속하던 버그 수정 — 실제로 도구 결과를 소비한 요청만 집계 (v2.1.222)
+- zsh `[[ ]]` 정규식 조건에서 숨겨진 명령을 실행할 수 있던 Bash 권한 우회 취약점 수정 — 이제 권한 프롬프트 표시 (v2.1.221)
+- Windows PowerShell 권한 검사가 따옴표 포함 경로를 잘못 처리하던 버그 수정 — 승인 프롬프트로 변경 (v2.1.221)
+- 세션이 thinking 비활성화로 시작한 후 세션 내내 thinking 토글이 무효하던 버그 수정 (v2.1.221)
+- `--mcp-config` 서버가 print 모드(`-p`) 첫 턴 전에 연결되지 않아 모델이 도구 호출을 리터럴 텍스트로 출력하던 버그 수정 (v2.1.221)
+- Esc로 프롬프트 철회 후 재제출 시 @-멘션 파일이 조용히 누락되던 버그 수정 (v2.1.221)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

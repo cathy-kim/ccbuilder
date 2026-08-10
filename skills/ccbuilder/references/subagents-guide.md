@@ -188,7 +188,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) — 이와 별개로 있던 "200개 도달 시 신규 에이전트 파견 완전 거부" 하드 캡은 v2.1.224에서 제거됨(동시성·깊이 제한은 유지) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
