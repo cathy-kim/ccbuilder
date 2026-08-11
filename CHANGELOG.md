@@ -8,6 +8,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-11
+
+### Added
+- **Claude Code v2.1.227 sync** (v2.1.220 → v2.1.227 콘텐츠 반영)
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 전환 (Team·Enterprise)
+  - (v2.1.224) **크로스세션 SendMessage** — 같은 사용자의 여러 머신에 걸친 Claude Code 세션 간 메시지 송수신, `ListAgents`로 탐색 (macOS·Linux)
+  - (v2.1.224) **서브에이전트 세션당 파견 총량 200개 상한 제거** — 장시간 세션도 신규 에이전트 파견 거부 없음 (동시성·깊이 제한은 유지)
+  - (v2.1.224) `archive` 플러그인 소스, 샌드박스 자격증명 마스킹 확장(JWT·SigV4), `crossSessionInbound`/`dialogExpiry` 설정, `ANTHROPIC_BEDROCK_REGION_PREFIX`
+  - (v2.1.225) `SendMessage`로 이름 지정해 Remote Control 세션에 먼저 대화 시작 가능; 게이트웨이 spend-limit 지원; `claude agents` 워크스페이스 신뢰 프롬프트
+  - (v2.1.223) 마켓플레이스 owner wildcard(`"owner/*"`), 제한된 서브에이전트 모델 요청 시 경고, `/teleport` 힌트, `/review` → `/code-review` 별칭
+  - (v2.1.222) worktree 격리가 모든 세션 유형의 파일 편집·Bash에 적용 (보안 강화)
+  - (v2.1.221) [VSCode] Focus view, 샌드박스 자격증명 `mode: "mask"` (Linux/WSL)
+  - (v2.1.227) 슬래시 명령 메뉴 개선(선택 행 강조·매칭 문자 볼드·이모지 글리프 유지), 성능 개선
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.227; Agent/CLI 섹션에 크로스세션 SendMessage·self-hosted-runner·서브에이전트 스폰 상한 제거·제한 모델 경고 반영, Breaking Changes에 `/ultraplan` 명령 제거 추가
+- `references/version-sync.md`: v2.1.227 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 세션당 서브에이전트 파견 총량 상한 제거, 크로스세션 SendMessage, 제한된 모델 요청 시 경고 반영
+
+### Breaking Changes (Claude Code v2.1.222)
+- `/ultraplan` 명령 제거
+
+### Fixed (Claude Code v2.1.221-227 주요 수정)
+- 만료된 로그인 토큰 세션에서 구독 등급 없이 feature flag 평가되던 버그 수정 — Fable 사용량 크레딧 오표시 문제 (v2.1.227)
+- `claude-code-action`의 `allowed_non_write_users` 설정 시 GitHub-hosted 러너 Bash 명령 전체 실패 수정 (v2.1.227)
+- `/tui`가 첫 메시지 이전으로 되감긴 대화를 복원하던 버그 수정 (v2.1.227)
+- 크래프트된 Bash 명령·탭/비가시 유니코드 패딩이 권한 검사·승인 다이얼로그에서 명령 일부를 숨기던 보안 버그 수정 (v2.1.223)
+- 워크플로우 스크립트 동적 `import()` 샌드박스 이탈 수정, agent `bypassPermissions`가 조직 정책 무시하던 권한 허점 수정 (v2.1.223)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크의 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- worktree 격리 세션이 메인 체크아웃에 파괴적 git 명령 실행 가능하던 버그 수정 (v2.1.222)
+- MCP OAuth macOS 키체인 타임아웃 후 401 연발 버그, Remote Control 재개 시 대화 히스토리 손상 버그 수정 (v2.1.225)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

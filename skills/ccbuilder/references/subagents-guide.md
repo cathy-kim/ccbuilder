@@ -179,6 +179,10 @@ Task({
 
 // 신규 방식 (v2.1.77+)
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
+
+// 크로스세션 SendMessage (v2.1.224+): 같은 사용자의 다른 머신에서 실행 중인 Claude Code 세션에도 메시지 송수신 가능 (macOS·Linux)
+// ListAgents로 대상 탐색 → SendMessage({ to: "<name>", content: "..." })
+// v2.1.225+: Remote Control 세션에는 상대가 먼저 메시지를 보내지 않아도 이름으로 먼저 대화 시작 가능 (ListAgents에 `name [ref]`로 표시)
 ```
 
 ---
@@ -188,7 +192,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 제거** (v2.1.224) — 이전 기본 200개 캡(`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) 삭제, 장시간 세션도 신규 파견 거부 없음 (동시성·깊이 제한은 유지) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |

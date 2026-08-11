@@ -62,7 +62,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 ## 고급 기능
 
 - **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 다시 기본 depth 3 허용**으로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
-- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 상한 **제거** (v2.1.224 — 이전 기본 200개 `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` 캡 삭제, 장시간 세션도 신규 에이전트 파견 거부 없음, 동시성·깊이 제한은 유지); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Task tool `mode` 파라미터 제거 (v2.1.212)**: 서브에이전트는 부모 세션 permission mode 기본 상속
@@ -74,6 +74,8 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72); Claude 관리 worktree 간 mid-session 전환 지원 (v2.1.157)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
+- **크로스세션 SendMessage (v2.1.224+)**: 같은 사용자의 다른 머신에서 실행 중인 Claude Code 세션과도 메시지 송수신 가능(macOS·Linux) — `ListAgents`로 탐색; v2.1.225+: Remote Control 세션에 이름으로 먼저 대화 시작 가능(`ListAgents`에 `name [ref]` 표시)
+- **제한된 서브에이전트 모델 경고 (v2.1.223+)**: 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트가 요청한 모델이 조직 정책으로 제한되면 부모 모델로 대체 실행되며 경고 표시
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능

@@ -77,6 +77,46 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.227 (2026-08-11 동기화)
+
+**새로운 기능:**
+- (v2.1.224) **`claude self-hosted-runner`** — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 전환 (Team·Enterprise 플랜)
+- (v2.1.224) **크로스세션 SendMessage** — 같은 사용자의 여러 머신에 걸친 Claude Code 세션 간 메시지 송수신, `ListAgents`로 탐색 (macOS·Linux)
+- (v2.1.224) **서브에이전트 세션당 파견 총량 200개 상한 제거** — 장시간 세션도 신규 에이전트 파견 거부 없음 (동시성·깊이 제한은 유지)
+- (v2.1.224) `archive` 플러그인 소스 — git·npm 없이 HTTPS zip으로 플러그인 설치, SHA-256 핀 지원
+- (v2.1.224) 샌드박스 자격증명 마스킹 확장 — 구조화 env 값 `extract`/`onExtractNoMatch`, `decode: "jwt"` + `maskClaims`, AWS SigV4 재서명(`awsPairs`/`sigv4`); `network.tlsTerminate` 필요, user/managed/`--settings` 설정에서만 적용
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass 권한 세션으로 온 크로스세션 메시지 승인 대기, 다른 세션 메시지는 자동 전달
+- (v2.1.224) `ANTHROPIC_BEDROCK_REGION_PREFIX` env var — Bedrock 크로스리전 추론 프로필 접두사 지정
+- (v2.1.225) `SendMessage`로 이름 지정해 Remote Control 세션에 먼저 대화 시작 가능 (`ListAgents`에 `name [ref]`로 표시); 이미 확인된 Remote Control 수신자는 동명의 로컬 세션으로 대체되지 않음
+- (v2.1.225) 게이트웨이 spend-limit 지원 — 사용량 경고 메시지에 한도·리셋 시각·운영자 메시지 표시
+- (v2.1.225) `claude agents` 워크스페이스 신뢰 프롬프트 추가 — 신뢰되지 않은 디렉토리 (`claude`와 동일 동작)
+- (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 owner wildcard(`"owner/*"`) 지원 — GitHub org 전체 마켓플레이스 레포 허용·차단
+- (v2.1.223) 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트가 제한된 서브에이전트 모델 요청 시 부모 모델 실행 경고 추가
+- (v2.1.223) `/teleport` 힌트 — 클라우드 세션에서 `claude --teleport <session id>`로 로컬 이어가기
+- (v2.1.223) `/review`가 `/code-review` 별칭으로 변경(현재 diff 또는 PR 리뷰); `/code-review`에 effort 미지정 시 마지막 사용 레벨 재사용
+- (v2.1.222) worktree 격리가 모든 세션 유형에서 파일 편집·Bash에 적용 (이전에는 우회 가능한 보안 허점)
+- (v2.1.221) [VSCode] Focus view — 도구 활동을 턴별 요약으로 접기, `Ctrl+Alt+F` 토글
+- (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"` (Linux/WSL) — sentinel 복사본 제공, 프록시가 egress에서 실값으로 치환
+- (v2.1.227) 슬래시 명령 메뉴 개선 — 파란색이 선택된 행에만 표시, 매칭 문자 볼드 처리, 이모지·악센트 이름 글리프 유지
+
+**Breaking Changes:**
+- **`/ultraplan` 명령 제거** (v2.1.222)
+
+**주요 버그 수정:**
+- 만료된 로그인 토큰으로 세션 시작 시 구독 등급 없이 feature flag 평가되던 버그 수정 — Max 플랜 사용자에게 Fable 사용량 크레딧 활성화를 잘못 권유하던 문제 (v2.1.227)
+- `claude-code-action`에서 `allowed_non_write_users` 설정 시 GitHub-hosted 러너의 모든 Bash 명령이 실패하던 버그 수정 (v2.1.227)
+- `/tui`가 첫 메시지 이전으로 되감긴 대화를 다시 불러오던 버그 수정 (v2.1.227)
+- 크래프트된 Bash 명령이 권한 검사에서 일부를 숨길 수 있던 보안 버그 수정 (v2.1.223)
+- 탭·비가시 유니코드로 패딩된 명령이 권한 승인 다이얼로그에서 일부를 숨기던 버그 수정 (v2.1.223)
+- 워크플로우 스크립트가 동적 `import()`로 샌드박스 밖 코드를 실행할 수 있던 버그 수정 (v2.1.223)
+- agent 정의의 `bypassPermissions` 모드가 조직 bypass-permissions 비활성화 정책을 무시하던 권한 허점 수정 (v2.1.223)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크(요약·압축·리네임)의 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- long-running 세션의 워크트리 격리 세션이 메인 체크아웃에 파괴적 git 명령 실행 가능하던 버그 수정 (v2.1.222)
+- MCP OAuth 서버가 macOS에서 키체인 읽기 타임아웃 후 인증 안 된 것처럼 401 오류 연발하던 버그 수정 (v2.1.225)
+- Remote Control 세션 재개 시 매우 큰 압축 대화 이후 대화 히스토리가 깨지던 버그 수정 (v2.1.225)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**
