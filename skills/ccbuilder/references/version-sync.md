@@ -77,6 +77,71 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.231 (2026-08-13 동기화)
+
+**새로운 기능:**
+- (v2.1.229) `claude remote-control --continue` — 가장 최근 Remote Control 세션 재개 문서화
+- (v2.1.229) 셀프호스트 러너 세션에 서버 제공 Claude Code Hook 지원 추가 — managed 환경과 동일 동작
+- (v2.1.229) 게이트웨이 스트리밍 응답에 SSE keepalive ping 추가 — Vertex·Bedrock 업스트림에서 긴 thinking 중 idle-timeout 연결 끊김 방지
+- (v2.1.229) 플러그인 마켓플레이스 `command` 소스 — 로컬 명령(예: IDE)이 플러그인 디렉토리를 출력, 매 세션 재해석되어 재시작 없이 적용; `mode: "link"`가 이를 대체 사용
+- (v2.1.229) `ListAgents`가 연결 끊긴 Remote Control 세션을 `offline`으로, 클라우드 세션을 `cloud`로 표시
+- (v2.1.225) 게이트웨이 spend-limit 지원 — 사용량 경고에 한도·리셋 시각·운영자 메시지 표시 (게이트웨이 2.1.225+ 필요)
+- (v2.1.225) 신뢰되지 않은 디렉토리에서 `claude agents` 워크스페이스 신뢰 프롬프트 추가 (`claude`와 동일 동작)
+- (v2.1.225) `SendMessage`로 다른 머신의 Remote Control 세션에 먼저 메시지를 보내 대화 시작 가능 (`ListAgents`에 `name [ref]`로 표시)
+- (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 전환 (Team·Enterprise 플랜)
+- (v2.1.224) **`archive` 플러그인 소스** — git/npm 없이 HTTPS zip에서 플러그인 설치, SHA-256 핀 지원
+- (v2.1.224) **크로스 세션 `SendMessage`** — 모든 머신의 Claude Code 세션 간 메시지 전송, `ListAgents`로 탐색 (macOS·Linux)
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass 권한으로 실행 중인 세션으로 온 크로스 세션 메시지는 승인 대기, 다른 세션 메시지는 자동 전달
+- (v2.1.224) 샌드박스 자격증명 마스킹 확장 — `extract`·`onExtractNoMatch`(구조화 env 값), `decode: "jwt"`+`maskClaims`, `awsPairs`/`sigv4`(AWS SigV4 재서명); `network.tlsTerminate` 필요, user/managed/`--settings` 설정에서만 적용
+- (v2.1.224) `ANTHROPIC_BEDROCK_REGION_PREFIX` env var — `AWS_REGION` 유추 리전 대신 특정 cross-region inference profile 선호
+- (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경** — 현재 diff 또는 PR 리뷰 (`/code-review <level> <pr#>`); `/code-review ultra`로 클라우드 심층 리뷰
+- (v2.1.223) `/code-review` effort 레벨 미지정 시 마지막 입력 레벨 재사용
+- (v2.1.223) `strictKnownMarketplaces`·`blockedMarketplaces` managed 설정에 owner wildcard 항목(`"owner/*"`) 추가 — GitHub org 전체 마켓플레이스 허용/차단
+- (v2.1.223) 워크플로우 에이전트·forked skill·슬래시 명령·재개된 백그라운드 에이전트의 서브에이전트 모델이 제한될 때 경고 추가
+- (v2.1.223) 클라우드 세션에 `/teleport` 힌트 — `claude --teleport <session id>`로 로컬에서 이어가는 방법 표시
+- (v2.1.222) ultraplan 기능 제거
+- (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"` (Linux·WSL) — 세션토큰 자리에 sentinel 사본 읽기, egress 시 프록시가 실값으로 치환 (macOS는 `deny`로 폴백)
+- (v2.1.221) `claude-api` 스킬 `prompt-audit` 서브커맨드 — 구형 모델 대상으로 작성된 프롬프트·도구 설명 감사
+- (v2.1.228) Write 도구 — 최신 모델은 이번 세션에서 읽지 않은 기존 파일도 덮어쓰기 가능해짐 (Edit 도구와 동일 규칙); 구형 모델은 기존처럼 읽기 선행 필요
+
+**Breaking Changes:**
+- ultraplan 기능 제거 (v2.1.222)
+- `/commit-push-pr`에서 위험 플래그(`--force`, `--amend`, `--no-verify` 등) 포함 git/gh 명령이 더 이상 자동 승인되지 않음 (v2.1.229)
+- 셀프호스트 러너 Windows 시작 시 명시적 `--base-dir` 필수 — 기본 체크아웃 디렉토리 없음 (v2.1.229)
+- Write 도구 파일 덮어쓰기 규칙 변경 — 최신 모델은 세션 중 미열람 파일도 덮어쓰기 가능 (v2.1.228)
+
+**주요 버그 수정:**
+- MCP OAuth 사전 등록된 OAuth 클라이언트(Slack 등) 사용 시 redirect URI mismatch로 로그인 실패하던 버그 수정 (v2.1.231)
+- 긴 응답이 스트리밍 중 일부 사라지고 터미널에 중복 출력되던 버그 수정 (v2.1.229)
+- 도구 호출의 `glob`·`file_path`·`command` 값이 문자열이 아닐 때 오류 화면으로 크래시(및 `--resume` 시 재발) 수정 (v2.1.229)
+- 매우 좁은 터미널에서 progress bar·마크다운 테이블 렌더링 시 RangeError 크래시 수정 (`--continue`/`--resume` 시작 시 크래시 포함) (v2.1.229)
+- Windows에서 extended-length(`\\?\`)·UNC 경로 참조 시 크래시 수정 (v2.1.229)
+- `CLAUDE_CODE_ATTRIBUTION_HEADER` 비활성화 사용자의 auto mode 모든 도구 호출 실패 수정 (v2.1.229)
+- claude.ai 구독자가 커스텀 `ANTHROPIC_BASE_URL` 게이트웨이 사용 시 `/model`이 Sonnet/Opus 1M 거부하던 버그 수정 (v2.1.229)
+- MCP OAuth strict authorization 서버 대응 — redirect URI `localhost` 대신 `127.0.0.1` 사용 (v2.1.229)
+- `/install-github-app`로 생성된 Claude Code Review 워크플로우가 PR에 리뷰를 게시하지 않고 완료되던 버그 수정 (v2.1.229)
+- IDE 확장 연결 중 수천 개 진단이 있는 파일 편집 후 수 초간 UI 정지 수정 (v2.1.229)
+- self-hosted runner·remote 세션이 `managed-mcp.json` 배포·서버 제공 MCP 서버 존재 시 시작 시 종료되던 버그 수정 — 이제 경고와 함께 스킵 (v2.1.229)
+- self-hosted runner 레포 준비가 Git Credential Manager 프롬프트에서 행 걸리던 버그 수정 — 자격증명 없으면 즉시 실패 (v2.1.229)
+- interactive 세션이 드물게 내부 레이아웃 오류로 화면 갱신을 완전히 멈추던 버그 수정 (프로세스는 계속 실행) (v2.1.228)
+- Windows에서 git 설치 폴더의 상위 폴더에서 실행 시 git/Git Bash 미검출 수정 (v2.1.228)
+- `/tui`가 `/model` 변경 후에도 세션을 이전 모델로 되돌리던 버그 수정 (v2.1.228)
+- 세션 정리가 프로젝트 memory 폴더 내용을 삭제하던 버그 수정 (v2.1.228)
+- 심볼릭 링크된 개발 체크아웃이 유일 버전인 플러그인의 캐시를 백그라운드 정리가 삭제하던 버그 수정 (v2.1.228)
+- `claude-code-action`에서 `allowed_non_write_users` 사용 시 모든 Bash 명령이 실패하던 버그 수정 (v2.1.227)
+- 만료된 로그인 토큰으로 세션 시작 시 기능 플래그가 구독 티어 없이 평가되던 버그 수정 (v2.1.227)
+- `/tui`가 첫 메시지 이전으로 rewind된 대화를 복원하던 버그 수정 (v2.1.227)
+- 워크트리 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령을 실행할 수 있던 보안 버그 수정 — 격리가 모든 세션 유형의 파일 편집·Bash에 적용 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크(요약·압축·이름변경)에서 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- Bash 도구 permission 우회 — 크래프트된 명령이 일부를 권한 검사에서 숨길 수 있던 취약점 수정 (v2.1.223)
+- 탭·비표시 유니코드로 패딩된 명령이 승인 다이얼로그에서 명령 일부를 숨길 수 있던 버그 수정 (v2.1.223)
+- 워크플로우 스크립트가 동적 `import()`로 워크플로우 샌드박스 밖 코드를 실행할 수 있던 버그 수정 (v2.1.223)
+- 에이전트 정의 `bypassPermissions` 모드가 조직의 bypass-permissions 비활성화 정책을 무시하던 권한 격차 수정 (v2.1.223)
+- zsh `[[ ]]` regex 조건에서 숨겨진 명령 실행 가능하던 Bash 도구 권한 우회 수정 (v2.1.221)
+- Windows에서 따옴표 포함 경로에 대한 PowerShell 권한 검사 오류 수정 (v2.1.221)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

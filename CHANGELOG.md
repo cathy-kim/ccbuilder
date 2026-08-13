@@ -8,6 +8,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-13
+
+### Added
+- **Claude Code v2.1.231 sync** (v2.1.220 → v2.1.231 콘텐츠 반영)
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 전환 (Team·Enterprise 플랜)
+  - (v2.1.224) **크로스 세션 `SendMessage`** — 모든 머신의 Claude Code 세션 간 메시지 전송, `ListAgents`로 탐색 (macOS·Linux)
+  - (v2.1.224) `archive` 플러그인 소스 — git/npm 없이 HTTPS zip에서 플러그인 설치, SHA-256 pin 지원
+  - (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정, 샌드박스 자격증명 마스킹 확장(`extract`, JWT 클레임 마스킹, AWS SigV4 재서명), `ANTHROPIC_BEDROCK_REGION_PREFIX`
+  - (v2.1.225) 게이트웨이 spend-limit 사용량 경고, `claude agents` 워크스페이스 신뢰 프롬프트, `SendMessage`로 타 머신 Remote Control 세션에 먼저 메시지 시작 가능
+  - (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경**; owner wildcard(`"owner/*"`) 마켓플레이스 항목; `/code-review` effort 미지정 시 마지막 레벨 재사용; `/teleport` 힌트
+  - (v2.1.228) Write 도구 — 최신 모델은 세션 중 미열람 기존 파일도 덮어쓰기 가능 (Edit 도구와 동일 규칙)
+  - (v2.1.229) `claude remote-control --continue`, 플러그인 마켓플레이스 `command` 소스(`mode: "link"`), `ListAgents` `offline`/`cloud` 레이블
+  - (v2.1.229) 셀프호스트 러너 세션 서버 제공 Hook 지원, 게이트웨이 스트리밍 SSE keepalive(Vertex·Bedrock idle-timeout 방지)
+  - (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"`(Linux·WSL), `claude-api` 스킬 `prompt-audit` 서브커맨드, 백그라운드 세션 커밋·푸시 우선 워크플로우
+  - (v2.1.231) MCP OAuth 사전 등록 클라이언트(Slack 등) redirect URI mismatch 로그인 실패 수정
+  - 보안 수정: Bash 권한 우회(zsh `[[ ]]` regex, 탭/유니코드 패딩 명령), 워크플로우 스크립트 동적 `import()` 샌드박스 탈출, 워크트리 격리 세션의 메인 체크아웃 파괴적 git 명령 차단 강화, agent `bypassPermissions` 조직 정책 우회 방지
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.231; MCP·Plugin·CLI/Agent·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.231 변경사항 추적 엔트리 추가 (v2.1.221~231 신규 기능·Breaking Changes·버그 수정 정리)
+
+### Breaking Changes (Claude Code v2.1.221-231)
+- Removed ultraplan 기능 (v2.1.222)
+- `/commit-push-pr` 위험 플래그(`--force`·`--amend`·`--no-verify` 등) git/gh 명령 자동 승인 제거 (v2.1.229)
+- 셀프호스트 러너 Windows 시작 시 명시적 `--base-dir` 필수 (v2.1.229)
+- Write 도구 파일 덮어쓰기 규칙 변경 — 최신 모델은 세션 중 미열람 기존 파일도 덮어쓰기 가능 (v2.1.228)
+
+### Fixed (주요)
+- MCP OAuth redirect URI mismatch(Slack 등 사전 등록 클라이언트) 로그인 실패 수정 (v2.1.231)
+- 워크트리 격리 세션이 메인 체크아웃에 파괴적 git 명령을 실행할 수 있던 보안 버그 수정 (v2.1.222)
+- Bash 권한 검사 우회(zsh regex, 탭/유니코드 패딩 명령) 보안 수정 (v2.1.221, v2.1.223)
+- 워크플로우 스크립트 동적 `import()` 샌드박스 탈출 수정 (v2.1.223)
+- `claude-code-action`의 `allowed_non_write_users` 사용 시 모든 Bash 명령 실패 수정 (v2.1.227)
+- 긴 응답이 스트리밍 중 일부 유실·터미널 중복 출력되던 버그 수정 (v2.1.229)
+
+
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

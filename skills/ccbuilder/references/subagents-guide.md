@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-13
+**Claude Code Version**: v2.1.231+
 
 ---
 
@@ -180,6 +180,9 @@ Task({
 // 신규 방식 (v2.1.77+)
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
+
+> **v2.1.224 신규**: **크로스 세션 `SendMessage`** — 같은 머신뿐 아니라 다른 머신의 Claude Code 세션에도 메시지 전송 가능 (macOS·Linux). `ListAgents`로 다른 세션을 탐색합니다. `crossSessionInbound`/`dialogExpiry` 설정으로 bypass-permissions 세션에는 승인 대기 후 전달하도록 제어할 수 있습니다.
+> **v2.1.229 신규**: `ListAgents`가 연결 끊긴 Remote Control 세션은 `offline`, 클라우드 세션은 `cloud`로 표시합니다.
 
 ---
 

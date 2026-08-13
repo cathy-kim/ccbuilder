@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-13 (Claude Code v2.1.231+)
 
 ---
 
@@ -14,7 +14,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기 | **높음** |
+| `Write` | 127 | 파일 생성/덮어쓰기; 최신 모델은 이번 세션에서 읽지 않은 기존 파일도 덮어쓰기 가능(Edit와 동일 규칙, 구형 모델은 기존처럼 선행 Read 필요, v2.1.228) | **높음** |
 | `Edit` | 246 | 파일 내 문자열 치환 | **중간** |
 | `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
 | `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
@@ -34,7 +34,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
-| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams); 모든 머신의 Claude Code 세션 간 크로스 세션 메시지 지원 — `ListAgents`로 탐색 (macOS·Linux, v2.1.224) | 낮음 |
 
 ### Planning Tools
 

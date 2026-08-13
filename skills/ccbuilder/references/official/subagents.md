@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-13 (v2.1.231)
 
 ---
 
@@ -77,3 +77,6 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **크로스 세션 SendMessage (v2.1.224+)**: 같은 머신뿐 아니라 다른 머신의 Claude Code 세션으로도 메시지 전송 가능(macOS·Linux); `ListAgents`로 탐색; `crossSessionInbound`/`dialogExpiry` 설정으로 bypass-permissions 세션 수신 제어
+- **ListAgents 상태 레이블 (v2.1.229+)**: 연결 끊긴 Remote Control 세션 `offline`, 클라우드 세션 `cloud`로 표시
+- **self-hosted-runner (v2.1.224+)**: `claude self-hosted-runner`로 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 등록 (Team·Enterprise); 서버 제공 Hook을 managed 환경과 동일하게 지원 (v2.1.229)
