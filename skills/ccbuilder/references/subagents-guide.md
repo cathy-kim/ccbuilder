@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-14
+**Claude Code Version**: v2.1.232+
 
 ---
 
@@ -25,6 +25,10 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+
+> **v2.1.232 — 서브에이전트 포킹 기본 활성화**: `subagent_type: "fork"` 서브에이전트는 부모의 전체 대화 이력과 프롬프트 캐시를 그대로 상속합니다. 또한 인터랙티브 세션에서 파견되는 non-teammate 에이전트(포크가 아닌 일반 Task 파견 포함)는 기본적으로 백그라운드로 실행됩니다 — 결과가 준비될 때까지 대화가 블로킹되지 않습니다.
+>
+> **v2.1.224 — 세션당 파견 총량 상한 제거**: 기존 200개 세션당 서브에이전트 파견 상한이 폐지되어 장시간 세션도 신규 에이전트 파견을 거부하지 않습니다 (동시성·깊이 제한은 그대로 유지).
 
 ---
 
@@ -181,6 +185,19 @@ Task({
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
+### 7. 크로스세션 메시징 (v2.1.224+, macOS·Linux)
+
+`SendMessage`/`ListAgents`는 같은 세션의 서브에이전트뿐 아니라 **같은 머신 또는 다른 머신의 다른 Claude Code 세션**과도 통신할 수 있습니다.
+
+```typescript
+ListAgents()  // 다른 인터랙티브 세션·Remote Control 세션·클라우드 세션 목록 (offline/cloud 라벨 포함, v2.1.229)
+SendMessage({ to: "other-session-name", content: "..." })
+```
+
+- **v2.1.229**: `ListAgents`가 연결이 끊긴 Remote Control 세션은 `offline`, 클라우드 세션은 `cloud`로 표시
+- **v2.1.232**: 프롬프트에 `@`를 입력해 다른 세션을 이름으로 멘션하면 자동으로 `SendMessage`가 호출됨; 살아있는 세션과 정확히 일치하는 이름은 ref 확인 절차 없이 즉시 전달; 같은 머신의 인터랙티브 세션은 이름 충돌 시 `name-word-word` 변형이 자동 부여되어 고유성 보장
+- `crossSessionInbound`/`dialogExpiry` 설정으로 bypass-permissions 세션에 온 메시지는 승인 후 전달, 일반 세션은 자동 전달 (v2.1.224)
+
 ---
 
 ## 제약 사항
@@ -188,7 +205,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 폐지** — 기존 200개 상한 제거, 동시성·깊이 제한만 유지 (v2.1.224) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
@@ -291,6 +308,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| 인터랙티브 세션 서브에이전트 파견 | 포그라운드(대화 블로킹) | non-teammate 파견 **기본 백그라운드 실행**; `subagent_type: "fork"`는 부모 대화·프롬프트 캐시 상속 (v2.1.232) |
+| 세션당 서브에이전트 파견 총량 | 기본 200개 상한 | **상한 폐지** — 동시성·깊이 제한만 유지 (v2.1.224) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

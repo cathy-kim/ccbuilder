@@ -77,6 +77,58 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.232 (2026-08-14 동기화)
+
+**새로운 기능:**
+- (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 서브에이전트는 부모의 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate 에이전트 파견이 기본적으로 백그라운드 실행
+- (v2.1.232) `@` 멘션으로 다른 Claude 세션 호출 — Claude가 `SendMessage`로 직접 연결
+- (v2.1.232) `SendMessage`가 정확히 하나의 살아있는 세션과 일치하는 이름에는 ref 확인 없이 즉시 전달
+- (v2.1.232) 동일 머신 인터랙티브 세션 고유 이름 보장 — 이름 충돌 시 `name-word-word` 변형 자동 부여
+- (v2.1.232) `/config`에 "Dialog expiry", "Messages from your other sessions" 행 추가
+- (v2.1.232) GitLab 토큰 패밀리 시크릿 리댁션(`glrt-` 등), `glpat-`/`gldt-` 전체 리댁션; `glab` CLI 자격증명 `gh`와 동일 샌드박스 보호
+- (v2.1.232) 플러그인 마켓플레이스 GitLab 지원 — bare `gitlab.com` 레포 URL(중첩 서브그룹 포함) 클론
+- (v2.1.232) `additionalMarketplaces`/`allowedMarketplaces` 설정 별칭, `blockedMarketplaces` url 타입 엔트리
+- (v2.1.232) Fable 5가 `/advisor`에서 다시 제공 (조직 Fable 액세스 보유 시)
+- (v2.1.232) `/code-review` high·xhigh·max effort도 백그라운드 에이전트로 실행
+- (v2.1.232) `/plugin install plugin@marketplace`가 설치 전 마켓플레이스 자동 갱신
+- (v2.1.229) `claude remote-control --continue`; 자체 호스팅 러너 세션 서버 제공 Hook 지원
+- (v2.1.229) 게이트웨이 스트리밍 응답 SSE keepalive ping (Vertex·Bedrock idle-timeout 방지)
+- (v2.1.229) 플러그인 마켓플레이스 `command` 소스 — 로컬 명령이 플러그인 디렉터리 출력
+- (v2.1.229) `ListAgents`가 연결 끊긴 Remote Control 세션 `offline`, 클라우드 세션 `cloud` 표시
+- (v2.1.228) Write 도구 — 신형 모델은 미독 기존 파일도 덮어쓰기 허용(Edit 도구와 동일 규칙)
+- (v2.1.228) claude.ai 동기화 스킬 하드닝 — 로컬 명령/MCP 프롬프트 shadow 방지, `!` 명령·`@` 파일 확장 차단
+- (v2.1.225) `claude agents` 미신뢰 디렉터리 워크스페이스 신뢰 프롬프트; 게이트웨이 spend-limit 사용량 경고
+- (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 환경으로 등록 (Team·Enterprise)
+- (v2.1.224) **크로스세션 `SendMessage`** — 모든 머신의 Claude Code 세션 간 메시징, `ListAgents`로 탐색 (macOS·Linux)
+- (v2.1.224) `archive` 플러그인 소스 — git·npm 없이 HTTPS zip 설치, SHA-256 핀 지원
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass 권한 세션 크로스세션 메시지 승인 보류
+- (v2.1.224) 샌드박스 자격증명 마스킹 확장 — `extract`/`onExtractNoMatch`, `decode: "jwt"`+`maskClaims`, `awsPairs`/`sigv4`
+- (v2.1.224) 세션당 서브에이전트 파견 총량 상한(기존 200개) 제거 — 동시성·깊이 제한만 유지
+- (v2.1.223) owner wildcard 마켓플레이스 엔트리(`"owner/*"`); `/teleport` 힌트; `/review` → `/code-review` 별칭, 마지막 effort 레벨 재사용
+- (v2.1.223) `CLAUDE_CODE_DISABLE_1M_CONTEXT`가 네이티브 1M 컨텍스트 보유 모든 모델에 자동 압축 적용(고정 목록 대체)
+- (v2.1.221) 샌드박스 자격증명 파일 `mode: "mask"`(Linux·WSL); 백그라운드 세션 커밋·푸시로 작업 보존; `/fork` 세션 자체 worktree 생성; `/status` 세션 종류 표시
+
+**Breaking Changes:**
+- 서브에이전트 포킹 기본 활성화 — 인터랙티브 세션 non-teammate 에이전트 파견이 기본적으로 백그라운드 실행 (v2.1.232)
+- `sandbox.ripgrep`이 user·managed·`--settings` 설정에서만 적용 — project settings 오버라이드 불가 (v2.1.232)
+- ultraplan 기능 완전 제거 — 대체 없음 (v2.1.222)
+- Remote Control auto-start — 레포 로컬 설정으로 켜기 불가(끄기는 가능); user scope `/config`에서 활성화 (v2.1.222)
+- worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용 (v2.1.222)
+- 세션당 서브에이전트 파견 총량 상한(기존 200개) 폐지 (v2.1.224)
+
+**주요 버그 수정:**
+- PowerShell `$PSDefaultParameterValues` 조용한 덮어쓰기로 이후 명령 파일 접근 리다이렉트하던 권한 우회 수정 (v2.1.232)
+- Windows Git Bash Cygwin 스타일 심볼릭 링크가 경로 검증을 우회하던 취약점 수정 (v2.1.232)
+- 중첩 git 레포가 상위 디렉터리 신뢰를 상속하던 버그 수정 — 레포마다 독립 신뢰 확인 (v2.1.232)
+- MCP 연결이 프로토콜-버전 프로브 응답 없음/기형 응답 시 30초 풀 타임아웃까지 행 걸리던 버그 수정 (v2.1.232)
+- Bash 권한 우회 — 명령 일부 숨김, 탭·비가시 유니코드로 승인 다이얼로그 스푸핑 수정 (v2.1.223)
+- workflow 스크립트 동적 `import()`로 샌드박스 이탈하던 취약점 수정 (v2.1.223)
+- agent definition `bypassPermissions`가 조직 비활성화 정책을 무시하던 권한 갭 수정 (v2.1.223)
+- worktree 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령 실행하던 버그 수정 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 태스크에서 도구 제한 우회하던 버그 수정 (v2.1.222)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

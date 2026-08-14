@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-14 (v2.1.232)
 
 ---
 
@@ -62,7 +62,9 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 ## 고급 기능
 
 - **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 다시 기본 depth 3 허용**으로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
-- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 **상한 폐지**(기존 200개 상한 제거, 동시성·깊이 제한만 유지, v2.1.224); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **서브에이전트 포킹 기본 활성화 (v2.1.232)**: `subagent_type: "fork"` 서브에이전트는 부모의 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate 에이전트 파견은 기본적으로 백그라운드 실행
+- **크로스세션 메시징 (v2.1.224+, macOS·Linux)**: `SendMessage`/`ListAgents`로 같은 머신 또는 다른 머신의 다른 Claude Code 세션과 통신 — `ListAgents`가 오프라인 Remote Control 세션은 `offline`, 클라우드 세션은 `cloud`로 표시 (v2.1.229); `@` 멘션으로 세션 지정 시 자동 `SendMessage` 호출, 유일하게 일치하는 이름은 ref 확인 없이 즉시 전달, 동일 머신 이름 충돌 시 `name-word-word` 변형 자동 부여 (v2.1.232)
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Task tool `mode` 파라미터 제거 (v2.1.212)**: 서브에이전트는 부모 세션 permission mode 기본 상속
