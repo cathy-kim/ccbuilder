@@ -8,6 +8,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-15
+
+### Added
+- **Claude Code v2.1.233 sync** (v2.1.220 → v2.1.233 콘텐츠 반영)
+  - (v2.1.233) GitLab merge request URL 지원 — `--worktree` 플래그·`claude agents` 뷰에서 MR을 `!N`으로 표시
+  - (v2.1.233) apps gateway `forward_user_identity` 옵트인 설정 — Anthropic upstream에 로그인 사용자 identity 헤더 전달, 프록시가 사용자별 지출 귀속 가능
+  - (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux Bash 도구 명령에 옵트인 메모리 cgroup 적용, 폭주 빌드로 인한 세션 정지 방지
+  - (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정 (기본값 15분 유지)
+  - (v2.1.233) **Todo/Task 관리 도구 기본 비활성화** — Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 등 신모델에서 TaskCreate/Get/Update/List·TodoWrite 기본 제거, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) `claude plugin validate` — bare `.claude/skills` 디렉토리 검사, frontmatter 파싱 실패한 SKILL.md 보고
+  - (v2.1.233) 화면낭독기 모드 `/effort` 선택기 번호 목록화; print 모드 미인식 모델 ID 시 `[claude-code:unrecognized_model]` stderr 진단 라인
+  - (v2.1.232) **서브에이전트 포크 기본 활성화** — `subagent_type: "fork"`가 부모 대화 전체+프롬프트 캐시 상속(기본), 인터랙티브 세션의 비팀메이트 에이전트 파견도 기본 백그라운드 실행
+  - (v2.1.232) 프롬프트에 `@`로 다른 Claude 세션 멘션 → `SendMessage` 자동 라우팅; 세션명 중복 시 `name-word-word` 자동 변형
+  - (v2.1.232) `/config`에 "Dialog expiry"·"Messages from your other sessions" 행 추가
+  - (v2.1.232) GitLab 토큰 패밀리 시크릿 자동 마스킹, GitLab 마켓플레이스 지원(bare `gitlab.com` 레포 URL 클론), `additionalMarketplaces`/`allowedMarketplaces` 친화적 별칭 추가
+  - (v2.1.232) Fable 5가 `/advisor`에 다시 노출 (Fable 접근 가능 조직 대상)
+  - (v2.1.229) `claude remote-control --continue`, 마켓플레이스 `command` 소스(로컬 커맨드가 플러그인 디렉토리 재해석·`mode: "link"`), gateway 스트리밍 SSE keepalive ping
+  - (v2.1.225) gateway spend-limit 사용량 경고에 한도·리셋 시각·운영자 메시지 표시; `claude agents`에 미신뢰 디렉토리 워크스페이스 신뢰 프롬프트 추가
+  - (v2.1.224) `claude self-hosted-runner` — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행처로 등록(Team·Enterprise); `archive` 플러그인 소스(HTTPS zip, SHA-256 pinning); 크로스 세션 `SendMessage`(모든 머신); `crossSessionInbound`/`dialogExpiry` 설정; 200-서브에이전트 세션당 파견 상한 제거
+  - (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces` owner wildcard(`"owner/*"`); `/teleport` 힌트; `/review`가 `/code-review` alias로 변경, effort 미지정 시 마지막 사용 레벨 재사용
+  - (v2.1.222) `/code-review` high~max effort 백그라운드 에이전트 실행
+
+### Security
+- (v2.1.233) Windows NT `\??\` 디바이스 프리픽스 경로가 UNC 경로 검증을 우회하던 NTLM 자격증명 유출 벡터 차단
+- (v2.1.232) PowerShell `$PSDefaultParameterValues` 변수 쓰기 권한 우회 수정; Git Bash Cygwin 심볼릭 링크 권한 우회 수정(단, 해당 변경은 회귀를 일으켜 v2.1.233에서 되돌림); 중첩 git 저장소가 상위 디렉토리 신뢰를 상속하던 문제 수정 — 저장소별 개별 신뢰 확인 필요
+- (v2.1.223) 커맨드 일부를 권한 검사에서 숨기던 Bash 권한 우회, 탭·비가시 유니코드로 명령 일부를 숨기던 권한 프롬프트 우회, workflow 스크립트의 동적 `import()` 샌드박스 탈출 수정
+- (v2.1.222) worktree 격리 세션이 파일 편집·Bash 명령으로 메인 체크아웃에 파괴적 git 명령 실행 가능하던 취약점 수정; PreToolUse auto-allow 훅이 백그라운드 에이전트 작업(요약·압축·리네임)에서 도구 제한을 우회하던 문제 수정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.233; Task Management·CLI·Plugin·신규 도구·Breaking Changes 섹션에 위 항목 반영 (기존 500줄 상한 유지, 신규 줄 추가 없이 기존 항목에 인라인 반영)
+- `references/version-sync.md`: v2.1.233 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포크 기본 활성화, 비팀메이트 파견 기본 백그라운드, Todo/Task 도구 신모델 기본 비활성화 반영
+- `references/official/tools.md`: Task Management Tools 섹션에 신모델 기본 비활성화 노트 추가
+
+### Breaking Changes (Claude Code v2.1.221-v2.1.233)
+- Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- 서브에이전트 포크(`subagent_type: "fork"`) 기본 활성화, 인터랙티브 비팀메이트 에이전트 파견 기본 백그라운드 실행 (v2.1.232)
+- `sandbox.ripgrep`은 user·managed·`--settings` 설정에서만 적용 — project settings 오버라이드 불가 (v2.1.232)
+- Remote Control 자동 시작을 레포 로컬 설정(`.claude/settings.json` 등)이 켤 수 없음 — 끄는 것만 가능, 켜려면 user scope `/config` 사용 (v2.1.222)
+- ultraplan 기능 제거 (v2.1.222)
+
+### Fixed (Claude Code v2.1.221-v2.1.233 주요 수정)
+- 대기 중인 권한 프롬프트 중 환경이 종료될 때 클라우드 세션이 lost로 잘못 표시되던 버그 수정
+- MCP v2 연결이 고정 타임아웃으로 스트림을 끊는 서버(서버리스 호스트 등) 대상으로 subscriptions/listen 스트림을 무한 재오픈하던 버그 수정
+- Claude Desktop·VS Code에서 Notification 훅이 권한 프롬프트에 대해 발동하지 않던 버그 수정
+- 샌드박싱 활성화 시 Linux 유휴 세션이 CPU 코어 하나를 100%로 유지하던 버그 수정
+- `/checkup`, `/review` 등 번들 스킬 별칭이 `-p` 모드나 플러그인/MCP 로드 시 동명의 사용자·프로젝트 스킬에 가려져 "Unknown command"를 반환하던 버그 수정
+- 스킬/명령 인자 값이 템플릿 마커로 재확장되던 치환 버그 수정
+- Windows에서 auto 모드가 일반적인 `cd <dir> && <command> > file` Bash 명령마다 수동 승인을 요구하던 회귀 수정 (v2.1.232 회귀)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

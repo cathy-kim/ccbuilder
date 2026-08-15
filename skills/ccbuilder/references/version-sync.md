@@ -77,6 +77,75 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.233 (2026-08-15 동기화)
+
+**새로운 기능:**
+- (v2.1.233) GitLab merge request URL 지원 — `--worktree` 플래그와 `claude agents` 뷰에서 MR을 `!N`으로 표시
+- (v2.1.233) apps gateway `forward_user_identity` 옵트인 설정 — Anthropic upstream에 로그인 사용자 identity 헤더 전달 → 프록시가 사용자별 지출 귀속 가능
+- (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux Bash 도구 명령 옵트인 메모리 cgroup, 폭주 빌드로 인한 세션 정지 방지
+- (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정 (기본 15분 유지)
+- (v2.1.233) `claude plugin validate` — bare `.claude/skills` 디렉토리 검사, frontmatter 파싱 실패한 SKILL.md 보고
+- (v2.1.233) 화면낭독기 모드 `/effort` 선택기 번호 목록 + 타이핑 숫자 입력 프롬프트, 힌트·다이얼로그 텍스트 클리핑 수정
+- (v2.1.233) print 모드 진단 — 인식 못 하는 모델 ID로 요청 시 `[claude-code:unrecognized_model]` stderr 라인, `modelOverrides`로 매핑 시 억제
+- (v2.1.233) apps gateway 오류 전달 개선 — Vertex·Foundry·Claude Platform on AWS upstream의 400/413 오류가 upstream 메시지 그대로 전달; apps gateway auto-compact 버그 수정
+- (v2.1.233) GitHub app 설정 팁 — origin remote가 gitlab.com·bitbucket.org일 때 노출 안 함; enterprise marketplace 팁이 non-GitHub 내부 git 호스트 포괄
+- (v2.1.233) self-hosted-runner 세션 시작 시간 개선 — 워킹 트리 재작성 없이 세션 브랜치 생성, 서버 왕복 2회 제거
+- (v2.1.232) **서브에이전트 포크 기본 활성화** — `subagent_type: "fork"`가 전체 대화+프롬프트 캐시 상속(기본); 인터랙티브 세션의 비팀메이트 에이전트 파견도 기본 백그라운드 실행
+- (v2.1.232) 프롬프트에 `@`로 다른 Claude 세션 멘션 → `SendMessage`로 해당 세션에 직접 라우팅
+- (v2.1.232) `SendMessage`가 정확히 일치하는 유일한 라이브 세션 이름에 확인 없이 즉시 전달
+- (v2.1.232) 한 머신 내 인터랙티브 세션 이름 고유성 보장 — 중복 시 `name-word-word` 변형 자동 부여
+- (v2.1.232) `/config`에 "Dialog expiry"·"Messages from your other sessions" 행 추가
+- (v2.1.232) GitLab 토큰 패밀리(`glrt-`, `gloas-`, `glptt-` 등) 시크릿 자동 마스킹; `glab` CLI 설정 저장소에 `gh`와 동일한 샌드박스·자격증명 경로 보호
+- (v2.1.232) GitLab 마켓플레이스 지원 — bare `gitlab.com` 레포 URL(중첩 서브그룹 포함) `github.com`처럼 클론; 클론 인증 실패 힌트가 실제 git 호스트 명시
+- (v2.1.232) `additionalMarketplaces`/`allowedMarketplaces`가 `extraKnownMarketplaces`/`strictKnownMarketplaces`의 친화적 별칭으로 추가
+- (v2.1.232) Fable 5가 `/advisor`에 다시 노출 (Fable 접근 가능 조직), `/model fable` 사용자 크레딧 동의 플로우 재정비
+- (v2.1.229) `claude remote-control --continue` — 가장 최근 Remote Control 세션 재개
+- (v2.1.229) 마켓플레이스 `command` 소스 — 로컬 커맨드(IDE 등)가 플러그인 디렉토리를 출력, 매 세션 재해석되어 재시작 없이 적용; `mode: "link"`
+- (v2.1.229) gateway 스트리밍 응답에 SSE keepalive ping — Vertex·Bedrock upstream 긴 thinking 중 유휴 타임아웃 연결 끊김 방지
+- (v2.1.225) gateway spend-limit 사용량 경고 — 한도·리셋 시각·운영자 메시지 명시
+- (v2.1.225) `claude agents`에 미신뢰 디렉토리 워크스페이스 신뢰 프롬프트 추가 (`claude`와 동일 동작)
+- (v2.1.224) `claude self-hosted-runner` — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행처로 등록 (Team·Enterprise)
+- (v2.1.224) `archive` 플러그인 소스 — git/npm 없이 HTTPS zip으로 플러그인 설치, SHA-256 pinning 옵션
+- (v2.1.224) 크로스 세션 `SendMessage` — 모든 머신의 Claude Code 세션 간 메시징, `ListAgents`로 탐색 (macOS·Linux)
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass-permissions 세션으로의 크로스 세션 메시지 승인 보류, 다른 세션 메시지 자동 전달
+- (v2.1.224) 세션당 200-서브에이전트 파견 상한 제거 — 장기 실행 세션에서 신규 에이전트 파견 거부 안 함 (동시성·깊이 제한은 유지)
+- (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces` owner wildcard(`"owner/*"`) — GitHub org 산하 전체 마켓플레이스 레포 허용/차단
+- (v2.1.223) `/teleport` 힌트 — 클라우드 세션에서 `claude --teleport <session id>`로 로컬 이어가기 안내
+- (v2.1.223) `/review`가 `/code-review`의 alias로 변경(현재 diff 또는 PR 리뷰); `/code-review`가 effort 미지정 시 마지막 입력 레벨 재사용
+- (v2.1.222) `/code-review` high·xhigh·max effort가 다른 레벨처럼 백그라운드 에이전트로 실행
+
+**보안 수정:**
+- Windows NT `\??\` 디바이스 프리픽스 경로가 UNC 경로 검증을 우회하던 NTLM 자격증명 유출 벡터 차단 (v2.1.233)
+- PowerShell 변수 쓰기 파라미터가 `$PSDefaultParameterValues`를 조용히 덮어써 이후 명령의 파일 접근을 리다이렉트하던 권한 우회 수정 (v2.1.232)
+- Git Bash가 Cygwin 스타일 심볼릭 링크를 일반 파일로 오판하던 Windows 권한 우회 수정 — 단, 이 변경과 입력 리다이렉션(`< file`) 권한 검사는 회귀를 유발해 v2.1.233에서 되돌려짐(더 좁은 범위로 재작업 예정) (v2.1.232 → v2.1.233 되돌림)
+- 중첩 git 저장소가 상위 디렉토리의 신뢰를 상속하던 문제 수정 — 저장소별 개별 신뢰 확인 필요 (v2.1.232)
+- 크래프팅된 명령이 권한 검사에서 일부를 숨길 수 있던 Bash 권한 우회 수정 (v2.1.223)
+- 탭·비가시 유니코드로 패딩된 명령이 승인 다이얼로그에서 일부를 숨길 수 있던 문제 수정 (v2.1.223)
+- workflow 스크립트가 동적 `import()`로 workflow 샌드박스 밖 코드를 실행할 수 있던 문제 수정 (v2.1.223)
+- agent 정의의 `bypassPermissions` 모드가 조직의 bypass-permissions 비활성화 정책을 무시하던 권한 갭 수정 (v2.1.223)
+- worktree 격리 세션(및 서브에이전트)이 파일 편집·Bash로 메인 체크아웃에 파괴적 git 명령을 실행할 수 있던 취약점 수정 — 모든 세션 유형에서 격리 적용 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 작업(요약·압축·리네임)에서 도구 제한을 우회하던 문제 수정 (v2.1.222)
+
+**Breaking Changes:**
+- Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 등 신모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- 서브에이전트 포크(`subagent_type: "fork"`) 기본 활성화 — 대화 전체+프롬프트 캐시 상속; 인터랙티브 비팀메이트 에이전트 파견 기본 백그라운드 실행 (v2.1.232)
+- `sandbox.ripgrep`은 user·managed·`--settings` 설정에서만 적용 — project settings가 더 이상 오버라이드 불가 (v2.1.232)
+- Remote Control 자동 시작을 레포 로컬 설정(`.claude/settings.json`·`.claude/settings.local.json`)이 켤 수 없음 — 끄는 것만 가능; 켜려면 user scope `/config` (v2.1.222)
+- ultraplan 기능 제거 (v2.1.222)
+
+**주요 버그 수정:**
+- 대기 중인 권한 프롬프트 상태에서 환경이 종료될 때 클라우드 세션이 lost로 오표시되던 버그 수정 (v2.1.233)
+- 고정 타임아웃으로 장기 스트림을 끊는 서버(서버리스 호스트 등) 대상 MCP v2 연결이 subscriptions/listen 스트림을 무한 재오픈하던 버그 수정 (v2.1.233)
+- Claude Desktop·VS Code에서 Notification 훅이 권한 프롬프트에 대해 발동하지 않던 버그 수정 (v2.1.233)
+- 샌드박싱 활성화 시 Linux 유휴 세션이 CPU 코어 하나를 100%로 유지하던 버그 수정 (v2.1.233)
+- `/checkup`·`/review` 등 번들 스킬 별칭이 `-p` 모드·플러그인/MCP 로드 시 동명 사용자/프로젝트 스킬에 가려져 "Unknown command" 반환하던 버그 수정 (v2.1.233)
+- 스킬/명령 인자 값이 템플릿 마커로 재확장되던 치환 버그 수정 (v2.1.233)
+- Windows에서 auto 모드가 일반적인 `cd <dir> && <command> > file` Bash 명령마다 수동 승인을 요구하던 회귀 수정 (v2.1.232 회귀) (v2.1.233)
+- MCP OAuth 사전 등록 클라이언트(Slack 등)를 사용하는 서버에서 redirect URI 불일치로 로그인 실패하던 버그 수정 (v2.1.231)
+- 긴 (>200자) 프로젝트 경로가 공유 sanitized 프리픽스 아래 다른 프로젝트의 세션 디렉토리로 해석되던 버그 수정 — 세션 목록·rename·fork·delete·`/resume`이 더 이상 프로젝트 간 교차하지 않음 (v2.1.224)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

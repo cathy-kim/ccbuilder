@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-15
+**Claude Code Version**: v2.1.233+
 
 ---
 
@@ -25,6 +25,8 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+
+> **v2.1.232 서브에이전트 포크 기본 활성화**: `subagent_type: "fork"` 서브에이전트는 이제 기본적으로 부모 대화 전체와 프롬프트 캐시를 상속합니다. 또한 인터랙티브 세션에서 팀메이트가 아닌 일반 에이전트 파견도 기본적으로 백그라운드에서 실행됩니다(이전: 포그라운드).
 
 ---
 
@@ -282,7 +284,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
-## Breaking Changes (v2.1.212-2.1.219)
+## Breaking Changes (v2.1.212-2.1.233)
 
 | 변경 | 이전 | 이후 |
 |------|------|------|
@@ -291,6 +293,9 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| 서브에이전트 fork 실행 | 옵트인 방식 | **기본 활성화** — 대화 전체+프롬프트 캐시 상속 (v2.1.232) |
+| 비팀메이트 에이전트 파견 (interactive) | 포그라운드 기본 | **백그라운드 기본 실행** (v2.1.232) |
+| Todo/Task 관리 도구 | 모든 모델 기본 제공 | **Opus 4.8·Sonnet 5·Fable 5·Mythos 5+에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

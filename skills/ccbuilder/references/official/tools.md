@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-15 (Claude Code v2.1.233+)
 
 ---
 
@@ -46,6 +46,8 @@
 | `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
+
+> **v2.1.233**: Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 등 신규 모델에서 아래 6개 도구가 **기본적으로 사용 불가**해집니다 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원.
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
