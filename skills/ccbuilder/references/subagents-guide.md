@@ -156,6 +156,8 @@ Task({
 // output_file로 결과 확인
 ```
 
+> **v2.1.232**: 인터랙티브 세션에서 non-teammate 에이전트 파견은 이제 기본적으로 백그라운드 실행됩니다 (이전: 포그라운드). 또한 `subagent_type: "fork"`로 파견하면 서브에이전트가 현재 대화 전체와 프롬프트 캐시를 그대로 상속합니다(subagent forking, 기본 활성화).
+
 ### 5. 백그라운드 세션 분기 (`/fork`) vs 인라인 서브에이전트 (`/subtask`)
 
 > **v2.1.212 Breaking Change**: `/fork`가 현재 대화를 **새 백그라운드 세션**(`claude agents` 자체 행)으로 복제하는 방식으로 변경되었습니다. 기존에 `/fork`가 하던 인라인 서브에이전트 launch 방식은 **`/subtask`**로 이름이 분리되었습니다.
@@ -291,6 +293,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| non-teammate 에이전트 파견 (인터랙티브) | 포그라운드 실행 | **기본 백그라운드 실행** (v2.1.232) |
+| `subagent_type: "fork"` | - | **기본 활성화** — 전체 대화·프롬프트 캐시 상속 (v2.1.232) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

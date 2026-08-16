@@ -8,6 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-16
+
+### Added
+- **Claude Code v2.1.233 sync** (v2.1.220 → v2.1.233 콘텐츠 반영)
+  - (v2.1.233) GitLab merge request URL 지원 — `--worktree` 플래그·`claude agents` 뷰에서 `!N`으로 표시
+  - (v2.1.233) **Todo/Task 관리 도구 기본 비활성화** — Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 TaskCreate/Get/Update/List·TodoWrite 기본 제거; `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux Bash 도구 명령 옵트인 memory cgroup(런어웨이 빌드 세션 정지 방지)
+  - (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정(기본 15분)
+  - (v2.1.233) apps gateway `forward_user_identity` 옵트인 설정 — 로그인 사용자 신원을 헤더로 프록시 전달, 사용자별 spend 귀속
+  - (v2.1.233) `claude plugin validate`가 bare `.claude/skills` 디렉토리 검사(SKILL.md frontmatter 파싱 오류 리포트)
+  - (v2.1.233) 스크린리더 모드 `/effort` 선택기 번호 목록+타이핑 프롬프트; print mode `[claude-code:unrecognized_model]` stderr 로그
+  - (v2.1.232) **서브에이전트 forking 기본 활성화** — `subagent_type: "fork"`가 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션 non-teammate 에이전트 파견 기본 백그라운드 실행
+  - (v2.1.232) 프롬프트에 `@`로 다른 세션 멘션 시 `SendMessage`로 자동 도달; 유일하게 일치하는 세션 이름은 확인 없이 즉시 전달
+  - (v2.1.232) GitLab 플러그인 마켓플레이스 지원(bare `gitlab.com` URL), GitLab 토큰 시크릿 자동 redaction, `glab` CLI 자격증명 보호
+  - (v2.1.232) `/config`에 "Dialog expiry"·"Messages from your other sessions" 행 추가; `/code-review` high·xhigh·max effort도 백그라운드 에이전트로 실행
+  - (v2.1.229) `claude remote-control --continue`; 마켓플레이스 `command` 소스(로컬 커맨드가 플러그인 디렉토리 제공); `ListAgents`가 오프라인·클라우드 세션 라벨 표시
+  - (v2.1.225) `claude agents` workspace trust 프롬프트; 게이트웨이 spend-limit 경고에 한도·리셋 시각·운영자 메시지 표시
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code 웹·모바일·데스크톱 세션 실행 장소로 등록(Team·Enterprise)
+  - (v2.1.224) `archive` 플러그인 소스(HTTPS zip, SHA-256 pinning); 크로스세션 `SendMessage`(`ListAgents`로 다른 머신 세션 발견); 200-서브에이전트-세션 스폰 상한 제거
+  - (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정; 샌드박스 자격증명 마스킹 확장(`extract`, `decode: "jwt"`, `awsPairs`); `ANTHROPIC_BEDROCK_REGION_PREFIX`
+  - (v2.1.223) `/teleport` 힌트; 마켓플레이스 `"owner/*"` 와일드카드 허용·차단
+  - (v2.1.222) **`ultraplan` 기능 제거**; `/diff` 등 raw git blob 콘텐츠 사용; Remote Control 저장소 로컬 설정으로 자동 시작 불가(끄기만 가능)
+  - (v2.1.221) [VSCode] Focus view(`Ctrl+Alt+F`); 샌드박스 자격증명 `mode: "mask"`(Linux/WSL); `claude-api` 스킬 `prompt-audit` 서브커맨드
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.233; Task Management·Agent·CLI·Plugin·신규 도구/env·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.233 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 forking 기본 활성화, non-teammate 파견 기본 백그라운드, 크로스세션 SendMessage 반영
+- `references/official/tools.md`: `SendMessage` 크로스세션 동작, `ListAgents` 도구 항목 추가, Last Synced 갱신
+
+### Breaking Changes (Claude Code v2.1.221~233)
+- `ultraplan` 기능 제거 (v2.1.222)
+- 서브에이전트 forking 기본 활성화 + 인터랙티브 non-teammate 에이전트 파견 기본 백그라운드 실행 — 이전에는 포그라운드 인라인 실행 (v2.1.232)
+- `sandbox.ripgrep`은 user·managed·`--settings` 설정에서만 적용 — project settings 오버라이드 불가 (v2.1.232)
+- Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+
+### Fixed (Claude Code v2.1.221~233 주요 수정, 보안 포함)
+- Windows NT `\??\` device prefix 경로가 UNC path validation을 우회하던 NTLM 자격증명 유출 취약점 수정 (v2.1.233)
+- 워크트리 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령을 실행할 수 있던 취약점 수정 — 격리가 모든 세션 유형의 파일 편집·Bash에 적용 (v2.1.222)
+- Bash 도구 권한 검사를 우회하는 크래프트된 명령 은닉 취약점 수정, 탭·비가시 유니코드로 명령 일부를 숨기던 권한 프롬프트 우회 수정 (v2.1.223)
+- 워크플로우 스크립트가 동적 `import()`로 워크플로우 샌드박스를 벗어나던 취약점 수정 (v2.1.223)
+- PowerShell `$PSDefaultParameterValues` 변수 쓰기로 이후 명령의 파일 접근을 리다이렉트하던 Windows 권한 우회 수정 (v2.1.232)
+- Windows Git Bash가 Cygwin 스타일 심볼릭 링크를 일반 파일로 오인해 권한 검사를 우회하던 취약점 수정 (v2.1.232)
+- 중첩 git 레포지토리가 상위 디렉토리의 trust를 상속하던 버그 수정 — 레포지토리별 개별 trust 확인 필요 (v2.1.232)
+- 스킬/명령 인자 치환 값이 템플릿 마커로 재확장되던 버그 수정 (v2.1.233)
+- 번들 스킬 별칭(`/checkup`, `/review` 등)이 `-p` 모드·플러그인/MCP 로드 시 "Unknown command" 오표시하던 버그 수정 (v2.1.233)
+- Notification hook이 Claude Desktop·VS Code에서 권한 프롬프트 시 발동하지 않던 버그 수정 (v2.1.233)
+- MCP v2 연결이 고정 타임아웃으로 스트림을 종료하는 서버(서버리스 호스트 등)에 대해 subscriptions/listen 스트림을 무한 재시도하던 버그 수정 (v2.1.233)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

@@ -77,3 +77,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **Subagent forking 기본 활성화 (v2.1.232)**: `subagent_type: "fork"` 서브에이전트가 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate 에이전트 파견은 기본적으로 백그라운드 실행(이전: 포그라운드)
+- **크로스세션 SendMessage (v2.1.224+)**: `ListAgents`로 같은 계정의 다른 머신 세션까지 이름으로 발견해 메시지 전송(macOS·Linux); 프롬프트에 `@`로 세션 멘션 시 자동으로 `SendMessage` 호출 (v2.1.232); 200-서브에이전트-세션 스폰 상한 제거 (v2.1.224)
