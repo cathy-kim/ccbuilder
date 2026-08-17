@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-17 (Claude Code v2.1.233+)
 
 ---
 
@@ -14,7 +14,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기 | **높음** |
+| `Write` | 127 | 파일 생성/덮어쓰기; 신규 모델은 이번 세션에 읽지 않은 기존 파일도 덮어쓰기 가능(Edit 도구와 동일 규칙), 구형 모델은 read 필수 (v2.1.228) | **높음** |
 | `Edit` | 246 | 파일 내 문자열 치환 | **중간** |
 | `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
 | `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
@@ -34,7 +34,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
-| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams); 크로스세션 메시징 — 다른 머신의 세션에도 전송 가능(`ListAgents`로 탐색, v2.1.224); 프롬프트 `@세션이름` 멘션 시 자동 발동 (v2.1.232) | 낮음 |
 
 ### Planning Tools
 
@@ -46,6 +46,8 @@
 | `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
+
+> ⚠️ **v2.1.233**: Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 아래 6개 도구가 **기본 비활성화**됩니다. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 가능.
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|

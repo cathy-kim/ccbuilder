@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-17
+**Claude Code Version**: v2.1.233+
 
 ---
 
@@ -25,6 +25,10 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+>
+> **v2.1.224**: 세션당 서브에이전트 파견 총량 200개 상한 제거 — 장시간 세션도 신규 에이전트를 무제한 파견 가능 (동시 실행 상한 20개는 유지).
+>
+> **v2.1.232 Breaking Change**: **서브에이전트 포킹이 기본 활성화**됩니다. `subagent_type: "fork"` 서브에이전트는 부모의 전체 대화와 프롬프트 캐시를 상속하며, 인터랙티브 세션에서 비팀메이트 에이전트 파견은 기본적으로 백그라운드 실행됩니다.
 
 ---
 
@@ -181,6 +185,11 @@ Task({
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
+### 7. 크로스세션 메시징 & Self-Hosted Runner (신규)
+
+- **크로스세션 `SendMessage`** (v2.1.224): 같은 머신 또는 다른 머신에서 실행 중인 Claude Code 세션에도 메시지 전송 가능. `ListAgents`로 대상 세션 탐색. 프롬프트에 `@세션이름` 멘션 시 자동으로 해당 세션에 `SendMessage` 발동 (v2.1.232).
+- **`claude self-hosted-runner`** (v2.1.224, Team·Enterprise): 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션이 실행되는 장소로 등록. 서버 배포 Hook·managed-mcp.json 지원.
+
 ---
 
 ## 제약 사항
@@ -188,7 +197,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 없음** — 200개 한도는 v2.1.224에서 제거 |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |

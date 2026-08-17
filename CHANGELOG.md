@@ -8,6 +8,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-17
+
+### Added
+- **Claude Code v2.1.233 sync** (v2.1.220 → v2.1.233 콘텐츠 반영)
+  - (v2.1.233) **Task/TodoWrite 도구 기본 비활성화** — Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 TaskCreate/Get/Update/List·TodoWrite 기본 제거, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) `--worktree` 플래그·`claude agents` 뷰에 GitLab merge request URL 지원 (`!N` 표시)
+  - (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Bash 도구 명령 메모리 cgroup 제한 (Linux 옵트인, 폭주 빌드로부터 세션 보호)
+  - (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정 (기본 15분 유지)
+  - (v2.1.233) `forward_user_identity` apps gateway 설정 — 로그인 사용자 identity를 헤더로 프록시에 전달(사용자별 spend 귀속)
+  - (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 서브에이전트가 부모의 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 비팀메이트 에이전트 파견 기본 백그라운드 실행
+  - (v2.1.232) 프롬프트 `@세션이름` 멘션 → 자동 `SendMessage`로 해당 세션에 전달; `SendMessage`가 유일하게 매칭되는 세션 이름에 확인 없이 즉시 전달
+  - (v2.1.232) `/code-review high·xhigh·max` 백그라운드 에이전트로 실행 (기존 다른 레벨과 동일)
+  - (v2.1.232) 마켓플레이스 GitLab 지원 — bare `gitlab.com` 레포 URL(중첩 서브그룹 포함) 클론; GitLab 토큰 패밀리(`glrt-` 등) 시크릿 redaction
+  - (v2.1.232) `additionalMarketplaces`/`allowedMarketplaces` — `extraKnownMarketplaces`/`strictKnownMarketplaces` 친화적 별칭
+  - (v2.1.232) `/plugin install plugin@marketplace` 설치 전 마켓플레이스 카탈로그 자동 새로고침
+  - (v2.1.228) `Write` 도구 — 신규 모델은 이번 세션에 읽지 않은 기존 파일도 덮어쓰기 가능(Edit 도구와 동일 규칙), 구형 모델은 read 필수
+  - (v2.1.228) claude.ai 동기화 스킬 하드닝 — 로컬 명령·MCP 프롬프트 shadowing 방지, 설명 sanitize·라벨링, 본문에서 `!` 명령·`@` 파일 확장 차단
+  - (v2.1.225~228) 크로스세션 메시징 안정화 — Remote Control 오프라인 표시, headless 세션 승인 대기 알림, `ListAgents` cloud/offline 라벨
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 전환 (Team·Enterprise)
+  - (v2.1.224) `archive` 플러그인 소스 — git/npm 없이 HTTPS zip으로 설치, SHA-256 고정 옵션
+  - (v2.1.224) 크로스세션 `SendMessage` — 여러 머신의 Claude Code 세션 간 메시지 전송, `ListAgents`로 탐색 (macOS·Linux)
+  - (v2.1.224) `crossSessionInbound`/`dialogExpiry` 설정 — bypass 권한 세션 수신 메시지는 승인 대기, 일반 세션은 자동 전달
+  - (v2.1.224) 세션당 서브에이전트 파견 총량 200개 상한 제거 — 장시간 세션도 신규 에이전트 무제한 파견 (동시성·깊이 제한 유지)
+  - (v2.1.224) 샌드박스 자격증명 마스킹 확장 — `extract`/`onExtractNoMatch`, `decode: "jwt"`(`maskClaims`), `awsPairs`/`sigv4`
+  - (v2.1.223) `/review`가 `/code-review` 별칭으로 전환(현재 diff 또는 PR 리뷰), `/code-review ultra` 클라우드 딥 리뷰, effort 미지정 시 마지막 사용 레벨 재사용
+  - (v2.1.223) `/teleport` 힌트 — 클라우드 세션을 로컬에서 이어가기 (`claude --teleport <session id>`)
+  - (v2.1.222) **Breaking: `ultraplan` 기능 제거**
+  - (v2.1.222) worktree 격리 세션·서브에이전트의 메인 체크아웃 대상 파괴적 git 명령 차단 강화 (모든 세션 유형)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.233; Task Management 섹션에 신규 모델 기본 비활성화 경고 추가; Agent/CLI/Plugin·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.233 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포킹 기본값, 파견 세션 한도 제거, 크로스세션 메시징, self-hosted-runner 반영 (버전 v2.13.0 → v2.14.0)
+- `references/official/tools.md`: Task/TodoWrite 도구 신규 모델 기본 비활성화 경고, `Write` 도구 덮어쓰기 규칙 변경, `SendMessage` 크로스세션 기능 반영
+
+### Breaking Changes (Claude Code v2.1.220 → v2.1.233)
+- Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 Task/TodoWrite 도구군 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- 인터랙티브 세션의 비팀메이트 서브에이전트 파견이 기본적으로 백그라운드 실행으로 전환 (v2.1.232)
+- `ultraplan` 기능 제거 (v2.1.222)
+- 세션당 서브에이전트 파견 200개 상한 제거 (동작 확장, 하위 호환) (v2.1.224)
+
+### Fixed (주요 버그 수정, v2.1.221~233)
+- Windows NT `\??\` 디바이스 프리픽스 경로가 UNC 경로 검증을 우회하던 NTLM 자격증명 유출 취약점 수정 (v2.1.233)
+- MCP v2 연결이 고정 타임아웃으로 스트림을 종료하는 서버(서버리스 등)에 대해 subscriptions/listen 스트림을 무한 재시도하던 버그 수정 (v2.1.233)
+- Claude Desktop·VS Code에서 권한 프롬프트에 Notification Hook이 발동하지 않던 버그 수정 (v2.1.233)
+- 번들 스킬 별칭(`/checkup`, `/review` 등)이 `-p` 모드·플러그인/MCP 로드 시 "Unknown command" 오표시되던 버그 수정 (v2.1.233)
+- PowerShell 변수 쓰기 파라미터로 `$PSDefaultParameterValues`를 은밀히 덮어써 이후 명령의 파일 접근을 우회하던 권한 취약점 수정 (v2.1.232)
+- Git Bash가 Cygwin 스타일 심볼릭 링크를 경로 검증에서 일반 파일로 오인하던 Windows 권한 우회 취약점 수정 (v2.1.232)
+- 중첩된 git 레포지토리가 상위 디렉토리의 trust를 상속하던 버그 수정 — 레포별 개별 trust 확인 필요 (v2.1.232)
+- 세션 정리(cleanup)가 프로젝트 메모리 폴더 내용을 삭제하던 버그 수정 (v2.1.228)
+- Bash 도구 크래프트된 명령이 권한 검사에서 일부 내용을 숨길 수 있던 보안 버그 수정 (v2.1.223)
+- worktree 격리 세션과 서브에이전트가 메인 체크아웃에 파괴적 git 명령을 실행할 수 있던 격리 우회 버그 수정 (v2.1.222)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
