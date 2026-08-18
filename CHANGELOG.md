@@ -8,6 +8,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-18
+
+### Added
+- **Claude Code v2.1.234 sync** (v2.1.220 → v2.1.234 콘텐츠 반영)
+  - (v2.1.234) 푸터·상태줄 GitLab MR 배지(`!N`, draft/pending/green), claude.ai usage limit 리셋 시 세션 자동 재개(`/config`에서 끄기 가능)
+  - (v2.1.234) `/permissions`·`/add-dir`가 Claude 작업 중에도 열려 변경 사항이 현재 턴에 즉시 적용
+  - (v2.1.234) `/goal`이 백그라운드 태스크 30분+ 대기 시 자동 확인(`CLAUDE_CODE_GOAL_CHECKIN_MINUTES=0` 옵트아웃)
+  - (v2.1.234) `/config` **"Default teammate model" 설정 제거** — Agent Team 팀메이트는 스폰 시 모델 미지정이면 리더 모델 자동 사용
+  - (v2.1.234) 보안: 원격 파일 읽기·세션 복원·CLAUDE.md 포함·워크플로우 스크립트·파일 업로드가 Windows NT-namespace(`\??\`) 경로 거부 — NTLM 자격증명 유출 벡터 차단
+  - (v2.1.233) **Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite) 기본 비활성화** — Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델 대상, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) `--worktree`·`claude agents` 뷰에 GitLab MR URL 지원(`!N` 표시)
+  - (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 지정 시 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션 non-teammate 에이전트 스폰이 기본적으로 백그라운드 실행으로 전환
+  - (v2.1.232) 프롬프트에 `@세션이름` 입력으로 다른 Claude 세션에 `SendMessage` 직접 전송; GitLab 마켓플레이스·토큰 시크릿 마스킹 지원; Fable 5 `/advisor` 재등장
+  - (v2.1.229) `claude remote-control --continue`, 플러그인 마켓플레이스 `command` 소스
+  - (v2.1.225) 게이트웨이 spend-limit 사용량 경고(한도·리셋 시각·운영자 메시지 표시), `claude agents` 미신뢰 디렉토리 워크스페이스 trust 프롬프트
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web/mobile/desktop 세션 실행 환경으로 전환(Team·Enterprise); `archive` 플러그인 소스(HTTPS zip, SHA-256 pinning); **크로스세션 `SendMessage`**(macOS·Linux); 세션당 서브에이전트 파견 200개 상한 제거
+  - (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces` owner wildcard 지원; **`/review`가 `/code-review`의 별칭**으로 변경, 인자 없이 호출 시 마지막 effort 레벨 재사용
+  - (v2.1.222) worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용되어 메인 체크아웃 대상 파괴적 git 명령 차단; **`ultraplan` 기능 제거**; Remote Control auto-start가 레포-로컬 설정만으로는 켜지지 않음
+  - (v2.1.221) MCP OAuth 콜백 redirect URI 불일치 로그인 실패 수정(Slack 등 사전 등록 클라이언트), SSE keepalive ping — Vertex·Bedrock 게이트웨이 스트리밍 idle-timeout 방지 (v2.1.229/231)
+  - (v2.1.221) 다수 보안 강화 — zsh/PowerShell/Bash 숨은 명령 권한 우회 수정, nested git repo 개별 trust 요구, 워크플로우 스크립트 `import()` 샌드박스 탈출 차단
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.234; MCP·Agent Teams·Task Management·Agent/CLI/Plugin·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.234 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포킹 기본 활성화, non-teammate 스폰 기본 백그라운드 실행, 세션당 파견 200개 상한 제거, Todo/Task 도구 기본 비활성화 반영
+- `references/official/tools.md`: Task 관리 도구(TaskCreate/Get/Update/List)·TodoWrite 기본 비활성화 모델 목록 및 옵트인 env var 반영
+
+### Breaking Changes (Claude Code v2.1.222-234)
+- 서브에이전트 포킹 기본 활성화 + non-teammate 에이전트 스폰이 인터랙티브 세션에서 기본적으로 백그라운드 실행 (v2.1.232)
+- Todo/Task 관리 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- `ultraplan` 기능 제거 (v2.1.222)
+- Remote Control auto-start가 레포-로컬 설정(`.claude/settings.json`)만으로는 켜지지 않음 — user scope `/config` 필요 (v2.1.222)
+- `/config` "Default teammate model" 설정 제거 — 팀메이트 모델 미지정 시 리더 모델 자동 사용 (v2.1.234)
+
+### Fixed (Claude Code v2.1.221-234 주요 수정)
+- 워크스페이스 trust 없이 nested git 저장소가 부모 디렉토리 trust를 상속하던 보안 버그 수정 (v2.1.232)
+- PowerShell 변수 파라미터로 `$PSDefaultParameterValues` 덮어써 이후 명령 파일 접근을 리다이렉트하던 권한 우회 수정 (v2.1.232)
+- Windows Git Bash가 Cygwin 스타일 심볼릭 링크를 일반 파일로 오인해 권한 검사를 우회하던 버그 수정 (v2.1.232)
+- MCP v2 연결이 고정 타임아웃으로 스트림을 종료하는 서버(서버리스 호스트 등) 대상 subscriptions/listen 스트림을 무한 재개방하던 버그 수정 (v2.1.233)
+- 매우 긴 세션에서 auto mode가 압축 이후 샌드박스 명령의 네트워크 접근을 반복적으로 재확인·거부하던 버그 수정 (v2.1.234)
+- 백그라운드 서브에이전트 툴 권한 프롬프트 응답 시 세션 범위 권한 답변(거부 포함)이 유실되던 버그 수정 (v2.1.234)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

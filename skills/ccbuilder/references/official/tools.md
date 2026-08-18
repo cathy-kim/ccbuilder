@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-18 (Claude Code v2.1.234+)
 
 ---
 
@@ -26,7 +26,7 @@
 |------|--------|------|--------|
 | `Bash` | 1,067 | Shell 명령 실행 | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
-| `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
+| `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속; `subagent_type: "fork"`로 전체 대화·프롬프트 캐시 상속(v2.1.232); 인터랙티브 세션 non-teammate 스폰 기본 백그라운드 실행(v2.1.232) | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 
 ### Communication Tools
@@ -46,6 +46,8 @@
 | `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
+
+> **v2.1.233 Breaking Change**: 아래 5개 도구는 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 **기본적으로 사용 불가능**합니다. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 환경변수로 복원할 수 있습니다.
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|

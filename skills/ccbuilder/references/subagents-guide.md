@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-18
+**Claude Code Version**: v2.1.234+
 
 ---
 
@@ -25,6 +25,12 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+
+> **v2.1.232 Breaking Change**: **서브에이전트 포킹이 기본 활성화**되었습니다. `subagent_type: "fork"`로 파견된 서브에이전트는 전체 대화 히스토리와 프롬프트 캐시를 상속합니다. 또한 인터랙티브 세션에서 non-teammate 에이전트 스폰(일반 Task 호출)은 이제 **기본적으로 백그라운드에서 실행**됩니다(기존: 포그라운드).
+>
+> **v2.1.233 Breaking Change**: **Todo/Task 관리 도구**(`TaskCreate`, `TaskUpdate`, `TaskList`, `TaskGet`, `TodoWrite`)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 신규 모델에서 **기본적으로 사용 불가능**해졌습니다. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 환경변수로 다시 활성화할 수 있습니다.
+>
+> **v2.1.223**: 워크플로우 에이전트·포크된 스킬·슬래시 명령·재개된 백그라운드 에이전트가 요청한 서브에이전트 모델이 조직 정책으로 제한되어 부모 모델이 대신 실행될 때 경고가 표시됩니다.
 
 ---
 
@@ -188,7 +194,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 없음** — 200개 스폰 캡 제거, 장기 세션에서 신규 파견 거부 없음 (동시성·중첩 depth 제한은 유지, v2.1.224) |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
@@ -272,6 +278,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `TaskList` | 전체 작업 목록 조회 |
 | `TaskGet` | 개별 작업 상세 조회 |
 
+> **v2.1.233 Breaking Change**: 위 도구들과 `TodoWrite`는 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 **기본 비활성화**됩니다. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원하세요.
+
 ---
 
 ## Breaking Changes (v2.8-2.9)
@@ -282,7 +290,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
 
-## Breaking Changes (v2.1.212-2.1.219)
+## Breaking Changes (v2.1.212-2.1.234)
 
 | 변경 | 이전 | 이후 |
 |------|------|------|
@@ -291,6 +299,9 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 | **상한 제거** — 동시성·중첩 depth 제한만 유지 (v2.1.224) |
+| 인터랙티브 세션 non-teammate 에이전트 스폰 | 기본 포그라운드 | **기본 백그라운드 실행**; `subagent_type: "fork"`로 전체 대화·프롬프트 캐시 상속 포킹 지원 (v2.1.232) |
+| Todo/Task 관리 도구 (TaskCreate 등, TodoWrite) | 전체 모델에서 사용 가능 | **Opus 4.8·Sonnet 5·Fable 5·Mythos 5+에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

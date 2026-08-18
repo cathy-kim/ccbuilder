@@ -77,6 +77,54 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.234 (2026-08-18 동기화)
+
+**새로운 기능:**
+- (v2.1.234) 푸터·상태줄에 GitLab merge request 배지(`!N`, draft/pending/green) 표시 — GitLab remote + 인증된 `glab` CLI 필요
+- (v2.1.234) claude.ai usage limit 리셋 시 세션 자동 재개 — `/config`("Continue automatically at usage limit")에서 끄기 가능
+- (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME` 환경변수 — 세션별 설정 디렉토리를 쓰는 호스트용 프로젝트 트랜스크립트 디렉토리 짧은 이름 지정
+- (v2.1.234) `selection:clear` 키바인딩 액션 — 인앱 텍스트 선택 해제(에이전트 뷰 포함)
+- (v2.1.234) `/permissions`가 Claude 작업 중에도 열림 — 규칙 변경이 현재 턴에 즉시 적용; `/add-dir`, `/autocompact`, `/theme`, `/help`, `/config`, `/advisor` 다이얼로그도 풀스크린 TUI에서 작업 중 오픈 가능
+- (v2.1.234) `/goal`이 백그라운드 태스크 30분+ 대기 시 자동 확인 — `CLAUDE_CODE_GOAL_CHECKIN_MINUTES=0`으로 옵트아웃
+- (v2.1.234) `claude setup-token`이 예상 밖 추가 인자를 무시 대신 거부
+- (v2.1.234) **보안**: 원격 파일 읽기·세션 복원·CLAUDE.md 포함·워크플로우 스크립트·파일 업로드가 Windows NT-namespace(`\??\`) 경로 거부 — NTLM 자격증명 유출 벡터 방지
+- (v2.1.234) `/config`에서 **"Default teammate model" 설정 제거** — Agent Team 팀메이트는 스폰 시 모델 지정이 없으면 리더 모델을 자동 사용
+- (v2.1.234) 백그라운드 태스크 알림이 턴 사이에 전달될 때도 `<system-reminder>` 태그로 감싸져 전달 — 턴 중간 전달과 동일한 형식
+- (v2.1.233) **Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite) 기본 비활성화** — Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 등 신규 모델 대상, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+- (v2.1.233) `--worktree` 플래그·`claude agents` 뷰에 GitLab merge request URL 지원(`!N` 표시)
+- (v2.1.233) `forward_user_identity` 앱 게이트웨이 설정 — Anthropic upstream에 로그인 사용자 identity를 헤더로 전달, 프록시가 사용자별 지출 귀속 가능
+- (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux Bash 도구 명령에 옵트인 cgroup 메모리 제한
+- (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정(기본 15분 유지)
+- (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 지정 시 전체 대화·프롬프트 캐시를 상속하는 서브에이전트 생성; 인터랙티브 세션의 non-teammate 에이전트 스폰이 기본적으로 백그라운드 실행으로 전환
+- (v2.1.232) 프롬프트에 `@세션이름` 입력으로 다른 Claude 세션에 `SendMessage` 직접 전송; `SendMessage`가 정확히 일치하는 라이브 세션의 bare name으로 바로 전달(확인 불필요); 동일 머신 세션 고유 이름 강제(`name-word-word` 변형)
+- (v2.1.232) GitLab 토큰 패밀리(`glrt-` 등) 시크릿 마스킹, `glab` CLI 자격증명 샌드박스 보호; GitLab 저장소(중첩 subgroup 포함) 플러그인 마켓플레이스로 클론 지원; `additionalMarketplaces`/`allowedMarketplaces` — `extraKnownMarketplaces`/`strictKnownMarketplaces` 별칭; Fable 5가 `/advisor`에 재등장
+- (v2.1.231) MCP OAuth 콜백 redirect URI 불일치로 인한 로그인 실패 수정 — Slack 등 사전 등록 OAuth client 사용 서버
+- (v2.1.229) `claude remote-control --continue` — 최근 Remote Control 세션 재개; 플러그인 마켓플레이스 `command` 소스 — 로컬 커맨드(IDE 등)가 플러그인 디렉토리 출력, 세션마다 재탐색; 게이트웨이 스트리밍 응답에 SSE keepalive ping 추가 — Vertex·Bedrock 업스트림 idle-timeout 방지
+- (v2.1.225) 게이트웨이 spend-limit 사용량 경고 — 한도·리셋 시각·운영자 메시지 표시(게이트웨이 2.1.225+ 필요); `claude agents`에 미신뢰 디렉토리 워크스페이스 trust 프롬프트 추가
+- (v2.1.224) **`claude self-hosted-runner`** — 자체 머신·컨테이너를 Claude Code web/mobile/desktop 세션 실행 환경으로 전환(Team·Enterprise); `archive` 플러그인 소스 — git/npm 없이 HTTPS zip 설치(SHA-256 pinning 옵션); `crossSessionInbound`·`dialogExpiry` 설정 — bypass-permissions 세션 크로스세션 메시지 보류/자동전달; **크로스세션 `SendMessage`** — 여러 머신의 세션 간 메시지 송수신, `ListAgents`로 탐색(macOS·Linux); 세션당 서브에이전트 파견 200개 상한 제거(동시성·중첩 depth 제한은 유지)
+- (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces`에 owner wildcard(`"owner/*"`) 항목 지원; 워크플로우 에이전트·포크된 스킬·슬래시 명령·재개된 백그라운드 에이전트의 서브에이전트 모델 제한 시 경고 추가; `/teleport` 클라우드 세션 힌트; **`/review`가 `/code-review`의 별칭**으로 변경, 인자 없이 호출 시 마지막 effort 레벨 재사용
+- (v2.1.222) `claude agents`에 미신뢰 디렉토리 워크스페이스 trust 프롬프트; worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용되어 메인 체크아웃 대상 파괴적 git 명령 차단
+
+**Breaking Changes:**
+- 서브에이전트 포킹 기본 활성화 + non-teammate 에이전트 스폰이 인터랙티브 세션에서 기본적으로 백그라운드 실행 (v2.1.232)
+- Todo/Task 관리 도구(TaskCreate/Get/Update/List, TodoWrite)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- `ultraplan` 기능 제거 (v2.1.222)
+- Remote Control auto-start가 레포-로컬 설정(`.claude/settings.json`/`.claude/settings.local.json`)만으로는 켜지지 않음 — 끄기는 가능, 켜려면 user scope `/config` 필요 (v2.1.222)
+- `/config` "Default teammate model" 설정 제거 — 팀메이트는 스폰 시 모델 미지정이면 리더 모델 자동 사용 (v2.1.234)
+
+**주요 버그 수정:**
+- nested git 저장소가 부모 디렉토리 trust를 상속하던 보안 버그 수정 — 각 저장소가 개별 trust 확인 필요 (v2.1.232)
+- PowerShell 변수-쓰기 파라미터가 `$PSDefaultParameterValues`를 조용히 덮어써 이후 명령의 파일 접근을 리다이렉트하던 권한 우회 수정 (v2.1.232)
+- Windows Git Bash가 Cygwin 스타일 심볼릭 링크를 일반 파일로 오인해 경로 검증을 우회하던 권한 우회 수정 — 이제 쓰기 시 승인 필요 (v2.1.232)
+- MCP 서버가 프로토콜-버전 프로브에 응답하지 않거나 잘못된 응답을 보낼 때 30초 연결 타임아웃 전체를 대기하던 버그 수정 (v2.1.232)
+- MCP v2 연결이 고정 타임아웃으로 장기 스트림을 종료하는 서버(서버리스 호스트 등) 대상 subscriptions/listen 스트림을 무한 재개방하던 버그 수정 (v2.1.233)
+- 매우 긴 세션에서 auto mode가 컨텍스트 압축 이후 샌드박스 명령의 네트워크 접근을 반복적으로 재확인·거부하던 버그 수정 (v2.1.234)
+- 백그라운드 서브에이전트 툴 권한 프롬프트에 응답할 때 세션 범위 권한 답변(거부 포함)이 유실되던 버그 수정 (v2.1.234)
+- API 응답의 thinking 블록에 `thinking` 필드가 없거나 text 블록에 `text` 필드가 없을 때(주로 서드파티 게이트웨이 비스트리밍 폴백 경로) 발생하던 크래시 수정 (v2.1.234)
+- 특이한 유니코드 시퀀스가 포함된 일부 메시지에서 마크다운 렌더링이 극도로 느려지던 버그 수정 (v2.1.234)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**
