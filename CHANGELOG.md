@@ -8,6 +8,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-19
+
+### Added
+- **Claude Code v2.1.235 sync** (v2.1.220 → v2.1.235 콘텐츠 반영)
+  - (v2.1.235) `spellcheck` 설정 — 설치된 `aspell`/`hunspell`/`ispell`로 프롬프트 입력 오탈자 밑줄 표시
+  - (v2.1.235) `Agent` tool `subagent_type` 생략 시 사용 가능한 에이전트 목록과 함께 명확한 오류 반환(빈 세션에서 general-purpose 기본값 오표시 수정)
+  - (v2.1.234) GitLab merge request 배지 — footer·statusline에 `MR !N` draft/pending/green 상태 표시
+  - (v2.1.234) claude.ai 사용량 한도 리셋 시 세션 자동 재개 (`/config`의 "Continue automatically at usage limit"로 끄기 가능)
+  - (v2.1.234) 보안: 원격 파일 읽기·세션 복원·CLAUDE.md include·workflow 스크립트·파일 업로드가 Windows NT-namespace(`\??\`) 경로 거부 — NTLM 자격증명 유출 벡터 추가 하드닝
+  - (v2.1.233) GitLab merge request URL 지원 — `--worktree` 플래그, `claude agents` 뷰(`!N` 표시)
+  - (v2.1.233) **`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite` 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 제거** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) 옵트인 메모리 cgroup 지원 — `CLAUDE_CODE_TOOL_MEMORY_LIMIT` (Linux Bash 도구, 폭주 빌드 세션 정지 방지)
+  - (v2.1.233) `claude plugin validate` bare `.claude/skills` 디렉토리 검사 추가
+  - (v2.1.232) **서브에이전트 포크(fork) 기본 활성화** — `subagent_type: "fork"`가 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate 에이전트 스폰이 기본적으로 백그라운드 실행
+  - (v2.1.232) `@` 멘션으로 다른 Claude 세션 이름 호출 → `SendMessage`로 자동 전달
+  - (v2.1.232) `SendMessage`가 라이브 세션 하나와 정확히 일치하는 bare 이름에 확인 없이 즉시 전달; 동일 이름 세션 재사용 시 `name-word-word` 변형 자동 부여
+  - (v2.1.232) GitLab 마켓플레이스 지원(bare `gitlab.com` 레포 URL, 중첩 서브그룹 포함), `additionalMarketplaces`/`allowedMarketplaces` alias, GitLab 토큰 계열 시크릿 redaction
+  - (v2.1.229) `claude remote-control --continue` — 최근 Remote Control 세션 재개
+  - (v2.1.229) 플러그인 마켓플레이스 `command` 소스 — 로컬 커맨드(IDE 등)가 플러그인 디렉토리 출력, 세션마다 재해석되어 재시작 없이 적용
+  - (v2.1.229) `ListAgents`가 연결 끊긴 Remote Control 세션을 `offline`, 클라우드 세션을 `cloud`로 표시
+  - (v2.1.228) Write 도구 — 새 파일을 이번 세션에서 읽지 않고도 덮어쓸 수 있는 규칙이 Edit 도구와 동일하게 신형 모델에 적용(구형 모델은 read-first 유지)
+  - (v2.1.228) claude.ai에서 동기화된 스킬 하드닝 — 로컬 명령/MCP 프롬프트 오버라이드 불가, 설명 sanitize·라벨링, 로컬 머신에서 `!` 명령·`@` 파일 확장 차단
+  - (v2.1.225) 게이트웨이 spend-limit 사용량 경고 — 한도 도달 메시지에 한도·리셋 시각·운영자 메시지 표시(게이트웨이 2.1.225+ 필요)
+  - (v2.1.225) `claude agents`에 미신뢰 디렉토리 워크스페이스 신뢰 프롬프트 추가
+  - (v2.1.224) **`claude self-hosted-runner`** — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 등록 (Team·Enterprise)
+  - (v2.1.224) `archive` 플러그인 소스 — git/npm 없이 HTTPS zip으로 플러그인 설치, SHA-256 pinning 옵션
+  - (v2.1.224) **크로스세션 `SendMessage`** — 모든 기기의 Claude Code 세션 간 메시지 전송, `ListAgents`로 탐색 (macOS·Linux)
+  - (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass-permissions 세션으로의 크로스세션 메시지는 승인 대기, 다른 세션은 자동 전달
+  - (v2.1.224) 샌드박스 자격증명 마스킹 옵션 확장 — `extract`/`onExtractNoMatch`, `decode: "jwt"` + `maskClaims`, `awsPairs`/`sigv4`
+  - (v2.1.224) 세션당 서브에이전트 스폰 200개 상한 제거 (concurrency·depth 제한은 유지)
+  - (v2.1.223) `/review`가 `/code-review` 별칭으로 변경 — 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`), `/code-review ultra` 클라우드 딥리뷰
+  - (v2.1.223) `strictKnownMarketplaces`/`blockedMarketplaces` owner wildcard(`"owner/*"`) — GitHub org 전체 마켓플레이스 레포 허용/차단
+  - (v2.1.223) 서브에이전트·팀메이트·포크 스킬·재개된 백그라운드 에이전트가 요청한 모델이 조직 제한 대상일 때 경고 표시(부모 모델로 실행)
+  - (v2.1.222) worktree 격리 세션과 서브에이전트가 메인 체크아웃에 파괴적 git 명령을 실행하던 취약점 수정 — 격리가 모든 세션 유형의 파일 편집·Bash에 적용
+  - (v2.1.222) **ultraplan 기능 제거**
+  - (v2.1.221) VSCode Focus view — 도구 활동을 펼침 가능한 턴별 요약 뒤로 숨기는 채팅 메뉴 토글 (`Ctrl+Alt+F`)
+  - (v2.1.221) `claude-api` 스킬 `prompt-audit` 서브커맨드 — 구버전 모델 대상 패턴의 프롬프트·도구 설명 감사
+  - (v2.1.221) 보안: zsh `[[ ]]` 정규식 조건 내 숨겨진 명령이 Bash 권한 검사를 우회하던 버그 수정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.235; CLI·Plugin·Agent·Breaking Changes 섹션에 위 항목 반영; Task Management 섹션 헤딩에 TodoWrite/Task tools 기본 비활성화 조건 명시
+- `references/version-sync.md`: v2.1.235 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포크(fork) 기본 활성화, non-teammate 스폰 기본 백그라운드 전환, TaskCreate 계열·TodoWrite 도구 기본 비활성화(신형 모델) 반영
+- `references/official/tools.md`: Write 도구 read-first 규칙 완화(신형 모델), TodoWrite/Task tools 기본 비활성화 모델 목록 반영
+
+### Breaking Changes (Claude Code v2.1.222 ~ v2.1.233)
+- 서브에이전트 포크(`fork`) 기본 활성화 — 인터랙티브 세션의 non-teammate 에이전트 스폰이 기본적으로 백그라운드 실행 (v2.1.232)
+- `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite` 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 제거 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- ultraplan 기능 제거 (v2.1.222)
+- `/review`가 `/code-review` 별칭으로 통합 (v2.1.223)
+
+### Fixed (주요 수정, v2.1.221 ~ v2.1.235)
+- worktree 격리 세션·서브에이전트가 메인 체크아웃에 파괴적 git 명령 실행하던 취약점 수정 (v2.1.222)
+- PreToolUse auto-allow 훅이 백그라운드 에이전트 작업(요약·압축·리네임)에서 도구 제한을 우회하던 버그 수정 (v2.1.222)
+- zsh `[[ ]]` 정규식 조건 내 숨겨진 명령의 Bash 권한 검사 우회 수정 (v2.1.221)
+- Windows NT `\??\` 경로가 UNC 경로 검증을 우회하던 취약점 수정 (v2.1.221, v2.1.234 추가 하드닝)
+- 클라우드 세션이 권한 프롬프트 대기 중 환경 종료 시 lost로 잘못 표시되던 버그 수정 (v2.1.233)
+- 세션 압축 후 auto mode가 샌드박스 네트워크 접근을 반복적으로 재검사·거부하던 버그 수정 (v2.1.234)
+- 세션 스코프 권한 응답(거부 포함)이 백그라운드 서브에이전트 권한 프롬프트 응답 시 유실되던 버그 수정 (v2.1.234)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-19 (Claude Code v2.1.235+)
 
 ---
 
@@ -14,7 +14,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기 | **높음** |
+| `Write` | 127 | 파일 생성/덮어쓰기; 신형 모델은 이번 세션에서 읽지 않은 기존 파일도 덮어쓰기 가능(Edit과 동일 규칙, v2.1.228) — 구형 모델은 read-first 유지 | **높음** |
 | `Edit` | 246 | 파일 내 문자열 치환 | **중간** |
 | `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
 | `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행 | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 출력은 모델에 표시되나 사용자에게는 항상 보장되지 않음(도구 설명 명시, v2.1.224); Linux 옵트인 메모리 cgroup 상한(`CLAUDE_CODE_TOOL_MEMORY_LIMIT`, v2.1.233) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
@@ -49,12 +49,12 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `TaskCreate` | 558 | 작업 생성 | 낮음 |
-| `TaskUpdate` | - | 작업 상태 변경 | 낮음 |
-| `TaskList` | 133+ | 작업 목록 조회 | 낮음 |
-| `TaskGet` | - | 작업 상세 조회 | 낮음 |
+| `TaskCreate` | 558 | 작업 생성 — **Opus 4.8·Sonnet 5·Fable 5·Mythos 5+에서 기본 비활성화** (v2.1.233), `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 | 낮음 |
+| `TaskUpdate` | - | 작업 상태 변경 — 위와 동일 기본 비활성화 대상 (v2.1.233) | 낮음 |
+| `TaskList` | 133+ | 작업 목록 조회 — 위와 동일 기본 비활성화 대상 (v2.1.233) | 낮음 |
+| `TaskGet` | - | 작업 상세 조회 — 위와 동일 기본 비활성화 대상 (v2.1.233) | 낮음 |
 | `TaskOutput` | - | 백그라운드 태스크 출력 — **Deprecated** (v2.1.83): `Read`로 출력 파일 경로 직접 읽기 | 낮음 |
-| `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
+| `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) — **Opus 4.8·Sonnet 5·Fable 5·Mythos 5+에서 기본 비활성화** (v2.1.233), `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 | 낮음 |
 
 ### Team Tools
 

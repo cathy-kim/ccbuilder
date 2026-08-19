@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-19
+**Claude Code Version**: v2.1.235+
 
 ---
 
@@ -172,6 +172,12 @@ Task({
 > ⚠️ **v2.1.77 Breaking Change**: Agent tool의 `resume` 파라미터가 제거되었습니다.
 > 이전 에이전트 재개 시 `SendMessage({to: agentId})` 를 사용하세요.
 > `SendMessage`는 중단된 에이전트를 자동으로 백그라운드에서 재개합니다.
+>
+> **v2.1.224+**: `SendMessage`/`ListAgents`로 같은 기기뿐 아니라 사용자의 다른 기기(macOS·Linux) 세션과도 메시지 교환 가능(크로스세션). 프롬프트에 `@`로 세션 이름을 멘션하면 (v2.1.232+) `SendMessage`가 자동 호출됩니다.
+>
+> **v2.1.232+**: `subagent_type: "fork"` 서브에이전트 포크가 기본 활성화 — 부모 세션 전체 대화·프롬프트 캐시를 상속합니다. 인터랙티브 세션에서 non-teammate 에이전트 스폰은 기본적으로 백그라운드 실행됩니다.
+>
+> **v2.1.233+**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite` 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 제거됩니다 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원.
 
 ```typescript
 // 기존 방식 (제거됨)
@@ -188,7 +194,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 제거** (v2.1.224) — 이전: 기본 200개/`/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212); concurrency·depth 제한은 유지 |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |

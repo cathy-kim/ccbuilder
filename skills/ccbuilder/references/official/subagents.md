@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-19 (v2.1.235)
 
 ---
 
@@ -53,7 +53,7 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 }
 ```
 
-- `subagent_type`: 내장 또는 커스텀 agent 이름
+- `subagent_type`: 내장 또는 커스텀 agent 이름 — 생략 시 (v2.1.235) 사용 가능한 에이전트 목록과 함께 명확한 오류 반환 (기존: general-purpose 기본값 오표시)
 - `name`: 팀 내 표시 이름
 - `team_name`: Agent Team 소속
 - `run_in_background`: 백그라운드 실행
@@ -61,8 +61,11 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 
 ## 고급 기능
 
+- **서브에이전트 포크 (v2.1.232+, 기본 활성화)**: `subagent_type: "fork"`는 부모 세션의 전체 대화와 프롬프트 캐시를 상속; 인터랙티브 세션에서 non-teammate 에이전트 스폰은 기본적으로 백그라운드 실행(포그라운드로 강제하려면 `run_in_background: false`)
 - **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 다시 기본 depth 3 허용**으로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
-- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 200개 상한은 **v2.1.224에서 제거**(concurrency·depth 제한은 유지); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
+- **Task Management 도구 기본 비활성화 (v2.1.233+)**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 제거 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+- **크로스세션 SendMessage (v2.1.224+)**: 같은 기기뿐 아니라 사용자의 모든 기기(macOS·Linux)의 Claude Code 세션 간 메시지 전송 가능, `ListAgents`로 탐색; 프롬프트에 `@`로 세션 이름 멘션 시 `SendMessage` 자동 사용 (v2.1.232+)
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
 - **Task Spawning 제한**: `Task(agent-name)`으로 호출 가능한 agent 제한
 - **Task tool `mode` 파라미터 제거 (v2.1.212)**: 서브에이전트는 부모 세션 permission mode 기본 상속
