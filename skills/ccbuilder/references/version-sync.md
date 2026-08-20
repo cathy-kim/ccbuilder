@@ -77,6 +77,70 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.237 (2026-08-20 동기화)
+
+**새로운 기능:**
+- (v2.1.237) 내장 **"Concise" output style** 추가 — Claude가 결과부터 제시하고 프리앰블·내레이션 생략(작업 충실도는 유지); `/config` → Output style에서 선택
+- (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` 환경변수 — 신규 세션 시작 모델 지정; `/model` 선택이 여전히 오버라이드하며 재시작 간 유지 (`ANTHROPIC_MODEL`과 차이)
+- (v2.1.236) 크로스세션 `SendMessage`에 `notify_when_idle` 추가 — 동일 머신의 다른 세션이 다음 유휴 상태가 될 때 1회 알림 요청(옵트인, 폴링 불필요, macOS/Linux)
+- (v2.1.236) macOS 샌드박스: 와일드카드 read-deny 규칙(`**/.env`)이 허용된 read 영역 내에서도 우선 적용, 매치된 디렉토리 전체 콘텐츠 커버, 파일명 변경으로 우회 불가
+- (v2.1.236) `/usage`가 Team/Enterprise 멤버의 usage-credits 지출 행 표시(지출 전 0%로 캡핑된 행 포함)
+- (v2.1.236) auto mode 활성 중 `Monitor` allow rule 보류 — Bash와 동일하게 검토됨
+- (v2.1.236) `/goal` 유휴 세션이 장시간 백그라운드 작업에 막혀 있을 때 30분(이후 1h, 2h) 간격으로 자동 체크인
+- (v2.1.236) `SendMessage`가 세션 inbox 수용량 초과 시 발송 전 거부(이전: 전송됨으로 표시 후 드롭)
+- (v2.1.236) [VSCode] 트랜스크립트 스크린리더 지원 — 답변·권한 요청·오류·상태 변화 실시간 알림, 턴별 헤딩 내비게이션
+- (v2.1.235) `spellcheck` 설정 — 설치된 `aspell`/`hunspell`/`ispell`로 프롬프트 입력 맞춤법 밑줄 표시
+- (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME` 환경변수 — 세션별 설정 디렉토리를 갖는 호스트가 프로젝트 트랜스크립트 디렉토리 짧은 이름 지정
+- (v2.1.234) `selection:clear` 키바인딩 액션 추가
+- (v2.1.234) GitLab MR 배지 footer/statusline 표시 — GitLab remote + 인증된 `glab` CLI 존재 시 `MR !N` 상태 표시
+- (v2.1.234) 사용량 한도 리셋 시 세션 자동 재개 — `/config`에서 끄기 가능("Continue automatically at usage limit")
+- (v2.1.234) 보안: 원격 파일 읽기·세션 복원·CLAUDE.md include·workflow 스크립트·파일 업로드에서 Windows NT-namespace(`\??\`) 경로 거부 — NTLM 자격증명 유출 벡터 하드닝
+- (v2.1.233) GitLab MR URL 지원 — `--worktree` 플래그, `claude agents` 뷰에서 `!N` 표시
+- (v2.1.233) `forward_user_identity` apps gateway 설정(opt-in) — Anthropic 업스트림에 로그인 사용자 identity를 헤더로 전달, 프록시가 사용자별 spend 귀속 가능
+- (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux Bash 도구 명령에 opt-in cgroup 메모리 제한, 폭주 빌드가 세션을 멈추지 않도록 방지
+- (v2.1.233) `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS` — WebFetch 세션 URL 캐시 TTL 설정(기본 15분 유지)
+- (v2.1.233) **Task/Todo 관리 도구(TaskCreate/Get/Update/List, TodoWrite)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+- (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 서브에이전트가 부모의 전체 대화 + 프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate agent 파견이 기본적으로 백그라운드 실행으로 전환
+- (v2.1.232) 프롬프트에 `@` 입력으로 이름으로 다른 Claude 세션 멘션 — Claude가 `SendMessage`로 해당 세션에 직접 도달
+- (v2.1.232) `SendMessage`가 정확히 하나의 라이브 세션과 일치하는 bare name에 확인 절차 없이 바로 전달
+- (v2.1.232) 동일 머신의 인터랙티브 세션 이름 고유성 보장 — 이미 사용 중인 이름으로 시작/rename 시 `name-word-word` 변형 자동 부여
+- (v2.1.232) `/config`에 "Dialog expiry", "Messages from your other sessions"(크로스세션 인바운드 accept/hold/refuse) 행 추가
+- (v2.1.232) GitLab 토큰 패밀리(`glrt-`, `gloas-`, `glptt-`, `glagent-`, `glimt-`, `glsoat-`, `glcbt-`, `glft-`, `glffct-`) 시크릿 redaction; `glab` CLI 설정 저장소에 `gh`와 동일한 sandbox·자격증명 경로 보호
+- (v2.1.232) 플러그인 마켓플레이스 GitLab 지원 — bare `gitlab.com` repo URL(중첩 subgroup 포함) `github.com`과 동일하게 클론
+- (v2.1.232) `additionalMarketplaces`/`allowedMarketplaces`가 `extraKnownMarketplaces`/`strictKnownMarketplaces`의 친화적 별칭으로 허용
+- (v2.1.232) Fable 5가 Fable 액세스 보유 조직 대상 `/advisor`에 다시 제공
+- (v2.1.229) 셀프호스트 환경(`claude self-hosted-runner`)에 서버 제공 Hook 지원(managed 환경과 동일)
+- (v2.1.229) 게이트웨이 스트리밍 응답에 SSE keepalive ping 추가 — Vertex·Bedrock 업스트림 장시간 thinking 중 idle-timeout 연결 끊김 방지
+- (v2.1.229) 플러그인 마켓플레이스 `command` 소스 — 로컬 커맨드(예: IDE)가 플러그인 디렉토리를 출력, 매 세션 재해석되어 재시작 없이 적용
+- (v2.1.229) `ListAgents`가 연결 끊긴 Remote Control 세션을 `offline`으로, 클라우드 세션을 `cloud`로 표시
+- (v2.1.225) `SendMessage`로 다른 머신의 Remote Control 세션에 이름으로 먼저 대화 시작 가능(`ListAgents`에 `name [ref]`로 표시)
+- (v2.1.224) **셀프호스트 환경** — `claude self-hosted-runner`로 자체 머신·컨테이너를 Claude Code web/mobile/desktop 세션 실행 장소로 등록 (Team/Enterprise)
+- (v2.1.224) `archive` 플러그인 소스 — git/npm 없이 HTTPS zip으로 플러그인 설치, SHA-256 핀 옵션
+- (v2.1.224) `crossSessionInbound`·`dialogExpiry` 설정 — bypass-permissions 세션으로 보낸 크로스세션 메시지는 승인 대기, 다른 세션 메시지는 자동 전달
+- (v2.1.224) 샌드박스 자격증명 마스킹 옵션 확장 — `extract`/`onExtractNoMatch`, `decode: "jwt"` + `maskClaims`, `awsPairs`/`sigv4`(`network.tlsTerminate` 필요, user/managed/`--settings`에서만 적용)
+- (v2.1.224) 크로스세션 **`SendMessage`** 추가(macOS/Linux) — 같은 사용자의 모든 머신에서 Claude Code 세션 간 메시지 전송; `ListAgents`로 탐색
+- (v2.1.224) **세션당 서브에이전트 파견 200개 상한 제거** — 장시간 세션도 신규 에이전트 파견 계속 가능(동시성·중첩 depth 제한은 유지)
+
+**Breaking Changes:**
+- Task/Todo 관리 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- 서브에이전트 포킹(`subagent_type: "fork"`)·인터랙티브 non-teammate 파견 백그라운드 기본 전환 (v2.1.232)
+- `/config` "Default teammate model" 설정 제거 — 팀메이트는 spawn 명시 없으면 리더 모델 사용 (v2.1.232)
+- 세션당 서브에이전트 파견 200개 상한 제거 (v2.1.224)
+
+**주요 버그 수정:**
+- LLM 게이트웨이·커스텀 base URL 사용 세션의 prompt caching 오동작 수정 (v2.1.237)
+- 클립보드 복사·백그라운드 하우스키핑·백그라운드 세션·로컬 MCP 로그가 세션이 전환했던 디렉토리 삭제 후 깨지던 버그 수정 (v2.1.236)
+- 풀스크린 렌더러가 최초 시작 실패 후 매 실행마다 영구적으로 실패하던 버그 수정 — 이제 클래식 렌더러로 폴백 (v2.1.236)
+- `/model` 피커가 터미널보다 높게 렌더링되던 버그 수정 — 창에 맞는 개수만 표시, 스크롤로 나머지 접근 (v2.1.236)
+- 잘못된 종료 태그로 메시지 텍스트가 summary 필드에 남아 `SendMessage` 호출이 거부되던 버그 수정 (v2.1.236)
+- PowerShell 파라미터로 `$PSDefaultParameterValues`를 조용히 덮어써 이후 명령의 파일 접근을 리다이렉트하던 Windows 권한 우회 수정 (v2.1.232)
+- Git Bash가 Cygwin 스타일 심볼릭 링크를 일반 파일로 오인하던 Windows 권한 우회 수정 — 이제 쓰기 시 승인 필요 (v2.1.232)
+- 중첩 git 레포지토리가 상위 디렉토리 신뢰를 상속하던 버그 수정 — 이제 레포마다 개별 신뢰 확인 필요 (v2.1.232)
+- MCP v2 연결이 고정 타임아웃으로 스트림을 종료하는 서버(서버리스 호스트 등) 대상 subscriptions/listen 스트림을 무한 재오픈하던 버그 수정 (v2.1.233)
+- Bundled skill 별칭(`/checkup`, `/review` 등)이 `-p` 모드·플러그인/MCP 로드 시 "Unknown command"로 잘못 보고되던 버그 수정 (v2.1.233)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

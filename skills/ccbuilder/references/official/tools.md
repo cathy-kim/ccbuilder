@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-20 (Claude Code v2.1.237+)
 
 ---
 
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행 | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Linux cgroup 메모리 제한 옵트인, 폭주 빌드 세션 중단 방지 (v2.1.233) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
@@ -46,6 +46,8 @@
 | `ExitWorktree` | - | EnterWorktree 세션 종료 (v2.1.72) | 낮음 |
 
 ### Task Management Tools
+
+> **v2.1.233 Breaking Change**: Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`/`TodoWrite`가 **기본 비활성화**됩니다. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 가능.
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|

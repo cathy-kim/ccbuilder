@@ -8,6 +8,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-20
+
+### Added
+- **Claude Code v2.1.237 sync** (v2.1.220 → v2.1.237 콘텐츠 반영)
+  - (v2.1.237) 내장 **"Concise" output style** — 결과 우선 제시, 프리앰블·내레이션 생략(`/config` → Output style)
+  - (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` 환경변수 — 신규 세션 시작 모델 지정(`/model` 선택이 오버라이드하며 재시작 간 유지)
+  - (v2.1.236) 크로스세션 `SendMessage`에 `notify_when_idle` 추가 — 대상 세션이 다음 유휴 시 1회 알림(옵트인, macOS/Linux)
+  - (v2.1.236) macOS 샌드박스 와일드카드 read-deny 규칙 우선순위·커버리지 강화; `/usage` Team/Enterprise usage-credits 지출 행 표시
+  - (v2.1.235) `spellcheck` 설정 — `aspell`/`hunspell`/`ispell` 기반 프롬프트 입력 맞춤법 밑줄
+  - (v2.1.234) GitLab MR 배지 footer/statusline 표시; 사용량 한도 리셋 시 세션 자동 재개; Windows NT-namespace 경로 거부 범위 확장(보안)
+  - (v2.1.233) **Task/Todo 관리 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.233) `CLAUDE_CODE_TOOL_MEMORY_LIMIT` — Bash 도구 opt-in cgroup 메모리 제한(Linux); GitLab MR `--worktree`/`claude agents` 지원
+  - (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"`가 부모 대화+프롬프트 캐시 상속; 인터랙티브 non-teammate 파견 기본 백그라운드 전환
+  - (v2.1.232) `@` 멘션으로 다른 Claude 세션에 `SendMessage`; 동일 머신 세션 이름 고유성 보장(`name-word-word` 변형)
+  - (v2.1.232) GitLab 토큰 redaction, GitLab 마켓플레이스 지원, `additionalMarketplaces`/`allowedMarketplaces` 별칭; `/config` "Default teammate model" 설정 제거
+  - (v2.1.229) 셀프호스트 환경 서버 제공 Hook 지원; 게이트웨이 스트리밍 SSE keepalive; 플러그인 마켓플레이스 `command` 소스
+  - (v2.1.224) **셀프호스트 환경**(`claude self-hosted-runner`, Team/Enterprise) — 자체 머신/컨테이너를 세션 실행 장소로 등록
+  - (v2.1.224) **크로스세션 `SendMessage`**(macOS/Linux) 신규 추가; `archive` 플러그인 소스(HTTPS zip); 샌드박스 자격증명 마스킹 옵션 확장
+  - (v2.1.224) **세션당 서브에이전트 파견 200개 상한 제거** — 동시성·중첩 depth 제한은 유지
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.237; Agent Teams·Task Management·Agent/CLI·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.237 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포킹 기본 활성화, 인터랙티브 백그라운드 파견 기본값, 200개 파견 상한 제거 반영
+- `references/official/tools.md`: `Bash` `CLAUDE_CODE_TOOL_MEMORY_LIMIT` 반영, Task/Todo 도구 최신 모델 기본 비활성화 경고 추가, Last Synced 갱신
+
+### Breaking Changes (Claude Code v2.1.232-233)
+- Task/Todo 관리 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233)
+- 서브에이전트 포킹(`subagent_type: "fork"`)·인터랙티브 non-teammate 파견 백그라운드 기본 전환 (v2.1.232)
+- `/config` "Default teammate model" 설정 제거 — 팀메이트는 spawn 명시 없으면 리더 모델 사용 (v2.1.232)
+- 세션당 서브에이전트 파견 200개 상한 제거 (v2.1.224)
+
+### Fixed (Claude Code v2.1.221-237 주요 수정)
+- LLM 게이트웨이·커스텀 base URL 세션 prompt caching 오동작 수정 (v2.1.237)
+- 풀스크린 렌더러 최초 시작 실패 후 영구 실패하던 버그 수정 — 클래식 렌더러 폴백 (v2.1.236)
+- PowerShell 파라미터 `$PSDefaultParameterValues` 조용한 덮어쓰기로 인한 Windows 권한 우회 수정 (v2.1.232)
+- Git Bash Cygwin 심볼릭 링크 Windows 권한 우회 수정; 중첩 git 레포 신뢰 상속 버그 수정 (v2.1.232)
+- MCP v2 연결이 서버리스 호스트 등에서 subscriptions/listen 스트림을 무한 재오픈하던 버그 수정 (v2.1.233)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

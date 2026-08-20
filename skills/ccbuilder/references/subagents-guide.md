@@ -167,7 +167,21 @@ Task({
 
 또한 Task tool의 `mode` 파라미터는 제거(무시)되었습니다 — 서브에이전트는 이제 부모 세션의 permission mode를 기본 상속합니다 (v2.1.212).
 
-### 6. 에이전트 재개
+### 6. Subagent Forking (v2.1.232+)
+
+> **v2.1.232**: `subagent_type: "fork"`로 파견한 서브에이전트는 **부모의 전체 대화 + 프롬프트 캐시를 상속**합니다 (별도 컨텍스트 없이 이어감). 또한 인터랙티브 세션에서 non-teammate agent 파견은 **기본적으로 백그라운드 실행**으로 전환되었습니다 (기존: 포그라운드 기본).
+
+```typescript
+Task({
+  subagent_type: "fork",
+  prompt: "지금까지 논의한 내용을 바탕으로 리팩터링 계획을 작성해줘"
+  // 부모 대화 전체 + 캐시를 상속 — 컨텍스트 재설명 불필요
+})
+```
+
+Skill의 `context: fork` (v2.1.218)와는 별개 개념입니다 — 전자는 Skill 실행 컨텍스트 분기, 후자는 Task tool 서브에이전트 파견 방식입니다.
+
+### 7. 에이전트 재개
 
 > ⚠️ **v2.1.77 Breaking Change**: Agent tool의 `resume` 파라미터가 제거되었습니다.
 > 이전 에이전트 재개 시 `SendMessage({to: agentId})` 를 사용하세요.
@@ -188,7 +202,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 제약 | 값 |
 |------|-----|
 | 동시 실행 서브에이전트 | 기본 20개 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, v2.1.217) |
-| 세션당 서브에이전트 파견 총량 | 기본 200개, `/clear`로 리셋 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, v2.1.212) |
+| 세션당 서브에이전트 파견 총량 | **상한 제거** (v2.1.224) — 동시성·중첩 depth 제한은 유지; `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION` 기본 200 설정은 더 이상 세션을 막지 않음 |
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
