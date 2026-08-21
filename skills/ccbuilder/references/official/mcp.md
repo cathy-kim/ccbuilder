@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-21 (v2.1.238)
 
 ---
 
@@ -78,6 +78,14 @@
 
 - stream-json init 이벤트 `mcp_server_errors` — `--mcp-config` 검증 실패로 스킵된 서버 목록 (터미널 실행 시 시작 경고로도 표시)
 - `claude mcp list`/`/mcp` — 연결 실패 시 HTTP 상태·오류 텍스트 표시; 값에 숨은 공백 경고
+- **v2.1.238**: `claude mcp list`/`get`이 비활성화된 서버를 헬스체크 연결 없이 `⊘ Disabled`로 표시
+
+## 플러그인 마켓플레이스 headersHelper (v2.1.238)
+
+- `url` 마켓플레이스·카탈로그 엔트리의 `headersHelper`가 카탈로그·동일 출처 아카이브 fetch용 HTTP 헤더(단기 토큰 등)를 발급
+- 카탈로그 엔트리 헬퍼는 설치/업데이트 시에만 실행 — `claude plugin install/update`가 커맨드 표시 후 `[y/N]` 확인 (`-y`로 스킵)
+- 상속 자격증명 env var 없이 실행; user/managed/claude.ai-scope 헬퍼는 Claude config 디렉토리에서 실행
+- project `.mcp.json` MCP `headersHelper`, project/`--add-dir` agent 파일의 inline MCP 서버는 폴더 신뢰 다이얼로그 승인 필요 (`claude -p` 포함)
 
 ## 출력 제한
 

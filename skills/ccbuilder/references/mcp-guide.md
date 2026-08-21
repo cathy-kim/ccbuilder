@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-08-21
+**Claude Code Version**: v2.1.238+
 
 ---
 
@@ -208,6 +208,28 @@ esac
   }
 }
 ```
+
+---
+
+## 플러그인 마켓플레이스 headersHelper (v2.1.238 신규)
+
+플러그인 마켓플레이스의 `headersHelper`는 카탈로그 조회·동일 출처 아카이브 fetch에 필요한 HTTP 헤더(예: 단기 토큰)를 발급하는 커맨드를 실행합니다. `url` 타입 마켓플레이스나 카탈로그 엔트리에 지정할 수 있습니다.
+
+```json
+{
+  "marketplaces": {
+    "internal": {
+      "type": "url",
+      "url": "https://plugins.internal.example.com/marketplace.json",
+      "headersHelper": "~/.claude/mint-marketplace-token.sh"
+    }
+  }
+}
+```
+
+- 카탈로그 엔트리의 `headersHelper`는 해당 플러그인을 **설치·업데이트할 때만** 실행됩니다. 실행 전 커맨드가 표시되고 `claude plugin install`/`update`가 `[y/N]` 확인을 요구합니다 (`-y`로 스킵).
+- `headersHelper`는 상속된 자격증명 env var 없이 실행됩니다. user·managed·claude.ai-scope 헬퍼는 Claude config 디렉토리에서 실행됩니다.
+- project `.mcp.json`의 MCP `headersHelper`, 그리고 project/`--add-dir` agent 파일의 inline MCP 서버는 이제 해당 폴더의 신뢰 다이얼로그 승인이 선행되어야 합니다 (`claude -p` 포함).
 
 ---
 
@@ -417,6 +439,7 @@ MAX_MCP_OUTPUT_TOKENS=50000
 
 - 헤드리스 stream-json init 이벤트에 `mcp_server_errors` 필드 추가 — `--mcp-config`로 지정한 서버 중 설정 검증에 실패해 스킵된 항목 목록. 터미널(비-JSON) 실행에서는 시작 시 경고로 표시.
 - `claude mcp list`/`/mcp` — 서버 연결 실패 시 HTTP 상태 코드·오류 텍스트 표시; MCP 설정 값에 숨겨진 선행/후행 공백이 있을 때 경고.
+- **v2.1.238**: `claude mcp list`/`get`이 비활성화된 서버를 헬스체크 연결 없이 `⊘ Disabled`로 즉시 표시 (이전에는 연결을 시도한 뒤 상태를 판단).
 
 ---
 

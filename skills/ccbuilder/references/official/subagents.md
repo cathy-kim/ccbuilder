@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-21 (v2.1.238)
 
 ---
 
@@ -71,6 +71,8 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **Resume (v2.1.77 제거)**: Agent tool `resume` 파라미터 제거됨 → `SendMessage({to: agentId})` 로 대체
 - **병렬 실행**: 독립적인 리서치는 여러 agent 동시 실행
 - **`/fork` vs `/subtask` (v2.1.212 Breaking Change)**: `/fork`는 이제 대화를 새 백그라운드 세션으로 복제(`claude agents` 자체 행); 기존 인라인 서브에이전트 launch 방식은 `/subtask`로 분리
+- **서브에이전트 포킹 기본 활성화 (v2.1.232)**: `subagent_type: "fork"`는 전체 대화·프롬프트 캐시를 상속; 인터랙티브 세션의 non-teammate 에이전트 파견은 `run_in_background` 미지정 시에도 기본 백그라운드 실행
+- **Todo 도구 기본 제거 (v2.1.232 Breaking Change)**: `TaskCreate`/`TaskGet`/`TaskUpdate`/`TaskList`·`TodoWrite`가 Opus 4.8·Sonnet 5·Fable 5 등 최신 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
 - **EnterWorktree / ExitWorktree**: 격리된 worktree 세션 진입/종료 (v2.1.72); Claude 관리 worktree 간 mid-session 전환 지원 (v2.1.157)
 - **팀 에이전트 모델 상속**: Agent Team에서 팀메이트가 리더 모델 자동 상속 (v2.1.72)
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)

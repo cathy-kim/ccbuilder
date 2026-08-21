@@ -8,6 +8,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-21
+
+### Added
+- **Claude Code v2.1.238 sync** (v2.1.220 → v2.1.238 콘텐츠 반영)
+  - (v2.1.238) 플러그인 마켓플레이스 `headersHelper` — 카탈로그·동일 출처 아카이브 fetch용 단기 토큰 헤더 발급; 카탈로그 엔트리 헬퍼는 설치/업데이트 시에만 실행되며 `claude plugin install/update`가 `[y/N]` 확인 요구 (`-y` 스킵)
+  - (v2.1.238) MCP `headersHelper`(project `.mcp.json`)·project/`--add-dir` agent 파일 inline MCP 서버는 폴더 신뢰 다이얼로그 승인 필요; 상속 자격증명 env var 없이 실행, user/managed/claude.ai-scope 헬퍼는 Claude config dir에서 실행
+  - (v2.1.238) `claude mcp list`/`get` — 비활성화 서버를 헬스체크 연결 없이 `⊘ Disabled`로 표시
+  - (v2.1.238) `keybindingFlavor: "readline"` 설정 — 프롬프트 Ctrl+W가 Bash처럼 이전 공백까지 삭제 (기본값 `classic` 유지)
+  - (v2.1.238) `claude self-hosted-runner --defer-shutdown-max-min <분>` — SIGTERM 시 접속 세션 유지 후 파킹; `--proxy-authorization-command`/`--proxy-authorization-file` — egress 프록시 매 연결 신규 Proxy-Authorization 헤더 발급
+  - (v2.1.237) **built-in "Concise" output style** — 결과 우선·군더더기 생략, `/config` → Output style에서 선택
+  - (v2.1.236) **`ANTHROPIC_DEFAULT_MODEL`** env var — 신규 세션 시작 모델 지정 (`/model` 선택이 여전히 오버라이드, 재시작 후에도 유지); `notify_when_idle` cross-session `SendMessage` 옵션 — 다른 세션 유휴 전환 시 1회 알림
+  - (v2.1.235) `spellcheck` 설정 — 프롬프트 입력 오타 밑줄 표시 (aspell/hunspell/ispell)
+  - (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME` env var; `selection:clear` keybinding action; GitLab MR 배지 footer/statusline 표시(`glab` 인증 시); 클로드 계정 이메일은 사용자 식별 용도로만 사용하도록 지시; Windows NT-namespace(`\??\`) 경로 거부 보안 강화
+  - (v2.1.233) `--worktree`·`claude agents` GitLab MR URL 지원(`!N`); `forward_user_identity` apps gateway 설정(사용자별 spend 귀속); `CLAUDE_CODE_TOOL_MEMORY_LIMIT`(Bash 옵트인 memory cgroup, Linux); `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`; GitLab 토큰 패밀리 시크릿 redaction 확장
+  - (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"`가 전체 대화·프롬프트 캐시 상속, 인터랙티브 세션 non-teammate 에이전트 파견 기본 백그라운드 실행
+  - (v2.1.232) 프롬프트에 `@`로 다른 Claude 세션 이름 멘션 → `SendMessage`로 자동 전달; 세션 이름 중복 시 `name-word-word` variant 자동 부여
+  - (v2.1.232) `/config`에 "Dialog expiry", "Messages from your other sessions"(cross-session inbound accept/hold/refuse) 행 추가
+  - (v2.1.232) GitLab 마켓플레이스 지원(bare `gitlab.com` 레포, 중첩 서브그룹); `additionalMarketplaces`/`allowedMarketplaces` — 기존 설정 키 별칭
+  - (v2.1.229) **self-hosted runner에 서버 지정 Hook 지원** 추가 (managed 환경과 동일); 플러그인 마켓플레이스 `command` 소스(로컬 IDE 등이 플러그인 디렉토리 경로 출력)
+  - (v2.1.225) 게이트웨이 spend-limit — 사용량 경고에 한도·리셋 시간·운영자 메시지 표시; `claude agents` 워크스페이스 미신뢰 디렉토리 신뢰 프롬프트
+  - (v2.1.224) **`claude self-hosted-runner`** 출시 — 자체 머신/컨테이너를 Claude Code web·mobile·desktop 세션 실행 장소로 전환 (Team/Enterprise)
+  - (v2.1.224) **archive 플러그인 소스** — git/npm 없이 zip(HTTPS) 설치, SHA-256 pinning 옵션
+  - (v2.1.224) **cross-session `SendMessage`** — 같은 머신의 다른 세션에 메시지 전송, `ListAgents`로 탐색 (macOS/Linux); `crossSessionInbound`/`dialogExpiry` 설정
+  - (v2.1.224) 200-서브에이전트 세션 스폰 상한 제거(동시성·깊이 제한은 유지); sandbox credential-masking 옵션(`extract`, JWT-aware masking, AWS SigV4 재서명)
+  - (v2.1.223) owner wildcard(`"owner/*"`) 항목 — `strictKnownMarketplaces`/`blockedMarketplaces`; `/teleport` 힌트(클라우드 세션 → `claude --teleport <session id>`)
+  - (v2.1.223) **`/review`가 `/code-review` 별칭으로 변경** — `/code-review <level> <pr#>`, `/code-review ultra` 클라우드 딥리뷰; effort 미지정 시 마지막 사용 레벨 재사용
+  - (v2.1.222) worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용 — 메인 체크아웃 대상 파괴적 git 명령 차단
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.238; MCP·Plugin·Agent/CLI 항목에 위 기능 반영, Breaking Changes 목록 확장
+- `references/version-sync.md`: v2.1.238 변경사항 추적 엔트리 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: 서브에이전트 포킹 기본 활성화, non-teammate 에이전트 기본 백그라운드 파견, Todo 도구 기본 제거 반영 (v2.14.0)
+- `references/mcp-guide.md`, `references/official/mcp.md`: 플러그인 마켓플레이스 `headersHelper`, MCP `⊘ Disabled` 표시 변경 반영 (v2.21.0)
+- `references/official/tools.md`: Task Management 도구·`TodoWrite` 최신 모델 기본 제거 안내 추가
+
+### Breaking Changes (Claude Code v2.1.222 ~ v2.1.238)
+- **Todo/task 관리 도구(`TaskCreate`/`TaskGet`/`TaskUpdate`/`TaskList`, `TodoWrite`)가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 기본 제거** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.232)
+- **서브에이전트 포킹 기본 활성화 + 인터랙티브 세션 non-teammate 에이전트 파견 기본 백그라운드화** (v2.1.232)
+- **worktree 격리가 모든 세션 타입의 파일 편집·Bash에 적용** — 메인 체크아웃 대상 파괴적 git 명령 차단 (v2.1.222)
+- **`/review`가 `/code-review` 별칭으로 변경** (v2.1.223)
+- **"Default teammate model" 설정 제거** — 팀메이트는 리더 모델 상속 (v2.1.234)
+- MCP `headersHelper`(project `.mcp.json`)·inline MCP 서버가 폴더 신뢰 다이얼로그 승인을 요구 (v2.1.238)
+- Ctrl+L/Cmd+K 풀스크린 더블프레스 `/clear` 단축키 제거 — 항상 리페인트만 수행 (v2.1.238)
+
+### Fixed (주요 보안·버그 수정)
+- PowerShell `$PSDefaultParameterValues` 변수 쓰기로 이후 명령 파일 접근을 리다이렉트하는 권한 우회 수정 (v2.1.232)
+- Git Bash가 Cygwin-style 심볼릭 링크를 일반 파일로 오인하던 Windows 권한 우회 수정 (v2.1.232)
+- 중첩 git 레포지토리가 상위 디렉토리 신뢰를 상속하던 버그 수정 — 레포마다 독립 신뢰 확인 필요 (v2.1.232)
+- worktree 격리 서브에이전트가 `git -C`/`--git-dir`/`GIT_DIR`로 공유 체크아웃에 git 명령을 우회 실행하던 버그 수정 (v2.1.216, 이번 동기화 범위 내 재확인)
+- MCP 대형 tool output 트런케이션 시 전체 결과가 세션 종료까지 메모리에 남던 누수 수정 (v2.1.217)
+- Windows `\??\` NT-namespace 경로가 UNC 경로 검증을 우회하던 NTLM 자격증명 유출 취약점 마무리 하드닝 (v2.1.234)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

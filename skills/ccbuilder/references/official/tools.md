@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-21 (Claude Code v2.1.238+)
 
 ---
 
@@ -55,6 +55,8 @@
 | `TaskGet` | - | 작업 상세 조회 | 낮음 |
 | `TaskOutput` | - | 백그라운드 태스크 출력 — **Deprecated** (v2.1.83): `Read`로 출력 파일 경로 직접 읽기 | 낮음 |
 | `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
+
+> **v2.1.232 Breaking Change**: 이 표의 Task Management 도구(`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`)와 `TodoWrite`는 Opus 4.8·Sonnet 5·Fable 5·Mythos 5 등 최신 모델에서 **기본 제공되지 않습니다**. `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 가능.
 
 ### Team Tools
 
