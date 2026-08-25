@@ -77,6 +77,75 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.245 (2026-08-25 동기화)
+
+**새로운 기능:**
+- (v2.1.243) `/usage`에 **Loops 분석** 추가 — 루프별 실행 횟수·총 토큰·실행당 토큰·최근 실행 표시, 과도하게 실행되는/수다스러운 `/loop` 작업 파악 지원
+- (v2.1.243) **`modelPicker`** 설정 — `/model` 피커에 표시할 모델 목록을 순서·라벨과 함께 큐레이션 (Vertex/Bedrock ID 포함 모든 ID 스펠링 허용), 내장 라인업에 추가 또는 대체
+- (v2.1.243) **`promptCacheTtl`/`subagentPromptCacheTtl`** 설정 — API키·클라우드 프로바이더 사용자가 메인 대화는 1시간, 서브에이전트는 5분 프롬프트 캐시로 분리 유지
+- (v2.1.243) **`modelPricing`** managed 설정 — 조직의 계약 단가·할인율을 `/cost`, 상태줄, 텔레메트리 비용 수치에 정가 대신 반영
+- (v2.1.243) `/login` → Anthropic Console **키리스 로그인** — "Sign in with your Console account" (권장), API 키 생성이 금지된 조직 대응
+- (v2.1.243) `/status`에 `Skipped sources` 라인 — 더 높은 우선순위 managed 소스가 활성화되어 적용되지 않은 managed settings 소스(예: `managed-settings.json`) 나열
+- (v2.1.243) `/mcp`·`/plugins`에 조직이 인증을 관리하는 claude.ai 커넥터의 `managed` 마커 표시
+- (v2.1.243) GitHub 미연결 claude.ai 사용자에게 `/web-setup` 안내 팁; `/status`에 Claude Code on the web용 GitHub 연결 여부 표시
+- (v2.1.243) `/tasks`·에이전트 상세 다이얼로그에 각 서브에이전트가 실행된 모델(및 effort 레벨) 표시
+- (v2.1.243) 네이티브 바이너리 **zstd 압축** — 설치·자동 업데이트 다운로드 용량 축소 (Linux x64 약 340MB → 75MB)
+- (v2.1.243) 장기 실행 세션 메모리 사용량 개선 — 코드 온디맨드 로드로 네이티브 빌드 세션당 약 40–70MB 절감; 힙 증가 시 더 빠른 GC로 피크 메모리 개선
+- (v2.1.243) 시작 시간 개선 — 샌드박스·MCP 준비가 첫 프레임을 막지 않음, bare 실행 서브커맨드 등록 스킵, workflow discovery·settings·trust-store 처리 경량화
+- (v2.1.243) 샌드박스 Bash 도구 프롬프트가 허용 네트워크 호스트 목록을 더 이상 표시하지 않음 — 미등재 호스트도 시도하며 신규 호스트 승인 가능
+- (v2.1.243) `/model` 피커·번들 `claude-api` 스킬이 Sonnet 5 $2/$10 per Mtok을 한시 프로모션이 아닌 표준 정가로 표시
+- (v2.1.243) `/model`·`/fast`·`/effort`가 Bedrock·Vertex·Foundry 및 텔레메트리 비활성화 환경에서도 턴 종료까지 대기하지 않고 즉시 실행
+- (v2.1.239) `/cost`·상태줄·`--max-budget-usd`에 data-residency 워크스페이스용 1.1배 US-only-inference 프리미엄 반영
+- (v2.1.239) `/claude-api upgrade` — Python 프로젝트 `anthropic` SDK 0.x → 1.x 마이그레이션 지원
+- (v2.1.239) Alpine/musl 빌드 — 네이티브 이미지 붙여넣기·클립보드·오디오 캡처 애드온이 musl 바이너리로 정상 로드
+- (v2.1.238) `keybindingFlavor: "readline"` 설정 — 프롬프트에서 `Ctrl+W`가 Bash처럼 이전 공백까지 삭제
+- (v2.1.238) 플러그인 마켓플레이스 `headersHelper` — url 마켓플레이스·카탈로그 엔트리가 커맨드로 단명 토큰 등 HTTP 헤더 발급, 설치·업데이트 시에만 실행(`[y/N]` 확인)
+- (v2.1.238) `claude self-hosted-runner --defer-shutdown-max-min`/`--proxy-authorization-command`/`--proxy-authorization-file`
+- (v2.1.237) **Concise 출력 스타일** 내장 추가 — 결과 우선, 서두·내레이션 생략, `/config` → Output style에서 선택
+- (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` env var — 신규 세션 기본 모델 지정(`/model` 선택이 여전히 오버라이드·재시작 후 유지, `ANTHROPIC_MODEL`과 차이)
+- (v2.1.236) `SendMessage` `notify_when_idle` — 같은 머신의 다른 세션이 다음 유휴 전환 시 1회 알림 (옵트인, 폴링 없음)
+- (v2.1.234) 사용량 한도가 리셋되면 세션 자동 재개(`/config`에서 끄기 가능); GitLab MR 배지 footer/statusline (glab CLI 인증 시)
+- (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME` env var; `selection:clear` 키바인딩 액션
+- (v2.1.233) GitLab MR URL `--worktree` 지원; `forward_user_identity` apps gateway 설정; `CLAUDE_CODE_TOOL_MEMORY_LIMIT`(Bash cgroup 메모리 제한, Linux); `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`
+- (v2.1.233) **TodoWrite·TaskCreate/Get/Update/List 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+- (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 서브에이전트는 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션 non-teammate agent spawn 기본 백그라운드 실행
+- (v2.1.232) `@` 멘션으로 다른 Claude 세션에 직접 `SendMessage`; GitLab 토큰 계열(`glrt-`, `gloas-` 등) secret redaction; GitLab 마켓플레이스 소스(중첩 subgroup 포함) 지원
+- (v2.1.232) `additionalMarketplaces`/`allowedMarketplaces` — `extraKnownMarketplaces`/`strictKnownMarketplaces` 친화적 별칭
+- (v2.1.232) `/code-review`가 high·xhigh·max effort에서도 백그라운드 에이전트로 실행
+- (v2.1.235) `spellcheck` 옵트인 설정 — 프롬프트 입력 중 오탈자 밑줄 표시(aspell/hunspell/ispell)
+- (v2.1.229) `claude remote-control --continue` — 가장 최근 Remote Control 세션 재개; 플러그인 마켓플레이스 `command` 소스(로컬 커맨드가 플러그인 디렉토리 인쇄, 재시작 없이 재적용)
+- (v2.1.245) Linux glibc 2.44 배포판(Arch Linux, CachyOS, Fedora Rawhide) 시작 크래시 수정
+
+**Breaking Changes:**
+- TodoWrite·TaskCreate/Get/Update/List 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 가능 (v2.1.233)
+- 샌드박스 Bash 도구 프롬프트가 허용 네트워크 호스트 목록을 더 이상 표시하지 않음 — Claude가 미등재 호스트도 요청을 시도하고 신규 호스트 승인을 받는 방식으로 변경 (v2.1.243)
+
+**주요 버그 수정:**
+- 원격 MCP 서버가 `-p`/SDK 세션에서 연결 끊김 후 영구 미복구되던 문제 수정 — 자동 재연결 또는 실패 보고 (v2.1.243)
+- 데스크탑 앱발 MCP 서버 sign-in이 CIMD(Client ID Metadata Document) 지원 서버에서 "Invalid redirect URI"로 실패하던 버그 수정 (v2.1.243)
+- 서버 측 일시 비활성화 캐시 후 플래그 재조회 실패 시 auto mode가 시작부터 계속 사용 불가 상태로 남던 버그 수정 (v2.1.243)
+- API가 짧게 과부하 상태에서 재시도 요청 시 auto mode 도구 호출이 약 1분 대기 후 "temporarily unavailable"로 거부되던 버그 수정 (v2.1.243)
+- `/model` 피커가 Ultracode 선택을 조용히 무시하던 버그 수정 — 이제 현재 세션에 정상 적용 (v2.1.243)
+- `/resume`이 최근 50개 세션만 표시하던 제한 해제 — 스크롤 시 추가 로드 (v2.1.243)
+- 클라우드 세션이 턴 중간 재시작 후 대기 중이던 훅·백그라운드 태스크 알림을 일반 재개 메시지 대신 프롬프트로 재전송하던 버그 수정 (v2.1.243)
+- 2.1.232 소켓 디렉토리 강화 이후 user namespace·rootless 컨테이너에서 cross-session messaging이 조용히 꺼지던 버그 수정 (v2.1.243)
+- 백그라운드 서브에이전트가 마지막 백그라운드 Bash 태스크 완료 시 깨어나지 않던 버그 수정 (v2.1.243)
+- API가 응답을 전혀 시작하지 않을 때 세션이 10분 이상 무응답 상태로 남던 문제 수정 — 약 3분 후 타임아웃·1회 재시도 후 명확한 오류 (v2.1.243)
+- 훅 `if` 조건(예: `Bash(cat *)`)이 `$()`·백틱 명령 치환 뒤에 추가 인자가 있는 무관한 Bash 명령에서 잘못 발동하던 버그 수정 (v2.1.243)
+- `marketplace` 필드로 선언된 플러그인 의존성이 두 플러그인이 함께 `--plugin-dir`로 로드될 때 해석되지 않던 버그 수정 (v2.1.243)
+- `--agents`가 잘못된 JSON·에이전트 정의를 조용히 무시하던 버그 수정 — `--mcp-config`처럼 명확한 오류로 종료 (v2.1.243)
+- `claude --teleport <session>`이 커밋되지 않은 변경사항에서 종료되던 문제 수정 — stash 후 계속 진행 옵션 제공 (세션 피커와 동일 동작) (v2.1.243)
+- 사용 중인 오래된 GitHub CLI(`gh auth token` 미지원)에서 `/web-setup`이 반복 로그인 요청하던 버그 수정 (v2.1.243)
+- 자동 업데이트로 Claude in Chrome 설정 당시 버전이 정리된 후 연결이 끊기던 버그 수정 — 네이티브 launcher를 통해 실행하도록 변경 (v2.1.243)
+- Bedrock 스트리밍이 Content-Type 헤더를 제거하는 프록시 뒤에서 매 턴 non-streaming으로 재실행되어 API 호출이 조용히 2배 청구되던 버그 수정 (v2.1.239)
+- WebFetch가 세션 전체 동안 만료된 페이지 콘텐츠를 메모리에 유지하던 버그 수정 — 의도된 15분으로 정정 (v2.1.239)
+- `.worktreeinclude` 패턴이 `**/`로 시작할 때 gitignore된 디렉토리 대상에서 조용히 매칭 실패하던 버그 수정 (v2.1.239)
+- UTF-8 BOM으로 시작하는 `.md` 파일의 에이전트·스킬·명령이 조용히 무시되던 버그 수정 (v2.1.239)
+- Windows Git Bash 심볼릭 링크를 통한 권한 우회, PowerShell `$PSDefaultParameterValues` 변수 쓰기 권한 우회 수정 (v2.1.232)
+- 중첩된 git 레포지토리가 상위 디렉토리 신뢰를 상속받던 버그 수정 — 각 레포지토리가 자체 신뢰 확인 필요 (v2.1.232)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

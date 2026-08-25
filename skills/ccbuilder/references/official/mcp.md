@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-25 (v2.1.245)
 
 ---
 
@@ -49,7 +49,8 @@
 | **Resources** | `@server:protocol://path`로 참조 |
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
-| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81) |
+| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사전 등록 클라이언트(Slack 등) redirect URI mismatch 수정 (v2.1.231); 데스크탑 앱발 CIMD 서버 sign-in "Invalid redirect URI" 수정 (v2.1.243) |
+| **원격 MCP 재연결** | `-p`/SDK 세션에서 연결 끊긴 원격 MCP 서버가 자동 재연결 또는 실패 보고 (이전: 영구 미복구, v2.1.243) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |

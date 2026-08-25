@@ -3,8 +3,8 @@
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
 **Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Last Updated**: 2026-08-25
+**Claude Code Version**: v2.1.245+
 
 ---
 
@@ -291,6 +291,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| 서브에이전트 포킹 | 옵트인 | **기본 활성화** — `subagent_type: "fork"`는 전체 대화·프롬프트 캐시 상속; non-teammate agent spawn은 인터랙티브 세션에서 기본 백그라운드 실행 (v2.1.232) |
+| TodoWrite·Task 관리 도구 | 기본 제공 | Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 **기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 

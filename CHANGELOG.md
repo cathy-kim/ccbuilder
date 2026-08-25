@@ -8,6 +8,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-25
+
+### Added
+- **Claude Code v2.1.245 sync** (v2.1.220 → v2.1.245 콘텐츠 반영)
+  - (v2.1.243) `/usage`에 **Loops 분석** 추가 — 루프별 실행 횟수·총 토큰·실행당 토큰·최근 실행 표시로 과도하게 실행되는 `/loop` 작업 파악 지원
+  - (v2.1.243) **`modelPicker`** 설정 — `/model` 피커에 표시할 모델 목록(라벨·순서, Vertex/Bedrock ID 포함)을 조직이 큐레이션
+  - (v2.1.243) **`promptCacheTtl`/`subagentPromptCacheTtl`** 설정 — API키·클라우드 프로바이더 사용자가 메인 대화는 1시간, 서브에이전트는 5분 캐시 TTL로 분리 설정
+  - (v2.1.243) **`modelPricing`** managed 설정 — 조직 계약 단가·할인율을 `/cost`·상태줄·텔레메트리 비용 산정에 정가 대신 반영
+  - (v2.1.243) `/login` → Anthropic Console **키리스 로그인** — API 키 생성 없이 Console 계정으로 로그인 가능
+  - (v2.1.243) `/status`에 `Skipped sources` 라인 — 우선순위 낮아 미적용된 managed settings 소스 표시
+  - (v2.1.243) `/mcp`·`/plugins`에 조직이 인증을 관리하는 claude.ai 커넥터 `managed` 마커 표시
+  - (v2.1.243) `/tasks`·에이전트 상세 다이얼로그에 서브에이전트가 실행된 모델·effort 레벨 표시
+  - (v2.1.243) 네이티브 바이너리 **zstd 압축** — Linux x64 설치·업데이트 용량 약 340MB → 75MB로 축소
+  - (v2.1.243) 장기 세션 메모리 사용량 개선 — 코드 온디맨드 로드로 세션당 약 40–70MB 절감
+  - (v2.1.243) 샌드박스 Bash 도구 프롬프트가 허용 네트워크 호스트 목록을 더 이상 표시하지 않음 — 미등재 호스트도 시도 후 승인 요청
+  - (v2.1.239) `/cost`·상태줄·`--max-budget-usd`에 data-residency 워크스페이스 1.1배 US-only-inference 프리미엄 반영
+  - (v2.1.239) `/claude-api upgrade` — Python `anthropic` SDK 0.x → 1.x 마이그레이션 지원
+  - (v2.1.238) `keybindingFlavor: "readline"` 설정 — `Ctrl+W` 등 Bash 방식 단어 삭제 동작
+  - (v2.1.238) 플러그인 마켓플레이스 `headersHelper` — url/catalog 소스 설치·업데이트 시 단명 토큰 등 HTTP 헤더 발급 커맨드 실행
+  - (v2.1.237) **Concise 출력 스타일** 내장 추가 — 결과 우선, 서두·내레이션 생략
+  - (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` env var — 신규 세션 기본 모델 지정(`/model` 선택이 우선, 재시작 후 유지)
+  - (v2.1.236) `SendMessage` `notify_when_idle` — 다른 로컬 세션이 유휴 전환 시 1회 알림
+  - (v2.1.234) 사용량 한도가 리셋되면 세션 자동 재개(`/config`에서 끄기 가능); GitLab MR 배지 footer/statusline
+  - (v2.1.233) **TodoWrite·Task 관리 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원
+  - (v2.1.232) **서브에이전트 포킹 기본 활성화** — `subagent_type: "fork"` 서브에이전트는 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate agent spawn 기본 백그라운드 실행
+  - (v2.1.232) `@` 멘션으로 다른 Claude 세션에 직접 `SendMessage`; GitLab 토큰 계열 secret redaction; GitLab 마켓플레이스 소스 지원
+  - (v2.1.229) `claude remote-control --continue`, 플러그인 마켓플레이스 `command` 소스
+  - (v2.1.245) Linux glibc 2.44 배포판(Arch·CachyOS·Fedora Rawhide) 시작 크래시 수정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.245; MCP·Agent/CLI·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.245 변경사항 추적 엔트리 추가
+
+### Breaking Changes (Claude Code v2.1.233, v2.1.243)
+- TodoWrite·TaskCreate/Get/Update/List 도구가 Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 기본 비활성화 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 가능
+- 샌드박스 Bash 도구 프롬프트가 허용된 네트워크 호스트 목록을 더 이상 나열하지 않음 — 미등재 호스트로의 요청을 시도하며 신규 호스트 승인을 받는 방식으로 변경
+
+### Fixed (주요 버그 수정)
+- 원격 MCP 서버가 `-p`/SDK 세션에서 연결 끊김 후 영구 미복구되던 문제 수정 — 자동 재연결 또는 실패 보고 (v2.1.243)
+- 데스크탑 앱발 MCP 서버 sign-in이 CIMD 지원 서버에서 "Invalid redirect URI"로 실패하던 버그 수정 (v2.1.243)
+- `/model` 피커가 Ultracode 선택을 조용히 무시하던 버그 수정 (v2.1.243)
+- `/resume`이 최근 50개 세션만 표시하던 제한 해제 — 스크롤 시 추가 로드 (v2.1.243)
+- 백그라운드 서브에이전트가 마지막 백그라운드 Bash 태스크 완료 시 깨어나지 않던 버그 수정 (v2.1.243)
+- API가 응답을 시작하지 않을 때 세션이 10분 이상 멈추던 문제 수정 — 약 3분 후 타임아웃·1회 재시도 (v2.1.243)
+- 훅 `if` 조건(예: `Bash(cat *)`)이 `$()`·백틱 명령 치환을 포함한 무관한 Bash 명령에서 잘못 발동하던 버그 수정 (v2.1.243)
+- `claude --teleport <session>`이 커밋되지 않은 변경사항에서 종료되던 문제 수정 — stash 후 계속 진행 옵션 제공 (v2.1.243)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

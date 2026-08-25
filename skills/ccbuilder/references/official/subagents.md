@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-25 (v2.1.245)
 
 ---
 
@@ -76,4 +76,6 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **SendMessage 자동 재개**: 중단된 에이전트에 SendMessage 시 자동으로 백그라운드 재개 (v2.1.77)
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
-- **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능; `/tasks`·에이전트 상세 다이얼로그에도 실행 모델·effort 표시 (v2.1.243)
+- **서브에이전트 포킹 기본 활성화 (v2.1.232+)**: `subagent_type: "fork"` 서브에이전트는 전체 대화·프롬프트 캐시를 상속; 인터랙티브 세션에서 non-teammate agent spawn은 기본적으로 백그라운드 실행
+- **TodoWrite·Task 관리 도구 기본 비활성화 (v2.1.233+)**: Opus 4.8·Sonnet 5·Fable 5·Mythos 5 이상 모델에서 TodoWrite·TaskCreate/Get/Update/List가 기본 제거 — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원

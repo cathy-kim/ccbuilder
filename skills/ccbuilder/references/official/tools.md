@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-25 (Claude Code v2.1.245+)
 
 ---
 
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행 | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 샌드박스 프롬프트가 허용 네트워크 호스트 목록을 더 이상 나열하지 않음 — 미등재 호스트도 시도 후 승인 요청 (v2.1.243) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
@@ -49,12 +49,12 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `TaskCreate` | 558 | 작업 생성 | 낮음 |
-| `TaskUpdate` | - | 작업 상태 변경 | 낮음 |
-| `TaskList` | 133+ | 작업 목록 조회 | 낮음 |
-| `TaskGet` | - | 작업 상세 조회 | 낮음 |
+| `TaskCreate` | 558 | 작업 생성; Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 **기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233) | 낮음 |
+| `TaskUpdate` | - | 작업 상태 변경; 위와 동일한 모델 대상 기본 비활성화 (v2.1.233) | 낮음 |
+| `TaskList` | 133+ | 작업 목록 조회; 위와 동일한 모델 대상 기본 비활성화 (v2.1.233) | 낮음 |
+| `TaskGet` | - | 작업 상세 조회; 위와 동일한 모델 대상 기본 비활성화 (v2.1.233) | 낮음 |
 | `TaskOutput` | - | 백그라운드 태스크 출력 — **Deprecated** (v2.1.83): `Read`로 출력 파일 경로 직접 읽기 | 낮음 |
-| `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
+| `TodoWrite` | 2,167 | 체크리스트 관리 (레거시); Opus 4.8·Sonnet 5·Fable 5·Mythos 5+ 모델에서 **기본 비활성화** — `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`로 복원 (v2.1.233) | 낮음 |
 
 ### Team Tools
 
