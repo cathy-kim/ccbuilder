@@ -8,6 +8,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-26
+
+### Added
+- **Claude Code v2.1.246 sync** (v2.1.220 → v2.1.246 콘텐츠 반영)
+  - (v2.1.232) **서브에이전트 forking 기본 활성화** — `subagent_type: "fork"` 서브에이전트가 전체 대화·프롬프트 캐시 상속; 인터랙티브 세션의 non-teammate agent 파견이 기본적으로 백그라운드 실행
+  - (v2.1.232) `@` 멘션으로 다른 Claude 세션을 이름으로 호출 — `SendMessage`로 직접 연결; 동일 이름 세션 자동 `name-word-word` 변형; `/config`에 `Dialog expiry`·`Messages from your other sessions` 항목 추가
+  - (v2.1.233) `--worktree` 플래그·`claude agents` 뷰 GitLab MR URL 지원(`!N` 표시); `CLAUDE_CODE_TOOL_MEMORY_LIMIT`(Bash cgroup 메모리 제한, Linux opt-in); `CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS`
+  - (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME` env var; `selection:clear` 키바인딩; GitLab MR 상태줄·푸터 배지; claude.ai 사용량 한도 리셋 시 세션 자동 재개(`/config`로 끄기 가능)
+  - (v2.1.235) `spellcheck` 설정 — `aspell`/`hunspell`/`ispell` 기반 프롬프트 맞춤법 검사
+  - (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` env var(신규 세션 기본 모델); `SendMessage` `notify_when_idle`(크로스세션 유휴 알림 1회성 옵트인)
+  - (v2.1.237) 내장 **Concise** output style 추가 — 결과 우선·군더더기 없는 응답(`/config` → Output style)
+  - (v2.1.238) `keybindingFlavor: "readline"` 설정; 플러그인 마켓플레이스 `headersHelper`(카탈로그·아카이브 fetch용 HTTP 헤더 발급); `claude self-hosted-runner --defer-shutdown-max-min`·`--proxy-authorization-command/-file`
+  - (v2.1.239) `/cost`·상태줄·`--max-budget-usd`에 data-residency 1.1배 프리미엄 반영; `/claude-api upgrade`(Python `anthropic` 0.x→1.x 마이그레이션)
+  - (v2.1.243) **`/usage` Loops 분석**(`/loop` 태스크별 실행·토큰 통계); `modelPicker`·`promptCacheTtl`/`subagentPromptCacheTtl`·`modelPricing` managed 설정; `/login` Anthropic Console 키리스 로그인; `/status` `Skipped sources` 라인; `/mcp`·`/plugins` `managed` 마커; `/tasks`에 서브에이전트 모델·effort 표시; `/web-setup` GitHub 미연결 안내
+  - (v2.1.246) `/permissions` **Auto mode 탭** 추가; Bash 서브커맨드 앞 와일드카드 allow 규칙 시작 경고; 턴 종료 시각 표시; 비대화형 세션 중단 응답 자동 이어쓰기; `/code-review` 자율 시작 범위 확대(Bedrock·Vertex·Foundry 등); `/goal` 체크인 최대 3회 제한; `claude install`/`update` managed-settings 동의 프롬프트 연기; `/cd` 즉시 적용 범위 확대(설정·훅·MCP·스킬·에이전트); 서브에이전트 `maxTurns` partial 결과 + `SendMessage` 이어가기 힌트; Dynamic workflow 재시작 시 서브에이전트 재시작 확인 프롬프트
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.246; Agent/CLI/Plugin 강화·신규 도구/env·Agent·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.246 변경사항 추적 엔트리 추가
+
+### Breaking Changes (Claude Code v2.1.232)
+- 서브에이전트 forking·백그라운드 실행이 기본 활성화 — `subagent_type: "fork"`는 전체 대화 상속 기본 on, 인터랙티브 세션의 non-teammate agent 파견은 기본적으로 백그라운드 실행
+
+### Fixed (Claude Code v2.1.232–v2.1.246 주요 수정)
+- 헤드리스/원격 세션에서 수신 메시지에 중단된 MCP 도구 호출이 "completed with no output"으로 오보고되던 버그 수정 → 명시적 interrupted 오류로 변경 (v2.1.246)
+- MCP 도구 인자가 빈 스키마(`{}`)일 때 JSON 문자열로 잘못 전송되던 버그 수정 (v2.1.246)
+- 플러그인 스킬 frontmatter `name`에 `<plugin>:` 접두사가 이미 포함된 경우 슬래시 메뉴에 이중 표시되던 버그 수정 (v2.1.246)
+- `claude plugin update`가 설치된 플러그인의 bare 이름으로 실패하던 버그 수정 (v2.1.246)
+- `/reload-plugins`가 `skills/*/SKILL.md` 하위 스킬을 0개로 보고하던 버그 수정 (v2.1.246)
+- 리사이즈 후 풀스크린 모드 빈 트랜스크립트·erratic 스크롤 버그 수정 (v2.1.246)
+- 매우 긴 단일 줄(base64 등) 포함 diff의 심각한 트랜스크립트 렌더링 지연 수정 — 트런케이션 표시로 변경 (v2.1.246)
+- `curl | bash` 설치가 서버 관리 설정을 가진 일부 Team/Enterprise 사용자에서 "Raw mode is not supported"로 실패하던 버그 수정 (v2.1.246)
+- 리모트 MCP 서버가 비대화형(`-p`)·SDK 세션에서 연결 끊김 후 복구되지 않던 버그 수정 (v2.1.243)
+- glibc 2.44 배포판(Arch, CachyOS, Fedora Rawhide) 시작 시 크래시 수정 (v2.1.245)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
