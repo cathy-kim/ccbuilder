@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-27 (v2.1.247)
 
 ---
 
@@ -73,11 +73,19 @@
 - 필터: `serverName`, `serverCommand`, `serverUrl` (와일드카드 지원)
 - **차단 목록이 항상 우선**
 - **v2.1.219**: `${VAR}` 항목은 settings 파일 자체의 `env` 대신 시작 시 환경변수·managed-settings env에서 해석
+- **v2.1.243**: `/mcp`·`/plugins`에서 조직이 인증을 관리하는 claude.ai 커넥터에 `managed` 마커 표시
 
 ## Headless 진단 (v2.1.219)
 
 - stream-json init 이벤트 `mcp_server_errors` — `--mcp-config` 검증 실패로 스킵된 서버 목록 (터미널 실행 시 시작 경고로도 표시)
 - `claude mcp list`/`/mcp` — 연결 실패 시 HTTP 상태·오류 텍스트 표시; 값에 숨은 공백 경고
+- **v2.1.247**: Bedrock·Vertex·Foundry(텔레메트리 비활성화 세션 포함) — MCP 서버 연결 실패를 Claude에게 명시적으로 전달, 도구 부재로 오판하지 않도록 개선
+
+## headersHelper 신뢰·격리 (v2.1.238)
+
+- 프로젝트 `.mcp.json`·플러그인·agent 파일 인라인 서버의 `headersHelper`는 해당 폴더 신뢰 다이얼로그 수락 후에만 실행 (`claude -p` 포함)
+- 프로젝트 `.mcp.json`·플러그인·agent 파일의 `headersHelper`는 상속 자격증명 env var 없이 실행; user/managed/claude.ai-scope 헬퍼는 Claude 설정 디렉토리에서 실행
+- 플러그인 마켓플레이스 `headersHelper` — 설치·업데이트 시에만 실행되어 카탈로그·동일 출처 아카이브용 단기 토큰 발급, 실행 전 명령 표시 + `[y/N]` 확인
 
 ## 출력 제한
 

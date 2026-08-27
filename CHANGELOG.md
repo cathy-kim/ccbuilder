@@ -8,6 +8,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-27
+
+### Added
+- **Claude Code v2.1.247 sync** (v2.1.220 → v2.1.247 콘텐츠 반영)
+  - (v2.1.247) **`SendFeedback` 도구** — 세션 중 문제 발생 시 Claude가 피드백 초안을 작성, `/feedback`에서 검토 후 전송 (`feedbackDrafts` 설정으로 비활성화)
+  - (v2.1.247) `spinnerTipsOverride`에 `{id, text, cooldownSessions, priority}` 항목·`tipsFile`·`label` 추가 — 조직이 내장 팁과 함께 자체 팁 로테이션 가능
+  - (v2.1.247) Bash 권한 프롬프트에 auto mode 안내 팁 — "Yes, and switch to auto mode" 원클릭 전환 옵션
+  - (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트의 Claude API 비용 프로파일링, 캐싱·토큰 위생·배치·effort·모델 선택 등 비용 레버를 측정 기반으로 하나씩 적용
+  - (v2.1.247) `/claude-api` 스킬 Admin API 커버리지 확장 — 조직 멤버·초대·워크스페이스·API 키·rate limit 리포트·workload identity federation·CMEK
+  - (v2.1.247) Sonnet 5 기본 auto-compact window가 전체 1M 컨텍스트로 확장 — 1M window 세션은 약 934K 대신 약 967K 토큰에서 auto-compact
+  - (v2.1.247) cross-session 피어 메시지가 기본적으로 한 줄 미리보기(`Message from @sender: 첫줄`)로 축약, `Ctrl+O`로 전체 펼침
+  - (v2.1.247) 터미널 하이퍼링크 안전성 강화 — 네트워크/automounter 경로·제어문자·비가시문자 포함 링크 대상은 일반 텍스트로 렌더링
+  - (v2.1.246) `/permissions`에 Auto mode 탭 신규 추가 — 분류기 규칙 조회·편집
+  - (v2.1.246) 턴 종료 시각을 종료 라인에 표시 (예: `✻ Sautéed for 23s · done 6:05 PM`)
+  - (v2.1.246) 서브커맨드 앞에 와일드카드가 오는 Bash allow rule(`Bash(git * main)`) 시작 시 경고 — 서브커맨드 앞 옵션도 매칭됨을 안내
+  - (v2.1.243) `/usage`에 Loops 분류 추가 — 루프별 실행 수·총 토큰·실행당 토큰·마지막 실행 시각
+  - (v2.1.243) `modelPicker` 설정 — `/model` 피커에 순서·라벨을 지정한 모델 목록을 추가하거나 대체
+  - (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화는 1시간, 서브에이전트는 5분 캐시로 분리 유지
+  - (v2.1.243) `modelPricing` managed 설정 — 조직 계약 요금·할인율을 `/cost`·상태줄·텔레메트리 비용에 반영
+  - (v2.1.243) `/login` → Anthropic Console 계정으로 keyless 로그인 — API 키 발급 없이 조직 로그인
+  - (v2.1.243) `/status`에 `Skipped sources` 라인 — 상위 managed 소스가 활성화되어 적용되지 않은 managed settings 소스 표시
+  - (v2.1.243) `/mcp`·`/plugins`에 조직이 인증을 관리하는 claude.ai 커넥터 `managed` 마커 표시
+  - (v2.1.243) `/status`에 Claude Code on the web용 GitHub 연결 상태 표시 (`/web-setup` 안내)
+  - (v2.1.243) `/tasks`·에이전트 상세 다이얼로그에 서브에이전트 실행 모델·effort 레벨 표시
+  - (v2.1.239) `/claude-api upgrade` — Python `anthropic` SDK 0.x → 1.x 마이그레이션; 비용 견적에 데이터 상주 워크스페이스용 1.1× US-only-inference 프리미엄 반영
+  - (v2.1.238) `keybindingFlavor: "readline"`이 Bash 단어 이동까지 확장(Alt+F·Ctrl/Option+→ 단어 끝 이동, Alt+D 단어 삭제)
+  - (v2.1.238) 플러그인 마켓플레이스 `headersHelper` — catalog entry별 단기 토큰 등 HTTP 헤더 발급, 설치·업데이트 시에만 명령 표시 후 실행
+  - (v2.1.238) `claude self-hosted-runner --defer-shutdown-max-min`/`--proxy-authorization-command`/`--proxy-authorization-file` 추가
+  - (v2.1.237) 내장 **Concise** output style 추가 — 결과 우선, 사전 설명·내레이션 생략 (`/config` → Output style)
+  - (v2.1.236) `ANTHROPIC_DEFAULT_MODEL` env var — 신규 세션 시작 모델 지정, `/model` 선택이 여전히 우선하며 재시작 후에도 유지
+  - (v2.1.236) cross-session `SendMessage` `notify_when_idle` — 대상 세션이 다음 유휴 전환 시 1회 알림 (macOS·Linux, 폴링 불필요)
+  - (v2.1.235) `spellcheck` 설정 — 설치된 aspell/hunspell/ispell로 프롬프트 입력 중 오타 밑줄 표시
+  - (v2.1.234) `CLAUDE_CODE_PROJECT_DIR_NAME`, GitLab MR 배지(footer·statusline), `selection:clear` 키바인딩, claude.ai 사용량 한도 리셋 시 자동 세션 재개(`/config` 토글)
+  - (v2.1.233) GitLab merge request URL 지원 — `--worktree` 플래그·`claude agents` 뷰(`!N` 표시)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.247; MCP·Agent/CLI/Plugin·신규 명령·신규 도구·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.247 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: `/mcp`·`/plugins` managed 마커, 플러그인 마켓플레이스 `headersHelper` 신뢰 다이얼로그 요구사항 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가
+
+### Breaking Changes (Claude Code v2.1.247)
+- Sonnet 5 기본 auto-compact window가 전체 1M 컨텍스트로 확장 — 1M window 세션은 약 934K 대신 약 967K 토큰에서 auto-compact
+- cross-session 피어 메시지가 기본적으로 한 줄 미리보기로 축약 — `Ctrl+O`로 전체 펼침
+- 터미널 하이퍼링크 안전성 강화 — 네트워크/automounter 경로·제어문자·비가시문자 포함 링크는 일반 텍스트로 렌더링
+
+### Fixed (Claude Code v2.1.221 - v2.1.246 주요 수정)
+- 서브에이전트 첫 호출 모델 404 시 세션 폴백 모델 체인 사용 — 부모 오류에 타입·상태·request id·모델 포함 (v2.1.247)
+- 훅·백그라운드 에이전트가 대량 오류 출력을 인쇄해 "Prompt is too long"으로 세션이 멎던 버그 수정 (v2.1.247)
+- 비-라틴(예: 키릴) 키보드 레이아웃에서 kitty-protocol 터미널의 Ctrl 단축키 미동작 수정 (v2.1.247)
+- Bash 샌드박스 사후 정리가 샌드박스 쓰기 가능 영역 밖으로 재지정된 dotfile 관리 `~/.claude/settings.json` 심볼릭 링크를 삭제하던 버그 수정 (v2.1.247)
+- MCP 도구 인자가 파라미터 스키마가 빈 객체(`{}`)일 때 실제 타입 대신 JSON 문자열로 전송되던 버그 수정 (v2.1.246)
+- stdio MCP 서버가 `initialize` 이전에 `server/discover` 요청을 받아 지연 시작 서버가 매 세션마다 백엔드를 구동하던 버그 수정 (v2.1.246)
+- `/permissions`·`/mcp`·`/skills`·`/model` 등에서 빠른 화살표+Enter 입력이 탐색한 행이 아닌 이전 행에 적용되던 버그 수정 (v2.1.247)
+- 대형 diff의 매우 긴 단일 라인(예: base64)으로 인한 트랜스크립트 심각한 지연 수정 — 이제 잘라서 렌더링 (v2.1.246)
+- glibc 2.44 배포판(Arch, CachyOS, Fedora Rawhide 등)에서 시작 시 크래시 수정 (v2.1.245)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

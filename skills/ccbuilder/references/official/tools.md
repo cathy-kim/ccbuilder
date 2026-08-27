@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-27 (Claude Code v2.1.247+)
 
 ---
 
@@ -34,7 +34,8 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
-| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams); cross-session `notify_when_idle` — 대상 세션 유휴 전환 시 1회 알림 (v2.1.236) | 낮음 |
+| `SendFeedback` | - | 세션 중 문제 발생 시 피드백 초안 작성, `/feedback`에서 검토 후 전송 (`feedbackDrafts` 설정으로 비활성화, v2.1.247) | 낮음 |
 
 ### Planning Tools
 

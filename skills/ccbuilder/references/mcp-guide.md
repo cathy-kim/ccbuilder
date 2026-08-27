@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-08-27
+**Claude Code Version**: v2.1.247+
 
 ---
 
@@ -209,6 +209,8 @@ esac
 }
 ```
 
+> **v2.1.238 변경**: 프로젝트 `.mcp.json`, 플러그인, agent 파일의 인라인 MCP 서버가 지정한 `headersHelper`는 이제 해당 폴더의 신뢰(trust) 다이얼로그를 수락한 뒤에만 실행됩니다(`claude -p`에서도 동일). 또한 프로젝트 `.mcp.json`·플러그인·agent 파일의 `headersHelper`는 상속된 자격증명 환경변수 없이 실행되며, user/managed/claude.ai-scope 헬퍼는 Claude 설정 디렉토리에서 실행됩니다. 플러그인 마켓플레이스(카탈로그 항목 또는 url 마켓플레이스)의 `headersHelper`는 해당 플러그인 설치·업데이트 시에만 실행되어 카탈로그·동일 출처 아카이브 요청용 단기 토큰을 발급하며, 실행 전 명령이 표시되고 `claude plugin install/update`는 `[y/N]`(또는 `-y`)로 확인합니다 (v2.1.238).
+
 ---
 
 ## `-p` 모드 MCP 연결 최적화 (v2.1.89 신규)
@@ -411,12 +413,15 @@ MAX_MCP_OUTPUT_TOKENS=50000
 
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
 
+> **v2.1.243**: `/mcp`·`/plugins`에서 조직이 인증을 관리하는 claude.ai 커넥터에 `managed` 마커가 표시됩니다.
+
 ---
 
 ## Headless / CI 진단 (v2.1.219)
 
 - 헤드리스 stream-json init 이벤트에 `mcp_server_errors` 필드 추가 — `--mcp-config`로 지정한 서버 중 설정 검증에 실패해 스킵된 항목 목록. 터미널(비-JSON) 실행에서는 시작 시 경고로 표시.
 - `claude mcp list`/`/mcp` — 서버 연결 실패 시 HTTP 상태 코드·오류 텍스트 표시; MCP 설정 값에 숨겨진 선행/후행 공백이 있을 때 경고.
+- **v2.1.247**: Bedrock·Vertex·Foundry 세션(및 텔레메트리 비활성화 세션)에서 MCP 서버 연결 실패 시 Claude에게 명시적으로 알림 — 이전에는 해당 도구가 아예 존재하지 않는다고 잘못 판단할 수 있었음.
 
 ---
 
