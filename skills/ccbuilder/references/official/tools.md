@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-28 (Claude Code v2.1.251+)
 
 ---
 
@@ -13,11 +13,11 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기 | **높음** |
-| `Edit` | 246 | 파일 내 문자열 치환 | **중간** |
-| `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
-| `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
+| `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함); 권한 검사 후 심볼릭 링크가 스왑되어 승인 범위 밖 경로를 읽던 보안 취약점 수정 (v2.1.251) | 낮음 |
+| `Write` | 127 | 파일 생성/덮어쓰기; 권한 검사 후 심볼릭 링크 스왑을 통한 범위 밖 쓰기 방지 (v2.1.251) | **높음** |
+| `Edit` | 246 | 파일 내 문자열 치환; 권한 검사 후 심볼릭 링크 스왑을 통한 범위 밖 편집 방지 (v2.1.251) | **중간** |
+| `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`); 심볼릭 링크 경유 시 `Read(...)` deny 규칙 미적용 버그 수정 (v2.1.251) | 낮음 |
+| `Grep` | 300 | 파일 내용 검색 (ripgrep); 심볼릭 링크 경유 시 `Read(...)` deny 규칙 미적용 버그 수정 (v2.1.251) | 낮음 |
 | `NotebookEdit` | 121 | Jupyter 노트북 셀 편집 | 중간 |
 
 ### Execution Tools

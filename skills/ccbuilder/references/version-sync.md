@@ -77,6 +77,63 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.251 (2026-08-28 동기화)
+
+**새로운 기능:**
+- (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석(annotate) 처리 가능
+- (v2.1.251) `SessionStart` resume Hook에 세션 staleness·예상 재캐시 비용 필드 추가
+- (v2.1.251) Remote Control에 foreground 서브에이전트의 도구 호출·결과 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+- (v2.1.251) `/usage`에 Spend limit 바 추가 — Claude apps gateway 지출 한도가 있는 개발자용; status line `rate_limits.spend_limit` 필드
+- (v2.1.251) `/cost`에 세션별 prompt-cache 라인(hit ratio·misses·재캐시 토큰·warm/cold) 추가; status line용 `prompt_cache` 객체 제공
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가; 실행 중 백그라운드 세션의 `--resume` 메시지가 정확한 `claude attach <id>` 커맨드 명시
+- (v2.1.251) `/effort` 모델별 기본 effort 레벨 저장 — 모델 전환 시에도 각 모델의 설정 유지
+- (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 **기본 서브에이전트 모델**로 동작 변경 — agent definition의 `model:`과 per-spawn 모델 지정이 우선
+- (v2.1.251) 시트 기반 Enterprise 구독 기본 모델 Opus 5로 전환 (타 프리미엄 플랜과 동일)
+- (v2.1.251) 모델 인식 불가(third-party `ANTHROPIC_BASE_URL`) 시 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경
+- (v2.1.251) `claude --help`, TUI 관련: 자체 세션 크래시 후 Remote Control이 조용한 알림만 표시(조직 정책으로 비활성화 시)
+- (v2.1.251) 네이티브 바이너리 약 5MB 감소; 희귀 언어 6종(1c·gml·isbl·mathematica·maxima·sqf) 문법 강조 제거로 바이너리 2.5MB 추가 감소
+- (v2.1.251) Claude in Chrome 브라우저 액션이 텔레메트리 비활성화 세션에서도 항상 Claude Code 권한 검사를 거치도록 변경
+- (v2.1.248) `--restricted`/`CLAUDE_CODE_RESTRICTED=1` — 명령·코드 실행 도구와 `WebFetch` 제거, 파일 도구는 작업 디렉토리 내로 제한, `bypassPermissions` 거부, 사용자/프로젝트/로컬 설정 무시
+- (v2.1.248) `experimental.cacheTtl` agent frontmatter — 서브에이전트 TTL 미설정 시 적용되는 에이전트별 프롬프트 캐시 TTL(`"5m"`/`"1h"`)
+- (v2.1.248) `/usage-credits`를 AWS Marketplace·self-serve·trial Enterprise 조직 멤버도 사용 가능
+- (v2.1.247) `SendFeedback` 도구 — 세션 중 문제 발생 시 `/feedback`에서 검토·발송할 피드백 초안 작성 (`feedbackDrafts` 설정으로 끄기 가능)
+- (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트의 Claude API 비용 프로파일링 및 절감 레버 단계별 적용
+- (v2.1.246) `/permissions`에 Auto mode 탭 추가 — auto mode 분류기 규칙 조회·편집
+- (v2.1.246) Bash allow 규칙에 서브커맨드 앞 와일드카드(`Bash(git * main)`)가 있을 때 시작 경고 — 옵션 삽입으로 우회 가능성 안내
+- (v2.1.243) `/usage`에 Loops 분석 추가 — 루프별 실행 횟수·총 토큰·실행당 토큰·마지막 실행 시각
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커에 조직 커스텀 모델 목록 큐레이션
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화 1시간·서브에이전트 5분 캐시 분리 설정
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가·할인율을 `/cost`·status line·텔레메트리에 반영
+- (v2.1.243) `/login` → Anthropic Console "Sign in with your Console account" — API 키 없이 키리스 로그인
+- (v2.1.240·2.1.241·2.1.245·2.1.250) 버그 수정 및 안정성 개선
+
+**Breaking Changes:**
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 → 기본값으로 동작 변경 — agent `model:`·per-spawn 모델이 우선 (v2.1.251)
+- `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·조직/테넌트·라우팅·API 동작 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요 (v2.1.251)
+- 프로젝트 `.claude/settings.json`의 `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP`를 더 이상 설정 불가 — 셸/유저/managed settings 사용 필요 (v2.1.251)
+- 모델 인식 불가 시 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경 (v2.1.251)
+- 희귀 언어 6종(1c·gml·isbl·mathematica·maxima·sqf) 구문 강조 제거 (v2.1.251)
+
+**주요 버그 수정:**
+- 권한 검사 후 작업 디렉토리 내에서 심볼릭 링크가 스왑되어 파일 도구(Read/Write/Edit)가 승인 범위 밖을 읽거나 쓰던 보안 취약점 수정 (v2.1.251)
+- 플러그인 마켓플레이스 항목이 선언한 명령이 플러그인 디렉토리 밖을 가리킬 수 있던 보안 취약점 수정 — path-traversal 오류로 거부 (v2.1.251)
+- 프로젝트 설정으로 상세 베타 트레이싱·raw API body 로깅을 활성화하거나, 낮은 스코프 베타 트레이싱 엔드포인트가 managed settings·호스트 앱이 고정한 OTLP 컬렉터를 우회하던 보안 수정 (v2.1.251)
+- Workflow tool이 권한 검사 전에 세션이 읽을 수 없는 `scriptPath`를 읽고 오류에 인용하던 버그 수정 (v2.1.251)
+- Grep·Glob이 심볼릭 링크 경유 검색 경로에서 `Read(...)` deny 규칙을 적용하지 않던 버그 수정 (v2.1.251)
+- "text content blocks must be non-empty" 오류로 모델이 thinking만 생성한 턴 이후 대화가 멈추던 버그 수정 (v2.1.251)
+- 계정의 시작 기본 모드가 auto mode일 때 신규 설치 첫 실행이 default 모드로 시작하던 버그 수정 (v2.1.251)
+- Opus 5에서 effort가 xhigh/max이고 thinking이 꺼져 있을 때 "effort … is not supported" 오류로 실패하던 버그 수정 — 이제 `high`로 전송 (v2.1.251)
+- 다른 세션이 전달한 메시지에 답장 시 `SendMessage`가 "not reachable" 오류로 실패하던 버그 수정 (Claude Desktop 경유 전달) (v2.1.251)
+- 다수 병렬 서브에이전트 사용 시 초당 진행 상황 표시가 트랜스크립트에 계속 쌓이던 TUI 지연 수정 (v2.1.251)
+- Agent Teams: 팀메이트의 최종 답변이 팀 리드에게 전달되지 않던 버그 수정 — idle 알림에 포함되어 전달 (v2.1.251)
+- 백그라운드 서브에이전트가 이름 없는 형제/부모 에이전트의 메시지에 응답하지 못하던 버그 수정 (v2.1.251)
+- managed-settings `disableAutoMode`가 세션 중간에 도착해도 이미 실행 중인 auto mode 세션을 default 모드로 되돌리지 못하던 버그 수정 (v2.1.251)
+- 백그라운드 세션과 서브에이전트가 `git worktree add`로 직접 생성한 worktree 내부 파일을 편집하지 못하던 버그 수정 (v2.1.251)
+- `--input-format stream-json`에서 message id 없이 전송된 클라이언트 주입 assistant tool call이 첫 호출과 병합되어 결과가 유실되던 버그 수정 (v2.1.251)
+- 디렉토리 변경으로 세션 트랜스크립트가 동일 ID의 기존 트랜스크립트 위에 조용히 덮어써지던 버그 수정 (v2.1.251)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

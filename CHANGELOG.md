@@ -8,6 +8,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-28
+
+### Added
+- **Claude Code v2.1.251 sync** (v2.1.220 → v2.1.251 콘텐츠 반영; v2.1.241·v2.1.245·v2.1.250은 버그 수정만)
+  - (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석(annotate) 처리 가능
+  - (v2.1.251) `SessionStart` resume Hook에 세션 staleness·예상 재캐시 비용 필드 추가
+  - (v2.1.251) Remote Control에 foreground 서브에이전트 도구 호출·결과 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+  - (v2.1.251) `/usage`에 Spend limit 바 추가; status line `rate_limits.spend_limit` 필드
+  - (v2.1.251) `/cost`에 세션별 prompt-cache 라인(hit ratio·misses·재캐시 토큰·warm/cold) 추가; status line `prompt_cache` 객체
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가; `--resume` 메시지가 정확한 `claude attach <id>` 커맨드 명시
+  - (v2.1.251) `/effort` 모델별 기본 effort 레벨 저장 — 모델 전환 시에도 각자 설정 유지
+  - (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 기본 서브에이전트 모델로 동작 변경 — agent `model:`·per-spawn 모델이 우선
+  - (v2.1.251) 시트 기반 Enterprise 구독 기본 모델 Opus 5로 전환 (타 프리미엄 플랜과 동일)
+  - (v2.1.251) 보안: 권한 검사 후 심볼릭 링크 스왑을 통한 승인 범위 밖 읽기/쓰기(Read/Write/Edit), Grep·Glob의 `Read(...)` deny 규칙 우회(심볼릭 링크 경유) 수정
+  - (v2.1.251) 보안: 플러그인 마켓플레이스 명령이 플러그인 디렉토리 밖을 가리키는 경로 거부(path-traversal); Workflow tool의 `scriptPath` 권한 검사 전 읽기/노출 방지
+  - (v2.1.251) 보안: 프로젝트 설정으로 상세 베타 트레이싱·raw API body 로깅을 활성화하거나 managed settings가 고정한 OTLP 컬렉터를 우회하던 경로 차단
+  - (v2.1.251) 네이티브 바이너리 약 5MB 감소; 희귀 언어 6종(1c·gml·isbl·mathematica·maxima·sqf) 문법 강조 제거로 2.5MB 추가 감소
+  - (v2.1.243~2.1.250 주요 신규) `/usage` Loops 분석, `modelPicker`/`promptCacheTtl`/`modelPricing` 설정, Console 계정 키리스 로그인, `--restricted` 플래그, `experimental.cacheTtl` agent frontmatter, `SendFeedback` 도구, Auto mode 탭(`/permissions`), `keybindingFlavor` 설정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.251; Hook·Agent/CLI·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `PreModelSwitch`·`PostModelSwitch` 추가(29개)
+- `references/version-sync.md`: v2.1.251 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`·`PostModelSwitch` Hook 이벤트 추가, `SessionStart` staleness 필드 반영, 이벤트 수 29개로 갱신
+- `references/subagents-guide.md`, `references/official/subagents.md`: `CLAUDE_CODE_SUBAGENT_MODEL` 동작 변경, Remote Control 실시간 스트리밍 반영
+- `references/official/tools.md`: Read/Write/Edit 심볼릭 링크 보안 수정, Grep/Glob deny 규칙 우회 수정 반영
+
+### Breaking Changes (Claude Code v2.1.251)
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 기본값으로 동작 — agent `model:`·per-spawn 모델이 우선
+- `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·조직/테넌트·라우팅·API 동작 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요
+- 프로젝트 `.claude/settings.json`의 `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP`를 더 이상 설정하지 못함 — 셸/유저/managed settings에서 설정 필요
+- 모델을 인식할 수 없을 때(third-party `ANTHROPIC_BASE_URL`) 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경
+
+### Fixed (Claude Code v2.1.251 주요 수정)
+- "text content blocks must be non-empty" 오류로 대화가 멈추던 버그(모델이 thinking만 생성한 턴 이후) 수정
+- Opus 5에서 effort가 xhigh/max이고 thinking이 꺼져 있을 때 요청이 실패하던 버그 수정 (이제 `high`로 전송)
+- 여러 병렬 서브에이전트 사용 시 초당 진행 상황 표시가 트랜스크립트에 계속 쌓이던 TUI 지연 수정
+- Agent Teams: 팀메이트의 최종 답변이 팀 리드에게 전달되지 않던 버그 수정 (idle 알림에 포함되어 전달)
+- 백그라운드 서브에이전트가 이름 없는 형제/부모 에이전트의 메시지에 응답하지 못하던 버그 수정
+- managed-settings `disableAutoMode`가 세션 중간에 도착해도 이미 실행 중인 auto mode 세션이 기본 모드로 전환되지 않던 버그 수정
+- 백그라운드 세션과 서브에이전트가 자체 생성한 git worktree 내부 파일을 편집하지 못하던 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

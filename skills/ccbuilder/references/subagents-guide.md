@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-28
+**Claude Code Version**: v2.1.251+
 
 ---
 
@@ -25,6 +25,8 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+>
+> **v2.1.251 Breaking Change**: `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드가 아닌 **기본 서브에이전트 모델**로 동작 변경 — agent definition의 `model:` 필드와 per-spawn 모델 지정이 이 값보다 우선 적용됨. Remote Control에는 foreground 서브에이전트의 도구 호출·결과가 실시간 스트리밍됨(백그라운드 서브에이전트는 기존과 동일하게 상태만 표시).
 
 ---
 
