@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-08-29
+**Claude Code Version**: v2.1.251+
 
 ---
 
@@ -98,6 +98,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
+| `experimental.cacheTtl` | string | `"5m"` \| `"1h"` — 서브에이전트 TTL 미설정 시 적용할 프롬프트 캐시 TTL (v2.1.248) | - |
 
 ---
 
@@ -180,6 +181,16 @@ Task({
 // 신규 방식 (v2.1.77+)
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
+
+---
+
+## v2.1.251 변경 사항
+
+- **`CLAUDE_CODE_SUBAGENT_MODEL` 동작 변경**: 모든 서브에이전트를 강제 오버라이드하던 방식 → **기본 서브에이전트 모델 지정**으로 변경. agent 정의의 `model:` frontmatter와 파견 시 명시적 모델 지정이 이 env var보다 우선함
+- **Remote Control 실시간 스트리밍**: foreground 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+- **모델 404 자동 폴백** (v2.1.247): 서브에이전트가 첫 호출에서 모델 404를 받으면 세션의 fallback 모델 체인 사용; 부모 반환 오류에 오류 타입·상태·request id·모델명 포함
+- **부모/형제 에이전트 메시지 응답 수정**: 백그라운드 서브에이전트가 이름 없는 형제·부모 에이전트 메시지에도 응답 가능해짐 (이전에는 `from`이 agent type이라 주소 지정 불가)
+- **Agent Teams 수정**: 팀메이트의 최종 답변이 content-없는 "available" 알림 대신 idle 알림에 포함되어 팀 리드에 정상 전달
 
 ---
 

@@ -77,6 +77,69 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.251 (2026-08-29 동기화)
+
+**새로운 기능:**
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석(annotate) 가능
+- (v2.1.251) `SessionStart` resume hook에 세션 staleness(경과 시간)·예상 재캐싱 비용 필드 추가
+- (v2.1.251) foreground 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+- (v2.1.251) `/usage`에 Spend limit 바 + `rate_limits.spend_limit` 상태줄 필드 — 게이트웨이 지출 한도가 있는 조직 개발자용
+- (v2.1.251) `/cost`에 세션별 prompt-cache 라인(히트율·미스·재캐싱 토큰·warm/cold) + 상태줄 스크립트용 `prompt_cache` 객체 추가
+- (v2.1.251) `claude --help`에 `attach`/`logs`/`stop`/`respawn`/`rm` 서브커맨드 추가; 백그라운드 세션 `--resume` 메시지가 정확한 `claude attach <id>` 명령 표시
+- (v2.1.251) **`CLAUDE_CODE_SUBAGENT_MODEL`** 동작 변경 — 전체 강제 오버라이드 대신 **기본 서브에이전트 모델 지정**으로 완화; agent `model:` frontmatter·파견 시 명시적 모델이 우선
+- (v2.1.251) 서브에이전트 결과: `maxTurns` 한도 도달 시 partial 마킹 + `SendMessage`로 이어가라는 힌트와 함께 반환 (완료로 오인 방지, 2.1.247 계승 개선)
+- (v2.1.250) 버그 수정 및 안정성 개선
+- (v2.1.248) **`--restricted`/`CLAUDE_CODE_RESTRICTED=1`** 신규 — 명령·코드 실행 도구·`WebFetch`(미지정 시) 제거, 파일 도구 작업 디렉토리 내 제한, `bypassPermissions` 거부, user/project/local settings 무시
+- (v2.1.248) `experimental.cacheTtl` (`"5m"`|`"1h"`) agent frontmatter 필드 — 서브에이전트 TTL 미설정 시 적용되는 에이전트별 프롬프트 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label`/`SELF_HOSTED_RUNNER_CLIENT_LABEL` — 러너 등록 라벨(기본 hostname) 오버라이드
+- (v2.1.248) 서버 관리형 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 실패 사유·미조회 이유 표시
+- (v2.1.248) `/web-setup` GitHub CLI 토큰에 `workflow` scope 없을 때 경고 (대형 레포 push 거부 방지)
+- (v2.1.248) `/usage-credits` Enterprise(AWS Marketplace·self-serve·trial) 조직 지원 확대
+- (v2.1.248) 크로스 세션 메시징(`SendMessage`/`ListAgents`)이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서도 동작
+- (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 피드백 보고 초안 작성, `/feedback`에서 검토 후 발송 (`feedbackDrafts` 설정으로 비활성화)
+- (v2.1.247) `spinnerTipsOverride`에 `{id, text, cooldownSessions, priority}`, `tipsFile`, `label` 필드 추가 — 조직 자체 팁 로테이션
+- (v2.1.247) Bash 권한 프롬프트에 auto mode 안내 팁("Yes, and switch to auto mode" 원키 옵션) 추가
+- (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트 Claude API 비용 프로파일링 및 절감 루프(캐싱·토큰 절약·batch·effort·모델 선택)
+- (v2.1.247) `/claude-api` 스킬에 Admin API 커버리지 추가 (조직 멤버·초대·워크스페이스·API 키·rate limit 리포트·workload identity federation·CMEK)
+- (v2.1.246) Bash allow 규칙 서브커맨드 앞 와일드카드(`Bash(git * main)`) 시작 경고 — 옵션 삽입 매칭 위험 안내
+- (v2.1.246) `/permissions` Auto mode 탭 신규 — auto mode 분류기 규칙 조회·편집
+- (v2.1.246) 턴 종료 시간이 종료 라인에 표시 (예: `✻ Sautéed for 23s · done 6:05 PM`)
+- (v2.1.243) `/usage`에 Loops 분석 — `/loop` 태스크별 실행 횟수·총 토큰·실행당 토큰·마지막 실행 시각
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커에 순서·라벨 지정된 커스텀 모델 목록 추가/대체 (Vertex/Bedrock id 포함)
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — API key·클라우드 프로바이더에서 메인 대화 1시간·서브에이전트 5분 캐시 독립 설정
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가·할인율을 `/cost`·상태줄·텔레메트리 비용에 반영 (list price 대신)
+- (v2.1.243) `/login` → Anthropic Console "Sign in with your Console account" — API 키 생성 없는 키리스 로그인
+- (v2.1.243) `/status` `Skipped sources` 라인 — 상위 managed settings 소스로 인해 미적용된 소스 나열
+- (v2.1.243) `/mcp`·`/plugins`에 조직이 인증 관리하는 claude.ai 커넥터 `managed` 마커 표시
+- (v2.1.238) `keybindingFlavor: "readline"` 설정 — 프롬프트 Ctrl+W가 Bash처럼 이전 공백까지 삭제 (기본 `"classic"` 유지)
+- (v2.1.238) url 마켓플레이스·카탈로그 엔트리 `headersHelper` — 설치/업데이트 시 커맨드 실행해 HTTP 헤더(단기 토큰 등) 발급, 실행 전 확인(`[y/N]`, `-y`로 스킵)
+- (v2.1.238) `claude self-hosted-runner --defer-shutdown-max-min`, `--proxy-authorization-command`/`--proxy-authorization-file` 신규
+
+**Breaking Changes:**
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 강제 오버라이드 → 기본값 지정으로 완화 — agent `model:`·파견 시 모델이 우선 (v2.1.251)
+- `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·org/tenant·라우팅·API 동작 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요 (v2.1.251)
+- project-level `.claude/settings.json`의 `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 — 쉘/user/managed settings 사용 (v2.1.251)
+- 비-Claude 모델(커스텀 `ANTHROPIC_BASE_URL`) 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경 (v2.1.251)
+- 좌석 기반 Enterprise 구독 기본 모델이 Opus 5로 변경 — 다른 프리미엄 플랜과 통일 (v2.1.251)
+- Bash 정수 변수 산술식 할당(`OPTIND=1/0`, `RANDOM=2+2` 등) 자동 승인 제거 — 승인 프롬프트 필요 (v2.1.251)
+- sandbox TLS 종료·트래픽 프록시 라우팅·자격증명 주입 등 sandbox 격리를 약화하는 서버 관리형 설정에 승인 필요 (v2.1.251)
+- 6개 저사용 언어(1c, gml, isbl, mathematica, maxima, sqf) 구문 강조 제거 — 바이너리 2.5MB 축소 (v2.1.251)
+- **`--restricted` 모드 신규** — 명령/코드 실행 도구·`WebFetch` 제거, `bypassPermissions` 거부, user/project/local settings 무시 (v2.1.248)
+
+**주요 버그 수정:**
+- 파일 도구(Read/Write/Edit)가 권한 검사 통과 후 작업 디렉토리 내에서 심볼릭 링크가 바뀐 경로를 따라가 승인 범위 밖을 읽거나 쓸 수 있던 보안 버그 수정 (v2.1.251)
+- 마켓플레이스 항목에 선언된 플러그인 명령이 플러그인 디렉토리 밖 경로를 가리킬 수 있던 path-traversal 취약점 수정 — 이제 거부 (v2.1.251)
+- Grep·Glob이 심볼릭 링크로 연결된 검색 경로에 `Read(...)` deny 규칙을 적용하지 않던 버그 수정 (v2.1.251)
+- Agent Teams 팀메이트의 최종 답변이 팀 리드에 전달되지 않고 content 없는 "available" 알림만 오던 버그 수정 — idle 알림에 포함되도록 수정 (v2.1.251)
+- 백그라운드 세션·서브에이전트가 `git worktree add`로 직접 생성한 worktree 내부 파일을 편집하지 못하던 버그 수정 (v2.1.251)
+- Opus 5에서 effort xhigh/max + thinking 비활성화 조합 시 "effort is not supported" 오류로 실패하던 버그 수정 — 이제 `high`로 자동 전송 (v2.1.251)
+- 텍스트 콘텐츠 없이 thinking만 생성된 턴 이후 대화가 "text content blocks must be non-empty" 오류로 멈추던 버그 수정 (v2.1.251)
+- MCP 서버 handshake 응답 유실 시 SDK·클라우드 세션이 무한 대기하던 버그 수정 — 70초 타임아웃 후 해당 서버만 실패 처리 (v2.1.248)
+- MCP 대형 tool output 메모리 누수·서브에이전트 모델 404 처리 등 다수 안정성 수정 (v2.1.247)
+- Bash 권한 검사가 정수 변수 산술식 할당 명령을 승인 없이 자동 실행하던 버그 수정 — 이제 프롬프트 필요 (v2.1.251)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

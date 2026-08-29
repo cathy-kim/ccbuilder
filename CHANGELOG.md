@@ -8,6 +8,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-29
+
+### Added
+- **Claude Code v2.1.251 sync** (v2.1.220 → v2.1.251 콘텐츠 반영)
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석(annotate) 가능; `SessionStart` resume hook에 세션 staleness·예상 재캐싱 비용 필드 추가
+  - (v2.1.251) foreground 서브에이전트 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+  - (v2.1.251) `/usage`에 Spend limit 바 + `rate_limits.spend_limit` 상태줄 필드 (게이트웨이 지출 한도 조직용); `/cost`에 세션별 prompt-cache 라인(히트율·미스·재캐싱 토큰) + 상태줄 `prompt_cache` 필드
+  - (v2.1.251) `claude --help`에 `attach`/`logs`/`stop`/`respawn`/`rm` 서브커맨드 추가; `--resume` 메시지가 실행 중 백그라운드 세션의 정확한 `claude attach <id>` 명령 표시
+  - (v2.1.251) **`CLAUDE_CODE_SUBAGENT_MODEL`** 동작 변경 — 전체 강제 오버라이드 → 기본 서브에이전트 모델 지정; agent `model:` frontmatter·파견 시 명시적 모델이 우선
+  - (v2.1.248) **`--restricted`/`CLAUDE_CODE_RESTRICTED=1`** 신규 — 명령·코드 실행 도구·`WebFetch`(미지정 시) 제거, 파일 도구 작업 디렉토리 제한, `bypassPermissions` 거부, user/project/local settings 무시
+  - (v2.1.248) `experimental.cacheTtl` agent frontmatter 필드 — 서브에이전트 TTL 미설정 시 적용할 에이전트별 프롬프트 캐시 TTL
+  - (v2.1.248) 서버 관리형 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 실패 사유 표시
+  - (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 피드백 초안 작성, `/feedback`에서 검토 후 발송 (`feedbackDrafts` 설정으로 비활성화)
+  - (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트 Claude API 비용 프로파일링·절감 루프
+  - (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집; Bash 와일드카드-서브커맨드-앞 allow 규칙 시작 경고
+  - (v2.1.243) `modelPicker`, `promptCacheTtl`/`subagentPromptCacheTtl`, `modelPricing` managed 설정 신규; `/usage` Loops 분석(실행 횟수·토큰·마지막 실행); `/status` `Skipped sources` 라인; Console 계정 키리스 로그인
+  - (v2.1.238) `keybindingFlavor: "readline"` 설정 — Ctrl+W가 Bash처럼 이전 공백까지 삭제; url 마켓플레이스 `headersHelper` — 설치/업데이트 시 HTTP 헤더(단기 토큰) 발급
+  - **Breaking**: `ANTHROPIC_CUSTOM_HEADERS` 자격증명/org/라우팅 헤더 설정 시 승인 필요; project `.claude/settings.json` `env`가 `CLAUDE_CONFIG_DIR`/`CLAUDE_CODE_TMPDIR`/`TMPDIR` 등 설정 불가; 비-Claude 모델 기본 커밋 트레일러 `Co-Authored-By: Claude Code`로 변경; 좌석 기반 Enterprise 기본 모델 Opus 5로 변경; Bash 정수 변수 산술식 할당 자동 승인 제거
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.251; Hook 이벤트 목록에 `PreModelSwitch`/`PostModelSwitch` 추가(29개); Agent/CLI·Plugin·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.251 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`/`PostModelSwitch` 이벤트 추가, `SessionStart` resume staleness 필드 반영, 버전 헤더 갱신
+- `references/subagents-guide.md`, `references/official/subagents.md`: `CLAUDE_CODE_SUBAGENT_MODEL` 동작 변경, `experimental.cacheTtl`, Remote Control 스트리밍, Agent Teams·서브에이전트 메시징 버그 수정 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가, 버전 헤더 갱신
+
+### Fixed (Claude Code v2.1.238-251 주요 수정)
+- 파일 도구(Read/Write/Edit)가 권한 검사 후 심볼릭 링크가 바뀐 경로를 따라가 승인 범위 밖을 읽거나 쓰던 보안 버그 수정
+- 마켓플레이스 항목에 선언된 플러그인 명령이 플러그인 디렉토리 밖을 가리킬 수 있던 path-traversal 취약점 수정
+- Grep/Glob이 심볼릭 링크로 연결된 검색 경로에 `Read(...)` deny 규칙을 적용하지 않던 버그 수정
+- Agent Teams 팀메이트 최종 답변이 팀 리드에 전달되지 않던 버그 수정 — idle 알림에 포함되도록 수정
+- 백그라운드 세션이 자신이 생성한 git worktree 내부 파일을 편집하지 못하던 버그 수정
+- Bash 권한 검사가 정수 변수 산술식 할당 명령을 승인 없이 자동 실행하던 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
