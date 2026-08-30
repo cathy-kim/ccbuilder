@@ -77,6 +77,52 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.251 (2026-08-30 동기화)
+
+**새로운 기능:**
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 처리 가능
+- (v2.1.251) `SessionStart` resume 훅이 세션 staleness·예상 재캐시(re-cache) 비용 필드 수신
+- (v2.1.251) 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존과 동일하게 상태만 표시)
+- (v2.1.251) `/usage`·상태줄에 Spend limit 바/`rate_limits.spend_limit` 필드 — Claude apps gateway 지출 한도 사용 조직 대상
+- (v2.1.251) `/cost`에 세션별 프롬프트 캐시 라인(히트율·미스·재캐시 토큰) 추가; 상태줄 스크립트용 `prompt_cache` 객체
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 추가; `--resume` 메시지가 정확한 `claude attach <id>` 커맨드 안내
+- (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 강제 오버라이드 대신 **기본 서브에이전트 모델**로 동작 변경 — agent frontmatter `model:`과 파견 시 명시적 모델이 우선
+- (v2.1.251) `/effort`가 모델별 기본 effort 레벨 저장 — 모델 전환 시 각자 설정 유지
+- (v2.1.251) Enterprise 시트 기반 구독 기본 모델을 Opus 5로 전환 (다른 프리미엄 플랜과 통일)
+- (v2.1.251) `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·조직/테넌트·라우팅·API 동작 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요
+- (v2.1.251) 샌드박스 TLS 종료·프록시 라우팅·자격증명 주입·샌드박스 격리 약화 관련 server-managed settings 적용 전 승인 필요
+- (v2.1.251) 정수 shell 변수에 산술식을 대입하는 Bash 명령(`OPTIND=1/0` 등) 자동 승인 제거 — 항상 승인 프롬프트
+- (v2.1.251) 프로젝트 `.claude/settings.json`의 `env`가 더 이상 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP`를 설정하지 못함
+- (v2.1.251) 6개 저사용 언어(1c, gml, isbl, mathematica, maxima, sqf) 구문 강조 제거 — 바이너리 2.5MB 축소
+- (v2.1.250) 버그 수정 및 안정성 개선
+- (v2.1.248) `--restricted`/`CLAUDE_CODE_RESTRICTED=1` — 명령·코드 실행 도구와 `WebFetch` 제거, 파일 도구 작업 디렉토리 제한, `bypassPermissions` 거부, 유저·프로젝트·로컬 설정 무시
+- (v2.1.248) agent frontmatter `experimental.cacheTtl` (`"5m"`|`"1h"`) — 서브에이전트 TTL 미설정 시 사용하는 per-agent 프롬프트 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label`/`SELF_HOSTED_RUNNER_CLIENT_LABEL`
+- (v2.1.248) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서도 크로스세션 메시징(`SendMessage`/`ListAgents`) 지원
+- (v2.1.247) 서브에이전트 `maxTurns` 한도 도달 시 결과 partial 표시 + `SendMessage`로 이어가기 힌트; 서브에이전트 모델 404 시 세션 fallback 모델 체인 사용
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` — 메인 대화 1시간·서브에이전트 5분 캐시 분리
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 정렬·라벨
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가 기반 비용 계산
+- (v2.1.243) `/login` Console 계정 키리스 로그인; `/mcp`·`/plugins` 조직 관리 인증 커넥터 `managed` 표시
+- (v2.1.243) `/usage` Loops 세분화; `/tasks`·에이전트 상세에 서브에이전트 실행 모델·effort 표시
+
+**Breaking Changes:**
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 강제 오버라이드 → 기본값 지정으로 의미 변경 (v2.1.251)
+- 프로젝트 `.claude/settings.json`의 `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 (v2.1.251)
+- `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·라우팅 헤더 설정 시 승인 필요 (v2.1.251)
+- 정수 변수 산술 대입 Bash 명령 자동 승인 제거 — 항상 프롬프트 (v2.1.251)
+
+**주요 버그 수정:**
+- Read/Write/Edit가 권한 검사 후 교체된 심볼릭 링크를 따라가 승인 범위 밖을 읽거나 쓰던 보안 취약점 수정 (v2.1.251)
+- 마켓플레이스 플러그인 명령의 path-traversal 취약점 수정 (v2.1.251)
+- Grep/Glob이 심볼릭 링크 검색 경로로 접근한 파일에 `Read(...)` deny 규칙 미적용 버그 수정 (v2.1.251)
+- 씽킹만 있고 텍스트가 없는 턴 이후 "text content blocks must be non-empty" 오류로 대화가 멈추던 버그 수정 (v2.1.251)
+- Opus 5 thinking 비활성화 시 effort xhigh/max "not supported" 오류 수정 — 자동으로 high 전송 (v2.1.251)
+- 에이전트 팀 팀메이트 최종 답변이 팀 리드에게 전달되지 않던 버그 수정 (v2.1.251)
+- Workflow 도구가 권한 검사 전에 읽을 수 없는 `scriptPath`를 읽고 오류에 인용하던 버그 수정 (v2.1.251)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

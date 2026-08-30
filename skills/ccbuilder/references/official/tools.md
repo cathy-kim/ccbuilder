@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-08-30 (Claude Code v2.1.251+)
 
 ---
 
@@ -79,6 +79,14 @@
 | `ToolSearch` | 144+690 | MCP 도구 검색/로드 | 낮음 |
 | `Sleep` | 154 | 대기 (사용자 입력 시 깨어남) | 낮음 |
 | `EndConversation` | - | 심각한 악용·탈옥 시도 세션 자체 종료 (v2.1.214, claude.ai와 동일 정책) | 낮음 |
+
+---
+
+## 보안 수정 (v2.1.251)
+
+- **심볼릭 링크 스왑 (Read/Write/Edit)**: 권한 검사 이후 작업 디렉토리 내 심볼릭 링크가 다른 대상으로 교체되어, 승인된 위치 밖의 파일을 읽거나 쓸 수 있던 버그 수정
+- **Grep/Glob의 `Read(...)` deny 규칙**: 심볼릭 링크로 연결된 검색 경로를 통해 접근하는 파일에 `Read(...)` deny 규칙이 적용되지 않던 버그 수정
+- **Workflow 도구의 `scriptPath`**: 권한 검사가 실행되기 전에 세션이 읽을 수 없는 경로의 `scriptPath`를 읽고 오류 메시지에 그대로 인용하던 버그 수정
 
 ---
 

@@ -98,6 +98,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
+| `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"` 또는 `"1h"`) — 서브에이전트 TTL 설정이 별도로 없을 때 적용 (v2.1.248) | 5m |
 
 ---
 
@@ -114,6 +115,8 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 ---
 
 ## Task Tool 사용 (v2.3)
+
+> **v2.1.251 Breaking Change**: `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수의 의미가 변경되었습니다 — 이제 모든 서브에이전트를 강제로 오버라이드하지 않고 **기본 서브에이전트 모델**만 설정합니다. 에이전트 정의의 `model:` 필드나 Task 호출 시 지정한 모델이 `CLAUDE_CODE_SUBAGENT_MODEL`보다 우선합니다.
 
 ### 1. 코드베이스 탐색 (빠름, 저비용)
 
@@ -155,6 +158,8 @@ Task({
 })
 // output_file로 결과 확인
 ```
+
+> **v2.1.251**: 포그라운드(비-background) 서브에이전트의 도구 호출과 결과가 Remote Control 클라이언트에 실시간 스트리밍됩니다. 백그라운드 서브에이전트(기본값)는 여전히 상태만 표시됩니다.
 
 ### 5. 백그라운드 세션 분기 (`/fork`) vs 인라인 서브에이전트 (`/subtask`)
 
@@ -229,6 +234,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 }
 ```
 
+> **v2.1.238**: 플러그인 마켓플레이스에 `headersHelper`를 지정하면(url 마켓플레이스 또는 카탈로그 엔트리 단위) 카탈로그·동일 출처 아카이브 fetch에 사용할 HTTP 헤더(예: 단기 토큰)를 커맨드로 발급받을 수 있습니다. 카탈로그 엔트리의 `headersHelper`는 해당 플러그인을 설치·업데이트할 때만 실행되며, 실행될 커맨드가 먼저 표시된 뒤 `claude plugin install/update`가 `[y/N]` 확인을 요구합니다(`-y`로 생략 가능).
+
 ---
 
 ## Orchestrator Skill (병렬 Agent 조율)
@@ -272,6 +279,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `TaskList` | 전체 작업 목록 조회 |
 | `TaskGet` | 개별 작업 상세 조회 |
 
+> **v2.1.243**: `/tasks` 및 agent 상세 다이얼로그에 각 서브에이전트가 실행된 모델과 effort 레벨이 표시됩니다.
+
 ---
 
 ## Breaking Changes (v2.8-2.9)
@@ -306,6 +315,21 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--model <model>` | 사용 모델 지정 |
 | `--effort <level>` | effort 레벨 설정 |
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
+
+> **v2.1.251**: `/effort`가 모델별 기본 effort 레벨을 저장합니다 — 모델을 전환해도 각 모델이 자신의 effort 설정을 유지합니다.
+
+---
+
+## 프롬프트 캐시 TTL 설정 (v2.1.243)
+
+`promptCacheTtl`(메인 대화)과 `subagentPromptCacheTtl`(서브에이전트) 설정을 분리해, API 키·클라우드 프로바이더 사용자가 메인 대화는 1시간, 서브에이전트는 5분 캐시로 운영할 수 있습니다. 개별 에이전트 정의의 `experimental.cacheTtl`(v2.1.248, 위 Frontmatter 옵션 참고)이 우선 적용됩니다.
+
+---
+
+## 버그 수정 (v2.1.247)
+
+- **모델 404 폴백**: 서브에이전트가 첫 호출에서 모델 404 오류로 실패하면 세션의 fallback 모델 체인을 사용하도록 수정 — 부모에게 반환되는 오류에 오류 타입·상태 코드·request id·모델명이 포함됨
+- **maxTurns 도달 시 partial 표시**: `maxTurns` 한도에 도달해 멈춘 서브에이전트가 완료된 것처럼 보이지 않고, 출력이 partial로 표시되며 `SendMessage`로 이어서 진행하라는 안내가 함께 반환됨
 
 ---
 

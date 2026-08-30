@@ -8,6 +8,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-30
+
+### Added
+- **Claude Code v2.1.251 sync** (v2.1.220 → v2.1.251 콘텐츠 반영)
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환 차단·확인·주석 가능; `SessionStart` resume 훅이 세션 staleness·예상 재캐시(re-cache) 비용 필드 수신
+  - (v2.1.251) 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존과 동일하게 상태만 표시)
+  - (v2.1.251) `/usage`에 Spend limit 바 추가 (Claude apps gateway 지출 한도 사용 조직 대상); 상태줄 `rate_limits.spend_limit` 필드
+  - (v2.1.251) `/cost`에 세션별 프롬프트 캐시 라인 추가 (히트율·미스·재캐시 토큰 수); 상태줄 스크립트용 `prompt_cache` 객체
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가; `--resume` 메시지가 실행 중 백그라운드 세션에 정확한 `claude attach <id>` 커맨드 안내
+  - (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 강제 오버라이드 대신 **기본 서브에이전트 모델**로 동작 변경 — agent frontmatter `model:`과 파견 시 명시적 모델이 우선
+  - (v2.1.251) `/effort`가 모델별 기본 effort 레벨 저장 — 모델 전환 시 각자 설정 유지
+  - (v2.1.251) Enterprise 시트 기반 구독 기본 모델이 다른 프리미엄 플랜과 동일하게 Opus 5로 전환
+  - (v2.1.251) `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·조직/테넌트·라우팅·API 동작 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요
+  - (v2.1.251) 정수 shell 변수에 산술식을 대입하는 Bash 명령(`OPTIND=1/0`, `RANDOM=2+2` 등) 자동 승인 제거 — 항상 승인 프롬프트
+  - (v2.1.251) **보안 수정**: 권한 검사 후 작업 디렉토리 내에서 교체된 심볼릭 링크를 Read/Write/Edit가 따라가 승인 범위 밖을 읽거나 쓰던 취약점 수정; 마켓플레이스 플러그인 명령이 플러그인 디렉토리 밖을 가리키던 path-traversal 오류 수정; Grep·Glob이 심볼릭 링크 검색 경로를 통해 접근한 파일에 `Read(...)` deny 규칙을 미적용하던 버그 수정; Workflow 도구가 권한 검사 전에 세션이 읽을 수 없는 `scriptPath`를 읽고 오류에 인용하던 버그 수정
+  - (v2.1.248) `--restricted`/`CLAUDE_CODE_RESTRICTED=1` — 명령·코드 실행 도구와 `WebFetch` 제거(`--tools`로 명시 시 제외), 파일 도구 작업 디렉토리 제한, `bypassPermissions` 거부, 유저·프로젝트·로컬 설정 파일 무시
+  - (v2.1.248) agent frontmatter `experimental.cacheTtl` (`"5m"`|`"1h"`) — 서브에이전트 TTL 설정이 없을 때 사용하는 per-agent 프롬프트 캐시 TTL
+  - (v2.1.248) `claude self-hosted-runner --client-label`/`SELF_HOSTED_RUNNER_CLIENT_LABEL` — 러너 등록 라벨 오버라이드
+  - (v2.1.248) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서도 같은 머신 내 세션 간 크로스세션 메시징(`SendMessage`/`ListAgents`) 지원
+  - (v2.1.247) 서브에이전트가 `maxTurns` 한도에 도달하면 결과가 partial로 표시되며 `SendMessage`로 이어가기 힌트 제공; 서브에이전트 모델 404 시 세션 fallback 모델 체인 사용, 오류에 error type·status·request id·model 포함
+  - (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화 1시간 캐시 유지하며 서브에이전트는 5분 유지
+  - (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 정렬·라벨(내장 목록에 추가 또는 대체)
+  - (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가로 `/cost`·상태줄·텔레메트리 비용 계산
+  - (v2.1.243) `/login`에 Console 계정 키리스 로그인 추가; `/mcp`·`/plugins`에 조직 관리 인증 커넥터 `managed` 표시
+  - (v2.1.243) `/usage`에 Loops 세분화(루프별 실행 횟수·토큰·마지막 실행) 추가; `/tasks`·에이전트 상세 다이얼로그에 서브에이전트 실행 모델·effort 레벨 표시
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.251; Hook 이벤트 표에 `PreModelSwitch`/`PostModelSwitch` 추가(29개로 갱신, 공식 문서 링크 라벨도 동기화), Agent/CLI·MCP·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.251 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`/`PostModelSwitch` Hook 이벤트 추가, `SessionStart` staleness/재캐시 비용 필드 반영, 버전 헤더 갱신
+- `references/subagents-guide.md`, `references/official/subagents.md`: `CLAUDE_CODE_SUBAGENT_MODEL` 의미 변경, `experimental.cacheTtl`, `promptCacheTtl`/`subagentPromptCacheTtl`, Remote Control 스트리밍 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: claude.ai 커넥터 `managed` 표시, 원격 MCP 서버 재연결 개선 반영
+
+### Breaking Changes (Claude Code v2.1.251)
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 강제 오버라이드 → 기본값 지정으로 의미 변경 — agent `model:`·파견 시 모델이 우선
+- 프로젝트 `.claude/settings.json`의 `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP`를 더 이상 설정하지 못함 — 셸·유저·managed settings에서 설정 필요
+- `ANTHROPIC_CUSTOM_HEADERS`가 자격증명·조직/테넌트·라우팅·API 동작 헤더 설정 시 승인 필요
+- 정수 shell 변수 산술 대입 Bash 명령 자동 승인 제거 — 항상 승인 프롬프트
+
+### Fixed (Claude Code v2.1.251 주요 수정)
+- 심볼릭 링크 스왑을 통한 승인 범위 밖 파일 읽기/쓰기 보안 취약점 수정 (Read/Write/Edit)
+- 플러그인 마켓플레이스 명령의 path-traversal 취약점 수정
+- Grep/Glob이 심볼릭 링크 경로를 통해 `Read(...)` deny 규칙을 우회하던 버그 수정
+- 씽킹만 있고 텍스트가 없는 턴 이후 "text content blocks must be non-empty" 오류로 대화가 멈추던 버그 수정
+- Opus 5에서 thinking 비활성화 시 effort xhigh/max가 "not supported" 오류를 내던 버그 수정 (자동으로 high로 전송)
+- 에이전트 팀 팀메이트의 최종 답변이 팀 리드에게 전달되지 않던 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

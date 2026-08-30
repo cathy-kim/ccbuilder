@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-30 (v2.1.251)
 
 ---
 
@@ -27,13 +27,14 @@
 | `disallowedTools` | 차단 도구 목록 |
 | `model` | `sonnet`, `opus`, `haiku`, `inherit` |
 | `permissionMode` | `default`, `acceptEdits`, `delegate`, `dontAsk`, `bypassPermissions`, `plan` |
-| `maxTurns` | 최대 에이전트 턴 수 |
+| `maxTurns` | 최대 에이전트 턴 수 — 도달 시 출력이 partial로 표시되고 `SendMessage`로 이어서 진행하라는 안내 포함 (v2.1.247) |
 | `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78) |
 | `skills` | 프리로드할 Skill (전체 내용 주입) |
 | `mcpServers` | 사용 가능 MCP 서버 |
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
+| `experimental.cacheTtl` | 프롬프트 캐시 TTL (`"5m"` 또는 `"1h"`) — 서브에이전트 TTL 설정이 없을 때 적용 (v2.1.248) |
 
 ## 파일 위치 & 우선순위
 
@@ -61,6 +62,10 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 
 ## 고급 기능
 
+- **모델 선택 우선순위 (v2.1.251 Breaking Change)**: `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수는 이제 모든 서브에이전트를 강제 오버라이드하지 않고 **기본 서브에이전트 모델**만 설정 — agent 정의의 `model:` 필드와 Task 호출 시 지정한 모델이 우선 적용됨
+- **모델 404 폴백 (v2.1.247)**: 서브에이전트가 첫 호출에서 모델 404로 실패하면 세션의 fallback 모델 체인 사용; 부모에 반환되는 오류에 오류 타입·상태 코드·request id·모델명 포함
+- **라이브 스트리밍 (v2.1.251)**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍됨 (백그라운드 서브에이전트는 기본값대로 상태만 표시)
+- **캐시 TTL 설정 (v2.1.243)**: `promptCacheTtl`(메인 대화)·`subagentPromptCacheTtl`(서브에이전트) 설정 분리 — API 키·클라우드 프로바이더 사용자가 메인 대화 1시간, 서브에이전트 5분 캐시 운용 가능
 - **재귀 파견 (v2.1.172+)**: 서브에이전트가 자체 서브에이전트 파견 가능 — 최대 5레벨 깊이. **v2.1.217부터 기본 비활성화**로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 설정 시에만 중첩 허용. **v2.1.219부터 다시 기본 depth 3 허용**으로 변경 — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화
 - **동시 실행 상한 (v2.1.217+)**: 기본 20개 동시 서브에이전트 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`); 세션당 파견 총량 기본 200개 (`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`, `/clear`로 리셋, v2.1.212+); `--max-budget-usd` 한도 도달 시 신규 스폰 거부 + 실행 중 백그라운드 에이전트 중단
 - **Persistent Memory**: `memory` 필드로 세션 간 지식 영속
@@ -77,3 +82,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **`/tasks` 모델 표시 (v2.1.243)**: `/tasks` 및 agent 상세 다이얼로그에 각 서브에이전트가 실행된 모델·effort 레벨 표시
+- **`/effort` 모델별 저장 (v2.1.251)**: `/effort`가 모델별 기본 effort 레벨을 저장 — 모델 전환 시 각 모델이 자신의 설정 유지
