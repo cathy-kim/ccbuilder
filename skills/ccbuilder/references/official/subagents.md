@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-08-31 (v2.1.251)
 
 ---
 
@@ -34,6 +34,7 @@
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
+| `experimental.cacheTtl` | `"5m"` 또는 `"1h"` — 서브에이전트 프롬프트 캐시 TTL, `subagentPromptCacheTtl` 설정 미지정 시 사용 (v2.1.248) |
 
 ## 파일 위치 & 우선순위
 
@@ -77,3 +78,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **`CLAUDE_CODE_SUBAGENT_MODEL` 동작 변경 (v2.1.251)**: 전체 오버라이드 대신 서브에이전트 **기본 모델**로 동작 — agent 정의 `model:` 필드와 per-spawn 모델 지정이 우선
+- **Remote Control 실시간 스트리밍 (v2.1.251)**: Foreground 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍됨 (백그라운드 서브에이전트는 기본값대로 상태만 표시)

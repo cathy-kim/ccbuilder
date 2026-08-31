@@ -8,6 +8,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-08-31
+
+### Added
+- **Claude Code v2.1.251 sync** (v2.1.220 → v2.1.251 콘텐츠 반영)
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 처리; `SessionStart` resume Hook에 세션 staleness·예상 re-cache 비용 필드 추가
+  - (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 서브에이전트 **기본 모델**로 동작 변경 — agent frontmatter `model:`·per-spawn 모델이 우선
+  - (v2.1.251) Foreground 서브에이전트 도구 호출·결과 Remote Control 클라이언트 실시간 스트리밍 (백그라운드는 기존대로 상태만)
+  - (v2.1.251) `/usage` Spend limit 바 + `rate_limits.spend_limit` status line 필드; `/cost` 세션별 프롬프트 캐시 라인(hit ratio·misses·재캐시 토큰·warm/cold) + `prompt_cache` status line 객체
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가
+  - (v2.1.251) `/effort` 모델별 기본값 저장 — 모델 전환 시 각자 effort 설정 유지
+  - (v2.1.251) 좌석제(seat-based) Enterprise 구독 기본 모델 Opus 5 전환
+  - (v2.1.251) **보안 수정**: 심볼릭 링크가 권한 체크 이후 작업 디렉토리 내에서 교체되는 취약점(Read/Write/Edit 승인 범위 밖 접근) 수정; 플러그인 마켓플레이스 명령의 path-traversal 취약점 차단; Grep·Glob이 심볼릭 링크 경유 시 `Read(...)` deny 규칙을 우회하던 버그 수정; Workflow 도구가 권한 체크 전 세션이 읽을 수 없는 `scriptPath`를 읽던 버그 수정; 프로젝트 설정으로 상세 beta tracing·raw API body 로깅을 활성화하거나 관리형 OTLP 컬렉터를 우회하던 문제 수정
+  - (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 코드 실행 도구·WebFetch 제거, 파일 도구 작업 디렉토리 제한, bypassPermissions 거부, 사용자/프로젝트 설정 무시
+  - (v2.1.248) agent frontmatter `experimental.cacheTtl`(`"5m"`\|`"1h"`) — 서브에이전트별 프롬프트 캐시 TTL
+  - (v2.1.248) 크로스세션 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경 지원
+  - (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 피드백 초안 작성 후 `/feedback`에서 검토·전송
+  - (v2.1.247) `/claude-api cost-optimize` — API 비용 프로파일링·최적화 워크플로우
+  - (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집; Bash allow rule 서브커맨드 앞 와일드카드 시작 경고
+  - (v2.1.243) `modelPicker`·`promptCacheTtl`/`subagentPromptCacheTtl`·`modelPricing` 설정 추가; `/login` 키리스 Console 로그인; `/usage` Loops 세부 분석; `/status` `Skipped sources` 라인
+  - (v2.1.238) `keybindingFlavor: "readline"` 설정; 플러그인 마켓플레이스 `headersHelper` — 카탈로그·아카이브 fetch용 HTTP 헤더 발급
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.251; Hook 이벤트 목록에 `PreModelSwitch`·`PostModelSwitch` 추가(27개 → 29개); Agent/CLI·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.251 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`·`PostModelSwitch` Hook 이벤트, `SessionStart` resume 신규 필드 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `experimental.cacheTtl` frontmatter 필드, `CLAUDE_CODE_SUBAGENT_MODEL` 동작 변경, Remote Control 실시간 스트리밍 반영
+- `references/official/tools.md`: Read/Write/Edit/Grep/Glob 심볼릭 링크 보안 수정, `SendFeedback` 도구 추가 반영
+
+### Breaking Changes (Claude Code v2.1.251)
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 서브에이전트 기본값으로 동작 — agent frontmatter `model:`·per-spawn 모델이 우선
+- 인식되지 않는 모델(서드파티 `ANTHROPIC_BASE_URL` 등) 사용 시 커밋 트레일러 기본값이 `Co-Authored-By: Claude Code`로 변경
+- 프로젝트 `.claude/settings.json` `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 — 셸/유저/managed settings에서 설정 필요
+- Bash 산술 대입 표현식(`OPTIND=1/0` 등) 자동 승인 제거 — 승인 프롬프트 필요
+- `ANTHROPIC_CUSTOM_HEADERS`가 credential·org/tenant·routing·API-behavior 헤더 설정 시 승인 필요
+- 서버 관리 설정이 sandbox TLS 종료·프록시 라우팅·자격증명 주입·격리 완화를 적용하려면 승인 필요
+
+### Fixed (Claude Code v2.1.238-251 주요 수정)
+- 심볼릭 링크가 권한 체크 이후 작업 디렉토리 내에서 교체되는 경우 파일 도구가 승인 범위 밖을 읽고/쓰던 취약점 수정
+- 플러그인 마켓플레이스 항목이 선언한 명령이 플러그인 디렉토리 밖을 가리키던 path-traversal 취약점 차단
+- Grep·Glob이 심볼릭 링크 경로를 통해 `Read(...)` deny 규칙을 우회하던 버그 수정
+- 대화가 thinking만 생성된 턴 이후 "text content blocks must be non-empty" 오류로 멈추던 버그 수정
+- Opus 5 요청에서 effort xhigh/max + thinking 비활성화 시 오류 나던 버그 수정 (effort `high`로 자동 전송)
+- 백그라운드 세션·서브에이전트가 자체 생성한 git worktree를 편집하지 못하던 버그 수정
+- 자체 hosted-runner가 강제 중지된 세션의 Bash 프로세스를 정리하지 못하던 버그 수정
+- Fable/Fast Mode 사용량 크레딧 오판 관련 다수 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

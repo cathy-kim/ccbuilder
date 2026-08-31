@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-08-31
+**Claude Code Version**: v2.1.251+
 
 ---
 
@@ -12,7 +12,9 @@
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
-| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152) | No | `session_id`, `agent_type` |
+| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 re-cache 비용 필드 포함 (v2.1.251) | No | `session_id`, `agent_type` |
+| **PreModelSwitch** | 모델 전환 직전 (v2.1.251) | Yes (block/confirm) | `from_model`, `to_model` |
+| **PostModelSwitch** | 모델 전환 직후 (v2.1.251) | Yes (annotate) | `from_model`, `to_model` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
@@ -52,6 +54,8 @@
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
+
+**PreModelSwitch/PostModelSwitch (v2.1.251)**: 모델 전환(`/model`, `/fast`, fallback 등) 시점에 발동. `PreModelSwitch`는 `{"decision": "block"}` 또는 확인 요청으로 전환을 막거나 승인받을 수 있고, 두 이벤트 모두 전환 사유를 기록하는 annotate 용도로 사용 가능
 
 ---
 

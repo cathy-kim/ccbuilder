@@ -77,6 +77,65 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.251 (2026-08-31 동기화)
+
+**새로운 기능:**
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 처리
+- (v2.1.251) `SessionStart` resume Hook에 세션 staleness·예상 re-cache 비용 필드 추가
+- (v2.1.251) Foreground 서브에이전트 도구 호출·결과 Remote Control 클라이언트 실시간 스트리밍 (백그라운드 서브에이전트는 상태만 표시)
+- (v2.1.251) `/usage` Spend limit 바 + `rate_limits.spend_limit` status line 필드 (게이트웨이 지출 한도가 있는 개발자 대상)
+- (v2.1.251) `/cost` 세션별 프롬프트 캐시 라인(hit ratio·misses·재캐시 토큰·warm/cold) + status line `prompt_cache` 객체
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가; `--resume` 안내 메시지가 정확한 `claude attach <id>` 명령을 명시
+- (v2.1.251) `/effort` 모델별 기본값 저장 — 모델 전환 시 각자 effort 설정 유지
+- (v2.1.251) `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 서브에이전트 **기본 모델**로 동작 변경 — agent frontmatter `model:`·per-spawn 모델이 우선
+- (v2.1.251) 인식되지 않는 모델(서드파티 `ANTHROPIC_BASE_URL` 등) 사용 시 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경
+- (v2.1.251) 좌석제(seat-based) Enterprise 구독 기본 모델 Opus 5로 전환 (다른 프리미엄 플랜과 통일)
+- (v2.1.251) `ANTHROPIC_CUSTOM_HEADERS`가 credential·org/tenant·routing·API-behavior 헤더(`Authorization`, `Host` 등) 설정 시 승인 필요
+- (v2.1.251) 프로젝트 `.claude/settings.json` `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 — 셸·유저·managed settings에서 설정 필요
+- (v2.1.251) Bash 샌드박스 명령 출력 파일 생성·읽기 방식 변경 — 샌드박스 명령이 출력 파일을 리다이렉트·교체하지 못하도록 차단
+- (v2.1.251) syntax highlighting 6개 언어 제거(1c·gml·isbl·mathematica·maxima·sqf) — 바이너리 2.5MB 감소
+- (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 코드 실행 도구·WebFetch 제거(`--tools` 명시 시 예외), 파일 도구 작업 디렉토리 제한, bypassPermissions 거부, 사용자/프로젝트/로컬 설정 무시
+- (v2.1.248) agent frontmatter `experimental.cacheTtl`(`"5m"`\|`"1h"`) — 서브에이전트 미설정 시 사용할 프롬프트 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label`(`SELF_HOSTED_RUNNER_CLIENT_LABEL`) — 러너 등록 라벨 오버라이드
+- (v2.1.248) 크로스세션 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경 지원
+- (v2.1.248) 서버 관리 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 실패 원인 표시
+- (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 피드백 초안 작성 후 `/feedback`에서 검토·전송(`feedbackDrafts` 설정으로 비활성화)
+- (v2.1.247) `spinnerTipsOverride`에 `{id,text,cooldownSessions,priority}`·`tipsFile`·`label` 추가 — 조직 자체 팁 로테이션
+- (v2.1.247) `/claude-api cost-optimize` — API 비용 프로파일링·최적화 워크플로우; Admin API 커버리지 확대
+- (v2.1.247) Sonnet 5 기본 auto-compact 창을 전체 1M 컨텍스트로 확장 — 약 967K 토큰에서 압축
+- (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집
+- (v2.1.246) Bash allow rule 서브커맨드 앞 와일드카드 시작 경고(`Bash(git * main)`)
+- (v2.1.246) 턴 종료 시 완료 시각 표시(`✻ Sautéed for 23s · done 6:05 PM`)
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 모델 목록(Vertex/Bedrock ID 포함)
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화 1시간·서브에이전트 5분 캐시 TTL 분리
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가·할인율을 `/cost`·status line·텔레메트리에 반영
+- (v2.1.243) `/login` 키리스 Console 계정 로그인 — API 키 생성 없이 가능
+- (v2.1.243) `/usage` Loops 세부 분석(루프별 실행 횟수·토큰·마지막 실행); `/status` `Skipped sources` 라인; `/mcp`·`/plugins` `managed` 마커; `/tasks`에 서브에이전트 실행 모델·effort 표시
+- (v2.1.238) `keybindingFlavor: "readline"` 설정 — Ctrl+W가 Bash처럼 이전 공백까지 삭제
+- (v2.1.238) 플러그인 마켓플레이스 `headersHelper` — 카탈로그·아카이브 fetch용 HTTP 헤더(단기 토큰 등) 발급 커맨드
+
+**Breaking Changes:**
+- `CLAUDE_CODE_SUBAGENT_MODEL`이 전체 오버라이드 대신 서브에이전트 기본값으로 동작 — agent frontmatter `model:`·per-spawn 모델이 우선 (v2.1.251)
+- 인식되지 않는 모델 사용 시 커밋 트레일러 기본값이 `Co-Authored-By: Claude Code`로 변경 (v2.1.251)
+- 프로젝트 `.claude/settings.json` `env`가 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 (v2.1.251)
+- Bash 산술 대입 표현식(`OPTIND=1/0` 등) 자동 승인 제거 — 승인 프롬프트 필요 (v2.1.251)
+- `ANTHROPIC_CUSTOM_HEADERS`가 credential·routing 관련 헤더 설정 시 승인 필요 (v2.1.251)
+- 서버 관리 설정이 sandbox TLS·프록시·자격증명·격리 완화를 적용하려면 승인 필요 (v2.1.251)
+
+**주요 보안·버그 수정:**
+- 심볼릭 링크가 권한 체크 이후 작업 디렉토리 내에서 교체되는 경우 파일 도구(Read/Write/Edit)가 승인 범위 밖을 읽고/쓰던 취약점 수정 (v2.1.251)
+- 플러그인 마켓플레이스 항목이 선언한 명령이 플러그인 디렉토리 밖을 가리키던 path-traversal 취약점 차단 (v2.1.251)
+- 프로젝트 설정에서 상세 beta tracing·raw API body 로깅을 활성화하거나 managed settings·host app이 고정한 OTLP 컬렉터를 우회하던 문제 수정 (v2.1.251)
+- Workflow 도구가 권한 체크 이전에 세션이 읽을 수 없는 `scriptPath`를 읽고 오류에 인용하던 버그 수정 (v2.1.251)
+- Grep·Glob이 심볼릭 링크 경로를 통해 `Read(...)` deny 규칙을 우회하던 버그 수정 (v2.1.251)
+- 대화가 thinking만 생성된 턴 이후 "text content blocks must be non-empty" 오류로 멈추던 버그 수정 (v2.1.251)
+- Opus 5 요청에서 effort xhigh/max + thinking 비활성화 시 오류 나던 버그 수정 — effort `high`로 자동 전송 (v2.1.251)
+- 백그라운드 세션·서브에이전트가 자체 생성한 git worktree를 편집하지 못하던 버그 수정 (v2.1.251)
+- 에이전트 팀의 팀메이트 최종 답변이 팀 리드에게 전달되지 않던 버그 수정 (v2.1.251)
+- SDK MCP 서버 핸드셰이크 확인 유실 시 세션이 무기한 정지하던 버그 수정 — 70초 후 타임아웃 (v2.1.251)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**
