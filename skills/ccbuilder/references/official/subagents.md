@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-01 (v2.1.252)
 
 ---
 
@@ -34,6 +34,7 @@
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
+| `experimental.cacheTtl` | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`) — subagent 전용 TTL 미설정 시 사용 (v2.1.248) |
 
 ## 파일 위치 & 우선순위
 
@@ -77,3 +78,6 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **`CLAUDE_CODE_SUBAGENT_MODEL` (v2.1.251 Breaking Change)**: 이제 모든 서브에이전트를 무조건 오버라이드하지 않고 기본 서브에이전트 모델만 지정 — agent 정의의 `model:`과 파견 시 명시적 모델이 우선
+- **Remote Control 스트리밍 (v2.1.251)**: 포어그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드는 상태만)
+- **fallback 모델 체인 (v2.1.243)**: 서브에이전트가 첫 호출에서 모델 404를 받으면 세션의 fallback 모델 체인 사용

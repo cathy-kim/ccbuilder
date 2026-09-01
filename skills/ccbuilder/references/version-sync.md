@@ -77,6 +77,56 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.252 (2026-09-01 동기화)
+
+**새로운 기능:**
+- (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 처리 가능
+- (v2.1.251) `SessionStart` resume Hook에 세션 신선도(staleness)·예상 재캐싱 비용 필드 추가
+- (v2.1.251) 포어그라운드 서브에이전트의 도구 호출·결과를 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존처럼 상태만 표시)
+- (v2.1.251) `/usage`에 Spend limit 바 추가; `rate_limits.spend_limit` 상태줄 필드 (Claude apps gateway 지출 한도 사용자)
+- (v2.1.251) `/cost`에 세션별 프롬프트 캐시 라인(히트율·미스·재캐싱 토큰·warm/cold) 추가, 상태줄 스크립트용 `prompt_cache` 필드
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 추가; 백그라운드 세션 `--resume` 메시지가 정확한 `claude attach <id>` 명령 표기
+- (v2.1.251) `/schedule` — MCP 서버는 클라우드 루틴에 연결 불가함을 명확히 안내
+- (v2.1.248) **`--restricted`/`CLAUDE_CODE_RESTRICTED=1`** — 명령·코드 실행 도구와 `WebFetch` 제거(`--tools`에 명시 시 예외), 파일 도구를 작업 디렉토리 내로 제한, `bypassPermissions` 거부, 사용자·프로젝트·로컬 설정 파일 무시
+- (v2.1.248) `experimental.cacheTtl` (`"5m"`\|`"1h"`) agent frontmatter 필드 — subagent 전용 TTL 설정 없을 때 사용할 per-agent 프롬프트 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label <label>` (또는 `SELF_HOSTED_RUNNER_CLIENT_LABEL`) — 러너 등록 라벨 오버라이드
+- (v2.1.248) 서버 관리 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 실패 원인 표시
+- (v2.1.248) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서도 크로스세션 메시징(`SendMessage`/`ListAgents`) 지원
+- (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 `/feedback`에서 검토·전송할 피드백 초안 자동 작성 (`feedbackDrafts` 설정으로 끔)
+- (v2.1.247) `spinnerTipsOverride`에 `{id, text, cooldownSessions, priority}` 엔트리, `tipsFile`, `label` 추가 — 조직 자체 팁 로테이션
+- (v2.1.247) 서브에이전트가 첫 호출에서 모델 404 시 세션의 fallback 모델 체인 사용; 부모 반환 오류에 타입·상태·요청 ID·모델 포함
+- (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트 Claude API 지출 프로파일링·비용 절감 레버 단계적 적용
+- (v2.1.246) `/permissions`에 Auto mode 탭 추가 — auto mode 분류기 규칙 조회·편집
+- (v2.1.246) Bash allow 규칙에서 서브커맨드 앞 와일드카드(`Bash(git * main)`) 시작 경고 — 옵션 삽입도 매칭됨을 안내
+- (v2.1.246) 턴 완료 시각을 종료 라인에 추가 (예: `✻ Sautéed for 23s · done 6:05 PM`)
+- (v2.1.243) `/usage`에 Loops 세부 분석(루프별 실행 횟수·총 토큰·실행당 토큰·마지막 실행) 추가
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커에 커스텀 모델 목록 큐레이션 (Vertex/Bedrock ID 포함, 내장 라인업 추가/대체)
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — API키·클라우드 프로바이더 사용자가 메인 대화 1시간, 서브에이전트 5분 캐시 유지 가능
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가·할인율을 `/cost`·상태줄·텔레메트리 비용에 반영
+- (v2.1.243) `/login` Anthropic Console 키리스 로그인("Sign in with your Console account") 추가
+- (v2.1.243) `/tasks`·에이전트 상세 다이얼로그에 각 서브에이전트가 실행된 모델·effort 레벨 표시
+- (v2.1.239) 데이터 상주(data-residency) 워크스페이스 비용 추정치에 1.1x US-only-inference 프리미엄 반영
+
+**Breaking Changes:**
+- **`CLAUDE_CODE_SUBAGENT_MODEL` 의미 변경** — 전체 서브에이전트 모델 무조건 오버라이드 → 기본값만 지정; agent 정의의 `model:`과 파견 시 명시적 모델이 우선 (v2.1.251)
+- 비-Claude 모델(커스텀 `ANTHROPIC_BASE_URL` 등) 사용 시 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경 (v2.1.251)
+- 좌석 기반 Enterprise 구독의 기본 모델이 Opus 5로 변경 (v2.1.251)
+- 프로젝트 `.claude/settings.json`의 `env`에서 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 — 셸·사용자·managed 설정에서 지정 필요 (v2.1.251)
+- 6개 저사용 언어(1c, gml, isbl, mathematica, maxima, sqf) 구문 강조 제거 — 바이너리 2.5MB 축소 (v2.1.251)
+
+**주요 버그 수정:**
+- Bash 명령이 일부 Mac에서 "task output swap refused (tasks dir moved or linked)" 오류로 실패하던 버그 수정 (v2.1.252)
+- ".claude/settings.local.json"이 없는 프로젝트에서 "always allow"가 저장되지 않던 버그 수정 (v2.1.252)
+- 배경 태스크 알림의 대형 실패 출력(예: 디스크 풀 시 git 오류)이 API 요청 크기 한도를 초과시키던 버그 수정 (v2.1.252)
+- 파일 도구(Read/Write/Edit)가 권한 검사 이후 교체된 심볼릭 링크를 따라가 승인 범위 밖을 읽거나 쓰던 보안 버그 수정 (v2.1.251)
+- 플러그인 마켓플레이스 항목이 플러그인 디렉토리 밖을 가리키는 커맨드를 선언할 수 있던 취약점 수정 — path-traversal 오류로 거부 (v2.1.251)
+- Grep·Glob이 심볼릭 링크로 연결된 검색 경로에 `Read(...)` deny 규칙을 적용하지 못하던 버그 수정 (v2.1.251)
+- 대량 오류 출력(훅·백그라운드 에이전트)이 대화를 오버플로우시켜 세션을 "Prompt is too long"으로 멈추게 하던 버그 수정 (v2.1.247)
+- Bash 권한 검사가 산술 표현식을 정수 셸 변수에 대입하는 명령(`OPTIND=1/0` 등)을 자동 승인하던 버그 수정 — 이제 승인 필요 (v2.1.246)
+- 서브에이전트 결과 — `maxTurns` 한도로 정지한 서브에이전트가 완료된 것처럼 보이던 버그 수정, partial 표시 + `SendMessage` 계속 진행 힌트 추가 (v2.1.247)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

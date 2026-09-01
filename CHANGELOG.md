@@ -8,6 +8,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-09-01
+
+### Added
+- **Claude Code v2.1.252 sync** (v2.1.220 → v2.1.252 콘텐츠 반영)
+  - (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 처리 가능
+  - (v2.1.251) `SessionStart` resume Hook에 세션 신선도(staleness)·예상 재캐싱 비용 필드 추가
+  - (v2.1.251) 포어그라운드 서브에이전트의 도구 호출·결과를 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드는 기존처럼 상태만)
+  - (v2.1.251) `/usage`에 Spend limit 바, `/cost`에 세션별 프롬프트 캐시 히트율/미스/재캐싱 토큰 라인 추가
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가
+  - (v2.1.248) **`--restricted`/`CLAUDE_CODE_RESTRICTED=1`** — 명령·코드 실행 도구와 `WebFetch` 제거, 파일 도구 작업 디렉토리 제한, `bypassPermissions` 거부, 사용자·프로젝트·로컬 설정 무시
+  - (v2.1.248) `experimental.cacheTtl` agent frontmatter 필드 — subagent 전용 TTL 미설정 시 사용할 per-agent 프롬프트 캐시 TTL
+  - (v2.1.248) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서도 크로스세션 메시징(`SendMessage`/`ListAgents`) 지원
+  - (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 `/feedback`에서 검토·전송할 피드백 초안 자동 작성
+  - (v2.1.247) `spinnerTipsOverride`에 `tipsFile`·`label`·`{id,text,cooldownSessions,priority}` 필드 추가
+  - (v2.1.247) 서브에이전트가 첫 호출 모델 404 시 세션 fallback 모델 체인 사용, 오류에 타입·상태·요청ID·모델 포함
+  - (v2.1.246) `/permissions`에 Auto mode 탭 추가 (분류기 규칙 조회·편집)
+  - (v2.1.246) Bash 와일드카드가 서브커맨드 앞에 오는 allow 규칙(`Bash(git * main)`) 시작 경고 추가
+  - (v2.1.243) `/usage`에 Loops 세부 분석(루프별 실행 횟수·총 토큰·실행당 토큰·마지막 실행) 추가
+  - (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 모델 목록 큐레이션 (Vertex/Bedrock ID 포함)
+  - (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — API키·클라우드 프로바이더에서 메인 대화 1시간, 서브에이전트 5분 캐시 유지
+  - (v2.1.243) `modelPricing` managed 설정 — 조직 계약 단가·할인율을 `/cost`·상태줄·텔레메트리에 반영
+  - (v2.1.243) `/tasks`·에이전트 상세 다이얼로그에 각 서브에이전트가 실행된 모델·effort 레벨 표시
+  - (v2.1.243) `/login` Anthropic Console 키리스 로그인("Sign in with your Console account") 추가
+  - (v2.1.220~2.1.250) 그 외 버그 수정 및 안정성 개선 다수
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.252; Hook 이벤트 목록에 `PreModelSwitch`·`PostModelSwitch` 추가(29개); MCP·Agent·CLI·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.252 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`·`PostModelSwitch` Hook 이벤트 추가, `SessionStart` resume 필드 갱신
+- `references/subagents-guide.md`, `references/official/subagents.md`: `experimental.cacheTtl` frontmatter 필드, `CLAUDE_CODE_SUBAGENT_MODEL` 의미 변경, Remote Control 스트리밍, fallback 모델 체인 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가
+
+### Breaking Changes (Claude Code v2.1.251)
+- **`CLAUDE_CODE_SUBAGENT_MODEL` 의미 변경** — 이제 전체 서브에이전트 모델을 무조건 오버라이드하지 않고 기본값만 지정; agent 정의의 `model:`과 파견 시 명시적 모델이 우선
+- 비-Claude 모델(커스텀 `ANTHROPIC_BASE_URL` 등) 사용 시 기본 커밋 트레일러가 `Co-Authored-By: Claude Code`로 변경
+- 좌석 기반 Enterprise 구독의 기본 모델이 Opus 5로 변경 (다른 프리미엄 플랜과 동일)
+- 프로젝트 `.claude/settings.json`의 `env`에서 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 설정 불가 — 셸·사용자·managed 설정에서 지정 필요
+
+### Fixed (주요 버그 수정)
+- (v2.1.251) Bash 명령이 일부 Mac에서 "task output swap refused" 오류로 실패하던 버그 수정
+- (v2.1.251) `.claude/settings.local.json`이 없는 프로젝트에서 "always allow"가 저장되지 않던 버그 수정
+- (v2.1.251) 배경 태스크 알림의 대형 실패 출력(예: 디스크 풀 시 git 오류)이 API 요청 크기 한도를 초과시키던 버그 수정
+- (v2.1.251) 파일 도구(Read/Write/Edit)가 권한 검사 후 교체된 심볼릭 링크를 따라가 승인 범위 밖을 읽거나 쓰던 보안 버그 수정
+- (v2.1.251) Grep·Glob이 심볼릭 링크로 연결된 검색 경로에 `Read(...)` deny 규칙을 적용하지 못하던 버그 수정
+- (v2.1.248) 플러그인 마켓플레이스 항목이 플러그인 디렉토리 밖을 가리키는 커맨드를 선언할 수 있던 취약점 수정 — path-traversal 오류로 거부
+- (v2.1.247) 대량 오류 출력(훅·백그라운드 에이전트)이 대화를 오버플로우시켜 세션을 멈추게 하던 버그 수정
+- (v2.1.246) Bash 권한 검사가 산술 표현식을 정수 변수에 대입하는 명령을 자동 승인하던 버그 수정 — 이제 승인 필요
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

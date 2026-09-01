@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-09-01 (Claude Code v2.1.252+)
 
 ---
 
@@ -35,6 +35,7 @@
 |------|--------|------|--------|
 | `AskUserQuestion` | 194 | 사용자에게 질문 | 낮음 |
 | `SendMessage` | 1,241 | 팀메이트 메시지 (Agent Teams) | 낮음 |
+| `SendFeedback` | - | 세션 중 문제 발생 시 `/feedback`에서 검토·전송할 피드백 초안 자동 작성 (v2.1.247, `feedbackDrafts` 설정으로 끔) | 낮음 |
 
 ### Planning Tools
 

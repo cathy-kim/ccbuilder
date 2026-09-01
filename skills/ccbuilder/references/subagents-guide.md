@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-09-01
+**Claude Code Version**: v2.1.252+
 
 ---
 
@@ -65,6 +65,10 @@ isolation: worktree              # 격리된 git worktree에서 실행
 # 백그라운드 실행 (신규 v2.1.49)
 background: true                 # 항상 백그라운드 Task로 실행
 
+# 프롬프트 캐시 TTL (신규 v2.1.248)
+experimental:
+  cacheTtl: "1h"                 # "5m" | "1h" — subagentPromptCacheTtl 미설정 시 이 에이전트에 적용
+
 # 내장 Hooks
 hooks:
   - type: PreToolUse
@@ -98,6 +102,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
+| `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`) — subagent 전용 TTL 설정 없을 때 사용 (v2.1.248) | - |
 
 ---
 
@@ -193,6 +198,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
+| 첫 호출 모델 404 | 세션의 fallback 모델 체인 자동 사용 — 부모에 반환되는 오류에 타입·상태·요청 ID·모델 포함 (v2.1.243) |
 
 ---
 
@@ -291,6 +297,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `/fork` | 인라인 서브에이전트 launch | **백그라운드 세션 생성**; 기존 동작은 `/subtask` (v2.1.212) |
 | agent frontmatter `name` | 임의 문자열 허용 | `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 (v2.1.218) |
 | Fast Mode 대상 모델 | Opus 4.7·4.8 | **Opus 4.7 제거** — Opus 5·Opus 4.8만 지원 (v2.1.219) |
+| `CLAUDE_CODE_SUBAGENT_MODEL` | 모든 서브에이전트 모델을 무조건 오버라이드 | **기본 서브에이전트 모델만 지정** — agent frontmatter `model:`과 파견 시 명시적 모델이 우선 (v2.1.251) |
 
 ## claude agents 플래그 (v2.1.142 신규)
 
@@ -308,6 +315,12 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
 
 ---
+
+## Remote Control 연동 (v2.1.251)
+
+- 포어그라운드로 실행 중인 서브에이전트의 도구 호출·결과가 연결된 Remote Control 클라이언트(claude.ai/code, 모바일 앱)에 실시간 스트리밍됨
+- 백그라운드 서브에이전트(기본값)는 기존과 동일하게 상태만 표시
+- `/tasks` 및 에이전트 상세 다이얼로그에 각 서브에이전트가 실행된 모델·effort 레벨 표시 (v2.1.243)
 
 ## 버그 수정 (v2.1.101)
 
