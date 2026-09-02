@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-02 (v2.1.258)
 
 ---
 
@@ -37,6 +37,8 @@
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 | 26 | `MessageDisplay` | 어시스턴트 메시지 텍스트 변환·숨김 — 출력 transform 또는 hide 가능 (v2.1.152) | transform/hide |
 | 27 | `DirectoryAdded` | `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | - |
+| 28 | `PreModelSwitch` | 모델 전환 전 — 차단(block)·확인(confirm) 가능 (v2.1.251) | block/confirm |
+| 29 | `PostModelSwitch` | 모델 전환 후 — 주석(annotate) (v2.1.251) | annotate |
 
 ## Handler 타입
 
@@ -93,6 +95,10 @@
 - **SessionStart 환경 변수**: `$CLAUDE_ENV_FILE`에 기록하면 세션 전체에서 사용 가능
 - **MCP 도구 Hook**: MCP 도구도 일반 도구와 동일하게 Hook 발동
 - **`terminalSequence`** (v2.1.141): Hook JSON 출력에 추가 가능 — 제어 터미널 없이 데스크탑 알림·창 제목·벨 신호 발송 (예: tmux 알림, 터미널 벨)
+
+## 모델 전환 Hook (v2.1.251)
+
+`PreModelSwitch`/`PostModelSwitch`는 `/model`, `/fast`, fallback 전환 등 세션의 활성 모델이 바뀔 때 발동합니다. `PreModelSwitch`는 전환을 차단(block)하거나 확인(confirm)을 요구할 수 있고, `PostModelSwitch`는 전환 후 컨텍스트에 주석(annotate)을 남길 수 있습니다. 같은 릴리스에서 `SessionStart` resume hook 입력에도 세션 staleness와 예상 재캐시 비용 필드가 추가되었습니다.
 
 ## Deprecation
 

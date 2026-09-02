@@ -77,6 +77,57 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.258 (2026-09-02 동기화)
+
+**새로운 기능:**
+- (v2.1.257) **Claude Fable 5.1** (`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok, $0.25/Mtok 캐시 읽기
+- (v2.1.257) `timeFormat`(`timeZone`) 설정 — 12/24시간·24시간 UTC·strftime 패턴으로 턴 종료 시계·트랜스크립트 타임스탬프 표시
+- (v2.1.257) auto mode **Containment Escape** 규칙 신규 — 클라우드 메타데이터 자격증명 fetch·egress 우회·cross-tenant 접근이 환경에서 명시적으로 예상되지 않는 한 자동 승인 제외
+- (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제, per-spawn·agent-definition 모델 오버라이드 무시
+- (v2.1.257) `/effort`에 `s` — 현재 세션에만 effort 변경 (`/model`과 동일 패턴)
+- (v2.1.257) `/doctor` — 종료된 세션이 남긴 stale 샌드박스 마스크 파일 경고
+- (v2.1.257) auto mode 작업 디렉토리 외부 첫 파일 읽기 전 1회 확인 프롬프트, `permissions.blockReadsOutsideWorkingDirectories` 차단 옵션
+- (v2.1.257) 게이트웨이 `/model` 피커 항목에 `description` 지원 (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`)
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 이벤트 신규** — 모델 전환 차단(block)·확인(confirm)·주석(annotate); `SessionStart` resume hook에 세션 staleness·예상 재캐시 비용 필드 추가
+- (v2.1.251) Remote Control에 포그라운드 서브에이전트 도구 호출·결과 실시간 스트리밍 (백그라운드 서브에이전트는 상태만 표시)
+- (v2.1.251) `/usage` Spend limit 바 (게이트웨이 지출 한도), `rate_limits.spend_limit` status line 필드
+- (v2.1.251) `/cost`에 세션별 prompt-cache 라인(히트율·미스·재캐시 토큰·warm/cold) 추가
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 문서화
+- (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) 신규 — 명령 실행 도구·WebFetch 제거(`--tools`에 명시된 경우 제외), 파일 도구 작업 디렉토리 제한, bypassPermissions 거부, 사용자/프로젝트/로컬 설정 파일 무시
+- (v2.1.248) Agent frontmatter `experimental.cacheTtl`(`5m`|`1h`) — 서브에이전트 TTL 설정 없을 때 사용할 per-agent 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label`(또는 `SELF_HOSTED_RUNNER_CLIENT_LABEL`)
+- (v2.1.248) 서버 관리 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status` 원인 표시
+- (v2.1.248) `/usage-credits` AWS Marketplace·self-serve Enterprise·Enterprise trial 지원
+- (v2.1.248) 크로스세션 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경 지원
+- (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 Claude가 피드백 초안 작성, `/feedback`에서 검토 후 발송 (`feedbackDrafts` 설정으로 끔)
+- (v2.1.247) `spinnerTipsOverride`에 `{id, text, cooldownSessions, priority}` 엔트리, `tipsFile`, `label` 추가
+- (v2.1.247) `/claude-api cost-optimize` — Claude API 비용 프로파일링·최적화 레버 가이드; claude-api 스킬 Admin API 커버리지 확대
+- (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집
+- (v2.1.246) 턴 종료 시각이 duration 라인에 추가 (`done 6:05 PM`)
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 순서·라벨 모델 목록
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화 1시간, 서브에이전트 5분 캐시 TTL 분리
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 요금·할인 반영 (`/cost`, status line, 텔레메트리)
+- (v2.1.243) `/login` 키리스 Console 로그인 ("Sign in with your Console account")
+- (v2.1.243) `/status` `Skipped sources` 라인 — 미적용 managed settings 소스 표시
+- (v2.1.243) `/mcp`·`/plugins` `managed` 마커 — 조직 관리 인증 claude.ai 커넥터 표시
+- (v2.1.243) `/tasks` 서브에이전트별 모델·effort 레벨 표시
+- (v2.1.243) `/usage` Loops breakdown — 루프별 실행 횟수·토큰·최근 실행
+
+**Breaking Changes:**
+- `defaultMode: "bypassPermissions"`가 `.claude/settings.json`/`.claude/settings.local.json`에서 무시됨 — `"auto"`와 동일 취급, user/managed settings 또는 `--permission-mode`로 설정 (v2.1.257)
+- `/btw` 히스토리 탐색 키가 `←`/`→`에서 `Shift+←`/`Shift+→`(또는 `[`/`]`)로 변경 (v2.1.257)
+
+**주요 버그 수정:**
+- macOS 12(Monterey) Claude Code 실행 실패 회귀 수정, v2.1.255에서 발생 (v2.1.258)
+- 재전송된 권한 승인이 적용되지 못해 원격·예약 세션이 "user messages must have non-empty content" 오류로 실패하던 버그 수정 (v2.1.258)
+- 파일 도구(Read/Write/Edit)가 권한 검사 후 작업 디렉토리 내에서 교체된 심볼릭 링크를 따라가던 보안 버그 수정 (v2.1.251)
+- 플러그인 커맨드가 마켓플레이스 항목의 경로 지정을 통해 플러그인 디렉토리 밖을 가리킬 수 있던 path-traversal 버그 수정 (v2.1.251)
+- `claude -p`/SDK/클라우드 세션이 서버 오류·연결 끊김·정지로 중단된 응답을 자동으로 이어가지 못하던 문제 개선 (v2.1.247)
+- SDK MCP 서버 핸드셰이크 확인 유실 시 무한 대기하던 버그 수정 — 70초 타임아웃 후 해당 서버만 실패 처리 (v2.1.251)
+- glibc 2.44 배포판(Arch Linux, CachyOS, Fedora Rawhide) 시작 크래시 수정 (v2.1.245)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

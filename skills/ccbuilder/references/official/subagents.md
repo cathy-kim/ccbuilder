@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-02 (v2.1.258)
 
 ---
 
@@ -34,6 +34,7 @@
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
+| `experimental.cacheTtl` | `5m` \| `1h` — 서브에이전트 `subagentPromptCacheTtl` 설정 미지정 시 사용할 per-agent 프롬프트 캐시 TTL (v2.1.248) |
 
 ## 파일 위치 & 우선순위
 
@@ -77,3 +78,6 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **/tasks 모델·effort 표시 (v2.1.243+)**: `/tasks`와 에이전트 상세 다이얼로그에 각 서브에이전트가 실행 중인 모델·effort 레벨 표시
+- **Remote Control 실시간 스트리밍 (v2.1.251+)**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍됨 (백그라운드 서브에이전트는 기본값대로 상태만 표시)
+- **CLAUDE_CODE_SUBAGENT_MODEL_FORCE (v2.1.257+)**: `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제 적용 — per-spawn `model` 파라미터와 agent frontmatter `model` 오버라이드를 모두 무시

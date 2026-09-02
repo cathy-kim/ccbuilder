@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-02 (v2.1.258)
 
 ---
 
@@ -78,6 +78,15 @@
 
 - stream-json init 이벤트 `mcp_server_errors` — `--mcp-config` 검증 실패로 스킵된 서버 목록 (터미널 실행 시 시작 경고로도 표시)
 - `claude mcp list`/`/mcp` — 연결 실패 시 HTTP 상태·오류 텍스트 표시; 값에 숨은 공백 경고
+
+## 안정성 개선 (v2.1.251, v2.1.257)
+
+- SDK MCP 서버 핸드셰이크 확인(acknowledgment)이 유실되면 이전에는 무한 대기했으나, 이제 70초 후 타임아웃되어 해당 서버만 실패로 표시 (v2.1.251)
+- `/mcp` `enable`/`reconnect`가 세션 중 뒤늦게 로드된 managed MCP allow/deny 목록이나 `strictPluginOnlyCustomization` 차단을 반영해 서버 연결을 막음 (v2.1.257)
+- `claude mcp remove`가 `strictPluginOnlyCustomization`으로 MCP가 플러그인 전용으로 잠긴 환경에서도 원격 서버의 저장된 OAuth 자격증명을 정리 (v2.1.257)
+- WebSocket MCP 서버 연결 실패가 `[object ErrorEvent]` 대신 실제 오류 메시지로 로그됨 (v2.1.257)
+- MCP 연결·OAuth 디버그/오류 로그에서 서버 URL·요청 헤더에 담긴 자격증명이 redact됨 (v2.1.257)
+- `/mcp`·`/plugins`에 `managed` 마커 — 조직이 인증을 관리하는 claude.ai 커넥터 표시 (v2.1.243)
 
 ## 출력 제한
 

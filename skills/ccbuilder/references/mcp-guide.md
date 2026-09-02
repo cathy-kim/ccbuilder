@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-09-02
+**Claude Code Version**: v2.1.258+
 
 ---
 
@@ -315,6 +315,15 @@ CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=0       # 비활성화
 
 ---
 
+## MCP 안정성 개선 (v2.1.251, v2.1.257)
+
+- **SDK MCP 핸드셰이크 타임아웃 (v2.1.251)**: SDK MCP 서버의 핸드셰이크 확인(acknowledgment)이 유실되면 이전에는 세션·클라우드 세션이 무한 대기했으나, 이제 70초 후 타임아웃되어 해당 서버만 실패로 표시되고 나머지는 정상 동작
+- **재연결 시 managed 목록 재확인 (v2.1.257)**: `/mcp` `enable`/`reconnect`가 세션 중 뒤늦게 로드된 managed MCP allow/deny 목록이나 `strictPluginOnlyCustomization` 차단을 반영해 차단해야 할 서버를 연결하지 않음
+- **`claude mcp remove` OAuth 정리 (v2.1.257)**: `strictPluginOnlyCustomization`으로 MCP가 플러그인 전용으로 잠긴 환경에서도 원격 서버 제거 시 저장된 OAuth 자격증명을 함께 정리
+- **오류 로그 개선 (v2.1.257)**: WebSocket MCP 연결 실패가 `[object ErrorEvent]` 대신 실제 오류 메시지로 표시; 연결·OAuth 디버그/오류 로그에서 서버 URL·요청 헤더에 담긴 자격증명 redact
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.
@@ -410,6 +419,8 @@ MAX_MCP_OUTPUT_TOKENS=50000
 - **Name-based**: 서버 이름 기반
 
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
+>
+> **v2.1.243**: `/mcp`·`/plugins`에 `managed` 마커 추가 — 조직이 인증을 관리하는 claude.ai 커넥터에 표시.
 
 ---
 

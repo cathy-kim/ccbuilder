@@ -8,6 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-09-02
+
+### Added
+- **Claude Code v2.1.258 sync** (v2.1.220 → v2.1.258 콘텐츠 반영)
+  - (v2.1.257) **Claude Fable 5.1** (`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok, $0.25/Mtok 캐시 읽기
+  - (v2.1.257) `timeFormat`·`timeZone` 설정 — 12/24시간·24시간 UTC·strftime 패턴으로 턴 종료 시계·트랜스크립트 타임스탬프 표시
+  - (v2.1.257) auto mode **Containment Escape** 규칙 신규 — 클라우드 메타데이터 자격증명 fetch·egress 우회·cross-tenant 접근을 환경이 명시적으로 허용하지 않는 한 자동 승인하지 않음
+  - (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — 모든 서브에이전트에 메인/지정 모델을 강제 적용(개별 파견·에이전트 정의 오버라이드 무시)
+  - (v2.1.257) `/effort`에 `s` 추가 — 현재 세션에만 effort 변경 (`/model`과 동일 패턴)
+  - (v2.1.257) `/doctor`에 죽은 세션이 남긴 stale 샌드박스 마스크 파일 경고 추가
+  - (v2.1.257) auto mode에서 작업 디렉토리 외부 첫 파일 읽기 시 1회 확인 프롬프트 + `permissions.blockReadsOutsideWorkingDirectories` 차단 옵션 추가
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 이벤트 신규** — 모델 전환 차단(block)·확인(confirm)·주석(annotate); `SessionStart` resume hook에 세션 staleness·예상 재캐시 비용 필드 추가
+  - (v2.1.251) Remote Control에 포그라운드 서브에이전트 도구 호출·결과 실시간 스트리밍(백그라운드는 상태만 표시)
+  - (v2.1.251) `/usage` Spend limit 바(게이트웨이 지출 한도), `/cost` 세션별 prompt-cache 라인(히트율·미스·재캐시 토큰)
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가
+  - (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) 신규 — 명령 실행 도구·WebFetch 제거, 파일 도구 작업 디렉토리 제한, bypassPermissions 거부, 사용자/프로젝트/로컬 설정 파일 무시
+  - (v2.1.248) Agent frontmatter `experimental.cacheTtl`(`5m`|`1h`) — 서브에이전트별 프롬프트 캐시 TTL 지정
+  - (v2.1.248) 크로스세션 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경 지원
+  - (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 Claude가 피드백 초안 작성, `/feedback`에서 검토 후 발송 (`feedbackDrafts` 설정으로 끔)
+  - (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트 Claude API 비용 프로파일링 및 최적화 레버(캐싱·토큰 절약·배치·effort·모델 선택) 가이드
+  - (v2.1.243) `modelPicker`·`promptCacheTtl`/`subagentPromptCacheTtl`·`modelPricing` 설정 신규 — 모델 피커 커스텀, 캐시 TTL 분리, 조직 계약 요금 반영
+  - (v2.1.243) `/login`에 키리스 Console 로그인("Sign in with your Console account") 추가
+  - (v2.1.243) `/status` `Skipped sources` 라인, `/mcp`·`/plugins` `managed` 마커, `/tasks` 서브에이전트별 모델·effort 표시
+  - (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집
+  - MCP 안정성 개선 — SDK MCP 서버 핸드셰이크 유실 시 70초 타임아웃(v2.1.251), `/mcp` reconnect가 뒤늦게 로드된 managed allow/deny 목록 반영, `claude mcp remove` OAuth 자격증명 정리(v2.1.257)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.258; MCP·Memory·Hook·CLI/Agent·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `PreModelSwitch`/`PostModelSwitch` 추가(29개)
+- `references/version-sync.md`: v2.1.258 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`/`PostModelSwitch` Hook 이벤트 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: `experimental.cacheTtl` agent frontmatter, 포그라운드 서브에이전트 스트리밍 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP 안정성 수정 사항, `managed` 마커 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가
+
+### Breaking Changes (Claude Code v2.1.257)
+- `defaultMode: "bypassPermissions"`가 `.claude/settings.json`/`.claude/settings.local.json`에서 무시됨 — `"auto"`와 동일 취급, user/managed settings 또는 `--permission-mode`로 설정
+- `/btw` 히스토리 탐색 키가 `←`/`→`에서 `Shift+←`/`Shift+→`(또는 `[`/`]`)로 변경
+
+### Fixed (주요 수정, v2.1.243~2.1.258)
+- macOS 12(Monterey) Claude Code 실행 실패 회귀 수정 (v2.1.258, v2.1.255 회귀)
+- 재전송된 권한 승인이 적용되지 못해 원격·예약 세션이 "user messages must have non-empty content" 오류로 실패하던 버그 수정 (v2.1.258)
+- 파일 도구(Read/Write/Edit)가 권한 검사 후 작업 디렉토리 내에서 교체된 심볼릭 링크를 따라가던 보안 버그 수정 (v2.1.251)
+- 플러그인 커맨드가 마켓플레이스 항목의 경로 지정을 통해 플러그인 디렉토리 밖을 가리킬 수 있던 path-traversal 버그 수정 (v2.1.251)
+- `claude -p`/SDK/클라우드 세션이 서버 오류·연결 끊김·정지로 중단된 응답을 자동으로 이어가지 못하던 문제 개선 (v2.1.247)
+
+### Notes
+- v2.1.245: glibc 2.44 배포판(Arch, CachyOS, Fedora Rawhide) 시작 크래시 수정 등 소규모 릴리스
+- v2.1.250, v2.1.252: 버그 수정 및 안정성 개선 위주(세부 사항 미공개)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added
