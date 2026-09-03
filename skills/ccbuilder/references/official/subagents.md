@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-03 (v2.1.259)
 
 ---
 
@@ -34,6 +34,7 @@
 | `hooks` | Agent 스코프 라이프사이클 훅 |
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
+| `experimental.cacheTtl` | 서브에이전트별 프롬프트 캐시 TTL (`"5m"` \| `"1h"`) — `subagentPromptCacheTtl` 미설정 시 사용 (v2.1.248) |
 
 ## 파일 위치 & 우선순위
 
@@ -77,3 +78,6 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **`settings.json` `agent` 필드**: dispatched 세션 기본 에이전트 지정; `--agent <name>`으로 오버라이드 (v2.1.157)
 - **agent 이름 제약 (v2.1.218+)**: agent frontmatter `name`에 `:` 포함 시 거부 — 플러그인 네임스페이싱 예약 문자
 - **reasoning effort (v2.1.215+)**: `subagentStatusLine` payload에 effort 레벨 포함 — 커스텀 상태줄에서 모델·effort 렌더링 가능
+- **`CLAUDE_CODE_SUBAGENT_MODEL_FORCE` (v2.1.257)**: `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제 적용 — agent 정의 `model`, per-spawn 오버라이드 모두 무시
+- **중첩 백그라운드 서브에이전트 결과 (v2.1.259)**: 부모 서브에이전트의 트랜스크립트에 저장되어 재개 시 유지, 공유 트랜스크립트에서 전달 표시
+- **cross-session 메시징 확장 (v2.1.248)**: `SendMessage`/`ListAgents`가 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동작

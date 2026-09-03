@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-03 (v2.1.259)
 
 ---
 
@@ -61,7 +61,7 @@
 
 ## Managed MCP (조직 관리)
 
-**방법 1**: `managed-mcp.json` - 관리자 전용 제어 (사용자 커스터마이징 불가)
+**방법 1**: `managed-mcp.json` - 관리자 전용 제어 (사용자 커스터마이징 불가); **`managedMcpServers`** managed 설정(v2.1.259)으로 HTTP/SSE MCP 서버를 모든 사용자에게 제공 — `.mcp.json`과 동일 엔트리 형식, `command` 지정 엔트리는 스킵
 
 **방법 2**: 허용/차단 목록
 ```json
@@ -73,6 +73,7 @@
 - 필터: `serverName`, `serverCommand`, `serverUrl` (와일드카드 지원)
 - **차단 목록이 항상 우선**
 - **v2.1.219**: `${VAR}` 항목은 settings 파일 자체의 `env` 대신 시작 시 환경변수·managed-settings env에서 해석
+- **Breaking Change (v2.1.259)**: `allowedMcpServers`는 이제 사용자가 추가한 서버만 통제 — `managed-mcp.json`/`managedMcpServers` 서버는 allowlist와 무관하게 로드됨(차단하려면 `deniedMcpServers` 사용)
 
 ## Headless 진단 (v2.1.219)
 

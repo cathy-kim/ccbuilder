@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-03 (v2.1.259)
 
 ---
 
@@ -37,6 +37,10 @@
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 | 26 | `MessageDisplay` | 어시스턴트 메시지 텍스트 변환·숨김 — 출력 transform 또는 hide 가능 (v2.1.152) | transform/hide |
 | 27 | `DirectoryAdded` | `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | - |
+| 28 | `PreModelSwitch` | 모델 전환 직전 — 차단·확인·주석 가능 (v2.1.251) | allow/deny/confirm |
+| 29 | `PostModelSwitch` | 모델 전환 직후 (v2.1.251) | - |
+
+`SessionStart` resume 이벤트에 세션 staleness·예상 재캐시 비용 필드 추가 (v2.1.251).
 
 ## Handler 타입
 

@@ -77,6 +77,65 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.259 (2026-09-03 동기화)
+
+**새로운 기능:**
+- (v2.1.259) **`managedMcpServers`** managed 설정 — 조직이 모든 사용자에게 HTTP/SSE MCP 서버 제공 (`.mcp.json`과 동일 엔트리 형식, command 지정 엔트리는 스킵)
+- (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트용, 프롬프트가 필요한 모든 작업을 자동 거부 (auto mode 등 활성 권한 모드는 계속 판단)
+- (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 — 축약 도구 요약에 "MR !N" 표시, 푸터 MR 배지 갱신
+- (v2.1.259) `claude plugin validate --json` — 머신 리더블 검증 리포트
+- (v2.1.259) 중첩 백그라운드 서브에이전트 결과가 부모 서브에이전트 트랜스크립트에 저장 — 재개 시 유지, 공유 트랜스크립트에 전달 표시
+- (v2.1.259) auto mode가 command·skill frontmatter `model:` 지정 시에도 세션 모델 유지 (미지원 모델로 턴 실행하던 버그 수정)
+- (v2.1.258) 버그 수정 (macOS 12 launch 회귀, Remote/scheduled 세션 재전송 승인 실패)
+- (v2.1.257) **Claude Fable 5.1**(`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok, 캐시 읽기 $0.25/Mtok
+- (v2.1.257) `timeFormat`/`timeZone` 설정 — 턴 종료 시계·트랜스크립트 타임스탬프 형식 지정
+- (v2.1.257) auto mode **Containment Escape** 규칙 신규 — 클라우드 메타데이터 자격증명 탈취·egress 우회·크로스테넌트 접근 자동 승인 제외
+- (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — 모든 서브에이전트에 `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델) 강제, per-spawn·agent 정의 오버라이드 무시
+- (v2.1.257) `/effort s` — 현재 세션만 effort 변경 (`/model`과 동일 패턴)
+- (v2.1.257) `/doctor` 경고 — 종료된 세션이 남긴 stale sandbox mask 파일 감지
+- (v2.1.257) auto mode 작업 디렉토리 외부 첫 파일 읽기 시 1회 확인 프롬프트 — `permissions.blockReadsOutsideWorkingDirectories`로 차단 가능
+- (v2.1.252) 버그 수정 (Bash "task output swap refused" 오류, `.claude/settings.local.json` 없는 프로젝트 always-allow 미저장)
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 이벤트 신규** — 모델 전환 차단·확인·주석 가능
+- (v2.1.251) `SessionStart` resume Hook에 세션 staleness·예상 재캐시 비용 필드 추가
+- (v2.1.251) Remote Control 클라이언트에 foreground 서브에이전트 도구 호출·결과 실시간 스트리밍 (백그라운드 서브에이전트는 상태만 표시)
+- (v2.1.251) `/usage` Spend limit bar, `rate_limits.spend_limit` status line 필드 (게이트웨이 지출 한도)
+- (v2.1.251) `/cost`에 세션별 프롬프트 캐시 라인(hit ratio, misses, 재캐시 토큰) 추가, status line `prompt_cache` 객체
+- (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 문서화; `--resume` 메시지가 정확한 `claude attach <id>` 명령 안내
+- (v2.1.250) 버그 수정 및 안정성 개선
+- (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 명령 실행·코드 실행 도구와 `WebFetch` 제거(`--tools`로 재추가 가능), 파일 도구 작업 디렉토리 내로 제한, `bypassPermissions` 거부, 유저·프로젝트·로컬 설정 무시
+- (v2.1.248) agent frontmatter **`experimental.cacheTtl`**(`"5m"`|`"1h"`) — 서브에이전트별 프롬프트 캐시 TTL(서브에이전트 TTL 설정 없을 때 사용)
+- (v2.1.248) `claude self-hosted-runner --client-label`(`SELF_HOSTED_RUNNER_CLIENT_LABEL`) — 러너 등록 라벨 오버라이드
+- (v2.1.248) 서버 관리형 설정 진단 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 이유 표시
+- (v2.1.248) `/usage-credits` — AWS Marketplace·self-serve Enterprise·Enterprise trial 대상 확장
+- (v2.1.248) cross-session 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션 지원 확장
+- (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 `/feedback`용 피드백 초안 작성(`feedbackDrafts` 설정으로 비활성화 가능)
+- (v2.1.247) `spinnerTipsOverride`에 `{id, text, cooldownSessions, priority}`·`tipsFile`·`label` 추가 — 조직 커스텀 팁 로테이션
+- (v2.1.247) Bash 권한 프롬프트에 auto mode 전환 팁("Yes, and switch to auto mode")
+- (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트 Claude API 비용 프로파일링·최적화 워크플로우
+- (v2.1.247) `/claude-api` 스킬 Admin API 커버리지 확장 (조직 멤버·초대·워크스페이스·API 키·rate limit·WIF·CMEK)
+- (v2.1.246) Bash allow 규칙 서브커맨드 앞 와일드카드(`Bash(git * main)`) 시작 경고
+- (v2.1.246) `/permissions` Auto mode 탭 — 분류기 규칙 조회·편집
+- (v2.1.246) 턴 종료 줄에 완료 시각 표시 (예: "✻ Sautéed for 23s · done 6:05 PM")
+- (v2.1.245) 버그 수정 (glibc 2.44 배포판 시작 크래시)
+- (v2.1.243) `/usage` Loops 분석 — 루프별 실행 횟수·총 토큰·실행당 토큰·최근 실행
+- (v2.1.243) `modelPicker` 설정 — `/model` 피커 커스텀 순서·라벨 지정
+- (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — API키·클라우드 프로바이더 사용자가 메인 대화 1시간, 서브에이전트 5분 캐시 유지
+- (v2.1.243) `modelPricing` managed 설정 — 조직 계약 요율·할인 배율을 `/cost`·상태줄·텔레메트리에 반영
+- (v2.1.243) keyless Console 로그인 — `/login` → "Sign in with your Console account"
+
+**Breaking Changes:**
+- `allowedMcpServers`가 사용자 추가 서버만 통제하도록 변경 — allowlist로 필터링되던 `managed-mcp.json` 서버가 업그레이드 후 자동 로드됨; 차단하려면 `deniedMcpServers` 사용 (v2.1.259)
+
+**주요 버그 수정:**
+- 동시 세션이 서로의 `~/.claude.json` 변경을 되돌리던 버그 수정 — workspace trust·MCP/project 상태 유실 방지 (v2.1.259)
+- Bash `Read()` deny 규칙이 옵션 값(`--ignore-revs-file=.env`, `-f.env`, `@file`)·`git diff`/`git grep` 파일 피연산자·`cd DIR && cat FILE` 복합 명령을 커버하지 못하던 버그 수정 (v2.1.259)
+- 텔레메트리 비활성화 세션에서 OAuth 토큰 갱신 시 프롬프트 캐시가 무효화되던 버그 수정 (v2.1.259)
+- 수백 개 도구 호출이 있는 긴 턴 이후 풀스크린 모드가 빈 대화를 표시하던 버그 수정 (v2.1.259)
+- `CLAUDE_CODE_MAX_CONTEXT_TOKENS`가 인식되지 않는 모델 버전의 Vertex 스타일 모델 ID(`@YYYYMMDD` 접미사)에 무시되던 버그 수정 (v2.1.259)
+- MCP 서버가 도구 목록 조회 중 연결 끊길 때 도구 없이 연결됨으로 표시되던 버그 수정 (v2.1.259)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

@@ -8,6 +8,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-09-03
+
+### Added
+- **Claude Code v2.1.259 sync** (v2.1.220 → v2.1.259 콘텐츠 반영; 공개 changelog 존재 버전 위주로 정리)
+  - (v2.1.259) **`managedMcpServers`** managed 설정 — 조직이 모든 사용자에게 HTTP/SSE MCP 서버 제공(`.mcp.json`과 동일 엔트리 형식, command 지정 엔트리는 스킵)
+  - (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트용, 프롬프트 필요 작업 자동 거부(auto mode 등 활성 권한 모드는 계속 판단)
+  - (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 — "MR !N"으로 축약 표시·푸터 배지 갱신
+  - (v2.1.259) `claude plugin validate --json` — 머신 리더블 검증 리포트
+  - (v2.1.259) 중첩 백그라운드 서브에이전트 결과가 부모 서브에이전트 트랜스크립트에 저장되어 재개 시 유지
+  - (v2.1.257) **Claude Fable 5.1**(`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok
+  - (v2.1.257) `timeFormat`/`timeZone` 설정; auto mode **Containment Escape** 규칙(클라우드 메타데이터 탈취·egress 우회 자동 승인 제외); `/effort s` 세션 한정 effort 변경
+  - (v2.1.257) auto mode 작업 디렉토리 외부 첫 파일 읽기 1회 확인 프롬프트(`permissions.blockReadsOutsideWorkingDirectories`)
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 이벤트 신규** — 모델 전환 차단·확인·주석
+  - (v2.1.251) Remote Control로 foreground 서브에이전트 도구 호출 실시간 스트리밍; `/usage` Spend limit bar; `/cost` 세션별 프롬프트 캐시 라인
+  - (v2.1.251) `claude --help`에 `attach`·`logs`·`stop`·`respawn`·`rm` 서브커맨드 추가
+  - (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 명령 실행·코드 실행 도구·`WebFetch` 제거, 파일 도구 작업 디렉토리 한정, `bypassPermissions` 거부
+  - (v2.1.248) agent frontmatter **`experimental.cacheTtl`**(`"5m"`|`"1h"`) — 서브에이전트별 프롬프트 캐시 TTL
+  - (v2.1.248) cross-session 메시징(`SendMessage`/`ListAgents`) Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션 지원 확장
+  - (v2.1.247) **`SendFeedback` 도구** 신규 — 세션 중 문제 발생 시 `/feedback`용 피드백 초안 작성(`feedbackDrafts` 설정으로 비활성화 가능)
+  - (v2.1.247) `/claude-api cost-optimize`; `/claude-api` 스킬 Admin API 커버리지 확장
+  - (v2.1.246) Bash allow 규칙 서브커맨드 앞 와일드카드 시작 경고; `/permissions` Auto mode 탭; 턴 종료 시각 표시
+  - (v2.1.243) `promptCacheTtl`/`subagentPromptCacheTtl` 설정 — 메인 대화 1시간·서브에이전트 5분 캐시 유지; `modelPricing` managed 설정; `modelPicker` 설정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.259; MCP·Hook·Agent/CLI·Plugin·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `PreModelSwitch`/`PostModelSwitch` 추가(29개)
+- `references/version-sync.md`: v2.1.259 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`/`PostModelSwitch` Hook 이벤트 추가
+- `references/subagents-guide.md`, `references/official/subagents.md`: `experimental.cacheTtl` agent frontmatter, `promptCacheTtl`/`subagentPromptCacheTtl`, `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: `managedMcpServers` 설정, `allowedMcpServers` 동작 변경 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가
+
+### Breaking Changes (Claude Code v2.1.259)
+- `allowedMcpServers`가 사용자 추가 서버만 통제하도록 변경 — allowlist로 필터링되던 `managed-mcp.json` 서버가 업그레이드 후 자동 로드됨, 차단하려면 `deniedMcpServers` 사용
+
+### Fixed (Claude Code v2.1.259 주요 수정)
+- 동시 세션이 서로의 `~/.claude.json` 변경을 되돌리던 버그 수정(workspace trust·MCP/project 상태 유실 방지)
+- auto mode가 command·skill frontmatter `model:` 지정 시에도 세션 모델을 유지하도록 수정(미지원 모델로 턴 실행하던 버그 수정)
+- Bash `Read()` deny 규칙이 옵션 값(`--ignore-revs-file=.env` 등)·`git diff`/`git grep` 파일 피연산자·`cd DIR && cat FILE` 복합 명령을 커버하지 못하던 버그 수정
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

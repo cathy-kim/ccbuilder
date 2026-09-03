@@ -3,8 +3,8 @@
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
 **Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Last Updated**: 2026-09-03
+**Claude Code Version**: v2.1.259+
 
 ---
 
@@ -395,6 +395,10 @@ MAX_MCP_OUTPUT_TOKENS=50000
 }
 ```
 
+### managedMcpServers (v2.1.259 신규)
+
+managed setting으로 조직이 **모든 사용자**에게 HTTP/SSE MCP 서버를 제공. `.mcp.json`과 동일한 엔트리 형식을 사용하며, `command`를 지정하는 엔트리는 (로컬 실행이 필요하므로) 자동으로 스킵됩니다.
+
 ### 정책 기반 제한
 
 ```json
@@ -410,6 +414,8 @@ MAX_MCP_OUTPUT_TOKENS=50000
 - **Name-based**: 서버 이름 기반
 
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
+
+> **Breaking Change (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 직접 추가한 서버만** 통제합니다. 기존에 allowlist로 필터링되던 `managed-mcp.json`(위 `managedMcpServers`) 서버는 업그레이드 후 allowlist와 무관하게 로드됩니다 — 이를 차단하려면 `deniedMcpServers`를 사용하세요.
 
 ---
 
