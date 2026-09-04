@@ -77,6 +77,67 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.260 (2026-09-04 동기화)
+
+**새로운 기능:**
+- (v2.1.260) **`/diff` 패널** — 풀스크린 모드에서 대화 옆에 미커밋 변경사항을 표시, `/diff`로 토글
+- (v2.1.260) `/cost`·상태줄 `prompt_cache` 필드에 캐시 미스 가능 원인(도구 정의·시스템 프롬프트 변경, TTL 경과 등) 표시
+- (v2.1.260) `/reload-plugins`가 헤드리스 세션에서도 사용 가능 (Desktop·SDK 명령 목록에 노출)
+- (v2.1.260) **`/advisor` 텍스트 폼** — desktop 앱·Remote Control·기타 headless(-p/Agent SDK) 세션에서 `/advisor`, `/advisor <model>`, `/advisor off`
+- (v2.1.260) `oidc.scope_on_refresh` — refresh 시에만 `openid`를 재요청해야 id_token을 반환하는 IdP 지원
+- (v2.1.260) Claude apps gateway `desktop` 정책 블록에 최신 Claude Desktop 키 지원 (`userPluginMarketplacesEnabled`, `userPluginUploadsEnabled`)
+- (v2.1.260) `/ultrareview`·`claude ultrareview` 클라우드 리뷰 대기시간 30→45분으로 연장
+- (v2.1.260) `/effort`가 Fable 5.1에서 세션 중 변경돼도 프롬프트 캐시를 무효화하지 않도록 개선
+- (v2.1.260) 서브에이전트가 시작한 백그라운드 명령의 1시간 제한 제거 — 메인 세션과 동일하게 종료·중단될 때까지 실행
+- (v2.1.260) `ctrl+l`/`cmd+k`가 풀스크린 모드에서 터미널 `clear`처럼 트랜스크립트 뷰를 지움(위로 스크롤하면 이전 메시지 확인 가능)
+- (v2.1.260) 관리형 CLAUDE.md(`claudeMd`)가 더 이상 보안 승인 다이얼로그를 트리거하지 않음(훅·셸 명령·샌드박스·unsafe env 설정은 계속 승인 필요)
+- (v2.1.260) `!` bash-mode 프롬프트에 입력한 명령은 strict sandbox 모드에서도 샌드박스 밖에서 실행(자신의 터미널에 입력하는 것과 동일하게 취급)
+- (v2.1.259) **`managedMcpServers`** 관리형 설정 신규 — 조직이 모든 사용자에게 HTTP/SSE MCP 서버 제공 (`.mcp.json`과 동일 형식; command 지정 항목은 스킵)
+- (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트에서 프롬프트 대상이 될 모든 동작을 자동 거부(활성 permission mode는 auto mode 포함 계속 판단)
+- (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 → GitLab merge request를 축약 도구 요약에서 `MR !N`으로 표시, 풋터 MR 배지 갱신
+- (v2.1.259) `claude plugin validate --json` — 머신 판독 가능한 검증 리포트
+- (v2.1.257) **Claude Fable 5.1**(`claude-fable-5-1`) 출시, 신규 기본 Fable 모델 — 1M 컨텍스트, $10/$50 per Mtok, $0.25/Mtok 캐시읽기
+- (v2.1.257) `timeFormat`/`timeZone` 설정 — 12시간·24시간·24시간 UTC 또는 strftime 패턴으로 턴 종료 시각·트랜스크립트 타임스탬프 표시
+- (v2.1.257) auto mode에 **Containment Escape 룰** 추가 — 클라우드 메타데이터 크리덴셜 페치·egress 회피·크로스테넌트 접근을 환경에서 명시적으로 허용하지 않는 한 자동 승인 제외
+- (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제 적용, per-spawn·agent definition 모델 오버라이드 무시
+- (v2.1.257) `/effort`에 `s` 추가 — 현재 세션에만 effort 변경 적용 (`/model`과 동일 패턴)
+- (v2.1.257) `/doctor` 경고 — 종료된 세션이 남긴 stale 샌드박스 마스크 파일 감지
+- (v2.1.257) `permissions.blockReadsOutsideWorkingDirectories` — auto mode에서 작업 디렉토리 밖 첫 파일 읽기 전 1회 확인 프롬프트, 해당 읽기를 아예 차단하는 옵션 포함
+- (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 이벤트 신규** — 모델 전환을 차단·확인·주석 처리(block/confirm/annotate); `SessionStart` resume hook에 세션 최신도·재캐싱 예상 비용 필드 추가
+- (v2.1.251) Remote Control 클라이언트에 포그라운드 서브에이전트의 도구 호출·결과 실시간 스트리밍(백그라운드 서브에이전트는 기존처럼 상태만 표시)
+- (v2.1.251) `/usage`에 Spend limit bar; `/cost`에 세션별 프롬프트 캐시 라인(히트율·미스·재캐싱 토큰) + 상태줄 `prompt_cache` 필드
+- (v2.1.251) `claude --help`에 `attach`, `logs`, `stop`, `respawn`, `rm` 추가
+- (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 명령 실행 도구·`WebFetch` 제거(단, `--tools`로 명시 시 예외), 파일 도구는 작업 디렉토리 내로 제한, `bypassPermissions` 거부, 사용자·프로젝트·로컬 설정 파일 무시
+- (v2.1.248) agent frontmatter `experimental.cacheTtl`(`5m`|`1h`) — 서브에이전트 TTL 미설정 시 사용할 프롬프트 캐시 TTL
+- (v2.1.248) `claude self-hosted-runner --client-label`(또는 `SELF_HOSTED_RUNNER_CLIENT_LABEL`) — 러너 등록 레이블 오버라이드
+- (v2.1.248) 관리형 설정 진단 강화 — 로드 실패 시 시작 경고, `/doctor`·`/status`에 실패 원인 표시
+- (v2.1.248) 크로스세션 메시징(SendMessage/ListAgents)이 Bedrock·Vertex·Foundry·텔레메트리 비활성 세션에서도 동작
+- (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 피드백 초안 작성, `/feedback`에서 검토 후 전송(`feedbackDrafts` 설정으로 끄기 가능)
+- (v2.1.247) `spinnerTipsOverride`에 `{id,text,cooldownSessions,priority}` 항목, `tipsFile`, `label` 추가 — 조직 자체 팁을 내장 팁과 함께 로테이션
+- (v2.1.247) `/claude-api cost-optimize` — 기존 프로젝트의 Claude API 지출 프로파일링, 비용 절감 레버(캐싱·토큰 절약·배치·effort·모델 선택) 안내
+
+**Breaking Changes:**
+- `allowedMcpServers`가 이제 사용자가 직접 추가한 서버만 대상 — `managed-mcp.json`의 리터럴 서버는 더 이상 자동 필터링되지 않음, 차단하려면 `deniedMcpServers` 사용 (v2.1.259)
+- 관리형 설정(managed-settings.json, 드롭인, MDM plist, HKLM 값) 파싱 실패 시 조용히 미적용되던 것에서 시작 거부(소스 명시)로 변경 (v2.1.259)
+- 2.1.259에서 `Read()` deny 규칙을 Bash 인자에도 적용하도록 확장했던 변경을 2.1.260에서 롤백 — `Read(./**/build/**)` 규칙이 auto mode에서도 `npm run build`를 차단하고 `cd … && grep`에 매번 프롬프트를 띄우던 문제 때문
+
+**주요 버그 수정:**
+- `Edit`/`Write`/`Read` 권한 규칙 경로에 괄호가 포함되면 Bash 샌드박스가 무효한 규칙으로 처리해 "read-only" 폴더가 쓰기 가능해지던 버그 수정 (v2.1.260)
+- 컴파일 불가능한 패턴(닫히지 않은 `[` 등)을 가진 파일 권한 규칙 하나가 모든 파일 편집을 "Invalid regular expression" 오류로 실패시키던 버그 수정 (v2.1.260)
+- zsh `REPORTTIME`/`REPORTMEMORY`/`DIRSTACKSIZE` 할당에 명령 치환을 숨겨도 Bash 권한 검사가 자동 승인하던 버그 수정 — 이제 승인 프롬프트 표시 (v2.1.260)
+- 기업 루트 CA가 OS 인증서 저장소에만 있을 때 Bedrock 모델 탐색·토큰 카운팅·AWS SSO/STS 자격증명 호출이 "unable to get local issuer certificate"로 실패하던 버그 수정 (v2.1.260)
+- macOS `permissions.blockReadsOutsideWorkingDirectories`가 샌드박스된 git의 사용자 git config 및 worktree 격리 서브에이전트 자신의 체크아웃을 숨기던 버그 수정 (v2.1.260)
+- `/rewind`·`--rewind-files`가 체크포인트 백업 파일이 없을 때도 복원 성공으로 보고하던 버그 수정 (v2.1.260)
+- `/rewind`가 되감긴 턴의 stale 파일-읽기 추적을 남겨 "File unchanged since last read" 오표시·외부 편집 후 전체 파일 재주입을 유발하던 버그 수정 (v2.1.260)
+- SendMessage로 다른 에이전트를 재개한 서브에이전트가 그 에이전트의 완료 알림을 받지 못하던 버그 수정 — 알림이 메인 대화로 잘못 전달되던 문제 (v2.1.260)
+- 동시 세션이 서로의 `~/.claude.json` 변경을 되돌리던 버그 수정 — 다수 세션 동시 실행 시 workspace trust·MCP/프로젝트 상태가 유실되지 않음 (v2.1.259)
+- managed-settings 파일·드롭인·MDM plist·HKLM 값이 파싱 실패할 때 조용히 미적용되던 버그 수정 — 이제 시작 거부와 함께 원인 소스 표시 (v2.1.259)
+- Stop이 remote-control 세션의 백그라운드 에이전트·워크플로우를 실제로 멈추지 못하던 버그 수정 — 중단된 태스크가 프로세스 종료 시까지 계속 표시·재중단 가능 (v2.1.259)
+- 마켓플레이스 repo URL에 trailing slash나 `?`/`#`가 있으면 사용 불가능한 `.git` 클론 URL이 생성되던 버그 수정 (v2.1.259)
+- macOS 12(Monterey)에서 실행 자체가 실패하던 v2.1.255 회귀 수정 (v2.1.258)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

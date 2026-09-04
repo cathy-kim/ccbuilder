@@ -8,6 +8,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-09-04
+
+### Added
+- **Claude Code v2.1.260 sync** (v2.1.220 → v2.1.260 콘텐츠 반영)
+  - (v2.1.260) **`/diff` 패널** — 풀스크린 모드에서 대화 옆에 미커밋 변경사항 diff 패널 표시, `/diff`로 토글
+  - (v2.1.260) **`/advisor` 텍스트 폼** — desktop 앱·Remote Control·headless(-p/SDK)에서 `/advisor`, `/advisor <model>`, `/advisor off`
+  - (v2.1.260) `/cost`·상태줄 `prompt_cache` 필드에 캐시 미스 가능 원인(도구 정의·시스템 프롬프트 변경, TTL 경과 등) 표시
+  - (v2.1.260) `/reload-plugins` 헤드리스 세션 지원; `/ultrareview` 클라우드 리뷰 대기시간 30→45분; 서브에이전트 백그라운드 명령 1시간 제한 제거
+  - (v2.1.260) **`Read()` deny 규칙의 Bash 인자 적용을 2.1.259에서 롤백** — `npm run build`가 `Read(./**/build/**)` 규칙에 걸려 auto mode에서도 차단되던 회귀 수정
+  - (v2.1.259) **`managedMcpServers`** 관리형 설정 신규 — 조직이 모든 사용자에게 HTTP/SSE MCP 서버 제공(`.mcp.json`과 동일 형식)
+  - (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트에서 프롬프트 대상 명령 자동 거부(active mode는 계속 판단)
+  - (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 → GitLab MR을 `MR !N`으로 표시, 풋터 MR 배지 갱신
+  - (v2.1.259) `claude plugin validate --json` — 머신 판독 가능 검증 리포트
+  - (v2.1.259) **Breaking**: `allowedMcpServers`가 이제 사용자가 직접 추가한 서버만 대상 — `managed-mcp.json`의 리터럴 서버는 더 이상 자동 필터링되지 않음(차단은 `deniedMcpServers`)
+  - (v2.1.259) **관리형 설정 파싱 실패 시 시작 거부로 변경** — 이전엔 조용히 미적용되던 것이 이제 소스 이름과 함께 시작 거부
+  - (v2.1.257) **Claude Fable 5.1**(`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok($0.25/Mtok 캐시읽기)
+  - (v2.1.257) `timeFormat`/`timeZone` 설정 — 12시간·24시간·24시간 UTC·strftime 패턴
+  - (v2.1.257) auto mode **Containment Escape 룰** 추가 — 클라우드 메타데이터 크리덴셜 페치·egress 회피·크로스테넌트 접근 자동승인 차단
+  - (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`, agent frontmatter `experimental.cacheTtl`(`5m`|`1h`), `/effort s`(세션 한정), `permissions.blockReadsOutsideWorkingDirectories`
+  - (v2.1.251) **`PreModelSwitch`·`PostModelSwitch` Hook 이벤트 신규** — 모델 전환을 차단·확인·주석 처리(block/confirm/annotate)
+  - (v2.1.251) Remote Control에 포그라운드 서브에이전트 도구 호출·결과 실시간 스트리밍; `/usage` Spend limit bar; `/cost` 프롬프트 캐시 히트율 라인 + `prompt_cache` 상태줄 필드
+  - (v2.1.248) **`--restricted`**(`CLAUDE_CODE_RESTRICTED=1`) — 명령 실행 도구·`WebFetch` 제거, 파일 도구 작업 디렉토리 내 제한, `bypassPermissions` 거부
+  - (v2.1.248) 크로스세션 메시징(SendMessage/ListAgents)이 Bedrock·Vertex·Foundry·텔레메트리 비활성 세션에서도 지원
+  - (v2.1.247) **`SendFeedback` 도구 신규** — 세션 중 문제 발생 시 피드백 초안 작성 후 `/feedback`에서 검토·전송(`feedbackDrafts` 설정으로 끄기)
+  - (v2.1.247) `spinnerTipsOverride`에 `{id,text,cooldownSessions,priority}`·`tipsFile`·`label`; `/claude-api cost-optimize` 신규
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.260; MCP·Hook·CLI/Plugin/Agent·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `PreModelSwitch`·`PostModelSwitch` 추가(29개)
+- `references/version-sync.md`: v2.1.260 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`·`PostModelSwitch` Hook 이벤트 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: `managedMcpServers` 관리형 설정 추가, `allowedMcpServers` 동작 변경(Breaking) 반영
+- `references/official/tools.md`: `SendFeedback` 도구 추가
+
+### Breaking Changes (Claude Code v2.1.259)
+- `allowedMcpServers`가 사용자 추가 서버만 govern — `managed-mcp.json` 리터럴 서버는 더 이상 자동 필터링 안 됨
+- 관리형 설정(managed-settings.json 등) 파싱 실패 시 조용히 미적용되는 대신 시작을 거부
+
+### Fixed (Claude Code v2.1.221~260 주요 수정)
+- `Edit`/`Write`/`Read` 권한 규칙에 괄호가 포함될 때 Bash 샌드박스가 무효로 처리해 "read-only" 폴더가 쓰기 가능해지던 버그 수정 (v2.1.260)
+- 컴파일 불가능한 패턴(닫히지 않은 `[` 등)을 가진 파일 권한 규칙 하나가 모든 파일 편집을 "Invalid regular expression" 오류로 실패시키던 버그 수정 (v2.1.260)
+- zsh `REPORTTIME`/`REPORTMEMORY`/`DIRSTACKSIZE` 할당에 숨은 명령 치환이 Bash 권한 검사에서 자동 승인되던 버그 수정 (v2.1.260)
+- `/rewind`·`--rewind-files`가 체크포인트 백업 파일이 없는데도 복원 성공으로 보고하던 버그 수정 (v2.1.260)
+- 서브에이전트가 SendMessage로 재개한 다른 에이전트의 완료 알림을 받지 못하던 버그 수정 (v2.1.260)
+- 동시 세션이 서로의 `~/.claude.json` 변경을 되돌리던 버그 수정 — workspace trust·MCP/프로젝트 상태 유실 방지 (v2.1.259)
+- managed-settings 파일·드롭인·MDM plist·HKLM 값 파싱 실패 시 조용히 무시되던 버그 수정 (v2.1.259)
+- Stop이 remote-control 세션의 백그라운드 에이전트·워크플로우를 실제로 멈추지 못하던 버그 수정 (v2.1.259)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

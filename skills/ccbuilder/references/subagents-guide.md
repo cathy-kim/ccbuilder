@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.13.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.14.0
+**Last Updated**: 2026-09-04
+**Claude Code Version**: v2.1.260+
 
 ---
 
@@ -98,6 +98,9 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
+| `experimental.cacheTtl` | `"5m"`\|`"1h"` | 서브에이전트 전용 프롬프트 캐시 TTL — 서브에이전트 TTL 설정이 없을 때 사용 (v2.1.248) | - |
+
+**`CLAUDE_CODE_SUBAGENT_MODEL_FORCE`** (v2.1.257): 설정 시 `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제 적용 — per-spawn `model` 파라미터·agent definition `model:` 오버라이드를 모두 무시.
 
 ---
 
