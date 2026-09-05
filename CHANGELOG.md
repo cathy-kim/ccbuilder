@@ -8,6 +8,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.55.0] - 2026-09-05
+
+### Added
+- **Claude Code v2.1.261 sync** (v2.1.220 → v2.1.261 콘텐츠 반영)
+  - (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 가능; `SessionStart` resume 이벤트에 세션 staleness·예상 재캐시 비용 필드 추가
+  - (v2.1.257) **Claude Fable 5.1** (`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok (캐시 읽기 $0.25/Mtok)
+  - (v2.1.257) Auto mode에 **Containment Escape 규칙** 추가 — 클라우드 메타데이터 자격증명 탈취·egress 우회·크로스테넌트 접근 자동 승인 차단
+  - (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제, per-spawn·agent 정의 오버라이드 무시
+  - (v2.1.257) `permissions.blockReadsOutsideWorkingDirectories` — 작업 디렉토리 밖 첫 파일 읽기 시 auto mode 확인 프롬프트, 이후 차단 가능
+  - (v2.1.257) `/effort`에 `s` 추가 — 현재 세션만 effort 레벨 변경 (`/model`과 동일 패턴)
+  - (v2.1.248) agent frontmatter **`experimental.cacheTtl`** (`"5m"`|`"1h"`) — 에이전트별 프롬프트 캐시 TTL
+  - (v2.1.248) **`--restricted`**/`CLAUDE_CODE_RESTRICTED=1` — 명령 실행 도구·WebFetch 제거, 파일 도구 작업 디렉토리 한정, bypassPermissions 거부, 유저/프로젝트/로컬 설정 무시
+  - (v2.1.248) Bedrock·Vertex·Foundry·텔레메트리 비활성화 환경에서 크로스 세션 메시징(`SendMessage`/`ListAgents`) 지원
+  - (v2.1.259) **`managedMcpServers`** managed setting 신규 — `.mcp.json` 동일 형식으로 조직이 모든 사용자에게 HTTP/SSE MCP 서버 배포 (실행 커맨드 항목은 스킵)
+  - (v2.1.259) **Breaking**: `allowedMcpServers`는 이제 사용자 추가 서버만 통제 — 기존 allowlist가 걸러내던 `managed-mcp.json` 서버가 업그레이드 후 로드됨, 차단하려면 `deniedMcpServers` 사용
+  - (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트에서 프롬프트 필요한 항목 자동 거부 (active permission mode는 계속 판단)
+  - (v2.1.259) `claude plugin validate --json`; `glab mr create/merge/close/reopen/note/update` 인식 — GitLab MR 풋터 배지
+  - (v2.1.260) **`/diff`** — 풀스크린 모드 옆에 uncommitted 변경사항 표시 패널
+  - (v2.1.260) `/reload-plugins` 헤드리스 세션 지원; `/advisor`(텍스트 폼) 데스크탑·Remote Control·헤드리스 지원
+  - (v2.1.261) **`/skill-doctor`** — 미사용 스킬과 컨텍스트 비용 표시, 스킬 정리 지원
+  - (v2.1.261) `bashOutputMaxChars`/`taskOutputMaxChars` 설정 — 인라인 커맨드·백그라운드 태스크 출력 상한 최대 128K로 확대
+  - (v2.1.261) `--append-subagent-system-prompt-file` — 파일에서 서브에이전트 시스템 프롬프트를 읽어 추가 (CLI 인자로 넘기기엔 너무 큰 프롬프트용)
+  - (v2.1.261) `/status`·`claude doctor`에 조직 정책 로드 실패 원인("Organization policy") 라인 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.220 → v2.1.261; MCP·Hook·Agent/CLI·Breaking Changes 섹션에 위 항목 반영, Hook 이벤트 목록에 `PreModelSwitch`/`PostModelSwitch` 추가(29개)
+- `references/version-sync.md`: v2.1.261 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PreModelSwitch`/`PostModelSwitch` Hook 이벤트 추가, `SessionStart` staleness 필드 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `experimental.cacheTtl`, `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`, `--append-subagent-system-prompt-file` 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: `managedMcpServers` managed setting, `allowedMcpServers` 시맨틱 변경(Breaking) 반영
+
+### Breaking Changes (Claude Code v2.1.257 ~ v2.1.259)
+- `defaultMode: "bypassPermissions"`가 프로젝트/로컬 `settings.json`에서 무시됨 — `"auto"`와 동일 취급, 유저·관리형 settings 또는 `--permission-mode`로 설정 필요 (v2.1.257)
+- `allowedMcpServers`는 이제 사용자가 추가한 서버만 통제 — `managed-mcp.json` 서버 차단은 `deniedMcpServers` 사용 (v2.1.259)
+- 프롬프트 단어 이동/삭제 키가 Bash 스타일로 변경(Ctrl+W, Alt+F/D 등) — `keybindingFlavor` 설정 무효화 (v2.1.261)
+
+### Fixed (Claude Code v2.1.221 ~ v2.1.261 주요 수정, 발췌)
+- Bash 샌드박스가 괄호 포함 `Edit`/`Write`/`Read` 권한 규칙을 무효 처리해 "읽기 전용" 폴더가 쓰기 가능해지던 보안 버그 수정 (v2.1.260)
+- 컴파일 불가 패턴을 가진 파일 권한 규칙(예: 닫히지 않은 `[`)이 모든 파일 편집을 실패시키던 버그 수정 (v2.1.260)
+- 동시 세션이 서로의 `~/.claude.json` 변경을 되돌려 workspace trust·MCP 상태가 유실되던 버그 수정 (v2.1.259)
+- `/rewind`가 체크포인트 백업 파일 누락 시에도 성공으로 보고하던 버그 수정 (v2.1.260)
+- Bedrock 모델 탐색·토큰 계산·AWS SSO/STS 호출이 사내 루트 CA만 OS 인증서 저장소에 있을 때 실패하던 버그 수정 (v2.1.260)
+- 세션 재개 시 병렬 도구 호출 관련 hook 출력·컨텍스트가 유실되던 버그 수정 (v2.1.261)
+
+
 ## [2.54.0] - 2026-07-26
 
 ### Added

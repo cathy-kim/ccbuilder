@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-05 (v2.1.261)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | # | Event | 용도 | 차단 가능 |
 |---|-------|------|-----------|
-| 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔; `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152) | - |
+| 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔; `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 재캐시 비용 필드 포함 (v2.1.251) | - |
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
 | 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
 | 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
@@ -37,6 +37,8 @@
 | 25 | `PermissionDenied` | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 (v2.1.88) | retry |
 | 26 | `MessageDisplay` | 어시스턴트 메시지 텍스트 변환·숨김 — 출력 transform 또는 hide 가능 (v2.1.152) | transform/hide |
 | 27 | `DirectoryAdded` | `/add-dir` 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | - |
+| 28 | `PreModelSwitch` | 모델 전환 직전 — 전환 차단/확인/주석 가능 (v2.1.251) | block/confirm |
+| 29 | `PostModelSwitch` | 모델 전환 완료 후 (v2.1.251) | - |
 
 ## Handler 타입
 

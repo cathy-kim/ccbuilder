@@ -77,6 +77,47 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.261 (2026-09-05 동기화)
+
+**새로운 기능:**
+- (v2.1.261) `/status`·`claude doctor`에 조직 정책 로드 실패 원인("Organization policy" — 예: 프록시가 엔드포인트를 통과시키지 않음) 라인 추가
+- (v2.1.261) `bashOutputMaxChars`/`taskOutputMaxChars` 설정 — 인라인 커맨드·백그라운드 태스크 출력 상한을 최대 128K 문자까지 확대
+- (v2.1.261) `--append-subagent-system-prompt-file` — 파일에서 서브에이전트 시스템 프롬프트를 읽어 추가 (CLI 인자로 넘기기엔 너무 큰 프롬프트용)
+- (v2.1.261) `/skill-doctor` 신규 — 로드된 스킬 중 미사용 스킬과 컨텍스트 비용 표시, 스킬 정리(prune) 지원
+- (v2.1.260) `/diff` 신규 — 풀스크린 모드 옆에 uncommitted 변경사항 표시 패널
+- (v2.1.260) `/cost`·상태줄 `prompt_cache` 필드에 프롬프트 캐시 미스 가능 원인(도구 정의·시스템 프롬프트 변경, TTL 초과 유휴 등) 추가
+- (v2.1.260) `/reload-plugins` 헤드리스 세션 지원; `/advisor` 텍스트 폼(`/advisor`, `/advisor <model>`, `/advisor off`) — 데스크탑·Remote Control·헤드리스 지원
+- (v2.1.259) **`managedMcpServers`** managed setting 신규 — `.mcp.json`과 동일한 항목 형식으로 조직이 모든 사용자에게 HTTP/SSE MCP 서버 배포 (실행 커맨드 지정 항목은 스킵)
+- (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트에서 프롬프트가 필요한 항목을 자동 거부 (active permission mode는 계속 다른 항목 판단)
+- (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 — 접힌 도구 요약에 `MR !N` 표시, 푸터 MR 배지 갱신
+- (v2.1.259) `claude plugin validate --json` — 머신 판독 가능한 검증 리포트
+- (v2.1.257) **Claude Fable 5.1** (`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok, 캐시 읽기 $0.25/Mtok
+- (v2.1.257) auto mode **Containment Escape 규칙** 추가 — 클라우드 메타데이터 자격증명 탈취·egress 우회·크로스테넌트 접근 자동 승인 차단
+- (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제 적용, per-spawn·agent 정의 `model` 오버라이드 무시
+- (v2.1.257) `/effort`에 `s` 추가 — 현재 세션만 effort 변경 (`/model`과 동일 패턴)
+- (v2.1.257) `permissions.blockReadsOutsideWorkingDirectories` — 작업 디렉토리 밖 첫 파일 읽기 시 auto mode 확인 프롬프트, 이후 그런 읽기를 차단하는 옵션 제공
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환을 차단·확인·주석 가능
+- (v2.1.251) `SessionStart` resume Hook에 세션 staleness·예상 재캐시 비용 필드 추가
+- (v2.1.248) agent frontmatter **`experimental.cacheTtl`** (`"5m"`|`"1h"`) — 서브에이전트 TTL 설정 미지정 시 사용되는 에이전트별 프롬프트 캐시 TTL
+- (v2.1.248) **`--restricted`**/`CLAUDE_CODE_RESTRICTED=1` — 명령 실행 도구·WebFetch 제거, 파일 도구 작업 디렉토리 한정, bypassPermissions 거부, 유저/프로젝트/로컬 설정 무시
+- (v2.1.248) Bedrock·Vertex·Foundry, 텔레메트리 비활성화 환경에서도 동일 머신 내 크로스 세션 메시징(`SendMessage`/`ListAgents`) 지원
+
+**Breaking Changes:**
+- `defaultMode: "bypassPermissions"`가 프로젝트/로컬 `settings.json`(`.claude/settings.json`, `.claude/settings.local.json`)에서 무시되고 `"auto"`와 동일하게 취급 — 유저·관리형 settings에 설정하거나 `--permission-mode` 사용 필요 (v2.1.257)
+- `allowedMcpServers`는 이제 사용자가 추가한 서버만 통제 — 기존에 allowlist가 걸러내던 `managed-mcp.json`의 리터럴 서버가 업그레이드 후 그대로 로드됨; 계속 차단하려면 `deniedMcpServers` 사용 (v2.1.259)
+- 프롬프트 입력의 단어 단위 이동/삭제 키가 Bash 스타일로 변경 (Ctrl+W: 공백까지 삭제, Alt+F/Alt+D: 단어 끝에서 정지, 구두점이 단어 구분) — `keybindingFlavor` 설정은 더 이상 효과 없음 (v2.1.261)
+
+**주요 버그 수정 (발췌):**
+- Bash 샌드박스가 괄호 포함 `Edit`/`Write`/`Read` 권한 규칙을 무효한 패턴으로 처리해 "읽기 전용" 폴더가 쓰기 가능해지던 보안 버그 수정 (v2.1.260)
+- 컴파일 불가 패턴(예: 닫히지 않은 `[`)을 가진 파일 권한 규칙 하나 때문에 모든 파일 편집이 "Invalid regular expression" 오류로 실패하던 버그 수정 (v2.1.260)
+- 동시 실행 세션들이 서로의 `~/.claude.json` 변경을 되돌려 workspace trust가 리셋되고 MCP/프로젝트 상태가 유실되던 버그 수정 (v2.1.259)
+- `/rewind`·`--rewind-files`가 체크포인트 백업 파일이 없을 때도 복원 성공으로 보고하던 버그 수정 (v2.1.260)
+- Bedrock 모델 탐색·토큰 계산·AWS SSO/STS 자격증명 호출이 사내 루트 CA가 OS 인증서 저장소에만 있을 때 "unable to get local issuer certificate"로 실패하던 버그 수정 (v2.1.260)
+- 세션 재개 시 병렬 도구 호출 주변의 hook 출력·컨텍스트가 유실되어 재개된 요청이 달라지던 버그 수정 (v2.1.261)
+- 백그라운드 에이전트를 재개할 수 없을 때 wake-up 재시도가 타이트 루프를 돌며 CPU를 과점유하던 버그 수정 (v2.1.260)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**

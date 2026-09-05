@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-09-05
+**Claude Code Version**: v2.1.261+
 
 ---
 
@@ -12,7 +12,7 @@
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
-| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152) | No | `session_id`, `agent_type` |
+| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 재캐시 비용 필드 포함 (v2.1.251) | No | `session_id`, `agent_type` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
 | **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
@@ -36,6 +36,8 @@
 | **PermissionDenied** | auto mode 분류기 거부 후 발동 — `{retry: true}` 반환 시 모델 재시도 가능 (v2.1.88) | Yes (retry) | `tool_name`, `denial_reason` |
 | **MessageDisplay** | 어시스턴트 메시지 텍스트 변환·숨김 — `hookSpecificOutput.displayText` 또는 `{"decision":"hide"}` 반환 (v2.1.152) | Yes (transform/hide) | `message`, `role` |
 | **DirectoryAdded** | `/add-dir` 실행 또는 SDK `register_repo_root` control request로 세션 중 새 작업 디렉토리 등록 시 (v2.1.219) | No | `directory` |
+| **PreModelSwitch** | 모델 전환 직전 (v2.1.251) | Yes (block/confirm) | `from_model`, `to_model` |
+| **PostModelSwitch** | 모델 전환 완료 후 — 주석(annotate) 가능 (v2.1.251) | No | `from_model`, `to_model` |
 
 **신규 공통 필드 (v2.1.69)**: 모든 Hook 이벤트에 `agent_id` (서브에이전트 ID), `agent_type` (서브에이전트·`--agent`), `worktree` (worktree 세션 정보: name, path, branch, original_repo_dir) 포함
 
@@ -52,6 +54,8 @@
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
+
+**PreModelSwitch/PostModelSwitch (v2.1.251)**: `/model` 전환·auto mode 모델 변경 등 모델 전환 이벤트를 가로채 차단·확인·주석 가능; `SessionStart` resume 이벤트에 세션 staleness·예상 재캐시 비용 필드 추가
 
 ---
 

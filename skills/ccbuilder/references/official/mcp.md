@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-07-26 (v2.1.220)
+**Last Synced**: 2026-09-05 (v2.1.261)
 
 ---
 
@@ -73,6 +73,9 @@
 - 필터: `serverName`, `serverCommand`, `serverUrl` (와일드카드 지원)
 - **차단 목록이 항상 우선**
 - **v2.1.219**: `${VAR}` 항목은 settings 파일 자체의 `env` 대신 시작 시 환경변수·managed-settings env에서 해석
+- **v2.1.259 Breaking Change**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 통제 — 기존에 allowlist가 걸러내던 `managed-mcp.json` 리터럴 서버가 업그레이드 후 그대로 로드됨; 계속 차단하려면 `deniedMcpServers` 사용
+
+**방법 3 (v2.1.259)**: `managedMcpServers` managed setting — `.mcp.json`과 동일한 항목 형식으로 조직이 모든 사용자에게 HTTP/SSE MCP 서버 배포; 실행 커맨드를 지정하는 항목은 스킵됨
 
 ## Headless 진단 (v2.1.219)
 
