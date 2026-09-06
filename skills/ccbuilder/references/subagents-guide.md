@@ -98,6 +98,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `skills` | string[] | 프리로드할 스킬 (신규) | - |
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
+| `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`), 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) | - |
 
 ---
 
@@ -181,6 +182,8 @@ Task({
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
+**v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음.
+
 ---
 
 ## 제약 사항
@@ -192,6 +195,7 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | 세션당 WebSearch 호출 | 기본 200회 (`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`, v2.1.212) |
 | Task 컨텍스트 | 200k 토큰 |
 | 중첩 | **기본 depth 3 허용** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 비활성화 (v2.1.219; v2.1.217 "기본 비허용" 대체) |
+| 모델 강제 | `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — 모든 서브에이전트에 `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델) 강제, per-spawn·정의 오버라이드 무시 (v2.1.257) |
 | Auto-compaction | 서브에이전트 자동 compact 지원 |
 
 ---
