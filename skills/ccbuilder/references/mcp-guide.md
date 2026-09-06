@@ -410,6 +410,12 @@ MAX_MCP_OUTPUT_TOKENS=50000
 - **Name-based**: 서버 이름 기반
 
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
+>
+> **Breaking (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 관리합니다. 이전에는 이 목록이 `managed-mcp.json`의 literal 서버까지 필터링했지만, 업그레이드 후 그런 서버는 필터링 없이 로드됩니다. 특정 managed 서버를 차단하려면 `deniedMcpServers`를 사용하세요.
+
+### managedMcpServers — 조직 배포 HTTP/SSE 서버 (v2.1.259 신규)
+
+`managed-mcp.json`과 별개로, `managedMcpServers` managed 설정은 모든 사용자에게 HTTP/SSE MCP 서버를 배포합니다 (`.mcp.json`과 동일한 엔트리 형식). 로컬 커맨드를 실행하는 엔트리는 이 채널로 배포할 수 없어 스킵됩니다.
 
 ---
 

@@ -77,6 +77,58 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.263 (2026-09-06 동기화)
+
+**새로운 기능:**
+- (v2.1.261) **`/skill-doctor`** 명령 — 로드된 스킬 중 미사용 스킬과 컨텍스트 비용 표시, 정리 대상 파악
+- (v2.1.261) `bashOutputMaxChars`·`taskOutputMaxChars` 설정 — 명령·백그라운드 태스크 출력을 파일 저장 전 인라인으로 받는 한도 확대(최대 128K자)
+- (v2.1.261) `--append-subagent-system-prompt-file` — 서브에이전트 시스템 프롬프트 파일에서 읽기 (커맨드라인에 담기 힘든 긴 프롬프트용)
+- (v2.1.261) `/status`·`claude doctor`에 "Organization policy" 라인 — 조직 정책 로드 실패 원인(예: 프록시가 엔드포인트 미전달) 표시
+- (v2.1.261) 위험한 `rm` 안전 프롬프트 개선 — positional parameter 대상 `rm -rf`, 이중 인용 `sh -c` 스크립트 내부도 탐지
+- (v2.1.260) `/diff` — 풀스크린 모드에서 대화 옆 패널로 미커밋 변경사항 실시간 표시
+- (v2.1.260) `/cost`·상태줄 `prompt_cache` 필드 — 캐시 미스 원인(도구 정의/시스템 프롬프트 변경, TTL 경과 등) 표시
+- (v2.1.260) `/reload-plugins` 헤드리스 세션 지원
+- (v2.1.260) `/advisor`(텍스트 폼) — 데스크탑 앱·Remote Control·헤드리스(`-p`/SDK) 세션 지원
+- (v2.1.259) **`managedMcpServers` managed 설정 신규** — 조직이 모든 사용자에게 HTTP/SSE MCP 서버 배포(.mcp.json과 동일 엔트리 형식, 커맨드 지정 항목은 스킵)
+- (v2.1.259) `--permission-prompts none` — 무인 헤드리스 호스트에서 프롬프트 필요한 모든 동작 자동 거부(활성 권한 모드는 계속 판단)
+- (v2.1.259) `glab mr create/merge/close/reopen/note/update` 인식 — GitLab MR을 `MR !N`으로 표시, 푸터 MR 배지 갱신
+- (v2.1.259) `claude plugin validate --json` — 머신 판독 가능한 검증 리포트
+- (v2.1.257) **Claude Fable 5.1** (`claude-fable-5-1`) 출시 — 신규 기본 Fable 모델, 1M 컨텍스트, $10/$50 per Mtok, 캐시 읽기 $0.25/Mtok
+- (v2.1.257) `timeFormat`/`timeZone` 설정 — 12시간·24시간·24시간 UTC·strftime 패턴으로 턴 종료 시계·트랜스크립트 타임스탬프 포맷 지정
+- (v2.1.257) auto mode Containment Escape 규칙 신규 — 클라우드 메타데이터 자격증명 탈취·egress 우회·크로스테넌트 접근이 더 이상 자동 승인되지 않음
+- (v2.1.257) `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` — `CLAUDE_CODE_SUBAGENT_MODEL`(또는 메인 모델)을 모든 서브에이전트에 강제, per-spawn·정의 오버라이드 무시
+- (v2.1.257) `/effort`에 `s` — 현재 세션 한정 effort 변경 (`/model`과 동일 패턴)
+- (v2.1.257) `permissions.blockReadsOutsideWorkingDirectories` — 작업 디렉토리 밖 첫 파일 읽기 전 확인 프롬프트(차단 옵션)
+- (v2.1.251) **`PreModelSwitch`/`PostModelSwitch` Hook 신규** — 모델 전환 차단·확인·주석 처리
+- (v2.1.251) `SessionStart` resume hook에 세션 staleness·예상 재캐싱 비용 필드 추가
+- (v2.1.251) 포그라운드 서브에이전트 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍(백그라운드는 기존대로 상태만 표시)
+- (v2.1.251) `/usage` Spend limit 바 + `rate_limits.spend_limit` 상태줄 필드; `/cost` 세션별 프롬프트 캐시 히트율·미스·재캐싱 토큰 라인
+- (v2.1.251) `claude --help`에 `attach`, `logs`, `stop`, `respawn`, `rm` 서브커맨드 노출
+- (v2.1.248) `--restricted`/`CLAUDE_CODE_RESTRICTED=1` — 명령·코드 실행 도구·WebFetch 제거(`--tools` 명시 시 제외), 파일 도구 작업 디렉토리 내 제한, `bypassPermissions` 거부, 유저/프로젝트/로컬 설정 파일 무시
+- (v2.1.248) `experimental.cacheTtl`(`"5m"`\|`"1h"`) agent frontmatter — 서브에이전트 개별 프롬프트 캐시 TTL 지정
+- (v2.1.248) 크로스세션 메시징(`SendMessage`/`ListAgents`)이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작
+- (v2.1.248) 서버 관리 설정 진단 강화 — 시작 시 로드 실패 경고, `/doctor`·`/status`에 실패 원인 표시
+- (v2.1.263, v2.1.258, v2.1.252, v2.1.250) 버그 수정 및 안정성 개선 (세부 사항 미공개)
+
+**Breaking Changes:**
+- `defaultMode: "bypassPermissions"`가 프로젝트 `.claude/settings.json`·`settings.local.json`에서 무시됨 — `"auto"`와 동일 취급, 유저/관리형 설정 또는 `--permission-mode`로만 설정 가능 (v2.1.257)
+- `allowedMcpServers`가 사용자가 추가한 서버만 관리 — 이전에 필터링되던 literal `managed-mcp.json` 서버가 업그레이드 시 필터링 없이 로드됨, 차단은 `deniedMcpServers` 사용 (v2.1.259)
+- `keybindingFlavor` 설정이 더 이상 효과 없음 — 단어 편집 키가 Bash와 동일하게 통일(Ctrl+W 공백까지 삭제, Alt+F/Alt+D 단어 끝에서 정지, 구두점이 단어 구분자) (v2.1.261)
+
+**주요 버그 수정:**
+- 동시 세션 간 `~/.claude.json` 상호 덮어쓰기로 workspace trust 리셋·MCP/프로젝트 상태 유실되던 버그 수정 — 다수 세션 동시 실행 시 안전 (v2.1.259)
+- 커스텀 명령·스킬 frontmatter `model:`이 인터랙티브 세션에서 무시되던 버그 수정 (v2.1.259)
+- `Edit`/`Write`/`Read` 권한 규칙 경로에 괄호 포함 시 무효 규칙으로 처리되거나 Bash 샌드박스에서 무시되던 버그 수정 — "읽기 전용" 폴더가 실제로는 쓰기 가능했던 문제 (v2.1.260)
+- 파일 권한 규칙 중 컴파일 불가능한 패턴(예: 닫히지 않은 `[`)이 있으면 모든 파일 편집이 "Invalid regular expression" 오류로 실패하던 버그 수정 (v2.1.260)
+- Bash 권한 검사가 zsh `REPORTTIME`/`REPORTMEMORY`/`DIRSTACKSIZE` 할당에 숨은 명령어 치환을 자동 승인하던 버그 수정 — 이제 승인 프롬프트 표시 (v2.1.260)
+- Opus 5 effort xhigh/max에서 thinking 비활성화 시 "thinking … is not supported" 오류로 요청 실패하던 버그 수정 — effort를 `high`로 전송 (v2.1.251)
+- 에이전트 팀 팀메이트의 최종 답변이 팀 리더에게 전달되지 않던 버그 수정 — idle 알림에 포함되도록 수정 (v2.1.251)
+- 플러그인이 심볼릭 링크로 선언된 컴포넌트 경로를 통해 자신의 디렉토리 밖 파일을 읽을 수 있던 보안 버그 수정 (v2.1.251)
+- 파일 도구(Read/Write/Edit)가 권한 검사 후 작업 디렉토리 내에서 심볼릭 링크로 교체된 파일을 따라가 승인 범위 밖을 읽거나 쓰던 보안 버그 수정 (v2.1.251)
+- Claude Desktop·Cowork 세션이 30일 후 사라지던 버그 수정 — 데스크탑 작성 세션은 앱에 남아있는 동안 정리 제외 (v2.1.248)
+
+---
+
 ### v2.1.220 (2026-07-26 동기화)
 
 **새로운 기능:**
