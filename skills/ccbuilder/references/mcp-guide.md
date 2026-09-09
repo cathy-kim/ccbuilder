@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-09-09
+**Claude Code Version**: v2.1.266+
 
 ---
 
@@ -18,7 +18,7 @@ MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연�
 
 | Transport | 설명 | 상태 |
 |-----------|------|------|
-| **HTTP** | HTTP 기반 (streamable-http) | **권장** |
+| **HTTP** | HTTP 기반 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE 폴백 (v2.1.265) | **권장** |
 | **SSE** | Server-Sent Events | Deprecated |
 | **Stdio** | 로컬 프로세스 (stdin/stdout) | 지원 |
 

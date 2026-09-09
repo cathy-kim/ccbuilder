@@ -8,6 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.56.0] - 2026-09-09
+
+### Added
+- **Claude Code v2.1.266 sync** (v2.1.263 → v2.1.266 콘텐츠 반영)
+  - (v2.1.266) `CLAUDE_CODE_USE_GATEWAY` 단독 설정 시 Cloud gateway 강제 로그인되어 모든 요청이 "Not signed in to the Cloud gateway" 오류로 실패하던 2.1.265 회귀 수정 — API 키·`apiKeyHelper`·커스텀 인증 헤더 병행 설정 시 정상 동작 복원
+  - (v2.1.265) `--plugin-dir`이 플러그인 폴더 하나를 가리킬 때 매니페스트 있는 각 하위 폴더 자동 로드 — 실행 중 추가/제거되는 하위 폴더도 감지
+  - (v2.1.265) 디스크 저장 도구 결과 1GB 상한 신규 — 잘림 시 대화 내 미리보기에 표시
+  - (v2.1.265) Claude Desktop·Cowork가 앱 게이트웨이로 보내는 텔레메트리에 `user.email`·`user.groups` 추가 (터미널 세션과 동일)
+  - (v2.1.265) MCP `http` 서버가 레거시 HTTP+SSE transport만 지원할 때 자동 SSE 폴백 — MCP 스펙 준수, 이전에는 연결 자체가 안 됨
+  - (v2.1.265) claude.ai 커넥터가 HTTP 401을 반환하는 서버에서 실제로는 연결됐음에도 인증 필요로 잘못 표시되던 버그 수정
+  - (v2.1.265) Windows: AppContainer·제한 토큰 샌드박스에서 Read/Write/Edit이 "symlink resolution changed after permission was checked" 오류로 전부 거부되던 버그 수정
+  - (v2.1.265) `--worktree` 대형 레포 시작 속도 개선 — 신규 worktree 병렬 체크아웃 (git 2.32+)
+  - (v2.1.265) `/workflows` 에이전트 상세 뷰 개선 — 도구 호출 상태(running/failed/done) 표시, 서브에이전트 태스크 목록 표시, Enter로 호출 입력·결과 펼치기
+  - (v2.1.265) 비대화형 세션(`-p` stream-json, Agent SDK, 클라우드 세션)에서 `cd`가 턴 간 유지되지 않던 버그 수정
+  - (v2.1.265) 포그라운드 파견 서브에이전트 재개 시 도구 목록·시스템 프롬프트가 바뀌어 prompt-cache 재사용이 깨지던 버그 수정
+  - (v2.1.265) 이전 프로세스가 도구 실행 중 종료된 뒤 재개 시 마지막 프롬프트가 재작성되지 않고 중단된 도구 호출이 interrupted로 유지되도록 수정
+  - (v2.1.265) [VSCode] 유휴 세션 자동 아카이빙(기본 14일) 설정 추가
+  - (v2.1.264) 버그 수정 및 안정성 개선 (세부 사항 미공개)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.263 → v2.1.266; MCP HTTP Transport 행에 legacy SSE 폴백 반영, Plugin·env 섹션에 `--plugin-dir` 폴더 로드·1GB 도구 결과 상한·게이트웨이 텔레메트리 반영, CLI 섹션에 v2.1.265/v2.1.266 버그 수정 요약 추가
+- `references/version-sync.md`: v2.1.266 변경사항 추적 엔트리 추가 (이번 릴리스는 대부분 버그 수정·안정성 개선이며 Breaking Change 없음)
+
+### Fixed (주요 수정, v2.1.264 - v2.1.266)
+- LLM-gateway·프록시 설정에서 `CLAUDE_CODE_USE_GATEWAY` 단독 설정 시 모든 요청이 실패하던 2.1.265 회귀 수정 (v2.1.266)
+- 플러그인 경로에 백슬래시 포함 시 macOS/Linux 심볼릭 링크 격리 검사 우회되던 보안 버그 수정 (v2.1.265)
+- 두 글자로 시작하는 플러그인 디렉토리 이름이 플러그인 루트 밖으로 잘못 거부되던 버그 수정 (v2.1.265)
+- VS Code·SDK 세션이 토큰 갱신 중 세션 종료 시 간헐적 재로그인 요구되던 버그 수정 (v2.1.265)
+- Claude Code 자체 git status/diff probe가 작업 트리 내 중첩 레포의 clean filter를 실행하던 버그 수정 (v2.1.265)
+
+
 ## [2.55.0] - 2026-09-06
 
 ### Added

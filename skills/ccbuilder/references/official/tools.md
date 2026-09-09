@@ -3,9 +3,13 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-07-23 (Claude Code v2.1.218+)
+**Last Synced**: 2026-09-09 (Claude Code v2.1.266+)
 
 ---
+
+## 도구 결과 저장 한도
+
+디스크에 저장되는 도구 결과(대용량 Bash 출력, 백그라운드 태스크 출력 등)는 **1GB 상한**이 적용됩니다. 상한 초과로 잘린 경우 대화 내 미리보기에 잘림 여부가 표시됩니다 (v2.1.265).
 
 ## Tool 전체 목록
 

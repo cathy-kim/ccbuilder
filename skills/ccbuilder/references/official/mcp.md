@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-09 (v2.1.266)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Transport | 명령어 | 상태 |
 |-----------|--------|------|
-| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http) |
+| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE 폴백 — MCP 스펙 준수, 이전에는 연결 자체가 안 됨 (v2.1.265) |
 | **SSE** | `claude mcp add --transport sse <name> <url>` | **Deprecated** |
 | **Stdio** | `claude mcp add --transport stdio <name> -- <cmd>` | 로컬 서버 |
 
@@ -58,6 +58,7 @@
 | **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 | **자동 백그라운드 전환** | 도구 호출 2분 초과 시 자동 백그라운드 이동 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값 조정/비활성화 (v2.1.212) |
+| **사인인 지연 등록** | 인증 필요한 원격 MCP 서버 — 실제 인증 시도 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
 
 ## Managed MCP (조직 관리)
 
