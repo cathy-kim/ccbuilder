@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-09-06
+**최종 동기화**: 2026-09-10
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.267 (2026-09-10 동기화)
+
+**새로운 기능:**
+- (v2.1.267) **`maxEffortLevel` 설정** 신규(top-level 또는 `modelSettings`별) — Bedrock·Vertex·Foundry 포함 모든 provider의 effort 상한 지정, 사용자는 더 낮은 레벨 선택 가능
+- (v2.1.267) `--system-prompt-snapshot off` — 매 요청마다 시스템 프롬프트를 새로 렌더링(기록된 프롬프트 재사용 대신, 프롬프트 텍스트를 반복 수정하는 작업용)
+- (v2.1.266) `CLAUDE_CODE_USE_GATEWAY` 리그레션 수정 — API key·`apiKeyHelper`·커스텀 인증 헤더와 병용 시 강제로 Cloud gateway 로그인을 요구하던 문제 해결, 단독 설정 시 다시 무시됨(2.1.265 이전 동작으로 복원)
+- (v2.1.265) `user.email`·`user.groups` — Claude apps gateway 경유 Claude Desktop·Cowork 텔레메트리에 추가(터미널 세션과 동일화)
+- (v2.1.265) `--plugin-dir`에 플러그인 폴더 지정 지원 — 매니페스트 있는 각 하위 폴더가 개별 플러그인으로 로드, 실행 중 추가/제거된 하위 폴더 자동 반영
+- (v2.1.265) 도구 결과 디스크 저장 1GB 상한 신규 — 저장된 파일이 잘렸을 때 인라인 미리보기에 표시
+
+**Breaking Changes:**
+- 없음 (버그 수정으로 v2.1.265의 `CLAUDE_CODE_USE_GATEWAY` 의도치 않은 동작 변경이 원복됨, v2.1.266)
+
+**주요 버그 수정:**
+- `effort:` frontmatter(커스텀 명령·스킬·서브에이전트)가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 (v2.1.267)
+- 마켓플레이스 엔트리 경로의 백슬래시가 fetched 마켓플레이스 containment 검사를 우회하던 보안 버그 수정(macOS/Linux) (v2.1.267)
+- Workflow `agent()` 호출이 큰 output schema를 사용할 때 auto mode에서 안전성 분류기 대신 무조건 거부되던 버그 수정 (v2.1.267)
+- MCP 서버가 재전송하거나 내장 도구가 재렌더링한 도구를 모델이 이미 로드했을 때 이전 reasoning이 유실되던 버그 수정 (v2.1.267)
+- `/model`로 모델 전환 시 모든 도구 정의를 재전송(프롬프트 캐시 미스)하던 버그 수정 — 커밋/PR attribution 텍스트가 이제 대화 노트로 전달되어 모델 변경 시에만 갱신 (v2.1.267)
+- MCP `http` 서버가 레거시 HTTP+SSE 트랜스포트만 지원할 때 연결되지 않던 버그 수정 — MCP 스펙에 따라 자동 SSE fallback (v2.1.265)
+- 사인인 필요한 원격 MCP 서버에 실제 인증 전까지 OAuth 클라이언트를 등록하지 않도록 변경 (v2.1.265)
+- Windows: AppContainer·제한된 토큰 샌드박스에서 Read/Write/Edit가 "symlink resolution changed after permission was checked" 오류로 모든 파일을 거부하던 버그 수정 (v2.1.265)
+- 플러그인 경로의 백슬래시가 심볼릭 링크 containment 검사를 우회하던 보안 버그, 이중 점(`..`)으로 시작하는 플러그인 디렉토리가 루트 밖으로 잘못 거부되던 버그 수정(macOS/Linux) (v2.1.265)
+- 5MB 초과 대형 세션 재개 시 병렬 도구 호출과 그 hook 출력이 재로드된 대화에서 누락되던 버그 수정 (v2.1.267)
+- `/compact` 등 슬래시 명령 실행 후 `-p --resume`으로 세션 재개 시 불필요한 "Continue from where you left off." 턴이 삽입되던 버그 수정 (v2.1.267)
+- `claude remote-control`이 서버 자격증명 만료(시작 약 30일 후) 시 모든 연결된 세션을 끊고 종료되던 버그 수정 — 이제 자동 재등록 후 계속 동작 (v2.1.267)
+
+---
 
 ### v2.1.263 (2026-09-06 동기화)
 

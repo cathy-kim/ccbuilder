@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.20.0
-**Last Updated**: 2026-07-26
-**Claude Code Version**: v2.1.220+
+**Version**: 2.21.0
+**Last Updated**: 2026-09-10
+**Claude Code Version**: v2.1.267+
 
 ---
 
@@ -21,6 +21,8 @@ MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연�
 | **HTTP** | HTTP 기반 (streamable-http) | **권장** |
 | **SSE** | Server-Sent Events | Deprecated |
 | **Stdio** | 로컬 프로세스 (stdin/stdout) | 지원 |
+
+> **v2.1.265 수정**: `type: "http"`로 설정했지만 레거시 HTTP+SSE 트랜스포트만 지원하는 서버가 연결되지 않던 문제 수정 — MCP 스펙에 따라 자동으로 SSE로 폴백합니다.
 
 ---
 
@@ -168,6 +170,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 > **v2.1.81 신규**: **CIMD/SEP-991 지원** — Dynamic Client Registration을 지원하지 않는 서버에 대해 Client ID Metadata Document (CIMD) 방식으로 OAuth 등록 가능. 서버가 `/.well-known/oauth-client` 엔드포인트를 노출하면 자동 처리됨.
 
 > **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
+
+> **v2.1.265 변경**: 사인인이 필요한 원격 MCP 서버에 대해, 실제로 인증을 진행하기 전까지는 OAuth 클라이언트를 등록하지 않습니다 — 불필요한 클라이언트 등록 방지.
 
 ---
 

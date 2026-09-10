@@ -8,6 +8,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.56.0] - 2026-09-10
+
+### Added
+- **Claude Code v2.1.267 sync** (v2.1.263 → v2.1.267 콘텐츠 반영)
+  - (v2.1.267) **`maxEffortLevel` 설정** 신규(top-level 또는 `modelSettings`별) — Bedrock·Vertex·Foundry 포함 모든 provider의 effort 상한 지정, 사용자는 더 낮은 레벨 선택 가능
+  - (v2.1.267) `--system-prompt-snapshot off` — 매 요청마다 시스템 프롬프트를 새로 렌더링(기록된 프롬프트 재사용 대신, 프롬프트 텍스트 반복 작업용)
+  - (v2.1.267) `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용
+  - (v2.1.267) Bash 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도
+  - (v2.1.267) 마켓플레이스 엔트리 경로의 백슬래시가 containment 검사를 우회하던 보안 버그 수정(macOS/Linux)
+  - (v2.1.266) `CLAUDE_CODE_USE_GATEWAY` 리그레션 수정 — API key·`apiKeyHelper`·커스텀 인증 헤더와 병용 시 강제 게이트웨이 로그인 요구하던 문제 해결
+  - (v2.1.265) `--plugin-dir`에 플러그인 폴더 지정 지원 — 매니페스트 있는 각 하위 폴더 로드, 세션 중 추가/제거된 하위 폴더 자동 반영
+  - (v2.1.265) 텔레메트리에 `user.email`/`user.groups` 추가(Claude apps gateway, 터미널 세션과 동일화)
+  - (v2.1.265) 도구 결과 디스크 저장 1GB 상한 — 인라인 미리보기에 트런케이션 여부 표시
+  - (v2.1.265) MCP `http` 서버가 레거시 HTTP+SSE 트랜스포트만 지원할 때 연결 실패하던 버그 수정 — 자동 SSE fallback
+  - (v2.1.265) 사인인 필요한 원격 MCP 서버에 실제 인증 전까지 OAuth 클라이언트 미등록
+  - (v2.1.265) Windows: AppContainer·제한된 토큰 샌드박스에서 Read/Write/Edit가 심볼릭 링크 재검증 실패로 모든 파일을 거부하던 버그 수정
+  - (v2.1.265) 플러그인 경로 백슬래시 containment 우회, 이중 점(`..`) 시작 플러그인 디렉토리 오거부 버그 수정(macOS/Linux)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.263 → v2.1.267; MCP·Agent 필드·Plugin·신규 도구/env 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.267 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: HTTP+SSE fallback, 원격 MCP OAuth 클라이언트 등록 지연 반영
+- `references/official/tools.md`: Bash 도구 설명 가이드 개선, Windows 심볼릭 링크 버그 수정 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `effort:` frontmatter 버그 수정, `maxEffortLevel` 설정 반영
+
+### Fixed (주요 수정, v2.1.264 - v2.1.267)
+- `CLAUDE_CODE_USE_GATEWAY` 단독 설정 시 강제 Cloud gateway 로그인을 요구하던 2.1.265 리그레션 수정 (v2.1.266)
+- MCP `http` 서버 레거시 HTTP+SSE 트랜스포트 연결 실패 수정 — 자동 SSE fallback (v2.1.265)
+- Windows AppContainer·제한된 토큰 샌드박스에서 파일 도구가 모든 파일을 거부하던 버그 수정 (v2.1.265)
+- 플러그인·마켓플레이스 경로의 백슬래시가 심볼릭 링크 containment 검사를 우회하던 보안 버그 수정 (v2.1.265, v2.1.267)
+- `effort:` frontmatter가 기본 effort 고정 모델(Opus 4.7·4.8·Fable 5)에서 무시되던 버그 수정 (v2.1.267)
+
+
 ## [2.55.0] - 2026-09-06
 
 ### Added
