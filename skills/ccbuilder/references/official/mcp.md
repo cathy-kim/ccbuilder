@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-10 (v2.1.267)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Transport | 명령어 | 상태 |
 |-----------|--------|------|
-| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http) |
+| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE fallback (v2.1.265) |
 | **SSE** | `claude mcp add --transport sse <name> <url>` | **Deprecated** |
 | **Stdio** | `claude mcp add --transport stdio <name> -- <cmd>` | 로컬 서버 |
 
@@ -49,7 +49,7 @@
 | **Resources** | `@server:protocol://path`로 참조 |
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
-| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81) |
+| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |

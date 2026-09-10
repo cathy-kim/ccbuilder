@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-10 (v2.1.267)
 
 ---
 
@@ -28,7 +28,7 @@
 | `model` | `sonnet`, `opus`, `haiku`, `inherit` |
 | `permissionMode` | `default`, `acceptEdits`, `delegate`, `dontAsk`, `bypassPermissions`, `plan` |
 | `maxTurns` | 최대 에이전트 턴 수 |
-| `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78) |
+| `effort` | 모델 effort 레벨 (`low`, `medium`, `high`) — 플러그인 배포 에이전트 (v2.1.78); Opus 4.7·4.8·Fable 5 등 기본 effort 고정 모델에서 무시되던 버그 수정 (v2.1.267) |
 | `skills` | 프리로드할 Skill (전체 내용 주입) |
 | `mcpServers` | 사용 가능 MCP 서버 |
 | `hooks` | Agent 스코프 라이프사이클 훅 |
@@ -83,3 +83,4 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **포그라운드 스트리밍 (v2.1.251+)**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control 클라이언트에 실시간 스트리밍 (백그라운드 서브에이전트는 기존대로 상태만 표시)
 - **긴 시스템 프롬프트 (v2.1.261+)**: `--append-subagent-system-prompt-file <path>` — 커맨드라인에 담기 힘든 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음
 - **모델 전환 훅 (v2.1.251+)**: `PreModelSwitch`/`PostModelSwitch` Hook으로 서브에이전트를 포함한 모델 전환을 차단·확인·주석 가능
+- **effort 상한 (v2.1.267+)**: `maxEffortLevel` 설정(top-level 또는 `modelSettings`별)으로 Bedrock·Vertex·Foundry 포함 모든 provider의 effort 상한 지정 가능 — 서브에이전트에도 적용, 사용자는 더 낮은 레벨 선택 가능
