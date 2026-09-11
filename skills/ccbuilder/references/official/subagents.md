@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-11 (v2.1.268)
 
 ---
 
@@ -58,6 +58,14 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - `name`: 팀 내 표시 이름
 - `team_name`: Agent Team 소속
 - `run_in_background`: 백그라운드 실행
+
+## Task 관리 도구 모델 제한 (v2.1.268)
+
+`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`, `TodoWrite`는 Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5에서만 기본 제공됩니다. 그 외 모델(Opus 5·Sonnet 5 등)에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`을 설정하세요.
+
+## 보안 수정 (v2.1.268)
+
+신뢰하지 않은 폴더에 동일 이름의 agent 파일이 있을 때, respawn된 in-process teammate(Agent Teams)가 그 파일의 도구·시스템 프롬프트를 가져오던 버그 수정.
 - `model`: per-invocation 모델 오버라이드 (v2.1.72 복원, e.g. `"claude-opus-4-6"`)
 
 ## 고급 기능

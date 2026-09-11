@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-11 (v2.1.268)
 
 ---
 
@@ -49,7 +49,8 @@
 | **Resources** | `@server:protocol://path`로 참조 |
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
-| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
+| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265); 로컬 콜백 포트 바인딩 불가 시 "No available ports" 실패 버그 수정 (v2.1.268) |
+| **보안** | `/mcp`·`/plugin` 서버 상세, `claude mcp list`/`get`, MCP 로그인 오류가 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 버그 수정 (v2.1.268) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |

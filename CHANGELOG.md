@@ -8,6 +8,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-11
+
+### Added
+- **Claude Code v2.1.268 sync**
+  - `claude plugin install`/`uninstall`/`update`/`enable`/`disable`에 `--json` 플래그 추가, `claude plugin list --json` 각 행에 `errorDetails`/`noteDetails` 추가
+  - `claude auth status --json` 출력에 `configDirectory` 필드 추가
+  - Claude apps gateway `pricing:` 설정 — 로그인 클라이언트가 managed settings로 동일 요금 수신, `/cost`·텔레메트리가 spend meter와 일치
+  - `gatewayInternalNetworks` managed 설정 — 관리자가 조직 자체 공인 IPv4 대역에서 Claude apps gateway `/login` 허용
+  - `claude self-hosted-runner --remove-session-state` (기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+  - 게이트웨이 `access_control.allow_cidrs` 미설정 시 시작 경고, 공인 주소발 요청 최초 수신 시 1회 경고 추가
+
+### Changed
+- **Task 도구 모델 제한**: TaskCreate/TaskUpdate/TaskList/TaskGet, TodoWrite가 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델(Opus 5·Sonnet 5 등)은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.268; MCP·Hook·Agent·Plugin·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.268 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PermissionRequest`가 `--print` 모드에서 발동하지 않던 버그, `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 per-hook `timeout` 미설정 SessionEnd Hook에 적용되지 않던 버그 수정 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: 미신뢰 폴더 동일 이름 agent 파일 도구·시스템 프롬프트 유출 버그 수정, Task 도구 모델 제한 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP OAuth 로컬 콜백 포트 바인딩 실패 버그, `${VAR}` 플레이스홀더 해석 시크릿 노출 버그 수정 반영
+- `references/official/tools.md`: WebFetch 300초 타임아웃(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정/비활성화) 반영
+
+### Fixed (주요 수정, v2.1.268)
+- 서드파티 Anthropic 호환 엔드포인트(`ANTHROPIC_BASE_URL`)에서 2.1.265부터 모든 턴이 HTTP 400으로 실패하던 버그 수정 — Artifact 도구 입력 스키마의 정규식이 해당 엔드포인트에서 거부되던 문제
+- WebFetch가 응답을 끝내지 않고 열어두는 서버에서 무한 대기하던 버그 수정 — 300초 후 실패, `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정(0이면 비활성화)
+- 신뢰하지 않은 폴더의 동일 이름 agent 파일에서 도구·시스템 프롬프트를 가져오던 respawned in-process teammate 버그 수정
+- 장기 유휴 세션의 busy loop로 인한 CPU 점유 문제, 세션 recap 중 터미널 포커스 리포트로 인한 CPU 과다 사용 수정
+- 심볼릭 링크 디렉토리(`/etc`, `/tmp`, `/var`, `/bin`)의 deny·ask 권한 규칙이 실제 경로로 우회되던 버그, `env -C`/`eval` 등 분석 불가 명령이 같은 줄에 있을 때 Read/Edit deny 규칙이 미적용되던 버그 수정
+- 플러그인·마켓플레이스 오류가 git source URL의 토큰·비밀번호 노출하던 버그, `/mcp`·`/plugin` 서버 상세·MCP 로그인 오류가 `${VAR}` 플레이스홀더 해석 시크릿 노출하던 버그 수정
+- MCP 서버 OAuth 로그인이 로컬 콜백 포트 바인딩 불가 시 "No available ports for OAuth redirect"로 실패하던 버그 수정
+- `PermissionRequest` Hook이 `--print` 모드에서 발동하지 않던 버그, `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 per-hook `timeout` 미설정 SessionEnd Hook에 적용되지 않던 버그(1.5초 후 강제 취소) 수정
+- `/compact`·auto-compact 요약이 `$` 시퀀스 포함 텍스트를 손상시키던 버그, `/compact`로 종료된 대화 재개 시 복원 노트 순서가 재개마다 달라지던 버그 수정
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added

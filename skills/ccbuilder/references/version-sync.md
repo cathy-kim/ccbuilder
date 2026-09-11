@@ -77,6 +77,41 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.268 (2026-09-11 동기화)
+
+**새로운 기능:**
+- (v2.1.268) Claude apps gateway `pricing:` 설정 — `gateway.yaml`에 지정 시 로그인된 Claude Code 클라이언트가 managed settings로 동일 요금 수신, `/cost`·텔레메트리가 spend meter와 일치
+- (v2.1.268) 게이트웨이 `access_control.allow_cidrs` 미설정 시 시작 경고, 공인 주소발 요청 최초 수신 시 1회 경고 추가
+- (v2.1.268) `gatewayInternalNetworks` managed 설정 — 관리자가 조직 자체 공인 IPv4 대역에서 Claude apps gateway `/login` 허용
+- (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+- (v2.1.268) `claude auth status --json` 출력에 `configDirectory` 필드 추가
+- (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable`에 `--json` 추가, `claude plugin list --json` 각 행에 `errorDetails`/`noteDetails` 추가
+- (v2.1.268) 게시된 아티팩트 브라우저 탭 아이콘 — Claude가 각 페이지에 맞게 선택
+
+**Breaking Changes:**
+- Task 도구(TaskCreate/Get/Update/List, TodoWrite)가 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델(Opus 5·Sonnet 5 등)에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요 (v2.1.268)
+- 일반 `WebFetch` deny/ask 규칙이 더 이상 Artifact 도구 읽기·업데이트에 적용되지 않음 — 차단·게이팅하려면 `Artifact` 규칙(또는 `WebFetch(domain:claude.ai)`) 사용 (v2.1.268)
+
+**주요 버그 수정:**
+- 서드파티 Anthropic 호환 엔드포인트(`ANTHROPIC_BASE_URL`)에서 2.1.265부터 모든 턴이 HTTP 400으로 실패하던 버그 수정 — Artifact 도구 입력 스키마 정규식이 해당 엔드포인트에서 거부되던 문제 (v2.1.268)
+- WebFetch가 응답을 끝내지 않고 열어두는 서버에서 무한 대기하던 버그 수정 — 300초 후 실패, `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정 가능(0이면 비활성화) (v2.1.268)
+- 신뢰하지 않은 폴더의 동일 이름 agent 파일에서 도구·시스템 프롬프트를 가져오던 respawned in-process teammate 버그 수정 (v2.1.268)
+- 장기 유휴 세션의 busy loop로 인한 CPU 점유 문제, 세션 recap 중 터미널 포커스 리포트로 인한 CPU 과다 사용 수정 (v2.1.268)
+- MCP 도구 호출 후 "your message came through empty" 오응답 버그 수정 (v2.1.268)
+- 심볼릭 링크 디렉토리(`/etc`, `/tmp`, `/var` macOS · `/bin` Linux)의 deny/ask 권한 규칙이 경로가 실제 위치로 주어질 때 미적용되던 버그, `env -C`/`eval` 등 분석 불가 명령이 같은 줄에 있을 때 Read/Edit deny 규칙이 미적용되던 버그 수정 (v2.1.268)
+- 플러그인·마켓플레이스 오류가 git source URL의 토큰·비밀번호를 노출하던 보안 버그 수정 (v2.1.268)
+- `/mcp`·`/plugin` 서버 상세, `claude mcp list`/`get`, MCP 로그인 오류가 MCP 설정의 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 보안 버그 수정 (v2.1.268)
+- `excludeDynamicSections` 사용 SDK 세션에서 첫 메시지가 매 요청 재렌더링되어 prompt caching·extended thinking이 세션 중간에 깨지던 버그 수정 (v2.1.268)
+- 캐시된 모델 접근 거부 정보가 stale할 때 재시작 후·Desktop Code 탭에서 모델이 제한된 것으로 잘못 표시되던 버그, 다른 Claude Code 프로세스가 stale 모델 접근 항목을 갱신하면 실행 중 세션이 조직 기본 모델로 조용히 전환되던 버그 수정 (v2.1.268)
+- 워크로드 아이덴티티 페더레이션(claude-code-action 프로필 구성)에서 프로필 공유 프로세스가 `401 … jti reused`로 실행 중 실패하던 버그 수정 (v2.1.268)
+- MCP 서버 OAuth 로그인이 로컬 콜백 포트 바인딩 불가 시 "No available ports for OAuth redirect"로 실패하던 버그 수정 (v2.1.268)
+- `/compact`·auto-compact 요약이 `$` 시퀀스 포함 텍스트를 손상시키던 버그, `/compact`로 종료된 대화 재개 시 복원 노트 순서가 재개마다 달라지던 버그 수정 (v2.1.268)
+- `PermissionRequest` Hook이 `--print` 모드에서 발동하지 않던 버그 수정 (v2.1.268)
+- `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 per-hook `timeout` 미설정 SessionEnd Hook에 적용되지 않아 1.5초 후 강제 취소되던 버그 수정 (v2.1.268)
+- `claude plugin validate`가 디렉토리명이 점 두 개로 시작하는 플러그인 경로를 잘못 거부하던 버그, 플러그인이 기본 monitors 파일이나 루트 `SKILL.md`를 확인 실패 시 조용히 건너뛰던 버그 수정 (v2.1.268)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

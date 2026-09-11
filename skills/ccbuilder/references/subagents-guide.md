@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Version**: 2.15.0
+**Last Updated**: 2026-09-11
+**Claude Code Version**: v2.1.268+
 
 ---
 
@@ -25,6 +25,10 @@
 > **v2.1.217 Breaking Change**: 서브에이전트는 **기본적으로 중첩 서브에이전트를 파견하지 않음** — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` 환경변수를 설정해야 더 깊은 중첩 허용. 동시 실행 서브에이전트 수도 기본 20개로 제한 (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`로 오버라이드).
 >
 > **v2.1.219 기본값 재변경**: 서브에이전트는 다시 기본적으로 depth 3까지 중첩 서브에이전트를 파견 가능 (v2.1.217 기본값 대체) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`로 설정하면 중첩 비활성화.
+
+> **v2.1.268 보안 수정**: 신뢰하지 않은 폴더에 동일 이름의 agent 파일이 있을 때, respawn된 in-process teammate(Agent Teams)가 그 파일의 도구·시스템 프롬프트를 가져오던 버그 수정.
+
+> **v2.1.268 Breaking Change**: Task 관리 도구(`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`, `TodoWrite`)는 이제 Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5에서만 기본 제공됩니다. Opus 5·Sonnet 5 등 그 외 모델에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`을 설정하세요.
 
 ---
 

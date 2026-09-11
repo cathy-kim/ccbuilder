@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-11 (Claude Code v2.1.268+)
 
 ---
 
@@ -47,6 +47,8 @@
 
 ### Task Management Tools
 
+> **v2.1.268**: Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5에서만 기본 제공 — 그 외 모델(Opus 5·Sonnet 5 등)은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 설정 필요
+
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `TaskCreate` | 558 | 작업 생성 | 낮음 |
@@ -67,7 +69,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `WebFetch` | 297 | URL 내용 가져오기 | 낮음 |
+| `WebFetch` | 297 | URL 내용 가져오기; 응답을 끝내지 않는 서버에서 무한 대기하던 버그 수정 — 300초 타임아웃, `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정(0이면 비활성화, v2.1.268); localhost 등 dotless 호스트 오류 메시지 개선 — curl 사용 제안 (v2.1.268) | 낮음 |
 | `WebSearch` | 331 | 웹 검색 | 낮음 |
 
 ### Special Tools
