@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-12 (Claude Code v2.1.269+)
 
 ---
 
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267) | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267); `bashEditDiffEnabled` 설정 — 파일 편집을 수행한 Bash 명령 결과에 변경된 파일 diff 추가 표시 (v2.1.269) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |

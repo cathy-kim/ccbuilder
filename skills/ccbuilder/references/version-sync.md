@@ -77,6 +77,43 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.269 (2026-09-12 동기화)
+
+**새로운 기능:**
+- (v2.1.269) **`claude plugin eval`** 신규 — 플러그인 eval 스위트를 Claude Code에 대해 실행해 채점된 재현 가능한 결과 반환(JSON + HTML 리포트), `claude plugin eval --help`
+- (v2.1.269) **`/output-style [name]`** — 출력 스타일 목록 조회·전환, Remote Control 및 클라우드·기타 헤드리스 세션 지원
+- (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집 처리 시 도구 결과에 변경된 파일 diff 추가
+- (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OpenTelemetry 메트릭·이벤트에 `vcs.*` 레포지토리 속성 태그; `OTEL_LOG_TOOL_DETAILS` 병용 시 커밋 이벤트에 `vcs.ref.head.*` 추가
+- (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+- (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향(추론 위주 대량 팬아웃용)
+- (v2.1.269) `/focus` 안내 스피너 팁 추가 — 프롬프트·한줄 작업 요약·응답만 보여주는 뷰
+- (v2.1.269) Skill 도구 "Unknown skill" 오류 개선 — bare 이름이 정확히 하나의 플러그인 스킬과 매칭될 때 전체 이름 표시
+- (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+- (v2.1.268) `claude auth status --json`에 `configDirectory` 추가; `claude plugin install/uninstall/update/enable/disable`에 `--json`, `claude plugin list --json` 행에 `errorDetails`/`noteDetails` 추가
+- (v2.1.268) Claude apps gateway `pricing:` 설정 — `/cost`·텔레메트리가 관리형 요금과 일치
+
+**Breaking Changes:**
+- 없음 — 아래 항목들은 이전에 의도치 않게 넓게 적용되던 동작을 원래 범위로 좁히는 보안·버그 수정
+
+**주요 버그 수정:**
+- 작성된 설정 소스 밖까지 적용되던 `!`로 시작하는 deny/ask 권한 규칙 버그 수정 — 이제 해당 소스 내에서만 적용, bare `!` negation은 무시 (v2.1.269)
+- attribution reminder가 CLAUDE.md·메모리 규칙의 커밋/PR attribution 비활성화 설정을 덮어쓰던 버그 수정 — 관리형 설정 값은 계속 적용 (v2.1.269)
+- 압축(compaction) 후 Claude에게 전달되는 git status가 세션 시작 시점이 아닌 현재 상태로 수정 (v2.1.269)
+- 응답이 출력 토큰 한도로 잘려 자동 재개될 때 다음 턴에서 프롬프트 캐시가 부분적으로 무효화되던 버그 수정 (v2.1.269)
+- 동기화된 플러그인 MCP 서버가 원격 세션 재개 시 연결되지 않던 버그 수정 (v2.1.269)
+- 플러그인 아카이브 추출 파일이 다른 로컬 사용자에게 읽히거나 world-writable 비트가 유지되던 보안 버그, 재추출 시 이전 파일이 남던 버그 수정 (v2.1.269)
+- `Edit()` deny 규칙·쓰기 경로 검사가 Bash `tee` 명령이 쓰는 파일에는 적용되지 않던 버그 수정 — `Bash(tee:*)` allow 규칙이 작업 디렉토리 밖 대상은 더 이상 허용하지 않음 (v2.1.269)
+- F1/F2/F4(kitty-protocol 터미널)·Delete(st)·Alt+화살표(rxvt-unicode)·Shift+구두점(WezTerm) 키 입력 회귀 수정 (2.1.247 회귀) (v2.1.269)
+- `CLAUDE_CODE_RESUME_INTERRUPTED_TURN`이 6시간 넘게 지난 API 오류 턴을 재실행하던 버그 수정 (`CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS`로 조정 가능) (v2.1.269)
+- 조직 관리형 설정으로 활성화된 플러그인이 헤드리스 세션·Claude Desktop에서 로드되지 않던 버그 수정 — 다음 세션부터 로드 (v2.1.269)
+- `ANTHROPIC_BASE_URL` 서드파티 호환 엔드포인트에서 2.1.265 이후 모든 턴이 HTTP 400으로 실패하던 버그 수정 — Artifact 도구 입력 스키마 정규식 문제 (v2.1.268)
+- WebFetch가 응답을 끝내지 않고 열어두는 서버에서 무한 대기하던 버그 수정 — 300초 후 실패(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정) (v2.1.268)
+- 장시간 유휴 세션의 바쁜 루프로 인한 지속적 높은 CPU 사용률 수정 (v2.1.268)
+- 플러그인·마켓플레이스 오류에 git 소스 URL의 토큰·비밀번호가 노출되던 버그 수정 (v2.1.268)
+- `${VAR}` 플레이스홀더로 해석된 시크릿이 `/mcp`·`/plugin` 서버 상세·`claude mcp list`/`get`·MCP 로그인 오류에 노출되던 버그 수정 (v2.1.268)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

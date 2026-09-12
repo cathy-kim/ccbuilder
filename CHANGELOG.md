@@ -8,6 +8,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-12
+
+### Added
+- **Claude Code v2.1.269 sync** (v2.1.267 → v2.1.269 콘텐츠 반영)
+  - (v2.1.269) **`claude plugin eval`** 신규 — 플러그인 eval 스위트를 Claude Code에 대해 실행해 채점된 재현 가능한 결과 반환(JSON + HTML 리포트), `claude plugin eval --help` 참조
+  - (v2.1.269) **`/output-style [name]`** — 출력 스타일 목록 조회·전환, Remote Control 및 클라우드·기타 헤드리스 세션에서도 지원
+  - (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집을 처리할 때 도구 결과에 변경된 파일의 diff 추가
+  - (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OpenTelemetry 메트릭·이벤트에 `vcs.*` 레포지토리 속성 태그, `OTEL_LOG_TOOL_DETAILS` 병용 시 커밋 이벤트에 `vcs.ref.head.*` 추가
+  - (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+  - (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향(추론 위주 대량 팬아웃용)
+  - (v2.1.269) Skill 도구 "Unknown skill" 오류 개선 — bare 이름이 정확히 하나의 플러그인 스킬과 매칭될 때 전체 이름 표시
+  - (v2.1.269) 보안: 작성된 설정 소스 밖까지 적용되던 `!`로 시작하는 deny/ask 권한 규칙 버그 수정 — 이제 해당 소스 내에서만 적용, bare `!` negation은 무시
+  - (v2.1.269) attribution reminder가 CLAUDE.md·메모리 규칙의 커밋/PR attribution 비활성화 설정을 덮어쓰던 버그 수정(관리형 설정 값은 계속 적용)
+  - (v2.1.269) 압축(compaction) 후 Claude에게 전달되는 git status가 세션 시작 시점이 아닌 현재 상태로 수정
+  - (v2.1.269) 플러그인 아카이브 추출 파일이 다른 로컬 사용자에게 읽히거나 world-writable 비트가 유지되던 보안 버그, 재추출 시 이전 파일이 남던 버그 수정
+  - (v2.1.269) F1/F2/F4(kitty-protocol 터미널), Delete(st), Alt+화살표(rxvt-unicode), Shift+구두점(WezTerm) 키 입력 회귀 수정 (2.1.247 회귀)
+  - (v2.1.268) `claude self-hosted-runner --remove-session-state`, `claude auth status --json`의 `configDirectory`, plugin install/uninstall/update/enable/disable `--json` 지원
+  - (v2.1.268) `ANTHROPIC_BASE_URL` 서드파티 호환 엔드포인트에서 2.1.265 이후 모든 턴이 HTTP 400으로 실패하던 버그 수정 (Artifact 도구 입력 스키마 정규식 문제)
+  - (v2.1.268) WebFetch 무한 hang 수정 — 300초 후 실패(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정)
+  - (v2.1.268) 장시간 유휴 세션의 바쁜 루프로 인한 지속적 높은 CPU 사용률 수정
+
+### Changed
+- `SKILL.md`: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.269; 신규 명령/도구·env·버그 수정 항목 반영
+- `references/version-sync.md`: v2.1.269 변경사항 추적 엔트리 추가
+- `references/official/tools.md`: `bashEditDiffEnabled`(Bash 도구 결과 diff) 반영, Last Synced 갱신
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added
