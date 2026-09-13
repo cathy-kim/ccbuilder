@@ -8,6 +8,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-13
+
+### Added
+- **Claude Code v2.1.270 sync** (v2.1.267 → v2.1.270 콘텐츠 반영)
+  - (v2.1.270) 세션이 오래 실행된 후 Bash 읽기 전용 git 명령이 예상치 못하게 권한을 요청하던 버그 수정 (v2.1.269 리그레션)
+  - (v2.1.269) `claude plugin eval` — 플러그인 eval suite를 Claude Code 대상 실행, 채점된 재현 가능 결과(JSON+HTML 리포트, `--help` 참고)
+  - (v2.1.269) `/output-style [name]` — 출력 스타일 목록·전환, Remote Control·클라우드·헤드리스 세션 지원
+  - (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집 처리 시 변경된 파일 diff를 도구 결과에 포함
+  - (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OTel 메트릭·이벤트에 `vcs.*` 레포 속성 태깅
+  - (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+  - (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향
+  - (v2.1.269) `/ultrareview --post` — findings 도착 즉시 PR 코멘트 직접 게시(별도 클라우드 세션 불필요)
+  - (v2.1.269) claude.ai 동기화 스킬이 클라우드 세션에서 `anthropic-skills:<name>`으로 명명(Claude Desktop과 동일)
+  - (v2.1.269) `alwaysLoad` MCP 서버가 대화 중간 연결 완료 시 다음 턴 tool-search 없이 즉시 사용 가능
+  - (v2.1.268) Claude apps gateway `pricing:`(`gateway.yaml`) 신규 — 사인인 클라이언트가 동일 요금 수신, `/cost`·텔레메트리 스펜드 미터 일치
+  - (v2.1.268) `gatewayInternalNetworks` managed 설정, `access_control.allow_cidrs` 미설정 시 게이트웨이 시작 경고
+  - (v2.1.268) `claude self-hosted-runner --remove-session-state`, `claude auth status --json`에 `configDirectory` 추가
+  - (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable` `--json` 플래그, `plugin list --json`에 `errorDetails`/`noteDetails`
+  - (v2.1.268) 퍼블리시된 아티팩트 브라우저 탭 아이콘 자동 선택
+  - (v2.1.268) MCP 서버 OAuth 로컬 콜백 포트 바인딩 실패로 로그인 안 되던 버그 수정
+  - (v2.1.268) `PermissionRequest` Hook이 `--print` 모드에서 발동하지 않던 버그 수정
+  - (v2.1.268) `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 개별 `timeout` 없는 `SessionEnd` 훅에는 미적용되던 버그 수정
+  - (v2.1.270) 동기화된 플러그인 MCP 서버가 원격 세션 재개 시 연결되지 않던 버그 수정
+  - (v2.1.270) MCP 설정 서버 URL 쿼리 파라미터 순서만 바뀌어도 재연결되던 버그 수정
+
+### Changed
+- **Breaking**: 작업 추적 도구(TaskCreate/TaskUpdate/TaskList/TaskGet, TodoWrite)가 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요 (v2.1.268)
+- **Breaking**: plain `WebFetch` deny/ask 규칙이 더 이상 Artifact 도구 읽기/업데이트에 적용되지 않음 — `Artifact` 규칙 또는 `WebFetch(domain:claude.ai)` 사용 (v2.1.268)
+- **Breaking**: `!`로 시작하는 deny/ask 권한 규칙의 적용 범위가 작성된 설정 소스로 한정, 단독 `!` negation은 무시 (v2.1.270)
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.270; MCP·Hook·Agent/CLI·Plugin·신규 명령/도구·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.270 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: OAuth 콜백 포트 바인딩 수정, `alwaysLoad` 대화 중 연결 반영, 플러그인 MCP 서버 원격 재개 수정 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: 작업 추적 도구 모델 제한(`CLAUDE_CODE_ENABLE_TODO_TOOLS`) 반영
+- `references/official/tools.md`: Bash 도구 diff(`bashEditDiffEnabled`), 작업 추적 도구 모델 제한 반영
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added

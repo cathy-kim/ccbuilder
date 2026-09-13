@@ -77,6 +77,45 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.270 (2026-09-13 동기화)
+
+**새로운 기능:**
+- (v2.1.269) `claude plugin eval` — 플러그인 eval suite를 Claude Code 대상 실행, 채점된 재현 가능 결과(JSON+HTML 리포트); `claude plugin eval --help` 참고
+- (v2.1.269) `/output-style [name]` — 출력 스타일 목록 조회·전환, Remote Control·클라우드·헤드리스 세션 포함
+- (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집을 처리할 때 변경된 파일 diff를 도구 결과에 포함
+- (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OpenTelemetry 메트릭·이벤트에 `vcs.*` 레포 속성 태깅, `OTEL_LOG_TOOL_DETAILS` 설정 시 커밋 이벤트에 `vcs.ref.head.*` 추가
+- (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+- (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향, 추론 병목 fan-out용
+- (v2.1.269) `/focus` 스피너 팁 — 프롬프트·1줄 작업 요약·응답만 보는 뷰 안내
+- (v2.1.269) `/ultrareview --post`가 findings 도착 즉시 PR 코멘트를 직접 게시(별도 클라우드 세션 시작 없이) + 코멘트 링크 출력
+- (v2.1.269) claude.ai에서 동기화된 스킬이 클라우드 세션에서 `anthropic-skills:<name>`으로 명명(Claude Desktop과 동일), 충돌 없으면 짧은 이름도 계속 동작
+- (v2.1.268) Claude apps gateway `pricing:`(`gateway.yaml`) 신규 — 사인인한 클라이언트가 managed settings로 동일 요금 수신, `/cost`·텔레메트리 스펜드 미터 일치
+- (v2.1.268) `access_control.allow_cidrs` 미설정 시 게이트웨이 시작 경고 + 공인 IP에서 최초 요청 도착 시 1회 경고
+- (v2.1.268) `gatewayInternalNetworks` managed 설정 — 조직 자체 공인 IPv4 대역에서 `/login` 허용
+- (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+- (v2.1.268) `claude auth status --json` 출력에 `configDirectory` 추가
+- (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable` `--json` 플래그, `plugin list --json` 각 행에 `errorDetails`/`noteDetails` 추가
+- (v2.1.268) 퍼블리시된 아티팩트에 브라우저 탭 아이콘 — Claude가 각 페이지에 맞게 선택
+
+**Breaking Changes:**
+- 작업 추적 도구(`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`, `TodoWrite`)가 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공 — 다른 모델에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 설정 필요 (v2.1.268)
+- plain `WebFetch` deny/ask 규칙이 더 이상 Artifact 도구 읽기/업데이트에 적용되지 않음 — 차단하려면 `Artifact` 규칙(또는 `WebFetch(domain:claude.ai)`) 사용 (v2.1.268)
+- `!`로 시작하는 deny/ask 권한 규칙의 적용 범위가 작성된 설정 소스로 한정됨 — 단독 `!` negation은 무시 (v2.1.270)
+
+**주요 버그 수정:**
+- 세션이 오래 실행된 후 Bash 읽기 전용 git 명령이 예상치 못하게 권한을 요청하던 버그 수정 (v2.1.269 리그레션) (v2.1.270)
+- 동기화된 플러그인 MCP 서버가 원격 세션 재개 시 연결되지 않던 버그 수정 (v2.1.270)
+- MCP 설정에서 서버 URL 쿼리 파라미터 순서만 바뀌어도 재연결되던 버그 수정 (v2.1.270)
+- `Edit()` deny 규칙·write-path 검사가 Bash `tee` 명령이 쓰는 파일에는 적용되지 않던 버그 수정 — `Bash(tee:*)` allow 규칙이 작업 디렉토리 밖 대상까지 허용하지 않도록 수정 (v2.1.270)
+- `alwaysLoad` MCP 서버가 대화 중간에 연결을 마쳤을 때 다음 턴에 tool-search 왕복 없이 바로 사용 가능하도록 수정 (v2.1.269)
+- MCP 서버 OAuth 로그인이 로컬 콜백 포트 범위를 바인딩하지 못해 "No available ports for OAuth redirect" 오류로 실패하던 버그 수정 (v2.1.268)
+- `PermissionRequest` Hook이 `--print` 모드에서 발동하지 않던 버그 수정 (v2.1.268)
+- `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 개별 `timeout` 없는 `SessionEnd` 훅에는 적용되지 않아 1.5초 후 강제 취소되던 버그 수정 (v2.1.268)
+- deny/ask 권한 규칙이 심볼릭 링크된 디렉토리(`/etc`, `/tmp`, `/var` macOS; `/bin` Linux)에서 경로가 실제 위치로 주어졌을 때 적용되지 않던 버그, Bash 명령이 심볼릭 링크 경로 표기의 deny 규칙을 무시하던 버그 수정 (v2.1.268)
+- 플러그인·마켓플레이스 오류 메시지가 git source URL의 토큰·비밀번호를 노출하던 버그 수정 (v2.1.268)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

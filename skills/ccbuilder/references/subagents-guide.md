@@ -276,6 +276,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `TaskList` | 전체 작업 목록 조회 |
 | `TaskGet` | 개별 작업 상세 조회 |
 
+> **v2.1.268 변경**: 이 작업 추적 도구들(`TodoWrite` 포함)은 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공됩니다. 다른 모델(예: Opus 5, Sonnet 5)에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`을 설정하세요.
+
 ---
 
 ## Breaking Changes (v2.8-2.9)

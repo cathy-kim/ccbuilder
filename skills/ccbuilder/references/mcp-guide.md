@@ -173,6 +173,10 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.265 변경**: 사인인이 필요한 원격 MCP 서버에 대해, 실제로 인증을 진행하기 전까지는 OAuth 클라이언트를 등록하지 않습니다 — 불필요한 클라이언트 등록 방지.
 
+> **v2.1.268 수정**: 로컬 콜백 포트 범위를 바인딩할 수 없을 때 OAuth 로그인이 "No available ports for OAuth redirect" 오류로 실패하던 버그 수정.
+
+> **v2.1.270 수정**: MCP 설정에서 서버 URL의 쿼리 파라미터 순서만 바뀌어도 서버가 재연결되던 버그 수정.
+
 ---
 
 ## headersHelper 다중 서버 지원 (v2.1.85 신규)
@@ -285,6 +289,10 @@ MCP 서버 설정에 `alwaysLoad: true`를 추가하면, 해당 서버의 모든
 ```
 
 > **용도**: 자주 사용하는 MCP 서버의 도구를 tool-search 없이 즉시 접근할 때 사용하세요. Tool Search가 활성화된 환경에서도 해당 서버 도구는 항상 사용 가능합니다.
+
+> **v2.1.269 수정**: 텔레메트리가 비활성화된 first-party 세션에서, `alwaysLoad` 서버가 대화 중간에 연결을 완료하면 다음 턴부터 tool-search 왕복 없이 바로 사용 가능하도록 수정.
+
+> **v2.1.270 수정**: 동기화된 플러그인 MCP 서버가 원격(Remote Control) 세션 재개 시 연결되지 않던 버그 수정.
 
 ---
 

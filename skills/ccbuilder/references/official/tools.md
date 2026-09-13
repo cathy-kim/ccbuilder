@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-13 (Claude Code v2.1.270+)
 
 ---
 
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267) | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267); `bashEditDiffEnabled` 설정 시 파일 편집을 처리한 도구 결과에 변경 diff 포함 (v2.1.269); 세션이 오래 실행된 후 읽기 전용 git 명령이 불필요하게 권한을 요청하던 버그 수정 (v2.1.270) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
@@ -55,6 +55,8 @@
 | `TaskGet` | - | 작업 상세 조회 | 낮음 |
 | `TaskOutput` | - | 백그라운드 태스크 출력 — **Deprecated** (v2.1.83): `Read`로 출력 파일 경로 직접 읽기 | 낮음 |
 | `TodoWrite` | 2,167 | 체크리스트 관리 (레거시) | 낮음 |
+
+> **v2.1.268 변경**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`는 Claude 3.x·Opus 4.0–4.7·Sonnet 4.0–4.6·Haiku 4.5에서만 기본 제공됩니다. 다른 모델에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`을 설정하세요.
 
 ### Team Tools
 
