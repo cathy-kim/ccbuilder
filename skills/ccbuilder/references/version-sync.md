@@ -77,6 +77,51 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.270 (2026-09-14 동기화)
+
+**새로운 기능:**
+- (v2.1.269) **`claude plugin eval`** 신규 — 플러그인 eval suite를 Claude Code 대상으로 실행, 점수화된 재현 가능 결과(JSON+HTML 리포트) 생성; `claude plugin eval --help` 참고
+- (v2.1.269) `/output-style [name]` — 출력 스타일 목록·전환, Remote Control·클라우드·헤드리스 세션 지원
+- (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집을 처리할 때 도구 결과에 변경 파일 diff 추가
+- (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OTel 메트릭·이벤트에 `vcs.*` 저장소 속성 태그; `OTEL_LOG_TOOL_DETAILS`와 함께 커밋 이벤트에 `vcs.ref.head.*` 추가
+- (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+- (v2.1.269) `/focus` 안내 스피너 팁 추가 — 프롬프트·한줄 요약·응답만 보는 뷰 안내
+- (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향(추론 위주 대규모 fan-out)
+- (v2.1.269) 스킬 동기화: claude.ai에서 동기화된 스킬이 클라우드 세션에서 `anthropic-skills:<name>`으로 명명(Claude Desktop과 동일); 다른 것과 충돌 없으면 bare name도 계속 동작
+- (v2.1.269) `/ultrareview --post` — 결과 도착 시 PR 코멘트를 바로 게시하고 링크 출력(별도 클라우드 세션 시작 대신)
+- (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+- (v2.1.268) `claude auth status --json`에 `configDirectory` 추가
+- (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable` `--json` 지원; `plugin list --json` 각 행에 `errorDetails`/`noteDetails` 추가
+- (v2.1.268) 게시된 아티팩트의 브라우저 탭 아이콘 — Claude가 각 페이지에 맞게 선택
+- (v2.1.268) Claude apps gateway `pricing:` 설정 — 사인인된 클라이언트에 동일 요금 전달, `/cost`·텔레메트리가 spend meter와 일치
+
+**Breaking Changes:**
+- `WebFetch` deny/ask 규칙이 Artifact 도구 읽기·업데이트에는 더 이상 적용되지 않음 — 차단하려면 `Artifact` 규칙(또는 `WebFetch(domain:claude.ai)`) 사용 (v2.1.268)
+- TaskCreate/TaskUpdate/TaskList/TaskGet·TodoWrite가 특정 모델(Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5)에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요 (v2.1.268)
+- `!`로 시작하는 deny/ask 권한 규칙이 그 규칙을 작성한 settings 소스 내에서만 적용 — 단독 `!` 네거션은 무시됨 (v2.1.269)
+
+**주요 버그 수정:**
+- 오래 실행된 세션에서 읽기 전용 git 명령이 Bash에서 예기치 않게 권한을 요청하던 리그레션 수정 (v2.1.270, v2.1.269 회귀)
+- `PermissionRequest` Hook이 `--print`(헤드리스) 모드에서 발동하지 않던 버그 수정 (v2.1.268)
+- `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 per-hook `timeout` 없는 `SessionEnd` 훅에 적용되지 않고 1.5초 만에 강제 취소되던 버그 수정 (v2.1.268)
+- 재생성된 in-process teammate가 신뢰하지 않은 폴더의 동명 agent 파일에서 도구·시스템 프롬프트를 가져오던 보안 버그 수정 (v2.1.268)
+- 플러그인·마켓플레이스 오류 메시지가 git 소스 URL의 토큰·비밀번호를 노출하던 버그 수정 (v2.1.268)
+- `/mcp`·`claude mcp list`/`get`·MCP 로그인 오류가 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 버그 수정 (v2.1.268)
+- MCP 서버 OAuth 사인인이 로컬 콜백 포트 바인딩 실패로 "No available ports for OAuth redirect" 오류를 내던 버그 수정 (v2.1.268)
+- `claude plugin validate`가 디렉토리 이름이 점 2개로 시작하는 플러그인 경로를 오거부하던 버그 수정 (v2.1.268)
+- 기본 monitors 파일·루트 `SKILL.md`가 검증 실패 시 조용히 스킵되던 버그 수정 (v2.1.268)
+- 배포 가능한 gRPC 텔레메트리 엔드포인트가 스킴 없이 설정됐을 때 managed settings 승인 다이얼로그가 수집기 이름을 표시하지 않던 버그 수정 (v2.1.268)
+- 커밋/PR attribution reminder가 CLAUDE.md·메모리 규칙을 덮어쓰던 버그 수정 — 이제 CLAUDE.md/메모리 규칙이 우선 적용(관리형 설정이 지정한 라인은 계속 적용) (v2.1.269)
+- 동기화된 플러그인 MCP 서버가 원격 세션 재개 시 연결되지 않던 버그 수정 (v2.1.269)
+- 플러그인 LSP 서버(rust-analyzer 등)가 `shutdown` 요청을 거부할 때 세션 종료 후에도 계속 실행되던 버그 수정 — `shutdown` 실패해도 `exit` 전송 (v2.1.269)
+- 세션 아카이브에서 추출된 플러그인 파일이 다른 로컬 사용자에게 읽기 가능·world-writable 비트 유지·재추출 시 이전 파일 잔존하던 보안 버그 수정 (v2.1.269)
+- 플러그인 headersHelper 동의 프롬프트가 다른 호스트로 오인될 수 있는 URL 경로를 표시하던 버그 수정 (v2.1.269)
+- CMYK JPEG 이미지가 "cannot decode" 오류로 첨부 실패하던 버그 수정 — 다른 JPEG과 동일하게 변환·리사이즈 (v2.1.269)
+- 프롬프트가 완료 후 출력 토큰 한도로 잘려 자동 재개될 때 다음 턴의 프롬프트 캐시가 부분 무효화되던 버그 수정 (v2.1.269)
+- WebFetch가 응답을 끝내지 않고 계속 열어두는 서버에서 무한 대기하던 버그 수정 — 300초 후 실패(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 오버라이드) (v2.1.268)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

@@ -2,9 +2,9 @@
 
 > Claude Code의 Memory 시스템과 Modular Rules 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.57.0
+**Last Updated**: 2026-09-14
+**Claude Code Version**: v2.1.270+
 
 ---
 
@@ -102,6 +102,8 @@ CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
 - IMPORTANT: [절대 지켜야 할 규칙]
 - YOU MUST: [필수 수행 사항]
 ```
+
+> **v2.1.269 수정**: 커밋/PR attribution 관련 CLAUDE.md·메모리 규칙(예: "Co-Authored-By 라인 넣지 말 것")이 시스템의 기본 attribution reminder에 의해 덮어써지던 버그 수정 — 이제 CLAUDE.md/메모리 규칙이 우선 적용됩니다. 단, 관리형 설정(managed settings)이 지정한 라인은 계속 적용됩니다.
 
 ### 작성 원칙
 

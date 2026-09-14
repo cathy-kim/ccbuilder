@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.55.0
-**Last Updated**: 2026-09-06
-**Claude Code Version**: v2.1.263+
+**Version**: 2.57.0
+**Last Updated**: 2026-09-14
+**Claude Code Version**: v2.1.270+
 
 ---
 
@@ -20,7 +20,7 @@
 | **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
-| **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |
+| **PermissionRequest** | 권한 다이얼로그 — `--print`(헤드리스) 모드에서 발동하지 않던 버그 수정 (v2.1.268) | Yes (allow/deny) | `permission_type` |
 | **Stop** | Claude 응답 완료 — `hookSpecificOutput.additionalContext` 반환으로 피드백 전달하며 턴 계속 가능 (hook error 레이블 없음, v2.1.163) | Yes (block) | `stop_reason`, `background_tasks`, `session_crons` (v2.1.145) |
 | **SubagentStart** | 서브에이전트 생성 | No | `subagent_type`, `prompt` |
 | **SubagentStop** | 서브에이전트 완료 — `hookSpecificOutput.additionalContext` 반환 지원 (v2.1.163) | No | `subagent_result`, `agent_id`, `agent_transcript_path`, `background_tasks`, `session_crons` (v2.1.145) |
@@ -327,7 +327,7 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **Stop hook**: `block` decision 반환 시 Claude가 계속 작업 (reason 필수)
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
-- **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능; per-hook `timeout` 필드가 없는 `SessionEnd` 훅에는 이 env var가 적용되지 않고 1.5초 만에 취소되던 버그 수정 (v2.1.268)
 
 ---
 

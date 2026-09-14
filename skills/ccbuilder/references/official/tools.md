@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-14 (Claude Code v2.1.270+)
 
 ---
 
@@ -24,7 +24,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267) | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267); `bashEditDiffEnabled` 설정 — 도구가 파일 편집을 처리할 때 결과에 변경 파일 diff 추가 (v2.1.269); 오래 실행된 세션에서 읽기 전용 git 명령이 예기치 않게 권한을 요청하던 리그레션 수정 (v2.1.270) | **높음** |
 | `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
@@ -47,6 +47,8 @@
 
 ### Task Management Tools
 
+> **v2.1.268 변경**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`는 Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5에서만 기본 제공됩니다. 그 외 모델에서 사용하려면 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 설정이 필요합니다.
+
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `TaskCreate` | 558 | 작업 생성 | 낮음 |
@@ -67,7 +69,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `WebFetch` | 297 | URL 내용 가져오기 | 낮음 |
+| `WebFetch` | 297 | URL 내용 가져오기; 응답을 끝내지 않는 서버에서 무한 대기하던 버그 수정 — 300초 후 실패, `CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 오버라이드(0=비활성화) (v2.1.268) | 낮음 |
 | `WebSearch` | 331 | 웹 검색 | 낮음 |
 
 ### Special Tools

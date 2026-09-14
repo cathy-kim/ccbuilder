@@ -8,6 +8,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-14
+
+### Added
+- **Claude Code v2.1.270 sync** (v2.1.267 → v2.1.270 콘텐츠 반영)
+  - (v2.1.269) **`claude plugin eval`** 신규 — 플러그인 eval suite를 Claude Code 대상으로 실행, 점수화된 재현 가능 결과(JSON+HTML 리포트) 생성
+  - (v2.1.269) **`/output-style [name]`** — 출력 스타일 목록·전환, Remote Control·클라우드·헤드리스 세션에서도 지원
+  - (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집을 처리할 때 결과에 변경 파일 diff 추가
+  - (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow 도구 실행당 동시 에이전트 상한 상향(추론 위주 대규모 fan-out용)
+  - (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+  - (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OpenTelemetry 메트릭·이벤트에 `vcs.*` 저장소 속성 태그
+  - (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 세션별 디렉토리 삭제
+  - (v2.1.268) `claude auth status --json`에 `configDirectory` 추가
+  - (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable`에 `--json` 지원, `plugin list --json`에 `errorDetails`/`noteDetails` 필드 추가
+  - (v2.1.268) 게시된 아티팩트의 브라우저 탭 아이콘 — Claude가 각 페이지에 맞게 선택
+  - (v2.1.268) `PermissionRequest` Hook이 `--print`(헤드리스) 모드에서 발동하지 않던 버그 수정
+  - (v2.1.268) `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`가 per-hook `timeout` 없는 `SessionEnd` 훅에 적용되지 않던 버그 수정
+  - (v2.1.268) 재생성된 in-process teammate가 신뢰하지 않은 폴더의 동명 agent 파일에서 도구·시스템 프롬프트를 가져오던 보안 버그 수정
+  - (v2.1.268) 플러그인·마켓플레이스 오류 메시지가 git 소스 URL의 토큰·비밀번호를 노출하던 버그 수정
+  - (v2.1.268) `/mcp`·`claude mcp list`/`get`·MCP 로그인 오류가 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 버그 수정
+  - (v2.1.268) MCP 서버 OAuth 사인인이 로컬 콜백 포트 바인딩 실패로 "No available ports" 오류를 내던 버그 수정
+  - (v2.1.268) `claude plugin validate`가 디렉토리 이름이 점 2개로 시작하는 플러그인 경로를 오거부하던 버그 수정
+  - (v2.1.268) 기본 monitors 파일·루트 `SKILL.md`가 검증 실패 시 조용히 스킵되던 버그 수정
+  - (v2.1.268) **Breaking**: `WebFetch` deny/ask 규칙이 Artifact 도구 읽기·업데이트에는 더 이상 적용되지 않음 — 차단하려면 `Artifact` 규칙 사용
+  - (v2.1.268) **Breaking**: TaskCreate/TaskUpdate/TaskList/TaskGet·TodoWrite가 특정 모델(Claude 3.x, Opus 4.0–4.7, Sonnet 4.0–4.6, Haiku 4.5)에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요
+  - (v2.1.269) 커밋/PR attribution reminder가 CLAUDE.md·메모리 규칙을 덮어쓰던 버그 수정 — 이제 CLAUDE.md/메모리 규칙이 우선(관리형 설정 지정 라인은 계속 적용)
+  - (v2.1.269) 동기화된 플러그인 MCP 서버가 원격 세션 재개 시 연결되지 않던 버그 수정
+  - (v2.1.269) 플러그인 LSP 서버(rust-analyzer 등)가 `shutdown` 요청 거부 시 세션 종료 후에도 남아있던 버그 수정
+  - (v2.1.269) 아카이브에서 추출된 플러그인 파일이 다른 로컬 사용자에게 읽기·world-writable로 노출되던 보안 버그 수정
+  - (v2.1.269) **Breaking**: `!`로 시작하는 deny/ask 권한 규칙이 그 규칙을 작성한 settings 소스 내에서만 적용 — 단독 `!` 네거션은 무시됨
+  - (v2.1.270) 장시간 세션에서 읽기 전용 git 명령이 Bash에서 예기치 않게 권한을 요청하던 리그레션 수정(v2.1.269 회귀)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.270; MCP·Hook·Plugin·Agent/CLI·신규 도구/env·Breaking Changes·Task Management 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.270 변경사항 추적 엔트리 추가
+- `references/hooks-guide.md`, `references/official/hooks.md`: `PermissionRequest`(--print 모드)·`SessionEnd` 타임아웃 버그 수정 반영
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP OAuth 콜백 포트 버그 수정, `${VAR}` 시크릿 노출 버그 수정 반영
+- `references/official/tools.md`: Bash 도구 `bashEditDiffEnabled`, WebFetch 타임아웃, Task Management Tools 모델 제한 반영, Last Synced 버전 갱신
+- `references/memory-rules-guide.md`: 커밋/PR attribution reminder가 CLAUDE.md/메모리 규칙을 우선하도록 수정된 내용 반영
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added

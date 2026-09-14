@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.21.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Version**: 2.57.0
+**Last Updated**: 2026-09-14
+**Claude Code Version**: v2.1.270+
 
 ---
 
@@ -172,6 +172,8 @@ claude mcp add --transport http my-server https://mcp.example.com
 > **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
 
 > **v2.1.265 변경**: 사인인이 필요한 원격 MCP 서버에 대해, 실제로 인증을 진행하기 전까지는 OAuth 클라이언트를 등록하지 않습니다 — 불필요한 클라이언트 등록 방지.
+
+> **v2.1.268 수정**: 로컬 콜백 포트 범위 바인딩에 실패해 "No available ports for OAuth redirect" 오류로 사인인이 실패하던 버그 수정. `/mcp`·`claude mcp list`/`get`·MCP 로그인 오류가 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 버그도 함께 수정.
 
 ---
 
