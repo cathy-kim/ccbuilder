@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-15 (v2.1.272)
 
 ---
 
@@ -49,7 +49,7 @@
 | **Resources** | `@server:protocol://path`로 참조 |
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
-| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
+| **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265); 클라이언트 등록 동의 거부·redirect URI 재사용·동시 쓰기 버그 수정 (v2.1.271) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
@@ -74,6 +74,7 @@
 - **차단 목록이 항상 우선**
 - **v2.1.219**: `${VAR}` 항목은 settings 파일 자체의 `env` 대신 시작 시 환경변수·managed-settings env에서 해석
 - **Breaking (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 관리 — 이전에는 이 목록으로 `managed-mcp.json`의 literal 서버까지 필터링되었으나, 업그레이드 후 그런 서버는 그대로 로드됨. 차단하려면 `deniedMcpServers`를 사용
+- **v2.1.271 수정**: `managed-mcp.json`을 읽거나 파싱할 수 없으면 파일을 무시하는 대신 MCP 배타적 제어를 유지(user·project·plugin 서버 미로드) + 시작 시 경고
 
 **방법 3**: `managedMcpServers` (v2.1.259 신규) — 조직이 모든 사용자에게 HTTP/SSE MCP 서버를 배포 (`.mcp.json`과 동일한 엔트리 형식). 커맨드를 지정하는 엔트리는 스킵됨(로컬 실행형 서버는 이 채널로 배포 불가)
 

@@ -8,6 +8,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-15
+
+### Added
+- **Claude Code v2.1.272 sync** (v2.1.267 → v2.1.272 콘텐츠 반영)
+  - (v2.1.271) **`omitClaudeMd` agent frontmatter + `--agents` JSON 신규** — 커스텀·플러그인 서브에이전트가 user·project·local CLAUDE.md 없이 실행(관리형 policy 파일은 계속 로드)
+  - (v2.1.271) auto mode 샌드박싱에서 Bash·PowerShell·Monitor에 **명령별 `allowed_domains`** — 그 명령에 필요한 호스트만 검토·허용, 나머지 거부
+  - (v2.1.271) `claude plugin install`/`update --accept-command <sha256>` — 이전 `--json` 실행이 표시한 정확한 커맨드만 승인(`-y` 대신)
+  - (v2.1.271) `modelPricing` managed 설정·게이트웨이 `pricing` 블록에 `multiplier`(1 초과~10) 지원 — 내부 마크업 청구율
+  - (v2.1.271) Remote 세션(cloud·self-hosted runner)에 fast mode 지원 추가; `/config` 풀스크린 패널 마우스 지원(휠 스크롤·클릭)
+  - (v2.1.271) `claude self-hosted-runner --drain-marker-file <path>` — SIGTERM drain 시 호스트 drain으로 서버 보고(텔레메트리)
+  - (v2.1.269) **`claude plugin eval`** — 플러그인 eval suite를 Claude Code 대상으로 실행, 채점된 재현 가능 결과 반환(JSON+HTML)
+  - (v2.1.269) **`/output-style [name]`** — output style 목록 조회·전환, 헤드리스·Remote Control·클라우드 세션 지원
+  - (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일을 수정한 명령 결과에 변경 diff 포함
+  - (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1-256) — Workflow 도구 동시 에이전트 상한 상향
+  - (v2.1.269) `/ultrareview --post`가 완료 즉시 PR 코멘트 직접 게시(별도 클라우드 세션 없이)
+  - (v2.1.269) 클라우드에서 동기화된 스킬이 `anthropic-skills:<name>`으로 명명(충돌 없으면 bare name도 동작)
+  - (v2.1.268) `WebFetch`에 300초 자동 실패 데드라인 추가(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정, 0은 비활성화) — 응답 없이 연결만 유지하는 서버 대응
+  - (v2.1.268) `--json`을 `claude plugin install`/`uninstall`/`update`/`enable`/`disable`에 추가, `plugin list --json`에 `errorDetails`/`noteDetails` 추가
+  - (v2.1.268) `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`가 Claude 3.x·Opus 4.0-4.7·Sonnet 4.0-4.6·Haiku 4.5에서만 기본 제공(그 외 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요)로 변경
+  - (v2.1.270, v2.1.272) 버그 수정 및 안정성 개선(세부 사항 미공개)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.272; MCP·Task Management·Hook·Agent 필드·CLI·Plugin·신규 도구/env·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.272 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: `managed-mcp.json` 파싱 실패 시 배타적 MCP 제어 유지, MCP OAuth 클라이언트 등록 버그 수정, MCP 도구 bare name tool search 매칭 수정 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `omitClaudeMd` frontmatter 필드, 태스크 추적 도구 모델 제한 반영
+- `references/hooks-guide.md`, `references/official/hooks.md`: hook 실행 중 스피너 피드백(경과 시간, Esc 취소), `/hooks` 메뉴 크래시 수정 반영
+- `references/official/tools.md`: `WebFetch` 데드라인, `Bash`/`PowerShell` `allowed_domains`, `Monitor` 데드라인 변경, 태스크 도구 모델 제한 반영
+
+### Breaking Changes (Claude Code v2.1.268-v2.1.271)
+- 일반 `WebFetch` deny/ask 규칙이 Artifact 도구 읽기·갱신에 더 이상 적용되지 않음 — `Artifact` 규칙 사용 (v2.1.268)
+- 태스크 추적 도구(`TaskCreate` 등·`TodoWrite`)가 특정 모델에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요 (v2.1.268)
+- Monitor 워치가 항상 데드라인 보유(최대 30분, `-p`는 10분) — 무제한 `persistent` 옵션 대체 (v2.1.271)
+- Dynamic workflow 기본 크기가 Pro 플랜에서 small로 변경, medium 가이드라인 15→10개 에이전트로 하향 (v2.1.271)
+
+### Fixed (주요 수정, v2.1.268 - v2.1.272)
+- 로컬 콜백 포트 바인딩 불가 시 MCP OAuth 사인인 실패 수정, `/mcp`·로그인 오류의 `${VAR}` 시크릿 노출 수정 (v2.1.268)
+- MCP OAuth 클라이언트 등록 처리(동의 거부·redirect URI 재사용·동시 쓰기) 버그 수정 (v2.1.271)
+- `managed-mcp.json` 파싱 실패 시 파일이 무시되던 버그 수정 — 이제 배타적 MCP 제어 유지 + 시작 경고 (v2.1.271)
+- cloud 세션이 워커 재시작 후 workflow·agent 승인 적용 시 모든 서브에이전트 도구 호출을 거부하던 버그 수정 (v2.1.271)
+- 인터랙티브 `/hooks` 메뉴가 `__proto__`·`constructor` 이름의 hook matcher로 크래시하던 버그 수정 (v2.1.271)
+- 읽기 전용 git 명령이 세션이 오래 실행된 후 불필요하게 권한을 요청하던 v2.1.269 리그레션 수정 (v2.1.270)
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added

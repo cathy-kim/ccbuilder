@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Version**: 2.15.0
+**Last Updated**: 2026-09-15
+**Claude Code Version**: v2.1.272+
 
 ---
 
@@ -99,6 +99,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
 | `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`), 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) | - |
+| `omitClaudeMd` | boolean | user·project·local CLAUDE.md 미로드(관리형 policy 파일은 계속 로드), `--agents` JSON에서도 지정 가능 (v2.1.271) | false |
 
 ---
 
@@ -182,7 +183,7 @@ Task({
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
-**v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음. **v2.1.267 수정**: `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용.
+**v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음. **v2.1.267 수정**: `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용. **v2.1.268 변경**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite` 태스크 추적 도구가 Claude 3.x·Opus 4.0-4.7·Sonnet 4.0-4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요. **v2.1.271 신규**: `omitClaudeMd` agent frontmatter + `--agents` JSON — 커스텀·플러그인 서브에이전트가 user·project·local CLAUDE.md 없이 실행(관리형 policy 파일은 계속 로드); Claude in Chrome 도구 목록에 ToolSearch가 없을 때 이를 통해 로드하라는 안내가 나오던 버그 수정; cloud 세션이 워커 재시작 후 workflow·agent 승인 적용 시 모든 서브에이전트 도구 호출을 거부하던("updatedInput … failed schema validation") 버그 수정.
 
 ---
 

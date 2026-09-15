@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-15 (v2.1.272)
 
 ---
 
@@ -93,6 +93,7 @@
 
 - **Async Hook**: 백그라운드 실행, 다음 턴에 `systemMessage` 또는 `additionalContext` 반환
 - **SessionStart 환경 변수**: `$CLAUDE_ENV_FILE`에 기록하면 세션 전체에서 사용 가능
+- **hook 실행 피드백** (v2.1.271): SessionStart·UserPromptSubmit·PreToolUse·SessionEnd hook 실행 중 스피너가 경과 시간과 함께 표시, Esc로 SessionStart hook 대기 취소 가능
 - **MCP 도구 Hook**: MCP 도구도 일반 도구와 동일하게 Hook 발동
 - **`terminalSequence`** (v2.1.141): Hook JSON 출력에 추가 가능 — 제어 터미널 없이 데스크탑 알림·창 제목·벨 신호 발송 (예: tmux 알림, 터미널 벨)
 

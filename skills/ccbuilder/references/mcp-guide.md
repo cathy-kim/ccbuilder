@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.21.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Version**: 2.22.0
+**Last Updated**: 2026-09-15
+**Claude Code Version**: v2.1.272+
 
 ---
 
@@ -172,6 +172,10 @@ claude mcp add --transport http my-server https://mcp.example.com
 > **v2.1.85 신규**: **RFC 9728 Protected Resource Metadata discovery** — MCP OAuth가 RFC 9728 표준에 따라 리소스 서버의 `/.well-known/oauth-protected-resource` 메타데이터를 조회해 인증 서버를 자동으로 탐색합니다. `authServerMetadataUrl` 수동 지정 없이도 인증 서버를 찾을 수 있습니다.
 
 > **v2.1.265 변경**: 사인인이 필요한 원격 MCP 서버에 대해, 실제로 인증을 진행하기 전까지는 OAuth 클라이언트를 등록하지 않습니다 — 불필요한 클라이언트 등록 방지.
+
+> **v2.1.268 수정**: 로컬 콜백 포트 범위를 바인딩할 수 없을 때 "No available ports for OAuth redirect" 오류로 사인인이 실패하던 버그 수정; `/mcp`·`/plugin` 서버 상세, `claude mcp list`/`get`, MCP 로그인 오류가 MCP 설정의 `${VAR}` 플레이스홀더로 해석된 시크릿을 그대로 노출하던 버그 수정.
+
+> **v2.1.271 수정**: 클라이언트 등록 처리 버그 수정 — 동의를 거부하면 새 등록이 강제되고, 다른 redirect URI용 등록이 재사용되고, 동시 쓰기로 유효한 등록이 삭제되거나 불일치 등록이 남던 문제.
 
 ---
 
@@ -416,6 +420,8 @@ MAX_MCP_OUTPUT_TOKENS=50000
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
 >
 > **Breaking (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 관리합니다. 이전에는 이 목록이 `managed-mcp.json`의 literal 서버까지 필터링했지만, 업그레이드 후 그런 서버는 필터링 없이 로드됩니다. 특정 managed 서버를 차단하려면 `deniedMcpServers`를 사용하세요.
+>
+> **v2.1.271 수정**: `managed-mcp.json`을 읽거나 파싱할 수 없을 때 이전에는 파일이 무시됐지만, 이제 MCP 배타적 제어 상태를 유지합니다 — user·project·plugin MCP 서버가 전혀 로드되지 않고, 시작 시 경고가 표시됩니다.
 
 ### managedMcpServers — 조직 배포 HTTP/SSE 서버 (v2.1.259 신규)
 

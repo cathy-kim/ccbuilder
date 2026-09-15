@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-15 (v2.1.272)
 
 ---
 
@@ -84,3 +84,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **긴 시스템 프롬프트 (v2.1.261+)**: `--append-subagent-system-prompt-file <path>` — 커맨드라인에 담기 힘든 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음
 - **모델 전환 훅 (v2.1.251+)**: `PreModelSwitch`/`PostModelSwitch` Hook으로 서브에이전트를 포함한 모델 전환을 차단·확인·주석 가능
 - **effort 상한 (v2.1.267+)**: `maxEffortLevel` 설정(top-level 또는 `modelSettings`별)으로 Bedrock·Vertex·Foundry 포함 모든 provider의 effort 상한 지정 가능 — 서브에이전트에도 적용, 사용자는 더 낮은 레벨 선택 가능
+- **`omitClaudeMd` (v2.1.271+)**: agent frontmatter 필드 + `--agents` JSON — 커스텀·플러그인 서브에이전트가 user·project·local CLAUDE.md 없이 실행(관리형 policy 파일은 계속 로드)
+- **태스크 추적 도구 모델 제한 (v2.1.268+)**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`는 Claude 3.x·Opus 4.0-4.7·Sonnet 4.0-4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요
