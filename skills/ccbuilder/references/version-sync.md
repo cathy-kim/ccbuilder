@@ -77,6 +77,54 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.272 (2026-09-15 동기화)
+
+**새로운 기능:**
+- (v2.1.271) **`omitClaudeMd` agent frontmatter + `--agents` JSON 신규** — 커스텀·플러그인 서브에이전트가 user·project·local CLAUDE.md 없이 실행, 관리형 policy 파일은 계속 로드
+- (v2.1.271) auto mode 샌드박싱에서 Bash·PowerShell·Monitor에 **명령별 `allowed_domains`** — 그 명령이 필요로 하는 호스트만 함께 검토·개별 허용, 나머지 호스트는 거부
+- (v2.1.271) 마우스 지원이 `/config` 풀스크린 패널에 추가 — 휠로 목록 스크롤, 값 클릭으로 변경, 포인터 아래 행 하이라이트
+- (v2.1.271) `claude self-hosted-runner --drain-marker-file <path>` — SIGTERM drain 시 해당 파일이 존재하면 서버에 호스트 drain으로 보고(텔레메트리 전용)
+- (v2.1.271) `claude plugin install`/`update --accept-command <sha256>` — 이전 `--json` 실행이 표시한 정확한 커맨드만 승인(`-y` 대신)
+- (v2.1.271) `modelPricing` managed 설정·Claude apps gateway `pricing` 블록에 `multiplier`(1 초과~10) 지원 — 내부 마크업 청구율용
+- (v2.1.271) Remote 세션(cloud·self-hosted runner)에 fast mode 지원 — 호스트 fast-mode 설정 또는 세션 내 `/fast`가 조직 허용 범위에서 적용
+- (v2.1.269) **`claude plugin eval`** — 플러그인의 eval suite를 Claude Code 대상으로 실행해 채점된 재현 가능한 결과 반환(JSON+HTML 리포트)
+- (v2.1.269) **`/output-style [name]`** — output style 목록 조회·전환, 헤드리스·Remote Control·클라우드 세션 포함
+- (v2.1.269) `bashEditDiffEnabled` 설정 — Bash 도구가 파일 편집을 수행한 명령 결과에 변경 diff 포함
+- (v2.1.269) `OTEL_METRICS_INCLUDE_REPOSITORY` — OpenTelemetry 메트릭·이벤트에 `vcs.*` 레포 속성 태깅; 커밋 이벤트는 `OTEL_LOG_TOOL_DETAILS`와 함께 `vcs.ref.head.*` 포함
+- (v2.1.269) `CLAUDE_CODE_GATEWAY_MODEL_DISCOVERY_TIMEOUT_MS` — LLM 게이트웨이 `/v1/models` 탐색 타임아웃 연장(기본 3초)
+- (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1-256) — Workflow 도구 실행당 동시 에이전트 상한을 추론 병목 fan-out용으로 상향
+- (v2.1.269) `/ultrareview --post`가 완료 즉시 PR 코멘트를 직접 게시(별도 클라우드 세션 시작 대신)
+- (v2.1.269) claude.ai에서 동기화된 스킬이 Claude Desktop과 동일하게 `anthropic-skills:<name>`으로 명명 — 충돌 없으면 bare name도 계속 동작
+- (v2.1.268) `WebFetch`에 300초 자동 실패 데드라인 추가 — 응답을 끝내지 않고 연결만 유지하는 서버 대응(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정, 0은 비활성화)
+- (v2.1.268) `gatewayInternalNetworks` managed 설정 — 조직의 공용 IPv4 대역에서 Claude apps gateway `/login` 허용
+- (v2.1.268) `--json`을 `claude plugin install`/`uninstall`/`update`/`enable`/`disable`에 추가, `claude plugin list --json`의 각 행에 `errorDetails`/`noteDetails` 추가
+- (v2.1.268) `configDirectory`가 `claude auth status --json` 출력에 추가
+- (v2.1.268) `claude self-hosted-runner --remove-session-state`(기본 off) — 세션 종료 시 `<base-dir>/_sessions/` 하위 세션별 디렉토리 삭제
+- (v2.1.268) Claude apps gateway `gateway.yaml`의 `pricing:` 설정 시 사인인된 Claude Code 클라이언트도 동일 요율 수신 — `/cost`·텔레메트리가 spend meter와 일치
+- (v2.1.270, v2.1.272) 버그 수정 및 안정성 개선 (세부 사항 미공개)
+
+**Breaking Changes:**
+- 일반 `WebFetch` deny/ask 규칙이 Artifact 도구 읽기·갱신에 더 이상 적용되지 않음 — 차단·게이트하려면 `Artifact` 규칙(또는 `WebFetch(domain:claude.ai)`) 사용 (v2.1.268)
+- 태스크 추적 도구(`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`)가 Claude 3.x·Opus 4.0-4.7·Sonnet 4.0-4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요 (v2.1.268)
+- Monitor 워치가 항상 데드라인을 가짐(최대 30분, `-p` 단일 프롬프트 실행은 10분) — 무제한 `persistent` 옵션 대체, 만료 시 Claude에 재설정 알림 (v2.1.271)
+- Dynamic workflow 기본 크기가 Pro 플랜에서 small로 변경, medium 가이드라인이 15개에서 10개 에이전트로 하향 (v2.1.271)
+
+**주요 버그 수정:**
+- 로컬 콜백 포트 범위를 바인딩할 수 없을 때 "No available ports for OAuth redirect" 오류로 MCP 사인인이 실패하던 버그 수정 (v2.1.268)
+- `/mcp`·`/plugin` 서버 상세, `claude mcp list`/`get`, MCP 로그인 오류가 `${VAR}` 플레이스홀더로 해석된 시크릿을 노출하던 버그 수정 (v2.1.268)
+- 플러그인·마켓플레이스 오류가 git 소스 URL의 토큰·비밀번호를 노출하던 버그 수정 (v2.1.268)
+- WebFetch가 응답을 끝내지 않고 연결만 유지하는 서버에서 무한 대기하던 버그 수정 — 300초 데드라인 적용 (v2.1.268)
+- MCP OAuth 클라이언트 등록 처리 버그 수정 — 동의 거부 시 새 등록 강제, 다른 redirect URI용 등록 재사용, 동시 쓰기로 유효한 등록 삭제·불일치 등록 잔존 문제 (v2.1.271)
+- `managed-mcp.json`을 읽거나 파싱할 수 없을 때 파일이 무시되던 버그 수정 — 이제 MCP 배타적 제어 유지(user·project·plugin 서버 미로드) + 시작 경고 (v2.1.271)
+- MCP 도구를 전체 `mcp__server__tool` 이름 대신 bare name으로 선택할 때 tool search가 매칭하지 못하던 버그 수정 (v2.1.271)
+- cloud 세션이 워커 재시작 후 workflow·agent 승인이 적용되면서 모든 서브에이전트 도구 호출을 거부("updatedInput … failed schema validation")하던 버그 수정 (v2.1.271)
+- 인터랙티브 `/hooks` 메뉴가 `__proto__`·`constructor` 같은 내장 객체 속성 이름의 hook matcher에서 크래시하던 버그 수정 (v2.1.271)
+- 조직 계정·조직·API 키 전환 후에도 캐시된 조직 정책이 재사용되던 버그, 자격증명이 세션 중 바뀔 때 시간당 체크까지 정책이 갱신되지 않던 버그 수정 (v2.1.271)
+- 조직 정책이 `ANTHROPIC_UNIX_SOCKET`으로 설정한 서드파티 로컬 프록시를 거쳐 조회·거부되던 버그 수정 — 다른 커스텀 게이트웨이와 동일하게 처리 (v2.1.271)
+- 읽기 전용 git 명령이 세션이 오래 실행된 후 불필요하게 권한을 요청하던 v2.1.269 리그레션 수정 (v2.1.270)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-15 (Claude Code v2.1.272+)
 
 ---
 
@@ -24,8 +24,8 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267) | **높음** |
-| `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84) | **높음** |
+| `Bash` | 1,067 | Shell 명령 실행; 도구 설명 가이드 개선 — 명령을 그대로 echo하지 않고 무엇을 하는지 평이한 말로 설명하도록 유도 (v2.1.267); `bashEditDiffEnabled` 설정 — 파일을 수정한 명령 결과에 변경 diff 포함 (v2.1.269); auto mode 샌드박스에서 명령별 `allowed_domains` — 그 명령에 필요한 호스트만 검토·허용, 나머지는 거부 (v2.1.271) | **높음** |
+| `PowerShell` | - | PowerShell 명령 실행 (Windows 옵트인 프리뷰, v2.1.84); auto mode 샌드박스에서 명령별 `allowed_domains` 지원 (v2.1.271) | **높음** |
 | `Task` | 1,214 | 서브에이전트 실행; `mode` 파라미터 제거(v2.1.212, deprecated) — 부모 세션 permission mode 상속 | 중간 |
 | `Skill` | 326 | Skill 호출 | 낮음 |
 
@@ -47,6 +47,8 @@
 
 ### Task Management Tools
 
+> **v2.1.268 변경**: `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`·`TodoWrite`는 Claude 3.x·Opus 4.0-4.7·Sonnet 4.0-4.6·Haiku 4.5에서만 기본 제공 — 그 외 모델은 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` 필요.
+
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `TaskCreate` | 558 | 작업 생성 | 낮음 |
@@ -67,7 +69,7 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `WebFetch` | 297 | URL 내용 가져오기 | 낮음 |
+| `WebFetch` | 297 | URL 내용 가져오기; 응답을 끝내지 않고 연결만 유지하는 서버 대응 — 300초 후 자동 실패(`CLAUDE_CODE_WEBFETCH_DEADLINE_MS`로 조정, 0은 비활성화, v2.1.268) | 낮음 |
 | `WebSearch` | 331 | 웹 검색 | 낮음 |
 
 ### Special Tools
@@ -79,6 +81,7 @@
 | `ToolSearch` | 144+690 | MCP 도구 검색/로드 | 낮음 |
 | `Sleep` | 154 | 대기 (사용자 입력 시 깨어남) | 낮음 |
 | `EndConversation` | - | 심각한 악용·탈옥 시도 세션 자체 종료 (v2.1.214, claude.ai와 동일 정책) | 낮음 |
+| `Monitor` | - | 백그라운드 스크립트 이벤트 스트리밍 (v2.1.98); 워치는 항상 데드라인 보유(최대 30분, `-p` 단일 프롬프트 실행은 10분) — 기존 무제한 `persistent` 옵션 대체, 만료 시 Claude에 재설정 알림 (v2.1.271); auto mode 샌드박스에서 명령별 `allowed_domains` 지원 (v2.1.271) | 낮음 |
 
 ---
 

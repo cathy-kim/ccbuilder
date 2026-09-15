@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.55.0
-**Last Updated**: 2026-09-06
-**Claude Code Version**: v2.1.263+
+**Version**: 2.56.0
+**Last Updated**: 2026-09-15
+**Claude Code Version**: v2.1.272+
 
 ---
 
@@ -12,7 +12,7 @@
 
 | Event | 트리거 시점 | Decision 제어 | 주요 입력 필드 |
 |-------|------------|--------------|---------------|
-| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 재캐싱 비용 필드 수신 (v2.1.251) | No | `session_id`, `agent_type` |
+| **SessionStart** | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔 (v2.1.152); `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 재캐싱 비용 필드 수신 (v2.1.251); 실행 중 스피너가 경과 시간과 함께 hook 대기 상태 표시, Esc로 대기 취소 가능 (v2.1.271) | No | `session_id`, `agent_type` |
 | **PreModelSwitch** | 모델 전환 요청 발생 시 (v2.1.251) | Yes (block/confirm) | `from_model`, `to_model` |
 | **PostModelSwitch** | 모델 전환 완료 후 — 주석·로깅용 (v2.1.251) | No | `from_model`, `to_model` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
@@ -328,6 +328,7 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **hook 실행 피드백** (v2.1.271): SessionStart·UserPromptSubmit·PreToolUse·SessionEnd hook 실행 중 스피너가 경과 시간과 함께 표시; 인터랙티브 `/hooks` 메뉴가 `__proto__`·`constructor` 같은 내장 객체 속성 이름의 hook matcher에서 크래시하던 버그 수정
 
 ---
 
