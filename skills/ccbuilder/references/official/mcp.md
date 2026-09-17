@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-17 (v2.1.274)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Transport | 명령어 | 상태 |
 |-----------|--------|------|
-| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE fallback (v2.1.265) |
+| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE fallback (v2.1.265); v2 MCP client + MCP 2026-07-28 negotiation이 이제 모든 설치본(Bedrock·Vertex·Foundry·텔레메트리 비활성화 포함)에 기본 적용 — `MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out (v2.1.274) |
 | **SSE** | `claude mcp add --transport sse <name> <url>` | **Deprecated** |
 | **Stdio** | `claude mcp add --transport stdio <name> -- <cmd>` | 로컬 서버 |
 
@@ -58,6 +58,8 @@
 | **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 | **자동 백그라운드 전환** | 도구 호출 2분 초과 시 자동 백그라운드 이동 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값 조정/비활성화 (v2.1.212) |
+| **시작 대기 시간 상한** | `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` — 첫 비대화형 턴이 연결 중인 MCP 서버를 기다리는 시간 상한, `0`=대기 안 함 (v2.1.274) |
+| **`"type": "sdk"` 스킵** | `.mcp.json`·settings·plugins·agent 파일의 `"type": "sdk"` MCP 항목은 경고와 함께 스킵 — SDK 호스트 애플리케이션만 in-process 서버 등록 가능 (v2.1.274) |
 
 ## Managed MCP (조직 관리)
 

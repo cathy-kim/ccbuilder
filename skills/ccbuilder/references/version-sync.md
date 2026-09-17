@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.274 (2026-09-17 동기화)
+
+**새로운 기능:**
+- (v2.1.274) `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` 신규 — 첫 비대화형 턴이 연결 중인 MCP 서버를 기다리는 시간 상한 지정, `0`=대기 안 함
+- (v2.1.274) Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션도 direct HTTP MCP 서버에 v2 MCP client + MCP 2026-07-28 negotiation 기본 적용 — `MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out
+- (v2.1.274) `.mcp.json`·settings·plugins·agent 파일의 `"type": "sdk"` MCP 항목은 경고와 함께 스킵 — SDK 호스트 애플리케이션만 in-process 서버 등록 가능
+- (v2.1.274) 풀스크린 모드에서 접힌 teammate·agent 메시지 클릭-확장 지원
+- (v2.1.271) `omitClaudeMd` agent frontmatter·`--agents` JSON 신규 — 커스텀·플러그인 서브에이전트가 user/project/local CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드)
+
+**Breaking Changes:**
+- 없음
+
+**주요 버그 수정:**
+- MCP `http` 서버가 레거시 HTTP+SSE 트랜스포트만 지원하며 첫 응답을 422/4xx로 반환할 때 연결 실패하던 버그 수정 (v2.1.274)
+- Streamable HTTP MCP 도구 호출이 더 긴 per-server `timeout` 설정에도 약 5분 후 타임아웃되던 버그 수정 (v2.1.274)
+- MCP 서버가 `listChanged` 선언 없이 list-changed 알림을 보낼 때 MCP 프롬프트·리소스가 갱신되지 않던 버그 수정 (v2.1.274)
+- MCP 도구 호출이 403 insufficient_scope로 거부될 때 만료된 로그인으로 잘못 보고되던 버그 수정 — 누락된 권한 명시 + `/mcp` 재인증 안내 (v2.1.274)
+- Stop 프롬프트 훅이 대화의 매 블록마다 전체 프롬프트를 재전송하던 문제 수정 — 반복 블록은 500자 라벨로 조건 표시 (v2.1.274)
+- "unexpected tool_use_id" 400 오류로 세션이 무한 재시도에 걸리던 버그 수정 — 손상된 트랜스크립트 자가 복구, 복구 불가 시 `/rewind` 힌트와 함께 오류 표시 (v2.1.274)
+- 조직 정책 `allowManagedMcpServersOnly`, `deniedMcpServers`, `disableClaudeAiConnectors`가 MDM/managed-settings.json과 서버 관리형 설정이 동시에 있을 때 무시되던 버그 수정 (v2.1.273)
+- 서브에이전트·백그라운드 에이전트가 최종 스트리밍 응답에 토큰 사용량이나 모델 id가 없을 때 실패로 잘못 보고되며 결과가 전달되지 않던 버그 수정 (v2.1.273)
+
+---
+
 ### v2.1.267 (2026-09-10 동기화)
 
 **새로운 기능:**

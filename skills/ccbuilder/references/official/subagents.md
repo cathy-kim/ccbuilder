@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-17 (v2.1.274)
 
 ---
 
@@ -35,6 +35,7 @@
 | `memory` | 영속 메모리 범위 (`user`, `project`, `local`) |
 | `initialPrompt` | 에이전트 첫 턴 자동 제출 내용 (v2.1.83) |
 | `experimental.cacheTtl` | 서브에이전트 프롬프트 캐시 TTL (`"5m"`\|`"1h"`) — 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) |
+| `omitClaudeMd` | 커스텀·플러그인 서브에이전트가 user/project/local CLAUDE.md 없이 실행 (관리형 정책 파일은 계속 로드) — `--agents` JSON에도 지정 가능 (v2.1.271) |
 
 ## 파일 위치 & 우선순위
 

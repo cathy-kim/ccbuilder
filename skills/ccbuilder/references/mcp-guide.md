@@ -319,6 +319,34 @@ CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=0       # 비활성화
 
 ---
 
+## CLAUDE_CODE_MCP_STARTUP_WAIT_MS — 시작 대기 시간 상한 (v2.1.274 신규)
+
+첫 비대화형 턴(`-p`)이 연결 중인 MCP 서버를 얼마나 기다릴지 상한을 지정합니다.
+
+```bash
+CLAUDE_CODE_MCP_STARTUP_WAIT_MS=0      # 대기 안 함 — 서버는 이후 턴에 연결
+CLAUDE_CODE_MCP_STARTUP_WAIT_MS=10000  # 최대 10초 대기
+```
+
+> **용도**: 헤드리스/CI 파이프라인에서 느린 MCP 서버 때문에 첫 턴이 지연되는 것을 방지합니다.
+
+---
+
+## v2 MCP Client 기본 적용 확대 (v2.1.274 변경)
+
+Bedrock·Vertex·Foundry·텔레메트리 비활성화 설치본도 direct HTTP MCP 서버에 v2 MCP client와 MCP 2026-07-28 negotiation을 기본 사용하도록 변경(다른 설치본은 기존에 이미 적용됨).
+
+```bash
+MCP_SDK_GENERATION=v1              # v1 클라이언트로 되돌리기
+MCP_PROTOCOL_NEGOTIATION=legacy    # 레거시 negotiation으로 되돌리기
+```
+
+## "type": "sdk" MCP 항목 스킵 (v2.1.274 변경)
+
+`.mcp.json`, settings, plugins, agent 파일에 `"type": "sdk"`로 선언된 MCP 항목은 이제 경고와 함께 스킵됩니다. SDK 기반 in-process 서버는 SDK를 사용하는 호스트 애플리케이션에서만 등록할 수 있습니다.
+
+---
+
 ## Tool Search
 
 MCP 도구가 전체의 10% 이상일 때 자동 활성화됩니다.

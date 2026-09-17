@@ -8,6 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-17
+
+### Added
+- **Claude Code v2.1.274 sync** (v2.1.267 → v2.1.274 콘텐츠 반영)
+  - (v2.1.274) `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` 신규 — 첫 비대화형 턴이 연결 중인 MCP 서버를 기다리는 시간 상한 지정(`0`=대기 안 함)
+  - (v2.1.274) Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션의 direct HTTP MCP 서버에도 v2 MCP client + MCP 2026-07-28 negotiation 기본 적용(`MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out)
+  - (v2.1.274) `.mcp.json`·settings·plugins·agent 파일의 `"type": "sdk"` MCP 항목은 경고와 함께 스킵 — SDK 호스트 애플리케이션만 in-process 서버 등록 가능
+  - (v2.1.274) MCP 서버가 `http`로 설정되었지만 레거시 HTTP+SSE만 지원해 422/4xx로 첫 응답할 때 연결 실패하던 버그 수정
+  - (v2.1.274) Streamable HTTP MCP 도구 호출이 더 긴 per-server `timeout` 설정에도 약 5분 후 타임아웃되던 버그 수정
+  - (v2.1.274) MCP 서버가 `listChanged` 선언 없이 list-changed 알림을 보낼 때 MCP 프롬프트·리소스가 갱신되지 않던 버그 수정
+  - (v2.1.274) MCP 도구 호출이 403 insufficient_scope로 거부될 때 만료된 로그인으로 잘못 보고되던 버그 수정 — 이제 누락된 권한을 명시하고 `/mcp` 재인증 안내
+  - (v2.1.271) `omitClaudeMd` agent frontmatter·`--agents` JSON 신규 — 커스텀·플러그인 서브에이전트가 user/project/local CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드)
+  - (v2.1.274) Stop 프롬프트 훅이 대화의 매 블록마다 전체 프롬프트를 재전송하던 문제 수정 — 반복 블록은 이제 500자 라벨로 조건 표시
+  - (v2.1.273) 조직 정책 `allowManagedMcpServersOnly`, `deniedMcpServers`, `disableClaudeAiConnectors`가 MDM/managed-settings.json과 서버 관리형 설정이 동시에 있을 때 무시되던 버그 수정
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.274; MCP·Agent 필드 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.274 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP_CODE_MCP_STARTUP_WAIT_MS, v2 MCP client 기본 적용 확대, `"type": "sdk"` 항목 스킵 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `omitClaudeMd` frontmatter 옵션 반영
+
+### Fixed (주요 수정, v2.1.268 - v2.1.274)
+- MCP `http` 서버가 레거시 HTTP+SSE 트랜스포트에서 4xx로 첫 응답할 때 연결 실패하던 버그 수정 (v2.1.274)
+- Streamable HTTP MCP 도구 호출 약 5분 타임아웃 버그 수정 (v2.1.274)
+- MCP 403 insufficient_scope 오류가 만료된 로그인으로 잘못 보고되던 버그 수정 (v2.1.274)
+- 조직 관리형 MCP 설정(`allowManagedMcpServersOnly` 등)이 무시되던 버그 수정 (v2.1.273)
+
+
 ## [2.56.0] - 2026-09-10
 
 ### Added
