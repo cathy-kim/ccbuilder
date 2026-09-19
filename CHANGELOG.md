@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-19
+
+### Changed
+- Claude Code compatibility updated: v2.1.267 → v2.1.278
+- Note: no changelog diff was available for this sync run (empty upstream extract), so content sections (SKILL.md 핵심 변경 사항, version-sync.md, reference guides) were left unchanged — manual review recommended to confirm whether v2.1.268–v2.1.278 introduced documentation-relevant changes
+
 ## [2.56.0] - 2026-09-10
 
 ### Added
