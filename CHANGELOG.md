@@ -8,6 +8,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.57.0] - 2026-09-20
+
+### Added
+- **Claude Code v2.1.278 sync** (v2.1.267 → v2.1.278 콘텐츠 반영)
+  - (v2.1.278) Auto mode가 API·Enterprise·Bedrock·Vertex·Foundry·게이트웨이에서 서버 사이드 분류기 기본 사용으로 전환 — 분류기 오버헤드 과금 없음, `CLAUDE_CODE_AUTO_MODE_SERVER=0`으로 Bedrock·Vertex·Foundry·게이트웨이 옵트아웃, 과금 폴백 시 경고 표시
+  - (v2.1.278) `/status`에 "Auto mode server" 행 추가 — 세션 auto mode 분류기의 서버 실행 여부 표시
+  - (v2.1.277) **AGENTS.md 지원** — CLAUDE.md 없는 프로젝트는 AGENTS.md를 대신 읽음, `/config` → "Project instructions"에서 변경(Bedrock·Vertex·Foundry 미지원)
+  - (v2.1.277) **`TaskOutput` 도구 완전 제거** — 백그라운드 태스크 출력은 `Read`로 파일 읽기, `taskOutputMaxChars` 설정·`TASK_MAX_OUTPUT_LENGTH` env var 더 이상 효과 없음
+  - (v2.1.277) 서브에이전트 결과가 "subagent output" 헤더로 구분되어 메인 에이전트에 전달 — 서브에이전트 텍스트가 세션 자체 지시로 오인되지 못하게 하는 프롬프트 인젝션 방어
+  - (v2.1.277) Bedrock·Vertex·Foundry에서 워크플로우 스크립트의 계산된 `agent()` 프롬프트가 "script-authored text"로 명시되어 안전 분류기 오판 방지
+  - (v2.1.275) npm 소스 플러그인이 `npm pack --ignore-scripts`로 받아지고 무결성 검증됨 — 패키지 install 스크립트 실행 차단(보안 강화)
+  - (v2.1.274) Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션의 direct HTTP MCP 서버에 v2 MCP client + 2026-07-28 프로토콜 협상 기본 적용 — opt out: `MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy`
+  - (v2.1.274) `"type": "sdk"` MCP 엔트리는 경고와 함께 스킵 — SDK 호스트 앱만 in-process 서버 등록 가능
+  - (v2.1.274) `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` 신규 — 첫 non-interactive 턴의 MCP 서버 연결 대기 시간 상한 지정
+  - (v2.1.271) `omitClaudeMd` agent frontmatter·`--agents` JSON 필드 신규 — 커스텀·플러그인 서브에이전트가 CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드)
+  - (v2.1.271) `--accept-command <sha256>` — `claude plugin install`/`update`에서 이전 `--json` 실행이 표시한 정확한 커맨드만 승인
+  - (v2.1.271) Dynamic workflow 기본 크기 가이드라인 축소 — Pro 플랜 small, medium 권장 상한 15→10개 에이전트
+  - (v2.1.269) `claude plugin eval` 신규 — 플러그인 eval suite 실행 후 JSON+HTML 리포트
+  - (v2.1.269) `/output-style [name]` — Remote Control·클라우드·헤드리스 세션에서도 출력 스타일 목록·전환 지원
+  - (v2.1.269) `CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS`(1–256) — Workflow tool 실행당 동시 에이전트 한도 상향
+  - (v2.1.268) `claude auth status --json`에 `configDirectory` 필드 추가
+  - (v2.1.268) `claude plugin install`/`uninstall`/`update`/`enable`/`disable` `--json` 지원, `claude plugin list --json`에 `errorDetails`/`noteDetails` 추가
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.267 → v2.1.278; MCP·Memory·Agent 필드·CLI·Plugin·신규 도구/env·Agent(서브에이전트)·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.278 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP v2 client 기본화, `"type": "sdk"` 엔트리 스킵 반영
+- `references/subagents-guide.md`, `references/official/subagents.md`: `omitClaudeMd` frontmatter 필드 반영
+- `references/memory-rules-guide.md`: AGENTS.md 폴백 지원 반영
+- `references/official/tools.md`: `TaskOutput` 도구 상태를 Deprecated에서 완전 제거로 갱신
+
+### Fixed (주요 수정, v2.1.268 - v2.1.277)
+- MCP 서버가 `listChanged` 미선언 상태로 list-changed 알림을 보낼 때 프롬프트·리소스가 갱신되지 않던 버그 수정 (v2.1.274)
+- MCP 도구 호출이 403 insufficient_scope로 거부될 때 만료 로그인으로 오표시되던 버그 수정 — 누락 권한 명시 + `/mcp` 재인증 안내 (v2.1.274)
+- 대화가 "unexpected tool_use_id" 400 오류를 계속 재시도하며 멈추던 버그 수정 — 손상된 트랜스크립트 자가 복구, 실패 시 `/rewind` 안내와 함께 명확한 오류 표시 (v2.1.277)
+- `claude -p`/Agent SDK 세션이 내부 오류로 결과 없이 멈추던 버그 수정 — 이제 오류를 보고하고 exit code 1로 종료 (v2.1.277)
+
 ## [2.56.0] - 2026-09-10
 
 ### Added

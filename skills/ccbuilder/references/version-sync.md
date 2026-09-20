@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-09-10
+**최종 동기화**: 2026-09-20
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,39 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.278 (2026-09-20 동기화)
+
+**새로운 기능:**
+- (v2.1.278) Auto mode가 API·Enterprise·Bedrock·Vertex·Foundry·게이트웨이에서 서버 사이드 분류기를 기본 사용 — 분류기 오버헤드 과금 없음; `/status`에 "Auto mode server" 행 추가
+- (v2.1.277) **AGENTS.md 지원** — CLAUDE.md 없는 프로젝트는 AGENTS.md를 대신 읽음(`/config` → "Project instructions"에서 변경, Bedrock·Vertex·Foundry 미지원)
+- (v2.1.275) 신규 sign-in 계정 확인, send-now 키(ctrl+enter), claude.ai 스킬·플러그인 동기화(`syncClaudeAiSkills`/`syncClaudeAiPlugins`로 옵트아웃), `/plugin install <plugin> --marketplace <source>`
+- (v2.1.274) `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` 신규 — 첫 non-interactive 턴의 MCP 서버 연결 대기 시간 상한
+- (v2.1.271) `omitClaudeMd` agent frontmatter·`--agents` JSON 필드 신규 — 서브에이전트가 CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드)
+- (v2.1.271) `--accept-command <sha256>` — `claude plugin install`/`update`에서 이전 `--json` 실행이 표시한 정확한 커맨드만 승인
+- (v2.1.269) `claude plugin eval` 신규 — 플러그인 eval suite 실행 후 JSON+HTML 리포트
+- (v2.1.269) `/output-style [name]` — Remote Control·클라우드·헤드리스 세션 지원
+- (v2.1.268) `claude auth status --json`에 `configDirectory` 추가; 플러그인 CLI 서브커맨드에 `--json` 지원
+
+**Changed (기본값·과금 변경):**
+- Auto mode 서버 사이드 분류기 기본화(API·Enterprise·Bedrock·Vertex·Foundry·게이트웨이) — opt out: `CLAUDE_CODE_AUTO_MODE_SERVER=0`(Bedrock·Vertex·Foundry·게이트웨이만) (v2.1.278)
+- Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션의 direct HTTP MCP 서버 — v2 MCP client + 2026-07-28 프로토콜 협상 기본화, opt out: `MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy` (v2.1.274)
+- `.mcp.json`·설정·플러그인·agent 파일의 `"type": "sdk"` MCP 엔트리 — 경고와 함께 스킵(SDK 호스트 앱만 등록 가능) (v2.1.274)
+- npm 소스 플러그인 — `npm pack --ignore-scripts`로 받아지고 무결성 검증(패키지 install 스크립트 실행 차단) (v2.1.275)
+- 서브에이전트 결과가 "subagent output" 헤더로 구분되어 메인 에이전트에 전달 — 프롬프트 인젝션 방어 (v2.1.277)
+- Dynamic workflow 기본 크기 가이드라인 축소 — Pro 플랜 small, medium 권장 상한 15→10개 에이전트 (v2.1.271)
+
+**Breaking Changes:**
+- **`TaskOutput` 도구 완전 제거** — `Read`로 출력 파일 읽기, `taskOutputMaxChars` 설정·`TASK_MAX_OUTPUT_LENGTH` env var 무효화 (v2.1.277)
+
+**주요 버그 수정:**
+- 대화가 "unexpected tool_use_id" 400 오류를 계속 재시도하며 멈추던 버그 수정 — 손상된 트랜스크립트 자가 복구, 실패 시 `/rewind` 안내 (v2.1.277)
+- `claude -p`/Agent SDK 세션이 내부 오류로 결과 없이 멈추던 버그 수정 — 오류 보고 후 exit code 1 종료 (v2.1.277)
+- MCP 서버가 `listChanged` 미선언 상태로 list-changed 알림을 보낼 때 프롬프트·리소스가 갱신되지 않던 버그 수정 (v2.1.274)
+- MCP 도구 호출이 403 insufficient_scope로 거부될 때 만료 로그인으로 오표시되던 버그 수정 — 누락 권한 명시 + `/mcp` 재인증 안내 (v2.1.274)
+- Streamable HTTP MCP 도구 호출이 더 긴 per-server `timeout` 설정에도 약 5분 후 타임아웃되던 버그 수정 (v2.1.274)
+
+---
 
 ### v2.1.267 (2026-09-10 동기화)
 

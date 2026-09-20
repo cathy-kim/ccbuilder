@@ -3,8 +3,8 @@
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
 **Version**: 2.21.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Last Updated**: 2026-09-20
+**Claude Code Version**: v2.1.278+
 
 ---
 
@@ -23,6 +23,10 @@ MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연�
 | **Stdio** | 로컬 프로세스 (stdin/stdout) | 지원 |
 
 > **v2.1.265 수정**: `type: "http"`로 설정했지만 레거시 HTTP+SSE 트랜스포트만 지원하는 서버가 연결되지 않던 문제 수정 — MCP 스펙에 따라 자동으로 SSE로 폴백합니다.
+>
+> **v2.1.274 변경**: Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션의 direct HTTP MCP 서버도 v2 MCP client + 2026-07-28 프로토콜 협상을 기본 사용합니다(다른 세션과 동일). Opt out: `MCP_SDK_GENERATION=v1` 또는 `MCP_PROTOCOL_NEGOTIATION=legacy`. 같은 버전에서 `.mcp.json`·설정·플러그인·agent 파일의 `"type": "sdk"` MCP 엔트리는 경고와 함께 스킵됩니다 — SDK 호스트 애플리케이션만 in-process 서버를 등록할 수 있습니다.
+>
+> **v2.1.274 신규**: `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` — 첫 non-interactive 턴이 연결 중인 MCP 서버를 기다리는 시간 상한(`0`이면 대기하지 않음).
 
 ---
 

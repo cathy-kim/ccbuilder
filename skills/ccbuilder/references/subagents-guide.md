@@ -3,8 +3,8 @@
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
 **Version**: 2.14.0
-**Last Updated**: 2026-09-10
-**Claude Code Version**: v2.1.267+
+**Last Updated**: 2026-09-20
+**Claude Code Version**: v2.1.278+
 
 ---
 
@@ -99,6 +99,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `hooks` | object[] | 내장 Hook 정의 | - |
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
 | `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`), 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) | - |
+| `omitClaudeMd` | boolean | `true` 시 유저·프로젝트·로컬 CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드), `--agents` JSON에서도 지정 가능 (v2.1.271) | false |
 
 ---
 
