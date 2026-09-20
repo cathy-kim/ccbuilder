@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-20 (v2.1.278)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Transport | 명령어 | 상태 |
 |-----------|--------|------|
-| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE fallback (v2.1.265) |
+| **HTTP** | `claude mcp add --transport http <name> <url>` | 권장 (streamable-http); 레거시 HTTP+SSE만 지원하는 서버는 자동 SSE fallback (v2.1.265); Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션도 v2 MCP client + 2026-07-28 프로토콜 협상 기본화 — opt out: `MCP_SDK_GENERATION=v1`/`MCP_PROTOCOL_NEGOTIATION=legacy` (v2.1.274) |
 | **SSE** | `claude mcp add --transport sse <name> <url>` | **Deprecated** |
 | **Stdio** | `claude mcp add --transport stdio <name> -- <cmd>` | 로컬 서버 |
 
@@ -41,6 +41,7 @@
 ```
 
 - 환경 변수 확장: `${VAR}`, `${VAR:-default}`
+- `"type": "sdk"` 엔트리는 경고와 함께 스킵됨 — SDK 호스트 애플리케이션만 in-process 서버를 등록할 수 있음 (v2.1.274)
 
 ## 주요 기능
 
@@ -50,7 +51,7 @@
 | **Prompts as Commands** | `/mcp__server__prompt`로 실행 |
 | **Tool Search** | MCP 도구 10%+ 컨텍스트 초과 시 자동 활성화 |
 | **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
-| **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신 |
+| **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신; `listChanged` capability 미선언 상태로 알림을 보내도 프롬프트·리소스가 갱신됨 (v2.1.274 수정) |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
 | **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
 | **--channels** | 채널 capability 선언 MCP 서버가 도구 승인 프롬프트를 폰으로 릴레이 (v2.1.80-81) |
