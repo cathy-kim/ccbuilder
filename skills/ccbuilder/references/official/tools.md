@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-23 (Claude Code v2.1.280+)
 
 ---
 
@@ -14,7 +14,7 @@
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
 | `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함); Windows: AppContainer·제한된 토큰 샌드박스에서 심볼릭 링크 재검증 실패로 모든 파일 거부되던 버그 수정 (v2.1.265) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265) | **높음** |
+| `Write` | 127 | 파일 생성/덮어쓰기; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265); 모델이 `path`/`file_text`/`file_content`/불필요한 `description`을 `file_path`/`content` 대신 보낼 때 검증 실패하던 버그 수정 (v2.1.280) | **높음** |
 | `Edit` | 246 | 파일 내 문자열 치환; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265) | **중간** |
 | `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
 | `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |

@@ -77,6 +77,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.280 (2026-09-23 동기화)
+
+**새로운 기능:**
+- (v2.1.280) **Claude Opus 5.5** (`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok, 캐시 읽기 $0.20/Mtok
+- (v2.1.280) `/skills` 목록 마우스 휠 스크롤, `/plugin`의 스킬 상태 옵션 클릭 지원 확대(풀스크린 모드)
+- (v2.1.280) `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` 신규 — 세션 내 모든 MCP 서버의 도구 설명·서버 지시문 2,048자 상한 변경 가능
+- (v2.1.280) `hook_execution_complete` OTel 이벤트에 훅 출력 크기·오버사이즈 출력 저장 건수 필드 추가
+- (v2.1.280) [VSCode] Status·Sandbox·Chrome 다이얼로그, Export conversation, `/plan`, Slash commands 다이얼로그에 스킬 소스·토큰 추정치·on/off 상태 추가
+
+**Changed (기본값·동작 변경):**
+- Pro·Team Standard 플랜 기본 모델 Sonnet → Opus 전환 — Max·Team Premium·Enterprise와 동일화 (v2.1.280)
+- `/effort`에 저장된 레벨이 Opus 5.5 등 신규 출시 모델에는 적용되지 않고 기본값에서 시작 (v2.1.280)
+- Opus 4.7·4.8·Fable 5가 더 이상 `/effort`(`-p`·Agent SDK·프로젝트/관리형/`--settings` `effortLevel`·모델별 레벨 포함)를 무시하고 launch-default effort를 고수하지 않음 (v2.1.280)
+- auto mode: 안전성 검사가 거부한 동작에 대한 무한 재시도 제거 — 재시도해도 소용없다는 안내와 함께 단일 거부; 검사 무응답 시 반복 거부 대신 백오프, 10회 연속 시 턴 중단 + 메시지 (v2.1.280)
+- `PermissionRequest` Hook에서 agent-type 훅이 더 이상 실행되지 않음(allow/deny 결정 불가) — command·http 타입 훅 사용 안내 오류 표시 (v2.1.280)
+
+**Breaking Changes:**
+- 없음 (모델 기본값·effort 동작 변경은 opt-out/설정으로 조정 가능)
+
+**주요 버그 수정:**
+- `Write` 도구가 모델이 `path`/`file_text`/`file_content`/불필요한 `description`을 `file_path`/`content` 대신 보낼 때 검증 실패하던 버그 수정 (v2.1.280)
+- 심볼릭 링크 경로로의 쓰기가 인-트리 표기 기준으로 판단되던 버그 수정 — 프롬프트·`acceptEdits`·allow 규칙·auto mode가 심볼릭 링크 밖 위치를 잘못 승인하지 못하도록 수정 (v2.1.280)
+- 세션 도중 호스트 앱(Claude Desktop·VS Code·SDK)에서 모델 전환 시 다음 프롬프트가 캐시 미스를 유발하던 버그 수정 (v2.1.280)
+- 재개된 fork 서브에이전트가 최초 전송한 도구 목록 대신 도구 목록을 재구성해 프롬프트 캐싱이 깨지던 버그 수정 (v2.1.280)
+- "role 'system' must precede an 'assistant' message" API 오류로 매 턴 실패하던 버그 수정 (v2.1.280)
+- 백그라운드 서브에이전트에 보낸 메시지가 헤드리스·SDK 세션에서 서브에이전트 턴 종료 시점에 유실되던 버그 수정 (v2.1.280)
+
+---
+
 ### v2.1.278 (2026-09-20 동기화)
 
 **새로운 기능:**

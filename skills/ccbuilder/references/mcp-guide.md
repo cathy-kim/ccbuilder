@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.21.0
-**Last Updated**: 2026-09-20
-**Claude Code Version**: v2.1.278+
+**Version**: 2.22.0
+**Last Updated**: 2026-09-23
+**Claude Code Version**: v2.1.280+
 
 ---
 
@@ -382,6 +382,16 @@ claude mcp serve
 ```bash
 # MCP 도구 출력 토큰 제한 (기본: 25,000)
 MAX_MCP_OUTPUT_TOKENS=50000
+```
+
+---
+
+## MCP 도구 설명 길이 상한 (v2.1.280 신규)
+
+도구 설명·서버 지시문은 기본적으로 서버당 2,048자로 제한됩니다(OpenAPI 서버 등의 컨텍스트 팽창 방지, v2.1.84). `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` 환경변수로 세션 내 **모든** MCP 서버의 상한을 변경할 수 있습니다.
+
+```bash
+CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH=8000 claude
 ```
 
 ---

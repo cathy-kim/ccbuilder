@@ -8,6 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.58.0] - 2026-09-23
+
+### Added
+- **Claude Code v2.1.280 sync** (v2.1.278 → v2.1.280 콘텐츠 반영)
+  - **Claude Opus 5.5** (`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok, 캐시 읽기 $0.20/Mtok
+  - 풀스크린 모드 마우스 지원 확대 — `/skills` 목록 휠 스크롤, `/plugin` 스킬 상태 옵션 클릭
+  - `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` 신규 — 세션 내 모든 MCP 서버의 도구 설명·서버 지시문 2,048자 상한 변경 가능
+  - `hook_execution_complete` OTel 이벤트에 훅 출력 크기·오버사이즈 출력 저장 건수 필드 추가
+  - [VSCode] Status·Sandbox·Chrome 다이얼로그, Export conversation, `/plan`, Slash commands 다이얼로그 개선(스킬 소스·토큰 추정치·on/off 상태)
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.278 → v2.1.280; MCP·Hook·CLI·Agent·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.280 변경사항 추적 엔트리 추가
+- `references/official/mcp.md`: `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` 반영
+- `references/mcp-guide.md`: MCP 도구 설명 길이 상한 오버라이드 섹션 추가
+- `references/official/hooks.md`, `references/hooks-guide.md`: `PermissionRequest` Hook agent-type 제거 반영
+- `references/official/subagents.md`, `references/subagents-guide.md`: 신규 모델 effort 기본값 미상속, Opus 4.7·4.8·Fable 5 `/effort` 존중 반영
+- `references/official/tools.md`: `Write` 도구 입력 필드 유연성(검증 실패 수정) 반영
+- Pro·Team Standard 플랜 기본 모델 Sonnet → Opus 전환 반영(Max·Team Premium·Enterprise와 동일화)
+
+### Fixed (주요 수정, v2.1.279 - v2.1.280)
+- `Write` 도구가 모델이 `path`/`file_text`/`file_content`/불필요한 `description`을 보낼 때 검증 실패하던 버그 수정
+- 심볼릭 링크 경로 쓰기가 인-트리 표기 기준으로 승인되어 심볼릭 링크 밖 위치까지 자동 승인되던 버그 수정
+- 호스트 앱(Claude Desktop·VS Code·SDK)에서 세션 도중 모델 전환 시 다음 프롬프트 캐시 미스가 발생하던 버그 수정
+- "role 'system' must precede an 'assistant' message" API 오류로 매 턴 실패하던 버그 수정
+- 백그라운드 서브에이전트로 보낸 메시지가 헤드리스·SDK 세션에서 유실되던 버그 수정
+- auto mode가 안전성 검사 거부·무응답에 대해 무한 재시도/반복 거부하던 버그 수정 — 단일 거부 또는 백오프 후 10회째 턴 중단
+
 ## [2.57.0] - 2026-09-20
 
 ### Added

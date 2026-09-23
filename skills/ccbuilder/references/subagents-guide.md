@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-09-20
-**Claude Code Version**: v2.1.278+
+**Version**: 2.15.0
+**Last Updated**: 2026-09-23
+**Claude Code Version**: v2.1.280+
 
 ---
 
@@ -183,7 +183,7 @@ Task({
 SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계속해주세요" })
 ```
 
-**v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음. **v2.1.267 수정**: `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용.
+**v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음. **v2.1.267 수정**: `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용. **v2.1.280**: Opus 4.7·4.8·Fable 5가 `/effort`(`-p`·Agent SDK·프로젝트/관리형/`--settings` `effortLevel`·모델별 레벨 포함)를 더 이상 무시하지 않도록 추가 수정; `/effort`로 저장된 레벨은 Opus 5.5 등 신규 출시 모델에는 적용되지 않고 기본값에서 시작(레벨 재선택 필요).
 
 ---
 
