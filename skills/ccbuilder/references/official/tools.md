@@ -3,7 +3,7 @@
 > Skill/Agent 개발 시 `allowed-tools`, `disallowedTools` 설정에 참고.
 > Source: [claude-code-system-prompts](../github/repos/claude-code-system-prompts/)
 
-**Last Synced**: 2026-09-10 (Claude Code v2.1.267+)
+**Last Synced**: 2026-09-24 (Claude Code v2.1.281+)
 
 ---
 
@@ -13,9 +13,9 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함); Windows: AppContainer·제한된 토큰 샌드박스에서 심볼릭 링크 재검증 실패로 모든 파일 거부되던 버그 수정 (v2.1.265) | 낮음 |
-| `Write` | 127 | 파일 생성/덮어쓰기; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265) | **높음** |
-| `Edit` | 246 | 파일 내 문자열 치환; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265) | **중간** |
+| `Read` | 476 | 파일 읽기 (이미지, PDF, ipynb 포함); Windows: AppContainer·제한된 토큰 샌드박스에서 심볼릭 링크 재검증 실패로 모든 파일 거부되던 버그 수정 (v2.1.265); 경로에 null byte 포함 시 전체 턴 대신 해당 호출만 명확한 오류로 실패 (v2.1.281) | 낮음 |
+| `Write` | 127 | 파일 생성/덮어쓰기; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265); 경로 null byte 시 명확한 오류 (v2.1.281); `path`/`file_text`/`file_content`/불필요한 `description`으로 호출해도 검증 통과하도록 수정 (v2.1.280); `file_path`·`content`가 동일한 값으로 두 파라미터 이름에 중복 전달돼도 거부하지 않도록 수정 (v2.1.281) | **높음** |
+| `Edit` | 246 | 파일 내 문자열 치환; 위 Windows 심볼릭 링크 버그 동일 수정 (v2.1.265); 경로 null byte 시 명확한 오류 (v2.1.281) | **중간** |
 | `Glob` | 122 | 파일명 패턴 매칭 (`**/*.ts`) | 낮음 |
 | `Grep` | 300 | 파일 내용 검색 (ripgrep) | 낮음 |
 | `NotebookEdit` | 121 | Jupyter 노트북 셀 편집 | 중간 |

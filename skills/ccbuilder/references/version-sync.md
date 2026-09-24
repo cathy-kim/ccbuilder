@@ -77,6 +77,39 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.281 (2026-09-24 동기화)
+
+**새로운 기능:**
+- (v2.1.281) `"attribution": false`(settings.json) — 커밋·PR attribution 텍스트 전체 숨김(구버전 CLI 호환 위해 여러 버전 공유 파일에서는 object 형태 유지 권장)
+- (v2.1.281) `claude plugin validate`에 MCP 서버 검사 추가 — 로드 시 조용히 누락될 `.mcp.json` 엔트리, 미선언 `${user_config.*}` 참조, 안전하지 않은 URL 보고; 훅 command 문자열의 인용되지 않은 `${CLAUDE_PLUGIN_ROOT}` 경고 추가
+- (v2.1.281) `/insights`에 auto mode 추천 추가 — 최근 세션에서 auto mode가 처리 가능했을 권한 프롬프트 수 추정
+- (v2.1.281) `--agents`가 인라인 JSON뿐 아니라 JSON 파일 경로(`-p`와 함께)도 수용, 빈 `prompt` 허용
+- (v2.1.281) `/batch`가 git 저장소 밖에서도 `WorktreeCreate` 훅이 에이전트 worktree를 제공하는 환경에서 동작
+- (v2.1.281) `PreToolUse` 등 블로킹 이벤트의 `mcp_tool` 훅이 대상 MCP 서버가 연결 중이면 MCP connect timeout까지 대기(이전엔 스킵)
+- (v2.1.280) **Claude Opus 5.5**(`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok·캐시 읽기 $0.20/Mtok
+- (v2.1.280) `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` — MCP 도구 설명·서버 지시문 2,048자 상한 변경
+- (v2.1.280) `hook_execution_complete` OTel 이벤트에 훅 출력 크기·오버사이즈 출력 개수 필드 추가
+
+**Changed (기본값·동작 변경):**
+- self-hosted runner가 시스템 프롬프트를 커맨드라인 텍스트 대신 비공개 파일로 전달 — `--system-prompt`/`--append-system-prompt` wrapper·`command` 훅은 `--system-prompt-file`/`--append-system-prompt-file`로 전환 필요 (v2.1.281)
+- `CLAUDE_CODE_AUTO_MODE_SERVER`가 direct Anthropic API 연결에도 적용 — `0`은 서버 사이드 classifier 옵트아웃(로컬 classifier가 사용량에 집계), `1`은 옵트인 (v2.1.281)
+- auto mode에서 classifier 서버 사이드 리뷰가 실행되는 경로에서는 읽기 전용·샌드박스 Bash 명령도 해당 리뷰를 기다리고, 플래그 시 차단됨 (v2.1.281)
+
+**Breaking Changes:**
+- **`PermissionRequest` Hook에서 agent-type hook 실행 중단** — 응답이 요청을 승인/거부할 수 없는 구조였던 문제로, command 또는 http hook을 가리키는 오류로 대체 (v2.1.280)
+- **기본 Opus 모델이 Opus 5.5로 전환** (v2.1.280)
+
+**주요 버그 수정:**
+- 프록시·게이트웨이가 스트림을 깨끗이 닫아 응답이 잘렸을 때 경고 없이 완료로 표시되던 버그, 중복 스트림 이벤트로 도구 호출이 두 번 실행되던 버그 수정 (v2.1.281)
+- 프록시가 스트림 이벤트를 드롭할 때 "Content block not found"로 응답이 실패하던 버그 수정 — 부분 응답·web search 결과 보존 (v2.1.281)
+- `tool_use.name`이 200자를 초과하는 모델 호출 후 대화가 영구적으로 멈추던 버그 수정 (v2.1.281)
+- 커맨드 치환 결과만을 대상으로 하는 재귀 `rm`(예: `rm -rf "$(pwd)"`)이 auto·`--dangerously-skip-permissions` 모드에서 Bash allow rule과 무관하게 무프롬프트 실행되던 보안 버그 수정 — `CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT=1`로 옵트아웃 가능 (v2.1.281)
+- 권한 규칙에 NUL 바이트가 포함되면 와일드카드로 확장되던 보안 버그 수정 — 이제 아무것도 매칭하지 않음 (v2.1.281)
+- `claude --bg`가 workspace trust 프롬프트를 통과하지 않은 디렉토리에서 백그라운드 세션과 프로젝트 훅을 실행하던 버그 수정 — 이제 먼저 trust를 요청하거나 비대화형 시 종료 (v2.1.281)
+- `--setting-sources`(SDK `settingSources`)가 teammate·`/bg`·`claude agents`·`--worktree --tmux` 세션에 전달되지 않던 버그 수정 (v2.1.281)
+
+---
+
 ### v2.1.278 (2026-09-20 동기화)
 
 **새로운 기능:**

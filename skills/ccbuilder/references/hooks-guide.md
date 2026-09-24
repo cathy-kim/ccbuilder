@@ -129,6 +129,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
 }
 ```
 
+> **v2.1.281**: `PreToolUse` 등 블로킹 이벤트에 붙은 `mcp_tool` 훅은 대상 MCP 서버가 아직 연결 중이어도 더 이상 스킵되지 않고, MCP connect timeout까지 대기한 후 실행됩니다.
+
 ---
 
 ## 비동기 Hook (신규)
@@ -187,6 +189,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
   "reason": "보안 정책 위반"
 }
 ```
+
+> **v2.1.280 Breaking**: `PermissionRequest`는 agent-type hook을 더 이상 실행하지 않습니다(응답이 요청을 승인/거부할 수 없는 구조였음) — command 또는 http hook을 가리키는 오류가 표시됩니다.
 
 ### Stop Decision
 

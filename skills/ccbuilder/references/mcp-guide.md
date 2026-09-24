@@ -27,6 +27,10 @@ MCP를 통해 Claude Code에 외부 도구, 데이터 소스, 서비스를 연�
 > **v2.1.274 변경**: Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션의 direct HTTP MCP 서버도 v2 MCP client + 2026-07-28 프로토콜 협상을 기본 사용합니다(다른 세션과 동일). Opt out: `MCP_SDK_GENERATION=v1` 또는 `MCP_PROTOCOL_NEGOTIATION=legacy`. 같은 버전에서 `.mcp.json`·설정·플러그인·agent 파일의 `"type": "sdk"` MCP 엔트리는 경고와 함께 스킵됩니다 — SDK 호스트 애플리케이션만 in-process 서버를 등록할 수 있습니다.
 >
 > **v2.1.274 신규**: `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` — 첫 non-interactive 턴이 연결 중인 MCP 서버를 기다리는 시간 상한(`0`이면 대기하지 않음).
+>
+> **v2.1.280 신규**: `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` — 세션 내 모든 MCP 서버의 도구 설명·서버 지시문에 적용되는 2,048자 상한을 변경합니다.
+>
+> **v2.1.281 신규**: `PreToolUse` 등 블로킹 이벤트에 걸린 `mcp_tool` 훅은 대상 서버가 아직 연결 중이면 더 이상 스킵되지 않고 MCP connect timeout까지 대기 후 실행됩니다. `claude plugin validate`가 `.mcp.json`에서 로드 시 조용히 누락될 엔트리, 미선언 `${user_config.*}` 참조, 안전하지 않은 URL을 검사합니다.
 
 ---
 
