@@ -2,9 +2,9 @@
 
 > Claude Code의 Memory 시스템과 Modular Rules 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.10.0
+**Last Updated**: 2026-09-25
+**Claude Code Version**: v2.1.282+
 
 ---
 
@@ -50,6 +50,7 @@
 
 - **최대 깊이**: 5 hop (순환 참조 자동 감지)
 - **승인 다이얼로그**: 새 import 발견 시 사용자에게 확인
+- **v2.1.281**: `--add-dir`로 추가한 디렉토리가 작업 디렉토리 내부에 있을 때 그 CLAUDE.md·rules가 헤드리스·SDK 세션에 중복 전달되던 버그 수정; 대형 CLAUDE.md 시작 경고가 하나의 큰 파일뿐 아니라 여러 중간 크기 파일·`@`-import 합산 기준으로도 발동하도록 개선
 
 ### Memory Lookup
 

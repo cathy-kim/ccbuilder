@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-25 (v2.1.282)
 
 ---
 
@@ -13,7 +13,7 @@
 | 1 | `SessionStart` | 세션 시작/재개 — `reloadSkills: true` 반환으로 스킬 재스캔; `hookSpecificOutput.sessionTitle`로 시작·재개 시 세션 제목 설정 (v2.1.152); resume 시 세션 staleness·예상 재캐싱 비용 필드 수신 (v2.1.251) | - |
 | 2 | `UserPromptSubmit` | 프롬프트 처리 전 | exit 2 |
 | 3 | `PreToolUse` | 도구 실행 전 | allow/deny/ask/defer |
-| 4 | `PermissionRequest` | 권한 대화상자 표시 | allow/deny |
+| 4 | `PermissionRequest` | 권한 대화상자 표시 — `type: "agent"` hook 실행 불가(command·http만, v2.1.280 Breaking) | allow/deny |
 | 5 | `PostToolUse` | 도구 성공 후 — `duration_ms` 포함 (v2.1.119) | block |
 | 6 | `PostToolUseFailure` | 도구 실패 후 — `duration_ms` 포함 (v2.1.119) | block |
 | 7 | `Notification` | 알림 발송 시 | - |
@@ -48,7 +48,7 @@
 | `type: "http"` | URL로 JSON POST, JSON 응답 수신 (shell 불필요, v2.1.63) |
 | `type: "prompt"` | 단일 LLM 호출. `{ok: true/false, reason: "..."}` |
 | `type: "agent"` | 서브에이전트 (도구 접근 가능). prompt와 동일 스키마 |
-| `type: "mcp_tool"` | MCP 도구 직접 호출 — `server`, `tool`, `arguments` 필드 지정 (v2.1.118) |
+| `type: "mcp_tool"` | MCP 도구 직접 호출 — `server`, `tool`, `arguments` 필드 지정 (v2.1.118); 블로킹 이벤트에서 대상 서버가 연결 중이면 연결 완료까지 대기(최대 connect timeout, v2.1.281) |
 | `async: true` | 백그라운드 실행 (command hook만). 차단 안 함 |
 
 ## Matcher 패턴

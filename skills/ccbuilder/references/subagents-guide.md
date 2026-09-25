@@ -2,9 +2,9 @@
 
 > Claude Code Subagents 및 Plugin System 개발 완전 가이드
 
-**Version**: 2.14.0
-**Last Updated**: 2026-09-20
-**Claude Code Version**: v2.1.278+
+**Version**: 2.15.0
+**Last Updated**: 2026-09-25
+**Claude Code Version**: v2.1.282+
 
 ---
 
@@ -312,12 +312,22 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 | `--effort <level>` | effort 레벨 설정 |
 | `--dangerously-skip-permissions` | 권한 프롬프트 건너뜀 |
 
+**v2.1.281**: `--agents`가 인라인 JSON 문자열 외에 JSON 파일 경로도 허용(`-p`와 함께 사용), 빈 `prompt` 허용. `--setting-sources`(SDK `settingSources`)가 teammate·`/bg`·`claude agents`·`--worktree --tmux`로 파생된 세션에도 부모 세션의 설정 제약을 전달하도록 수정 — 이전엔 무시되어 파생 세션이 제한 없이 설정을 읽음.
+
 ---
 
 ## 버그 수정 (v2.1.101)
 
 - **MCP 도구 상속**: 동적으로 주입된 MCP 서버의 도구를 서브에이전트가 상속받지 못하던 버그 수정 — 이제 동적 주입 서버 도구도 정상 상속
 - **isolation: worktree 파일 접근**: 격리된 worktree에서 실행 중인 서브에이전트가 자신의 worktree 내 파일에 Read/Edit 접근이 거부되던 버그 수정 — 이제 자신의 worktree 내 파일에 정상 접근 가능
+
+## 버그 수정 (v2.1.280 - v2.1.281)
+
+- **LSP 도구 접근**: LSP 플러그인이 활성화된 상태에서 백그라운드 서브에이전트가 LSP 도구를 사용할 수 없던 버그 수정 (v2.1.280)
+- **메시지 유실**: 헤드리스·SDK 세션에서 서브에이전트가 턴을 마무리하는 중 전송된 메시지가 조용히 유실되던 버그 수정 (v2.1.280)
+- **리포트 유실**: 완료된 서브에이전트의 리포트를 읽기 전에 대화가 컴팩션되면 그 리포트가 유실되던 버그 수정 (v2.1.280)
+- **자동 재개**: 미완료 백그라운드 에이전트·셸·워크플로우가 있는 세션을 재개할 때, 아무것도 입력하지 않았는데도 모델 턴이 자동으로 시작되던 버그 수정 (v2.1.280)
+- **`--setting-sources` 전달 누락**: teammate·`/bg`·`claude agents`·`--worktree --tmux`로 파생된 세션이 부모의 `--setting-sources` 제약을 무시하던 버그 수정 (v2.1.281)
 
 ---
 

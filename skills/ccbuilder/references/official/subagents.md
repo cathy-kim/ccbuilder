@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/sub-agents
 
-**Last Synced**: 2026-09-10 (v2.1.267)
+**Last Synced**: 2026-09-25 (v2.1.282)
 
 ---
 
@@ -84,3 +84,5 @@ CLI flag --agents (세션) > .claude/agents/ (프로젝트) > ~/.claude/agents/ 
 - **긴 시스템 프롬프트 (v2.1.261+)**: `--append-subagent-system-prompt-file <path>` — 커맨드라인에 담기 힘든 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음
 - **모델 전환 훅 (v2.1.251+)**: `PreModelSwitch`/`PostModelSwitch` Hook으로 서브에이전트를 포함한 모델 전환을 차단·확인·주석 가능
 - **effort 상한 (v2.1.267+)**: `maxEffortLevel` 설정(top-level 또는 `modelSettings`별)으로 Bedrock·Vertex·Foundry 포함 모든 provider의 effort 상한 지정 가능 — 서브에이전트에도 적용, 사용자는 더 낮은 레벨 선택 가능
+- **`--agents` JSON 파일 경로 지원 (v2.1.281+)**: 인라인 JSON 문자열 외에 JSON 파일 경로도 지정 가능(`-p`와 함께), `prompt` 필드를 비워둘 수도 있음
+- **`--setting-sources` 파생 세션 전달 (v2.1.281+)**: teammate·`/bg`·`claude agents`·`--worktree --tmux`로 파생된 세션도 부모의 `--setting-sources` 제약을 상속 — 이전엔 파생 세션이 제약 없이 모든 설정 소스를 읽던 버그

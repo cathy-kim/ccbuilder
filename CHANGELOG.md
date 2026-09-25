@@ -8,6 +8,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.58.0] - 2026-09-25
+
+### Added
+- **Claude Code v2.1.282 sync** (v2.1.278 → v2.1.282 콘텐츠 반영)
+  - (v2.1.282) `maxProseWidth` 설정 신규 — 넓은 터미널에서 프로즈(본문) 너비만 제한, 표·코드블록은 전체 너비 유지
+  - (v2.1.282) `allowClaudeInChromeWithManagedMcp` managed 설정 신규 — 배타적 `managed-mcp.json`과 함께 `claude --chrome` 실행 허용, 차단 시 오류에 Chrome 명시
+  - (v2.1.282) `/status`·`claude doctor`에 프로젝트 설정 파일에서 무시된/텔레메트리를 끈 텔레메트리 변수 목록 표시
+  - (v2.1.281) MCP URL-mode elicitation(2026-07-28 프로토콜) — 서버가 브라우저 기반 플로우를 열도록 요청, 완료 확인 수단 없을 때 대기 다이얼로그 자동 정리
+  - (v2.1.281) `claude plugin validate`에 MCP 서버 체크 추가 — `.mcp.json` 엔트리 중 로드 시 조용히 드롭되는 항목·미선언 `${user_config.*}` 참조·insecure URL 보고
+  - (v2.1.281) `/insights`에 auto mode 추천 추가 — 최근 세션에서 auto mode가 처리할 수 있었던 권한 프롬프트 수 추정
+  - (v2.1.281) `--agents`가 인라인 JSON 외에 JSON 파일 경로도 허용(`-p`와 함께), 빈 `prompt` 허용
+  - (v2.1.281) `--setting-sources`(SDK `settingSources`)가 teammate·`/bg`·`claude agents`·`--worktree --tmux`로 파생된 세션에도 부모 제약을 전달하도록 수정 — 이전엔 무시됨
+  - (v2.1.281) `mcp_tool` 타입 훅이 블로킹 이벤트(PreToolUse 등)에서 MCP 서버 연결 중이면 대기(최대 MCP connect timeout) 후 실행 — 이전엔 스킵됨
+  - (v2.1.281) `claude plugin validate`가 shell-form hook에서 인용 없는 `${CLAUDE_PLUGIN_ROOT}` 경고 — 플러그인 경로에 공백 있을 때 깨짐 방지
+  - (v2.1.281) `/batch`가 git 저장소 밖에서도 `WorktreeCreate` hook이 agent worktree를 제공하면 실행 가능
+  - (v2.1.281) `--add-dir` 디렉토리가 작업 디렉토리 내부일 때 CLAUDE.md·rules가 헤드리스·SDK 세션에 중복 전달되던 버그 수정
+  - (v2.1.281) 대형 CLAUDE.md 시작 경고가 여러 중간 크기 파일·`@`-import 합산 기준으로도 발동하도록 개선
+  - (v2.1.280) **Claude Opus 5.5**(`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok·캐시 읽기 $0.20/Mtok; Pro·Team Standard 플랜 기본 모델 Sonnet→Opus 전환
+  - (v2.1.280) 백그라운드 서브에이전트가 LSP 플러그인 활성 시 LSP 도구를 사용하지 못하던 버그, 서브에이전트 턴 종료 중 전송된 메시지가 유실되던 버그, 컴팩션 전 읽지 않으면 완료된 서브에이전트 리포트가 유실되던 버그 수정
+  - (v2.1.282) `anthropic-skills`·`claude-ai` 네임스페이스의 스킬 폴더·명령 파일·워크플로우 명령이 더 이상 로드되지 않음(동명 플러그인은 로드되지만 동기화 스킬과 이름 충돌); MCP 서버 이름이 `anthropic-skills`/`claude-ai`이면 skills·prompts 목록을 제공하지 않음(도구는 계속 동작)
+  - (v2.1.282) 저장소·유저·`--add-dir` 스킬/명령/skills-directory 플러그인 매니페스트가 `allowManagedPermissionRulesOnly` 하에서 `allowed-tools`로 자기 도구를 사전 승인하던 보안 버그 수정
+  - (v2.1.282) Bash 권한 규칙의 중간 `:*` 패턴이 settings 파일에서 스킵되던 버그 수정 — `--allowedTools`는 이미 정상 동작, 이제 모든 소스에서 매칭 + 시작 시 매칭 방식 경고
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.278 → v2.1.282; MCP·Memory·Hook·Agent·CLI·Breaking Changes 섹션에 위 항목 반영(기존 행에 인라인 추가, 500줄 제한 유지)
+- `references/version-sync.md`: v2.1.282 변경사항 추적 엔트리 추가
+
+### Fixed (주요 수정, v2.1.279 - v2.1.282)
+- `PermissionRequest` Hook에서 agent-type hook 실행이 중단됨 — 응답이 요청을 허용/거부할 수 없어 오류로 command·http hook 사용 안내 (v2.1.280, Breaking)
+- 대화 히스토리에 API가 복호화 불가한 웹 검색 결과가 있을 때 모든 요청이 400 오류로 실패하던 버그 수정 (v2.1.282)
+- 세션 재개(`--continue`/`--resume`)가 이전 메시지를 변형된 형태로 재전송해 API가 이전 reasoning을 드롭하던 사례 다수 수정 (v2.1.282)
+- 컴팩션이 요약 요청 거부 시 실패하던 버그 수정 — 이제 폴백 모델로 재시도 (v2.1.282)
+- "Invalid `data` in `redacted_thinking` block" API 오류로 매 턴 실패하던 세션 버그 수정 — thinking block 드롭 후 1회 재시도 (v2.1.282)
+
 ## [2.57.0] - 2026-09-20
 
 ### Added

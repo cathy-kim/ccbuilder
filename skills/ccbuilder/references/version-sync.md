@@ -77,6 +77,44 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.282 (2026-09-25 동기화)
+
+**새로운 기능:**
+- (v2.1.282) `maxProseWidth` 설정 신규 — 넓은 터미널에서 프로즈(본문) 너비만 제한, 표·코드블록은 전체 너비 유지
+- (v2.1.282) `allowClaudeInChromeWithManagedMcp` managed 설정 신규 — 배타적 `managed-mcp.json`과 함께 `claude --chrome` 실행 허용
+- (v2.1.282) `/status`·`claude doctor`에 프로젝트 설정 파일에서 무시된/텔레메트리를 끈 텔레메트리 변수 목록 표시
+- (v2.1.281) MCP URL-mode elicitation(2026-07-28 프로토콜) — 서버가 브라우저 기반 플로우를 열도록 요청
+- (v2.1.281) `claude plugin validate`에 MCP 서버 체크 추가 — `.mcp.json` 조용히 드롭되는 엔트리·미선언 `${user_config.*}`·insecure URL 보고
+- (v2.1.281) `/insights`에 auto mode 추천 추가 — 최근 세션에서 auto mode가 처리 가능했을 권한 프롬프트 수 추정
+- (v2.1.281) `--agents`가 인라인 JSON 외에 JSON 파일 경로도 허용(`-p`와 함께), 빈 `prompt` 허용
+- (v2.1.281) `--setting-sources`(SDK `settingSources`)가 teammate·`/bg`·`claude agents`·`--worktree --tmux` 파생 세션에도 전달
+- (v2.1.281) `mcp_tool` 타입 훅이 블로킹 이벤트에서 MCP 서버 연결 중이면 대기(최대 connect timeout) 후 실행
+- (v2.1.281) `claude plugin validate`가 shell-form hook의 인용 없는 `${CLAUDE_PLUGIN_ROOT}` 경고
+- (v2.1.281) `/batch`가 git 저장소 밖에서도 `WorktreeCreate` hook이 agent worktree 제공 시 실행 가능
+- (v2.1.280) **Claude Opus 5.5**(`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok
+
+**Changed (기본값·과금 변경):**
+- Pro·Team Standard 플랜 기본 모델 Sonnet → Opus (5.5) — Max·Team Premium·Enterprise와 동일화 (v2.1.280)
+- `Skill(anthropic-skills:*)`/`Skill(claude-ai:*)` allow rule이 claude.ai 동기화 스킬만 커버(플러그인·동명 스킬 제외) (v2.1.282)
+- `anthropic-skills`/`claude-ai` 네임스페이스 스킬 폴더·명령·워크플로우 명령 로드 중단(동명 플러그인은 로드) (v2.1.282)
+- `anthropic-skills`/`claude-ai` 이름의 MCP 서버가 skills·prompts 목록 미제공(도구는 계속 동작) — 목록 노출하려면 서버 이름 변경 (v2.1.282)
+
+**Breaking Changes:**
+- **`PermissionRequest` Hook에서 agent-type hook 실행 중단** — 응답이 요청을 허용/거부할 수 없어 오류 발생, command·http hook으로 전환 필요 (v2.1.280)
+- `Skill(anthropic-skills:*)`/`Skill(claude-ai:*)` allow rule 적용 범위 축소 (v2.1.282)
+- 저장소·유저·`--add-dir` 스킬/명령/skills-directory 플러그인 매니페스트가 `allowManagedPermissionRulesOnly` 하에서 `allowed-tools`로 자기 도구 사전 승인하던 보안 버그 수정(사전 승인 불가) (v2.1.282)
+
+**주요 버그 수정:**
+- 대화 히스토리에 API가 복호화 불가한 웹 검색 결과가 있을 때 모든 요청이 400 오류로 실패하던 버그 수정 (v2.1.282)
+- 세션 재개(`--continue`/`--resume`)가 이전 메시지를 변형된 형태로 재전송해 API가 이전 reasoning을 드롭하던 사례 다수 수정 (v2.1.282)
+- 컴팩션이 요약 요청 거부 시 실패하던 버그 수정 — 폴백 모델로 재시도 (v2.1.282)
+- "Invalid `data` in `redacted_thinking` block" API 오류로 매 턴 실패하던 세션 버그 수정 — thinking block 드롭 후 1회 재시도 (v2.1.282)
+- Bash 권한 규칙의 중간 `:*` 패턴이 settings 파일에서 스킵되던 버그 수정 — 모든 소스에서 정상 매칭 (v2.1.282)
+- `--add-dir` 디렉토리가 작업 디렉토리 내부일 때 CLAUDE.md·rules가 헤드리스·SDK 세션에 중복 전달되던 버그 수정 (v2.1.281)
+- 백그라운드 서브에이전트 LSP 도구 미사용·턴 종료 중 메시지 유실·컴팩션 전 리포트 유실 버그 수정 (v2.1.280)
+
+---
+
 ### v2.1.278 (2026-09-20 동기화)
 
 **새로운 기능:**
