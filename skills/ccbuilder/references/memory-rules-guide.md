@@ -2,9 +2,9 @@
 
 > Claude Code의 Memory 시스템과 Modular Rules 완전 가이드
 
-**Version**: 2.9.0
-**Last Updated**: 2026-02-11
-**Claude Code Version**: v2.1.39+
+**Version**: 2.10.0
+**Last Updated**: 2026-09-26
+**Claude Code Version**: v2.1.283+
 
 ---
 
@@ -309,6 +309,8 @@ Git에 커밋하지 않을 개인 설정:
 > **v2.1.63**: Project config와 Auto memory가 **같은 레포의 git worktree 간 공유**됩니다. 워크트리에서 작업해도 메인 레포의 memory/가 동일하게 적용됩니다.
 
 > **v2.1.74**: `autoMemoryDirectory` 설정으로 Auto Memory 저장 디렉토리를 커스텀 경로로 지정할 수 있습니다. 기본값은 `~/.claude/projects/<project-path>/memory/`.
+
+> **v2.1.283 수정**: Claude가 git 저장소의 하위 디렉토리에서 시작된 경우, 자신의 auto-memory 노트에 대한 편집이 민감 파일 쓰기로 잘못 차단되던 버그 수정.
 
 `/memory` 명령으로 Auto Memory를 관리할 수 있습니다 (v2.1.59+).
 

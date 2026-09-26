@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/hooks
 
-**Last Synced**: 2026-09-06 (v2.1.263)
+**Last Synced**: 2026-09-26 (v2.1.283)
 
 ---
 
@@ -48,7 +48,7 @@
 | `type: "http"` | URL로 JSON POST, JSON 응답 수신 (shell 불필요, v2.1.63) |
 | `type: "prompt"` | 단일 LLM 호출. `{ok: true/false, reason: "..."}` |
 | `type: "agent"` | 서브에이전트 (도구 접근 가능). prompt와 동일 스키마 |
-| `type: "mcp_tool"` | MCP 도구 직접 호출 — `server`, `tool`, `arguments` 필드 지정 (v2.1.118) |
+| `type: "mcp_tool"` | MCP 도구 직접 호출 — `server`, `tool`, `arguments` 필드 지정 (v2.1.118); 차단형 이벤트에서 서버가 아직 연결 중이면 스킵되지 않고 연결을 기다린 후 실행 (v2.1.283 수정) |
 | `async: true` | 백그라운드 실행 (command hook만). 차단 안 함 |
 
 ## Matcher 패턴

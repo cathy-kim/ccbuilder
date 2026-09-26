@@ -8,6 +8,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.58.0] - 2026-09-26
+
+### Added
+- **Claude Code v2.1.283 sync** (v2.1.278 → v2.1.283 콘텐츠 반영)
+  - (v2.1.280) **Claude Opus 5.5**(`claude-opus-5-5`) 출시 — 신규 기본 Opus 모델, 1M 컨텍스트, $4/$20 per Mtok, 캐시 읽기 $0.20/Mtok
+  - (v2.1.280) `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH` 신규 — 세션 내 모든 MCP 서버의 툴 설명·서버 지시문 2,048자 상한 변경 가능
+  - (v2.1.281) MCP **URL-mode elicitation** — 2026-07-28 프로토콜 연결에서 서버가 브라우저 기반 플로우 오픈 요청 가능
+  - (v2.1.281) `claude plugin validate` MCP 검증 강화 — 로드 시 드롭될 `.mcp.json` 엔트리, 미선언 `${user_config.*}` 참조, 안전하지 않은 URL 검사
+  - (v2.1.281) `"attribution": false` — 커밋·PR attribution 라인 전체 숨김 설정 추가
+  - (v2.1.283) `/doctor prompt-audit`(`/checkup prompt-audit` 별칭) 신규 — CLAUDE.md·스킬·에이전트·명령의 구버전 모델용 프롬프팅 패턴 감사
+  - (v2.1.283) `availableModelsMatch: "exact"` managed 설정 — `availableModels` 엔트리가 명시된 모델 버전만 허용, 신규 릴리스 자동 차단
+  - (v2.1.283) `deniedModels` managed 설정 — `availableModels` 허용 여부와 무관하게 특정 모델 차단
+  - (v2.1.283) `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1` — `x-claude-code-prompt-id` 게이트웨이 헤더 추가, LLM 게이트웨이가 한 유저 프롬프트의 요청을 그룹화 가능
+  - (v2.1.283) `OTEL_LOG_TOOL_CONTENT=1` 시 MCP 도구·WebFetch·WebSearch 출력도 `tool.output` OTel span 이벤트에 포함
+  - (v2.1.283) MCP 도구가 반환한 이미지가 파일로도 저장되어 Bash·Read 등 다른 도구에서 열람 가능
+
+### Changed
+- SKILL.md: 핵심 변경 사항 섹션 헤딩 v2.1.278 → v2.1.283; MCP·Memory·Hook·Agent/CLI/Plugin·Breaking Changes 섹션에 위 항목 반영
+- `references/version-sync.md`: v2.1.283 변경사항 추적 엔트리 추가
+- `references/mcp-guide.md`, `references/official/mcp.md`: MCP 도구 설명 길이 상한 env var, URL-mode elicitation, `claude plugin validate` MCP 검증, 연결 안정성 버그 수정 반영
+- `references/hooks-guide.md`, `references/official/hooks.md`: 차단형 이벤트에서 `mcp_tool` Hook이 서버 연결 대기 없이 스킵되던 버그 수정 반영
+- `references/memory-rules-guide.md`: 서브디렉토리 시작 세션의 auto-memory 노트 편집이 민감 파일 쓰기로 오차단되던 버그 수정 반영
+
+### Fixed (주요 수정, v2.1.279 - v2.1.283)
+- MCP 도구 호출이 백그라운드로 전환된 후 진행(progress) 알림이 버려지던 버그 수정 (v2.1.283)
+- 세션 종료 시 시작 중이던 stdio MCP 서버가 계속 실행되던 버그 수정 (v2.1.283)
+- 프록시 재배포 등으로 인한 stateless 원격 MCP 서버의 일시적 404가 세션 내내 서버를 사용불가로 만들던 버그 수정 (v2.1.283)
+- URL 없는 MCP 서버 사인인 시도가 불명확한 SDK 오류로 실패하던 버그 수정 — `/mcp`가 이런 서버에 Authenticate를 표시하지 않음 (v2.1.283)
+- Dynamic workflow가 모델 폴백 도중 시작되면 이후 모든 에이전트가 폴백 모델에 고정되던 버그 수정 (v2.1.283)
+- Claude의 auto-memory 노트 편집이 하위 디렉토리에서 시작된 세션에서 민감 파일 쓰기로 오차단되던 버그 수정 (v2.1.283)
+- v2.1.282에서 막혔던 `claude-ai` 이름의 스킬·명령·워크플로우·MCP 서버가 다시 로드되도록 복원 (v2.1.283)
+- Claude Desktop 등 SDK 호스트 세션에서 Fable 사용 크레딧 프롬프트에 응답하지 않을 때 모델이 전환되던 문제 수정 — 턴이 종료되고 Remote Control 클라이언트에도 모델 전환 알림 표시 (v2.1.282)
+- managed settings 중첩 값 하나가 잘못되어도 `sandbox`·`permissions`·`autoMode`·`worktree`·`attribution` 블록 전체가 무시되지 않고 나머지가 적용되도록 수정 (v2.1.282)
+- 대화 히스토리에 API가 복호화할 수 없는 웹 검색 결과가 있을 때 모든 요청이 400 오류로 실패하던 버그 수정 (v2.1.282)
+
 ## [2.57.0] - 2026-09-20
 
 ### Added
