@@ -2,9 +2,9 @@
 
 > Claude Code에서 MCP 서버를 설정하고 활용하는 완전 가이드
 
-**Version**: 2.21.0
-**Last Updated**: 2026-09-20
-**Claude Code Version**: v2.1.278+
+**Version**: 2.22.0
+**Last Updated**: 2026-09-26
+**Claude Code Version**: v2.1.283+
 
 ---
 
@@ -177,6 +177,10 @@ claude mcp add --transport http my-server https://mcp.example.com
 
 > **v2.1.265 변경**: 사인인이 필요한 원격 MCP 서버에 대해, 실제로 인증을 진행하기 전까지는 OAuth 클라이언트를 등록하지 않습니다 — 불필요한 클라이언트 등록 방지.
 
+> **v2.1.281 신규**: MCP **URL-mode elicitation** — 2026-07-28 프로토콜 연결에서 서버가 Claude Code에 브라우저 기반 인증/입력 플로우를 열도록 요청 가능. 서버가 완료 여부를 확인할 방법이 없는 경우 대기 다이얼로그를 화면에 남기지 않습니다.
+>
+> **v2.1.283 수정**: URL이 없는(유효하지 않은) MCP 서버에 대한 사인인 시도가 불명확한 SDK 오류로 실패하던 버그 수정 — 이제 `/mcp`가 이런 서버에는 Authenticate 옵션을 아예 표시하지 않습니다.
+
 ---
 
 ## headersHelper 다중 서버 지원 (v2.1.85 신규)
@@ -272,6 +276,27 @@ Hook으로 인터셉트 가능:
 
 ---
 
+## MCP 도구 설명 길이 상한 (v2.1.280 신규)
+
+세션의 모든 MCP 서버에 적용되는 툴 설명·서버 지시문 2,048자 상한을 커스터마이즈할 수 있습니다.
+
+```bash
+CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH=8192
+```
+
+> **v2.1.283 개선**: `OTEL_LOG_TOOL_CONTENT=1` 설정 시 MCP 도구, WebFetch, WebSearch의 출력도 `tool.output` OpenTelemetry span 이벤트에 포함됩니다. MCP 도구가 반환한 이미지는 파일로도 저장되어 Bash·Read 등 다른 도구에서 열 수 있습니다.
+
+---
+
+## claude plugin validate — MCP 서버 검증 (v2.1.281 신규)
+
+`claude plugin validate`가 플러그인의 MCP 서버 설정도 점검합니다:
+- 로드 시 조용히 드롭될 `.mcp.json` 엔트리
+- 선언되지 않은 `${user_config.*}` 참조
+- 안전하지 않은(비-HTTPS 등) URL
+
+---
+
 ## alwaysLoad — Tool Search 지연 비활성화 (v2.1.121 신규)
 
 MCP 서버 설정에 `alwaysLoad: true`를 추가하면, 해당 서버의 모든 도구가 tool-search 지연 없이 항상 로드됩니다.
@@ -320,6 +345,15 @@ CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS=0       # 비활성화
 ```
 
 > **용도**: 장시간 실행되는 MCP 도구(대용량 데이터 처리, 외부 배치 작업 등) 호출 중에도 세션이 멈추지 않고 다른 작업을 계속할 수 있습니다.
+>
+> **v2.1.283 수정**: 도구 호출이 백그라운드로 전환된 뒤에는 MCP 진행(progress) 알림이 버려지던 버그 수정 — 이제 백그라운드 태스크가 최신 진행 상황을 계속 표시합니다.
+
+---
+
+## 연결 안정성 버그 수정 (v2.1.283)
+
+- 세션 종료 시 아직 시작 중이던 stdio MCP 서버 프로세스가 계속 실행 상태로 남던 버그 수정
+- 프록시가 재배포 중인 것과 같이 stateless 원격 MCP 서버가 일시적으로 HTTP 404를 반환할 때, 연결됨으로 계속 표시되면서도 세션 나머지 시간 동안 해당 서버를 사용할 수 없게 되던 버그 수정
 
 ---
 

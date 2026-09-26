@@ -2,7 +2,7 @@
 
 > Source: https://code.claude.com/docs/en/mcp
 
-**Last Synced**: 2026-09-20 (v2.1.278)
+**Last Synced**: 2026-09-26 (v2.1.283)
 
 ---
 
@@ -53,10 +53,10 @@
 | **OAuth 2.0** | `/mcp` 명령으로 인증 (자동/수동 등록); CIMD/SEP-991 지원 — Dynamic Client Registration 없는 서버도 지원 (v2.1.81); 사인인 필요한 서버는 실제 인증 전까지 OAuth 클라이언트 미등록 (v2.1.265) |
 | **Dynamic Updates** | 서버가 `list_changed` 발송 시 도구 목록 갱신; `listChanged` capability 미선언 상태로 알림을 보내도 프롬프트·리소스가 갱신됨 (v2.1.274 수정) |
 | **claude mcp serve** | Claude Code를 MCP 서버로 노출 |
-| **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76) |
+| **Elicitation** | MCP 서버가 세션 중 사용자 입력 요청 (폼·URL); `Elicitation`/`ElicitationResult` Hook으로 인터셉트 (v2.1.76); URL-mode elicitation — 2026-07-28 프로토콜에서 브라우저 기반 플로우 오픈 요청, 확인 불가 시 대기 다이얼로그 미표시 (v2.1.281) |
 | **--channels** | 채널 capability 선언 MCP 서버가 도구 승인 프롬프트를 폰으로 릴레이 (v2.1.80-81) |
 | **도구 호출 축소** | read/search 호출 "Queried {server}" 단일 라인 표시, Ctrl+O로 확장 (v2.1.81) |
-| **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
+| **컨텍스트 2KB 상한** | 도구 설명·서버 지시문 2KB로 제한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84); `CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH`로 세션 전체 한도 변경 가능 (v2.1.280) |
 | **중복 서버 제거** | 로컬과 claude.ai 커넥터 동명 서버 중복 시 로컬 설정 우선 (v2.1.84) |
 | **자동 백그라운드 전환** | 도구 호출 2분 초과 시 자동 백그라운드 이동 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값 조정/비활성화 (v2.1.212) |
 
@@ -77,6 +77,15 @@
 - **Breaking (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 관리 — 이전에는 이 목록으로 `managed-mcp.json`의 literal 서버까지 필터링되었으나, 업그레이드 후 그런 서버는 그대로 로드됨. 차단하려면 `deniedMcpServers`를 사용
 
 **방법 3**: `managedMcpServers` (v2.1.259 신규) — 조직이 모든 사용자에게 HTTP/SSE MCP 서버를 배포 (`.mcp.json`과 동일한 엔트리 형식). 커맨드를 지정하는 엔트리는 스킵됨(로컬 실행형 서버는 이 채널로 배포 불가)
+
+## 버그 수정 (v2.1.281 - v2.1.283)
+
+- `claude plugin validate` — 로드 시 드롭될 `.mcp.json` 엔트리, 미선언 `${user_config.*}` 참조, 안전하지 않은 URL 검사 추가 (v2.1.281)
+- 도구 호출이 백그라운드로 전환된 후 MCP 진행(progress) 알림이 버려지던 버그 수정 (v2.1.283)
+- 세션 종료 시 시작 중이던 stdio MCP 서버가 계속 실행되던 버그 수정 (v2.1.283)
+- 프록시 재배포 등으로 인한 stateless 원격 MCP 서버의 일시적 404가 세션 내내 서버를 사용불가로 만들던 버그 수정 (v2.1.283)
+- URL 없는 MCP 서버 사인인 시도가 불명확한 SDK 오류로 실패하던 버그 수정 — `/mcp`가 이제 이런 서버에 Authenticate를 표시하지 않음 (v2.1.283)
+- `OTEL_LOG_TOOL_CONTENT=1` 설정 시 MCP 도구·WebFetch·WebSearch 출력도 `tool.output` OTel span에 포함 (v2.1.283)
 
 ## Headless 진단 (v2.1.219)
 

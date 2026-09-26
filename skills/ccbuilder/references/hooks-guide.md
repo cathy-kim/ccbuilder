@@ -2,9 +2,9 @@
 
 > Claude Code Hooks 개발 완전 가이드
 
-**Version**: 2.55.0
-**Last Updated**: 2026-09-06
-**Claude Code Version**: v2.1.263+
+**Version**: 2.56.0
+**Last Updated**: 2026-09-26
+**Claude Code Version**: v2.1.283+
 
 ---
 
@@ -128,6 +128,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
   "arguments": { "key": "value" }
 }
 ```
+
+> **v2.1.283 수정**: 차단형 이벤트(`PreToolUse` 등)에 등록된 `mcp_tool` Hook이 대상 MCP 서버가 아직 연결 중일 때 스킵되던 버그 수정 — 이제 MCP 연결 타임아웃까지 서버 연결을 기다린 후 실행합니다.
 
 ---
 
