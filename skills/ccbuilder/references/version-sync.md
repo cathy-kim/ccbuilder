@@ -77,6 +77,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.285 (2026-09-30 동기화)
+
+**새로운 기능:**
+- (v2.1.285) `allowedProviders` managed 설정 — 사용 가능한 API provider 제한
+- (v2.1.285) `CLAUDE_CODE_DISABLE_WEB_FETCH`·`CLAUDE_CODE_NONSTREAMING_TIMEOUT_RETRIES` env var
+- (v2.1.285) `claude --desktop`, `claude plugin configure <plugin>`, `claude plugin install --config <server>.<key>=<value>`
+- (v2.1.284) **Claude Sonnet 5.5** (`claude-sonnet-5-5`) — 기본 Sonnet, 1M 컨텍스트
+- (v2.1.284) `/mcp reconnect all`, `effortSlider:*`·`toggleUltracode` keybinding 액션
+- (v2.1.283) `availableModelsMatch`·`deniedModels` managed 설정, `/doctor prompt-audit`
+- (v2.1.282) `maxProseWidth` 설정, `allowClaudeInChromeWithManagedMcp` managed 설정
+
+**Changed (기본값 변경):**
+- 권한 모드 미설정 시 auto mode로 시작 (대화형·VS Code 전체, `-p`·Python SDK는 third-party/텔레메트리 off) (v2.1.284/285)
+- 백그라운드 Bash·PowerShell 명령 시간 제한 — 기본 30분, 최대 2시간 (v2.1.285)
+- 커스텀 `ANTHROPIC_BASE_URL` 세션 1M 컨텍스트 사용 (v2.1.285)
+- MCP 서버 이름 `widgets` 예약, fork 서브에이전트 부모 permission mode 유지 (v2.1.285)
+- 프로젝트 설정이 admin 필수 sandbox를 완화할 수 없음 (v2.1.285)
+
+**Breaking Changes:**
+- Windows 프로젝트·로컬 `env`의 `ALLUSERSPROFILE`·`SystemDrive`·`CommonProgramFiles*` 설정 무시 — user/managed 설정 사용 (v2.1.285)
+
+**주요 버그 수정:**
+- 동기 hook이 백그라운드 프로세스(`daemon &`) 때문에 멈추던 버그 수정 (v2.1.285)
+- Elicitation·ElicitationResult 훅 `{"decision":"block"}` 무시되던 버그 수정 (v2.1.284)
+- 재개 세션 MCP 도구 호출이 서버 연결 중 "No such tool available"로 실패하던 버그 수정 (v2.1.284)
+- 스트리밍 실패 시 API 요청이 최대 21회 재시도되던 버그 수정 (v2.1.285)
+
+---
+
 ### v2.1.278 (2026-09-20 동기화)
 
 **새로운 기능:**

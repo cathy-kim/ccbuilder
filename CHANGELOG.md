@@ -8,6 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.58.0] - 2026-09-30
+
+### Added
+- **Claude Code v2.1.285 sync** (v2.1.278 → v2.1.285 콘텐츠 반영)
+  - (v2.1.285) `allowedProviders` managed 설정 — 머신에서 사용할 수 있는 API provider 제한
+  - (v2.1.285) `CLAUDE_CODE_DISABLE_WEB_FETCH`, `CLAUDE_CODE_NONSTREAMING_TIMEOUT_RETRIES` 환경 변수 신규
+  - (v2.1.285) `claude --desktop`, `claude plugin configure <plugin>`(`--values-stdin`), `claude plugin install --config <server>.<key>=<value>` 신규
+  - (v2.1.285) 백그라운드 Bash·PowerShell 명령 시간 제한(기본 30분, 최대 2시간)
+  - (v2.1.285) fork 서브에이전트가 부모 permission mode(plan·`dontAsk`) 유지, auto mode 서브에이전트는 보고 직후 종료
+  - (v2.1.285) `/resume`·`claude --resume <id> "prompt"`가 실행 중 백그라운드 세션 열기, `/tasks` "System tasks" 행
+  - (v2.1.285) `claude mcp list`에 `ws` 서버 표시, 플러그인 stdio 서버 값 숨김
+  - (v2.1.284) **Claude Sonnet 5.5** (`claude-sonnet-5-5`) — 기본 Sonnet, 1M 컨텍스트, $2/$10 per Mtok
+  - (v2.1.284) `/mcp reconnect all`, `effortSlider:*`·`toggleUltracode` keybinding 액션, Ultracode 독립 토글
+  - (v2.1.284) Elicitation/ElicitationResult 훅 `{"decision":"block"}` 동작, Auto-memory 로딩 시 마크업 무력화
+  - (v2.1.283) `availableModelsMatch`·`deniedModels` managed 설정, `/doctor prompt-audit`, `x-claude-code-prompt-id` 게이트웨이 헤더
+  - (v2.1.282) `maxProseWidth` 설정, `allowClaudeInChromeWithManagedMcp` managed 설정
+
+### Changed
+- 인터랙티브·VS Code 세션은 권한 모드 미설정 시 auto mode로 시작 (`-p`·Python SDK는 third-party provider/텔레메트리 off 한정)
+- 커스텀 `ANTHROPIC_BASE_URL` 세션이 1M 컨텍스트 모델에서 1M 창 사용 (`/autocompact 200k`로 조정)
+- MCP 서버 이름 `widgets` 클라우드·self-hosted runner 예약, 프로젝트 설정의 sandbox 완화 차단
+- `/ultrareview` macOS·Linux git 2.31+ 요구, `/claude-api` Remote Control 실행 불가
+- SKILL.md 핵심 변경 사항(MCP·Memory·CLI·Breaking Changes) 및 version-sync.md 갱신
+
+---
+
 ## [2.57.0] - 2026-09-20
 
 ### Added
