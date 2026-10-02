@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 
+## [2.58.0] - 2026-10-02
+
+### Added
+- **Claude Code v2.1.287 sync** (v2.1.278 → v2.1.287)
+  - 이번 동기화에 제공된 Claude Code CHANGELOG 항목이 비어 있어 새로 반영할 기능·Breaking Change·Deprecation 없음
+
+### Changed
+- SKILL.md "핵심 변경 사항" 헤딩을 v2.1.287로 갱신 (콘텐츠 변경 없음)
+- 조건부 레퍼런스 문서(hooks/subagents/mcp/tools/memory)는 관련 변경이 없어 수정하지 않음
+
 ## [2.57.0] - 2026-09-20
 
 ### Added
