@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.58.0] - 2026-10-04
+
+### Added
+- **Claude Code v2.1.289 sync** (v2.1.278 → v2.1.289)
+  - 제공된 Claude Code CHANGELOG에 신규 항목이 없어 추가된 기능 없음
+
+### Changed
+- 호환 버전을 Claude Code v2.1.289로 갱신 (콘텐츠 변경 없음, SKILL.md 핵심 변경 사항 헤딩 갱신)
 
 ## [2.57.0] - 2026-09-20
 
