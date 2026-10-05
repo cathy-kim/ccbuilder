@@ -77,6 +77,11 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.289 (2026-10-05 동기화)
+
+**새로운 기능:**
+- 동기화 시점에 제공된 Claude Code CHANGELOG 항목 없음 — v2.1.278 이후 신규 기능·Breaking Change·Deprecation 반영 내용 없음
+
 ### v2.1.278 (2026-09-20 동기화)
 
 **새로운 기능:**
