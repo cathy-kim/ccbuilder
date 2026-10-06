@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.58.0] - 2026-10-06
+
+### Added
+- **Claude Code v2.1.291 sync** (v2.1.278 → v2.1.291 콘텐츠 반영)
+  - (v2.1.287) **Claude Mods** 도입 — 플러그인이 함수 훅으로 더 깊은 동작 수정; 내장 mod "You should know"(`/plugin enable cc-plugin-you-should-know@builtin`)
+  - (v2.1.290) mod 훅 확장 — `tool.check`에 `agentId`·`ceiling`, `turn.step` 결과에 `serverToolUses`, `ThemeKey`·`Color` 타입; `claude plugin validate`가 gating 훅의 `.catch` 여부 표시(`gatingHooks`)
+  - (v2.1.289) `agent.spawn`(teammate), 모든 plugin hook 이벤트에 일관된 agent id, `$.agent.list()` idle·waiting 상태
+  - (v2.1.288) `$.ui.selection()` mod API, `/code-review --max-findings <n>|all`, `/autocompact` 모델별 저장, 에이전트 뷰 Ctrl+F 검색·Alt+↑/↓ 그룹 이동, Ctrl+C로 지운 프롬프트 Up 복원
+  - (v2.1.288) `CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS` — 구조화 출력 거부 게이트웨이용
+  - (v2.1.290) `claude attach <name>`·`claude logs <name>` 이름 일부 허용; `/claude-api managed-agents-onboard <url|quickstart>`
+  - (v2.1.290) WebFetch `offset` 파라미터(100,000자 초과분 이어읽기); WebSearch 예산 시간당 100회 리필(`CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR`)
+  - (v2.1.290) 관리형 설정 심볼릭 링크 외부 경고, `/status`·doctor에 managed settings가 sandbox allowRead/도메인 무시 시 경고
+  - (v2.1.287) MCP URL elicitation(2025-11-25 프로토콜, `bareElicitationCapability`), `prompt_text` OTel `user_prompt` 필드
+  - (v2.1.290) 스킬 목록이 폴더명과 SKILL.md `name` 모두 표시; 내장 `plugin-authoring` 스킬이 mod 설치 명령 안내
+
+### Changed
+- (v2.1.288) `claude project purge` → `claude purge`(구 이름 유지)
+- (v2.1.290) 프로젝트 설정으로 `CLAUDE_CODE_DISABLE_ATTACHMENTS`·Claude in Chrome 활성화 불가
+- (v2.1.290) `pyright`는 읽기 전용 명령 아님, 일부 `ps` 형태와 `rg`/`git grep` 와일드카드 인자는 권한 프롬프트
+- (v2.1.290) in-process teammate `agent_id`가 agent ID로 변경(`name@team`은 `teammate_id`), TeammateIdle 훅이 서브에이전트·fork에서 발동하지 않음
+- (v2.1.290) `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`이 시작 연결 warm-up도 생략
+- (v2.1.290) `/code-review` medium effort가 Opus 5.5·Sonnet 5.5에서도 cleanup·CLAUDE.md 컨벤션 보고
+- (v2.1.288) path-scoped `.claude/rules`·중첩 CLAUDE.md가 Write/Edit에서도 로드; 플러그인 정의 에이전트가 팀에서 자체 프롬프트·tools·effort로 실행
+- 보안 수정 다수: Bash deny/ask 규칙 우회(변수 prefix·`declare`/`export`·sandbox auto-allow), PreToolUse 입력 재작성 후 규칙 재적용, Read deny 규칙이 이미지·@멘션·심볼릭 링크에 적용, `/ultrareview` 업로드 안정성
+- 안정성 수정: 세션 종료 시 마지막 메시지 유실(v2.1.291), 클라우드 권한 응답 유실(v2.1.291), `--resume` 컨텍스트 유실, 스케줄 작업(`/loop`) compaction 후 복원
 
 ## [2.57.0] - 2026-09-20
 
