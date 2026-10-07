@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-09-20
+**최종 동기화**: 2026-10-06
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.291 (2026-10-06 동기화)
+
+**새로운 기능:**
+- (v2.1.287) **Claude Mods** — 플러그인이 함수 훅으로 더 깊은 동작 수정; 내장 mod "You should know"(`/plugin enable cc-plugin-you-should-know@builtin`)
+- (v2.1.290) mod `tool.check`에 `agentId`·`ceiling`, `turn.step` 결과에 `serverToolUses`; `claude plugin validate`의 `gatingHooks` 출력
+- (v2.1.289) `agent.spawn`(teammate)·`$.agent.list()` idle/waiting 상태
+- (v2.1.288) `/code-review --max-findings <n>|all`, `/autocompact` 모델별 저장, `$.ui.selection()`
+- (v2.1.290) `claude attach/logs <name>` 이름 일부 허용, WebFetch `offset`, WebSearch 시간당 100회 리필(`CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR`)
+- (v2.1.287) MCP URL elicitation(2025-11-25 프로토콜; 미연결 시 `bareElicitationCapability: true`)
+
+**Changed:**
+- `claude project purge` → `claude purge`(구 이름 유지, v2.1.288)
+- 프로젝트 설정의 `CLAUDE_CODE_DISABLE_ATTACHMENTS`·Claude in Chrome 활성화 차단 (v2.1.290)
+- `pyright`·일부 `ps`·`rg`/`git grep` 와일드카드 인자 권한 프롬프트화 (v2.1.290)
+- in-process teammate `agent_id` → agent ID, `name@team`은 `teammate_id` (v2.1.290)
+- `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`이 시작 warm-up도 생략 (v2.1.290)
+
+**Breaking Changes:**
+- 없음 (위 Changed 항목의 동작 변경 참고)
+
+**주요 버그 수정:**
+- 종료 시 세션 마지막 메시지 유실 / 클라우드 권한 프롬프트 응답 유실 (v2.1.291)
+- Bash deny/ask 규칙 우회 다수(변수 prefix, sandbox auto-allow, zsh 변수명) 및 Read deny 규칙 적용 누락(이미지·@멘션·심볼릭 링크) 수정 (v2.1.289–290)
+- PreToolUse/PermissionRequest 훅 매칭 실패 시 호출 차단, 훅 입력 재작성 후 규칙 재적용 (v2.1.288–290)
+- 스케줄 작업(`/loop`) compaction·resume 후 복원, `--resume` 컨텍스트 유실 수정 (v2.1.288–290)
+
+---
 
 ### v2.1.278 (2026-09-20 동기화)
 

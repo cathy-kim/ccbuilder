@@ -255,6 +255,8 @@ MCP_CONNECTION_NONBLOCKING=true claude -p "prompt"
 
 MCP 서버가 세션 실행 중 사용자에게 구조화된 입력을 요청할 수 있습니다. 대화형 폼 필드 또는 브라우저 URL로 표시됩니다.
 
+**URL elicitation (v2.1.287)**: 2025-11-25 프로토콜 서버의 URL 프롬프트(로그인 등) 지원. 업데이트 후 서버가 연결되지 않으면 MCP 설정 항목에 `"bareElicitationCapability": true` 추가. 완료를 보고할 수 없는 서버의 URL 프롬프트는 "I'm done, continue" 선택 후 도구 호출이 계속됨 (v2.1.288).
+
 Hook으로 인터셉트 가능:
 - `Elicitation`: 요청이 표시되기 전에 인터셉트 (응답 오버라이드)
 - `ElicitationResult`: 응답이 서버로 전송되기 전에 오버라이드

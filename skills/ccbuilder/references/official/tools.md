@@ -67,8 +67,8 @@
 
 | Tool | Tokens | 용도 | 위험도 |
 |------|--------|------|--------|
-| `WebFetch` | 297 | URL 내용 가져오기 | 낮음 |
-| `WebSearch` | 331 | 웹 검색 | 낮음 |
+| `WebFetch` | 297 | URL 내용 가져오기 (100,000자 초과 시 미읽음 분량 안내, `offset`으로 이어읽기, v2.1.290) | 낮음 |
+| `WebSearch` | 331 | 웹 검색 (대화형 세션 예산 시간당 100회 리필, `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR`, v2.1.290) | 낮음 |
 
 ### Special Tools
 
