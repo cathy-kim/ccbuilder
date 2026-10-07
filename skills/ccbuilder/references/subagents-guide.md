@@ -321,6 +321,15 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 ---
 
+## v2.1.292 변경
+
+- Agent tool `effort` 파라미터 — 서브에이전트를 지정한 effort 레벨로 실행
+- 에이전트 이름 최대 256자 (초과 시 거부, 스킬·플러그인 파일 `name`은 무시)
+- `permissionMode: auto` 서브에이전트가 auto mode 사용 불가(설정 비활성·circuit breaker·미지원 모델) 시 auto로 진입하던 버그 수정
+- mod `agent.spawn` 훅이 workflow agent(run·index 포함)도 받아 거부 가능
+
+---
+
 ## 공식 문서
 
 - **Subagents Reference**: https://code.claude.com/docs/en/sub-agents

@@ -436,6 +436,14 @@ MAX_MCP_OUTPUT_TOKENS=50000
 
 ---
 
+## 프로토콜 협상 · 시작 (v2.1.292)
+
+- 로컬(stdio) MCP 서버도 프로토콜 `2026-07-28`을 기본 협상 (Bedrock·Vertex·Foundry 포함) — opt out: `MCP_PROTOCOL_NEGOTIATION=legacy`. 새 프로토콜 검사를 무시하는 서버는 첫 느린 연결 후 7일간 기억해 구방식으로 바로 연결.
+- `claude -p`·SDK 첫 턴이 HTTP/SSE 서버의 `resources/list` 응답을 기다리지 않음.
+- 이름이 128자를 넘는 MCP 도구는 제외되고 MCP 오류로 이름이 표시됨 (이전에는 모든 요청 실패).
+
+---
+
 ## MCP CLI 명령어
 
 ```bash

@@ -77,6 +77,33 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.292 (2026-10-07 동기화)
+
+**새로운 기능:**
+- Agent tool `effort` 파라미터 — 서브에이전트를 지정 effort 레벨로 실행
+- `claude plugin install --marketplace <source>` — 마켓플레이스 추가 후 설치
+- `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` — 529 재시도 백오프 기본 지연
+- Mod API: `prompt.autocomplete`, `$.model.complete` 프롬프트 캐싱, `agent.spawn`에 workflow agent 전달
+- Artifact 도구 목록 최대 200개, Code Review analytics 저장소별 분석
+
+**Changed:**
+- 로컬(stdio) MCP 서버 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out)
+- 에이전트 이름 최대 256자
+- 훅 출력 `<system-reminder>` 태그 이스케이프; Grep `file_path` 수용
+- 예약·Run now routine artifact 승인 없이 게시(본인만 공개)
+- `claude plugin test` 훅 내 `expect` 실패가 테스트 실패로 처리
+
+**Breaking Changes:**
+- 없음 (위 Changed의 MCP 프로토콜 협상 기본화·에이전트 이름 길이 제한 참고)
+
+**주요 버그 수정:**
+- 보안: UNC 경로 읽기 권한 프롬프트 우회, `/ultrareview` 스테이징 사본 읽기, 링크 교체 읽기, `rm -rf` 8.3 단축 경로
+- 서브에이전트 `permissionMode: auto` 오진입, 스킬 `allowed-tools` 재적용, `NO_PROXY` 무시
+- plan mode 복원, 예약 작업·`/loop` 유실, `claude -p` 백그라운드 명령 조기 중단
+- 128자 초과 MCP 도구명으로 인한 전체 요청 실패
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**

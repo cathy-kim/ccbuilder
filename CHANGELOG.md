@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-07
+
+### Added
+- **Claude Code v2.1.292 sync** (v2.1.291 → v2.1.292 콘텐츠 반영)
+  - Agent tool `effort` 파라미터 — 서브에이전트를 지정한 effort 레벨로 실행
+  - `claude plugin install --marketplace <source>` — 마켓플레이스 추가(`marketplace add`와 동일 정책 검사) 후 플러그인 설치
+  - `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` — 529(overloaded) 재시도 백오프 기본 지연 설정
+  - Mod API: `prompt.autocomplete` 이벤트, `$.model.complete` 프롬프트 캐싱(`cache: true` 블록), `agent.spawn` 훅에 workflow agent(run·index) 전달
+  - 훅 출력의 `<system-reminder>` 태그 이스케이프; Grep `file_path` 수용, Write·WebFetch·Read 불필요 파라미터 무시
+  - `-p`·SDK 첫 턴이 HTTP/SSE MCP 서버 `resources/list` 응답을 기다리지 않음; Artifact 도구 목록 최대 200개
+  - Code Review analytics: 기간 합계·저장소별 분석, 리뷰 시 base 브랜치의 CLAUDE.md 사용
+
+### Changed
+- 로컬(stdio) MCP 서버가 프로토콜 2026-07-28을 기본 협상(Bedrock·Vertex·Foundry 포함) — opt out: `MCP_PROTOCOL_NEGOTIATION=legacy`; 협상 미지원 서버는 7일간 기억
+- 에이전트 이름 최대 256자 (스킬·플러그인 파일 `name`은 초과 시 무시)
+- 예약·Run now routine이 본인만 볼 수 있는 artifact를 승인 없이 게시
+- `claude plugin test`: 훅 내 `expect` 실패·거부된 stub 응답이 테스트 실패로 처리
+- 샌드박스 strict 모드에서 `FOO=bar python3 app.py` 형태 명령 자동 허용
+- 사용량 한도 메시지 claude.ai 링크 `https://` 표기
+
+### Fixed
+- **보안**: PreToolUse 훅 승인·auto mode의 UNC 경로 파일 읽기 프롬프트 우회, `/ultrareview` 업로드 스테이징 사본 샌드박스 읽기, 노트북·PDF 읽기 중 링크 교체, 변조된 server-managed settings 캐시로 정책 플러그인 해제, `rm -rf` 8.3 단축 경로 미인식
+- 서브에이전트 `permissionMode: auto`가 auto mode 불가 시 진입하던 문제; 스킬 `allowed-tools` 규칙이 auto/plan mode 이탈 후 재적용되던 문제
+- `NO_PROXY`가 `HTTPS_PROXY` 설정 시 무시되던 문제; 128자 초과 MCP 도구명이 모든 요청을 실패시키던 문제
+- plan mode 미복원(`--resume`·`/resume`), 예약 작업 유실(`/resume`·`/branch`·`/clear` 후), 백그라운드 세션 `/loop` 재시작 유실, `claude -p` 백그라운드 명령 5초 후 중단
+- Read PDF `pages` 목록 오류 처리, 256KB 초과 @-멘션 파일 안내, Grep/Glob 읽기 불가 시 오보
+- 플러그인/mod 훅 다수(`tool.check` allow가 다이얼로그 생략, `.catch` 가드 누락, worker 재시작 중 권한 훅 누락, `$.state` 호출 많은 모듈 로딩 지연 등)
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added
