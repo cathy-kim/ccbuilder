@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-08
+
+### Added
+- **Claude Code v2.1.294 sync** (v2.1.291 → v2.1.294 콘텐츠 반영)
+  - (v2.1.293) **Claude Haiku 5.5** (`claude-haiku-5-5`) — 기본 Haiku 모델, 1M 컨텍스트, $0.10/$0.50 per Mtok (100K 초과 프롬프트 $0.50/$2.50)
+  - (v2.1.292) Agent tool `effort` 파라미터 — 서브에이전트 effort 레벨 지정
+  - (v2.1.292) `claude plugin install --marketplace <source>` — 마켓플레이스 추가 후 플러그인 설치
+  - (v2.1.292) `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` — 529 재시도 backoff 기본 지연 설정
+  - (v2.1.292) mod API: `prompt.autocomplete` 이벤트, `$.model.complete` 프롬프트 캐싱(`cache: true`), `agent.spawn` 훅에 workflow 에이전트 포함
+  - (v2.1.293) mod API: `$.tool.register`의 `isDeferred`, `subagentStatusLine` payload `agentType`, `claude plugin test`의 `mock.session`
+  - (v2.1.292) MCP: 로컬 stdio MCP 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out)
+
+### Changed
+- (v2.1.294) `prompt`·`agent` 훅을 지시문형으로 작성해도 차단 동작이 올바르게 적용; Stop·SubagentStop `prompt` 훅 판정 개선
+- (v2.1.292) 훅 출력의 `<system-reminder>` 태그 이스케이프, 에이전트 이름 최대 256자, 128자 초과 MCP 도구명 제외 + MCP 오류 표시
+- (v2.1.293) claude.ai 스킬 동기화 주기 약 40분, 에이전트·MCP 서버 목록에서 비ASCII 이름은 ASCII 뒤로 정렬
+- (v2.1.293) auto mode 거부 메시지 변경(v2.1.281) 및 클라우드 `/loop` 깨우기 복구(v2.1.290) 되돌림
+- (v2.1.293) path-scoped rules·중첩 CLAUDE.md가 Bash 단일 파일 `cat`/`head`/`tail`/`sed -n`/`grep` 조회 시에도 로드
+
+### Fixed
+- (v2.1.292) 보안: PreToolUse 훅 승인·auto mode가 UNC 경로 읽기 권한 프롬프트 우회, `permissionMode: auto` 서브에이전트의 auto mode 불가 시 진입
+- (v2.1.292) 샌드박스 명령이 `/ultrareview` 업로드 사본(`~/.claude/seed-admin`)을 읽을 수 있던 문제
+- (v2.1.293) `SendMessage`가 제거된 세션에서 서브에이전트 계속 안내, 서브에이전트가 내장 도구를 세션 전체 비활성으로 안내받던 문제
+- (v2.1.293) HTTP MCP 연결 메모리 누수, `claude purge` 삭제 실패 시 조용히 중단되던 문제
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

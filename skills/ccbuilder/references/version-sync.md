@@ -77,6 +77,27 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.294 (2026-10-08 동기화)
+
+**새로운 기능:**
+- (v2.1.293) **Claude Haiku 5.5** (`claude-haiku-5-5`) — 기본 Haiku, 1M 컨텍스트, $0.10/$0.50 per Mtok
+- (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace <source>`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`
+- (v2.1.292–293) mod API: `prompt.autocomplete`, `$.model.complete` 프롬프트 캐싱, `agent.spawn`에 workflow 에이전트, `$.tool.register` `isDeferred`, `subagentStatusLine` `agentType`, `mock.session`
+
+**Changed:**
+- `prompt`·`agent` 훅 지시문형 작성 시 차단 정상 적용, Stop·SubagentStop `prompt` 훅 판정 개선 (v2.1.294)
+- 훅 출력 `<system-reminder>` 이스케이프, 에이전트 이름 256자 제한 (v2.1.292)
+- stdio MCP 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy` opt out, v2.1.292)
+- claude.ai 스킬 동기화 약 40분 주기, auto mode 거부 메시지(v2.1.281)·클라우드 `/loop` 복구(v2.1.290) 되돌림 (v2.1.293)
+
+**Breaking Changes:**
+- 없음
+
+**주요 버그 수정:**
+- PreToolUse 훅 승인·auto mode의 UNC 경로 읽기 프롬프트 우회 수정 (v2.1.292)
+- `permissionMode: auto` 서브에이전트 auto mode 불가 시 진입 수정 (v2.1.292)
+- HTTP MCP 연결 메모리 누수, path-scoped rules의 Bash 조회 시 미로드 수정 (v2.1.293)
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**

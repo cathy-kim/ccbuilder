@@ -185,6 +185,8 @@ SendMessage({ to: "agent-id-from-previous-task", content: "이전 작업을 계�
 
 **v2.1.248+**: `SendMessage`/`ListAgents` 크로스세션 메시징이 Bedrock·Vertex·Foundry·텔레메트리 비활성화 세션에서도 동일 머신 내 세션 간 동작. **v2.1.251+**: 포그라운드 서브에이전트의 도구 호출·결과가 Remote Control에 실시간 스트리밍(백그라운드는 상태만 표시); `PreModelSwitch`/`PostModelSwitch` Hook으로 모델 전환 차단·확인·주석 가능. **v2.1.261+**: `--append-subagent-system-prompt-file <path>` — 긴 서브에이전트 시스템 프롬프트를 파일에서 읽음. **v2.1.267 수정**: `effort:` frontmatter가 Opus 4.7·4.8·Fable 5처럼 기본 effort가 고정된 모델에서 무시되던 버그 수정 — 커스텀 명령·스킬·서브에이전트 모두 적용.
 
+**v2.1.292–293**: Agent tool `effort` 파라미터 — Claude가 요청된 effort 레벨로 서브에이전트 실행; `permissionMode: auto` 서브에이전트는 auto mode 사용 불가(설정 비활성·circuit breaker·미지원 모델) 시 진입하지 않음; 에이전트 이름 최대 256자; `SendMessage`가 제거된 세션(호스트·권한 규칙·`--tools`)에서는 서브에이전트 계속/메시지 안내를 하지 않음; `worker`라는 커스텀 에이전트가 "Agent"로 표시되던 버그 수정; `subagentStatusLine` payload에 `agentType` 추가; 에이전트 목록은 비ASCII 이름이 ASCII 뒤에 정렬.
+
 ---
 
 ## 제약 사항

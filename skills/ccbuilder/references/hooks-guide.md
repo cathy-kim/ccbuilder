@@ -328,6 +328,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **지시문형 `prompt`/`agent` 훅** (v2.1.294): "Block commands that..." 같은 지시문형 프롬프트가 차단해야 할 동작을 허용하던 버그 수정. Stop·SubagentStop `prompt` 훅("Carry on if the build is broken")은 판정이 개선되어 Claude가 일찍 멈출 가능성 감소
+- **훅 출력 이스케이프** (v2.1.292): 훅 출력에 쓰인 `<system-reminder>` 태그는 Claude에 전달되기 전 이스케이프됨
 
 ---
 
