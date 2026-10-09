@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-09
+
+### Added
+- **Claude Code v2.1.295 sync** (v2.1.291 → v2.1.295 콘텐츠 반영)
+  - (v2.1.295) command·HTTP hook `onFailure: "block"` — 시작 실패, 타임아웃, 예상 외 exit code 시 액션 차단
+  - (v2.1.295) Program Status Protocol (OSC 7501) 지원, `/copy` 피커 인용문(`>` 제거), `claude plugin install/enable/disable/marketplace add` 설정 파일 미로드 경고
+  - (v2.1.295) Claude apps gateway: upstream별 `models` 목록(`*` 와일드카드), `timeouts.upstream_ttfb_ms`, `upstream_request_id` 감사 이벤트, `request-id` 응답 헤더, 사용자 설정의 `forceLoginMethod: "gateway"`/`forceLoginGatewayUrl`
+  - (v2.1.295) mod API: `$.ui.notify`, `Button` children(문자열·`Text`)
+  - (v2.1.295) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS` — 무인 재시도 모드 429/529 대기 상한
+  - (v2.1.295) `claude plugin validate`가 README 설치 안내 누락 시 조언 출력(exit code 불변)
+  - (v2.1.294) `prompt`/`agent` hook 지시문형 프롬프트 판정 개선 (Stop/SubagentStop 포함)
+  - (v2.1.293) Claude Haiku 5.5 (`claude-haiku-5-5`, 1M 컨텍스트), `subagentStatusLine`의 `agentType`, mod `$.tool.register`의 `isDeferred`
+  - (v2.1.292) `claude plugin install --marketplace <source>`, Agent tool `effort` 파라미터, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`, mod `prompt.autocomplete`·`$.model.complete` 프롬프트 캐싱·`agent.spawn`에 workflow agent 포함
+
+### Changed
+- (v2.1.295) MCP 도구 설명(tool search) 한도 2,048 → 16,384자; WebSocket MCP 16 MiB 초과 메시지 시 연결 종료
+- (v2.1.295) subagent `skills` 프리로드 최대 32개; claude.ai connector MCP 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy` 옵트아웃)
+- (v2.1.295) 백그라운드 요청이 gateway에서 Haiku 4.5 사용; Ctrl+C가 `/loop` wakeup을 유지(Esc로 중지)
+- (v2.1.292) stdio MCP 프로토콜 2026-07-28 기본 협상, agent 이름 최대 256자, hook 출력 `<system-reminder>` 이스케이프
+- 보안(v2.1.292): PreToolUse hook 승인·auto mode가 UNC 경로 읽기 권한 프롬프트를 우회하던 문제 수정
+- 주요 수정: `[1m]` 모델 context-1m beta 거부 시 재시도, Bash 권한 검사(glob for-loop), `--tools`/`--restricted` 적용 범위, 원격 MCP 재연결 백오프, 비동기 SessionStart hook 중복 컨텍스트, `CLAUDE_ENV_FILE` 변수의 `/resume`·`/branch` 전달, skill `allowed-tools`·`effort` 유실
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

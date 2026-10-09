@@ -68,6 +68,14 @@
 }
 ```
 
+**`onFailure: "block"` (v2.1.295)**: command·HTTP hook에 지정하면 hook이 시작되지 못하거나, 타임아웃되거나, 예상 외 exit code로 끝날 때 액션을 통과시키지 않고 차단합니다 (기본은 통과).
+
+```json
+{ "type": "command", "command": "./hooks/guard.sh", "onFailure": "block" }
+```
+
+**관련 변경**: 지시문형 `prompt`/`agent` hook("Block commands that...")이 차단해야 할 것을 허용하던 문제 수정 (v2.1.294); hook 출력의 `<system-reminder>` 태그는 이스케이프되어 Claude에 전달 (v2.1.292); 비동기 hook의 멀티라인 JSON 출력 인식, 비동기 SessionStart hook 컨텍스트 resume 중복 방지 (v2.1.295).
+
 ### HTTP Hook (신규 v2.1.63)
 
 Shell 없이 URL로 JSON POST, JSON 응답 수신:

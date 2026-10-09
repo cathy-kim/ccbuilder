@@ -77,6 +77,34 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.295 (2026-10-09 동기화)
+
+**새로운 기능:**
+- (v2.1.295) command·HTTP hook `onFailure: "block"` — 시작 실패/타임아웃/예상 외 exit code 시 액션 차단
+- (v2.1.295) OSC 7501 Program Status Protocol, `/copy` 인용문 처리, plugin 명령 설정 파일 미로드 경고, `claude plugin validate` README 설치 안내 조언
+- (v2.1.295) Claude apps gateway: upstream `models` 목록, `timeouts.upstream_ttfb_ms`, `upstream_request_id`, `forceLoginMethod: "gateway"`
+- (v2.1.295) mod `$.ui.notify`, `Button` children; `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`
+- (v2.1.293) Claude Haiku 5.5 (`claude-haiku-5-5`), `subagentStatusLine.agentType`, `$.tool.register` `isDeferred`
+- (v2.1.292) `claude plugin install --marketplace`, Agent tool `effort`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`, `prompt.autocomplete`
+
+**Changed:**
+- MCP 도구 설명 tool search 한도 2,048 → 16,384자, WebSocket MCP 16 MiB 초과 시 연결 종료 (v2.1.295)
+- subagent `skills` 프리로드 최대 32개 (v2.1.295)
+- claude.ai connector/stdio MCP 프로토콜 2026-07-28 기본 협상, `MCP_PROTOCOL_NEGOTIATION=legacy` 옵트아웃 (v2.1.292/295)
+- agent 이름 최대 256자, hook 출력 `<system-reminder>` 이스케이프 (v2.1.292)
+
+**Breaking Changes:**
+- 없음
+
+**주요 버그 수정:**
+- `prompt`/`agent` hook 지시문형 프롬프트가 차단해야 할 것을 허용하던 문제 (v2.1.294)
+- UNC 경로 읽기가 PreToolUse hook 승인·auto mode로 권한 프롬프트 우회 (v2.1.292, Security)
+- Bash 권한 검사(glob for-loop), `--tools`/`--restricted` 후등록 도구 적용 (v2.1.295)
+- 비동기 SessionStart hook 컨텍스트 중복, `CLAUDE_ENV_FILE` 변수 `/resume`·`/branch` 전달, 비동기 hook 멀티라인 JSON 출력 (v2.1.295)
+- skill `allowed-tools`·`effort` 유실로 `-p` 실행 시 Bash 거부 (v2.1.295)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**
