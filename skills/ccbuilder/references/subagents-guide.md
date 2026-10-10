@@ -100,6 +100,7 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
 | `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`), 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) | - |
 | `omitClaudeMd` | boolean | `true` 시 유저·프로젝트·로컬 CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드), `--agents` JSON에서도 지정 가능 (v2.1.271) | false |
+| `autoCompactWindow` | number | 이 서브에이전트가 메인 대화 윈도우보다 일찍 auto-compact되도록 지정, `--agents` JSON에서도 지정 가능 (v2.1.296) | - |
 
 ---
 

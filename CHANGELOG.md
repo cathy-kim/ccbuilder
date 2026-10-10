@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-10
+
+### Added
+- **Claude Code v2.1.296 sync** (v2.1.291 → v2.1.296 콘텐츠 반영)
+  - (v2.1.295) command·HTTP 훅 `onFailure: "block"` — 훅이 시작 실패·타임아웃·예상 외 exit code일 때 동작 차단
+  - (v2.1.293) **Claude Haiku 5.5** (`claude-haiku-5-5`) — 기본 Haiku 모델, 1M 컨텍스트, $0.10/$0.50 per Mtok; `subagentStatusLine`에 `agentType`
+  - (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace <source>`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`, 훅 출력 `<system-reminder>` 이스케이프
+  - (v2.1.296) 서브에이전트 frontmatter·`--agents` `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read 도구 `allow_large`
+  - (v2.1.296) `--debug`가 훅 command·plugin·결과·소요 시간 로깅, 커스텀 에이전트 파일의 미인식 frontmatter 필드 표시
+  - (v2.1.296) Claude apps gateway `managed.policies[]` `code` 키; Sonnet 5.5 캐시 읽기 $0.10/Mtok로 인하
+  - (v2.1.295) Program Status Protocol(OSC 7501), `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, `/copy` 인용문 선택, `$.ui.notify` mod API
+  - (v2.1.295) `claude plugin validate` README install line 조언, Grep `-l`/`-c`/`-r` 입력 허용
+
+### Changed
+- (v2.1.296) MCP 도구 설명·서버 지시문 기본 한도 2,048 → 4,096자 (v2.1.295: tool search 로드 설명은 16,384자에서 절단)
+- (v2.1.295) 서브에이전트 `skills` 프리로드 최대 32개; `←` 백그라운드 전환 동작 변경(v2.1.296: 진행 중이던 턴/`!` 명령 중단)
+- (v2.1.296) `BASH_ARGV0` 할당 후 사용 명령은 권한 프롬프트; 비-UTF-8 파일(Windows-1252, Shift-JIS, GBK) Edit/NotebookEdit 거부
+- (v2.1.296) `CLAUDE_CODE_TRANSCRIPT_LOCAL_GC`는 해제량 10% 미만이면 재작성 생략
+
+### Fixed
+- (v2.1.294) 지시문 형태 `prompt`/`agent` 훅이 차단해야 할 것을 허용하던 문제, Stop/SubagentStop `prompt` 훅 판정 개선
+- (v2.1.296) managed `PreToolUse` `"continue": false`·managed `prompt` 훅 차단이 턴을 끝내지 않던 문제, managed PostToolUse `updatedMCPToolOutput` 미적용
+- (v2.1.296) 헤드리스 세션이 비활성화된 `.mcp.json`/플러그인 MCP 서버를 시작하던 문제, 동명 플러그인 SessionStart 훅 누락
+- (v2.1.296) 시크릿 마스킹 누락, `claude purge`/GC의 U+2028·U+2029 처리, `constructor`/`prototype` 이름 마켓플레이스·플러그인 시크릿 오류
+- (v2.1.295) 원격 MCP 서버 장기 장애 후 재연결, MCP 페이지네이션 커서 반복, `--tools`/`--restricted` 후등록 도구 적용
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added
