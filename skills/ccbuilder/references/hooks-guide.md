@@ -328,6 +328,10 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **`onFailure: "block"`** (v2.1.295): command·HTTP 훅이 시작 실패·타임아웃·예상 외 exit code일 때 동작을 통과시키지 않고 차단
+- **지시문형 `prompt`/`agent` 훅** (v2.1.294): "Block commands that..." 같은 지시문 형태가 차단해야 할 것을 허용하던 문제 수정; Stop/SubagentStop 지시문 판정 개선
+- **managed 훅** (v2.1.296): `PreToolUse` `"continue": false` 거부·managed `prompt` 훅 차단이 이제 턴을 종료; PostToolUse `updatedMCPToolOutput` 적용 수정
+- **훅 출력** (v2.1.292/296): `<system-reminder>` 태그 이스케이프, plugin hint 유사 텍스트 변형 수정; `--debug`가 command·plugin·결과·소요 시간 로깅
 
 ---
 

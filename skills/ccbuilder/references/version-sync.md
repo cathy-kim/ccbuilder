@@ -77,6 +77,32 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.296 (2026-10-10 동기화)
+
+**새로운 기능:**
+- (v2.1.295) command·HTTP 훅 `onFailure: "block"` — 시작 실패·타임아웃·예상 외 exit code 시 동작 차단
+- (v2.1.293) Claude Haiku 5.5 (`claude-haiku-5-5`) 기본 Haiku, `subagentStatusLine` `agentType`
+- (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace <source>`
+- (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`(+ v2.1.292 `BASE_DELAY_MS`), Read `allow_large`
+- (v2.1.296) `--debug` 훅 로깅(command·plugin·결과·소요 시간), 미인식 agent frontmatter 필드 표시
+- (v2.1.295) OSC 7501 Program Status Protocol, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, `$.ui.notify`
+
+**Changed:**
+- MCP 도구 설명·서버 지시문 기본 한도 2,048 → 4,096자 (v2.1.296)
+- 서브에이전트 skills 프리로드 최대 32개 (v2.1.295)
+- `←` 백그라운드 전환 시 진행 중이던 턴/`!` 명령 중단 (v2.1.296)
+- Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10/Mtok (v2.1.296)
+
+**Breaking Changes:**
+- 없음 (위 Changed 항목의 동작 변경 참고)
+
+**주요 버그 수정:**
+- 지시문 형태 `prompt`/`agent` 훅 차단 누락 (v2.1.294), managed 훅 거부/차단이 턴을 끝내지 않던 문제 (v2.1.296)
+- `BASH_ARGV0` Bash 권한 우회, 비-UTF-8 파일 Edit 손상 수정 (v2.1.296)
+- 비활성화된 MCP 서버의 헤드리스 시작, 원격 MCP 재연결 루프 수정 (v2.1.295–296)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**
