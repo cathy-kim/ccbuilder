@@ -100,6 +100,9 @@ React/Next.js 기반 프론트엔드 개발을 담당합니다.
 | `mcpServers` | object | `--agent` 세션에서 로드할 MCP 서버 정의 (v2.1.117) | - |
 | `experimental.cacheTtl` | string | 프롬프트 캐시 TTL (`"5m"`\|`"1h"`), 미설정 시 서브에이전트 TTL 설정 사용 (v2.1.248) | - |
 | `omitClaudeMd` | boolean | `true` 시 유저·프로젝트·로컬 CLAUDE.md 없이 실행(관리형 정책 파일은 계속 로드), `--agents` JSON에서도 지정 가능 (v2.1.271) | false |
+| `autoCompactWindow` | number | 서브에이전트가 메인 대화의 윈도우보다 일찍 auto-compact되도록 지정, `--agents` JSON에서도 지정 가능 (v2.1.296) | - |
+
+> `--debug` 실행 시 custom agent 파일의 미인식 frontmatter 필드가 오타 힌트와 함께 표시됩니다 (v2.1.296). 서브에이전트가 `skills` 필드로 프리로드하는 스킬은 최대 32개(각 1회)이며 나머지는 Skill tool로 호출합니다 (v2.1.295). Agent tool은 `effort` 파라미터로 서브에이전트 effort를 지정할 수 있고 (v2.1.292), `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`로 워크플로우 에이전트 전체를 단일 모델로 실행할 수 있습니다 (v2.1.296).
 
 ---
 

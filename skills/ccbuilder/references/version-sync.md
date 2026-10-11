@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.296 (2026-10-11 동기화)
+
+**새로운 기능:**
+- (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read tool `allow_large`
+- (v2.1.295) command·HTTP 훅 `onFailure: "block"`, OSC 7501 지원, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, `$.ui.notify`
+- (v2.1.293) **Claude Haiku 5.5**(`claude-haiku-5-5`) 기본 Haiku, `subagentStatusLine` `agentType`
+- (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`
+
+**Changed:**
+- MCP 도구 설명·서버 지시문 기본 상한 2,048 → 4,096자 (v2.1.296)
+- Sonnet 5.5 캐시 읽기 $0.10/Mtok (v2.1.296)
+- 서브에이전트 `skills` 프리로드 최대 32개 (v2.1.295), 에이전트 이름 최대 256자 (v2.1.292)
+- stdio·claude.ai MCP 2026-07-28 프로토콜 기본 협상 (v2.1.292/295)
+
+**Breaking Changes:**
+- 없음 (`BASH_ARGV0` 사용 명령 권한 프롬프트화, 비-UTF-8 파일 편집 거부 등 동작 변경은 Changed 참고)
+
+**주요 버그 수정:**
+- managed PreToolUse `"continue": false`/prompt 훅 차단이 턴을 종료하지 않던 문제, instruction 형태 prompt/agent 훅이 차단 못하던 문제 (v2.1.294, v2.1.296)
+- UNC 경로 읽기 권한 우회, 샌드박스 읽기 거부 경로 처리 (v2.1.292)
+- UserPromptSubmit 훅 중 Esc가 헤드리스 세션 종료/프롬프트 통과시키던 문제, SessionStart 훅 동명 플러그인 스킵 (v2.1.296)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**

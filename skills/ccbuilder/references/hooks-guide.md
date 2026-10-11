@@ -53,6 +53,8 @@
 
 **continueOnBlock (PostToolUse, v2.1.139)**: `"continueOnBlock": true` 설정 시 hook이 block 결정을 반환해도 거부 사유를 모델에게 피드백하고 턴을 계속 진행 (기본: 중단)
 
+**onFailure: "block" (command·HTTP hook, v2.1.295)**: 훅이 시작되지 못하거나 타임아웃되거나 예상 밖의 종료 코드를 반환하면 액션을 통과시키지 않고 차단 (기본은 통과). `prompt`/`agent` 훅을 지시문 형태("Block commands that...")로 작성해도 올바르게 차단하며 (v2.1.294), managed `PreToolUse` 훅의 `"continue": false` 거부와 managed `prompt` 훅 차단은 턴을 종료합니다 (v2.1.296). 훅 출력의 `<system-reminder>` 태그는 Claude에 전달되기 전 이스케이프됩니다 (v2.1.292). `--debug`는 command 훅의 command·plugin·결과·소요 시간을 기록합니다 (v2.1.296).
+
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
 
 ---

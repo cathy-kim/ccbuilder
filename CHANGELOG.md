@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-11
+
+### Added
+- **Claude Code v2.1.296 sync** (v2.1.291 → v2.1.296 콘텐츠 반영)
+  - (v2.1.296) 서브에이전트 frontmatter·`--agents`에 `autoCompactWindow` — 메인보다 일찍 auto-compact
+  - (v2.1.296) `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`(워크플로우 에이전트 단일 모델), `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`(529 백오프 최대 지연)
+  - (v2.1.296) Read tool `allow_large` 옵션 — 크기 제한 초과 텍스트 파일 한 번에 읽기
+  - (v2.1.296) Claude apps gateway `managed.policies[]`의 `code` 키(Desktop Code 탭 적용); `--debug`가 custom agent 미인식 frontmatter 필드·command 훅 실행 결과/소요 시간 표시
+  - (v2.1.295) command·HTTP 훅 `onFailure: "block"` — 시작 실패·타임아웃·비정상 종료 시 액션 차단
+  - (v2.1.295) OSC 7501(Program Status Protocol) 지원, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, `forceLoginMethod: "gateway"`를 사용자 설정에서 지원, `$.ui.notify` mod API, gateway upstream `models` 목록
+  - (v2.1.293) **Claude Haiku 5.5**(`claude-haiku-5-5`) — 기본 Haiku, 1M 컨텍스트, `subagentStatusLine`에 `agentType`, `$.tool.register` `isDeferred`
+  - (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace <source>`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`, mod `prompt.autocomplete`·`$.model.complete` 프롬프트 캐싱
+
+### Changed
+- (v2.1.296) MCP 도구 설명·서버 지시문 기본 상한 2,048 → 4,096자 (tool search 로드 설명은 16,384자, v2.1.295)
+- (v2.1.296) Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10/Mtok; `←` 이동 중 시작된 턴/`!` 명령은 중단
+- (v2.1.295) 서브에이전트 `skills` 프리로드 최대 32개; WebSocket MCP 16 MiB 초과 메시지 연결 종료; 에이전트 이름 최대 256자(v2.1.292)
+- (v2.1.292–295) 로컬 stdio·claude.ai 커넥터 MCP 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy` opt out)
+- 보안/버그: `BASH_ARGV0` 할당 후 사용 명령 권한 프롬프트화, 비-UTF-8 파일 Edit/NotebookEdit 거부, managed PreToolUse `"continue": false`·prompt 훅 차단이 턴 종료, instruction 형태 prompt/agent 훅 차단 오동작 수정(v2.1.294), UNC 경로 읽기 권한 우회 수정(v2.1.292), 훅 출력 `<system-reminder>` 이스케이프(v2.1.292)
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added
