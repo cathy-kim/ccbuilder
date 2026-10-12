@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-12
+
+### Added
+- **Claude Code v2.1.296 sync** (v2.1.291 → v2.1.296 콘텐츠 반영)
+  - (v2.1.296) `autoCompactWindow` — subagent frontmatter·`--agents` 필드, 서브에이전트가 메인 대화보다 일찍 auto-compact
+  - (v2.1.296) `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`(workflow 에이전트 단일 모델), `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`(529 백오프 최대 지연), Read tool `allow_large` 옵션
+  - (v2.1.296) Claude apps gateway `managed.policies[]`의 `code` 키(Desktop Code 탭 적용), `--debug`가 agent 파일의 알 수 없는 frontmatter 필드·훅 실행 결과/소요시간 로깅
+  - (v2.1.295) command·HTTP Hook `onFailure: "block"` — 훅 시작 실패·타임아웃·예상 외 exit code 시 액션 차단
+  - (v2.1.295) Program Status Protocol(OSC 7501), `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, `claude plugin validate` README install 라인 안내, 설정 파일 미로드 경고, `/copy` 인용문 선택
+  - (v2.1.295) Claude apps gateway: 업스트림 `models` 목록, `timeouts.upstream_ttfb_ms`, `upstream_request_id` 감사 이벤트, user settings의 `forceLoginMethod: "gateway"`
+  - (v2.1.295) mod API `$.ui.notify`, `Button` children
+  - (v2.1.293) Claude Haiku 5.5(`claude-haiku-5-5`) 기본 Haiku 모델 — 1M 컨텍스트, $0.10/$0.50 per Mtok; `subagentStatusLine`에 `agentType`; `$.tool.register`의 `isDeferred`
+  - (v2.1.292) Agent tool `effort` 파라미터, `claude plugin install --marketplace <source>`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`, `prompt.autocomplete` mod 이벤트, `$.model.complete` 프롬프트 캐싱, 워크플로우 에이전트의 `agent.spawn` 훅 노출
+
+### Changed
+- (v2.1.296) MCP 도구 설명·서버 instructions 기본 한도 2,048 → 4,096자 (tool search 로드분은 v2.1.295부터 16,384자)
+- (v2.1.296) Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10 per Mtok (`/cost`, 상태줄, `--max-budget-usd`)
+- (v2.1.296) `←` 백그라운드 이동 중 시작된 턴·`!` 명령은 중단; 비-UTF-8 파일 Edit/NotebookEdit 거부; `BASH_ARGV0` 할당 후 사용 Bash 명령은 권한 프롬프트
+- (v2.1.295) 서브에이전트 `skills` 프리로드 최대 32개; WebSocket MCP 16 MiB 초과 메시지 시 연결 종료; claude.ai 커넥터 MCP 프로토콜 2026-07-28 기본 협상
+- (v2.1.294) `prompt`/`agent` 훅이 지시문형일 때 차단 실패하던 버그 수정, Stop/SubagentStop `prompt` 훅 판정 개선
+- (v2.1.292) stdio MCP 서버 프로토콜 2026-07-28 기본 협상(`MCP_PROTOCOL_NEGOTIATION=legacy` 옵트아웃); Hook 출력의 `<system-reminder>` 태그 이스케이프; 에이전트 이름 최대 256자
+- (v2.1.292) 보안: PreToolUse 훅 승인·auto mode가 UNC 경로 파일 읽기의 권한 프롬프트를 우회하던 문제 수정
+- (v2.1.296) 버그 수정: managed `PreToolUse` deny/`prompt` 훅 차단 시 턴 미종료, managed PostToolUse `updatedMCPToolOutput` 미적용, 헤드리스 비활성 MCP 서버 기동, 비밀값 redaction 누락, `/code-review` raw JSON 출력
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added
