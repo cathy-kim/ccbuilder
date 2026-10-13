@@ -327,6 +327,8 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **Stop hook**: `block` decision 반환 시 Claude가 계속 작업 (reason 필수)
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
+- **`onFailure: "block"`** (v2.1.295): command·HTTP hook이 시작 실패·타임아웃·예상 외 exit code일 때 동작을 통과시키지 않고 차단
+- **관리형 hook** (v2.1.296): PreToolUse `"continue": false` 거부와 prompt hook 차단이 이제 턴도 종료; PostToolUse `updatedMCPToolOutput` 적용 수정; hook 출력의 `<system-reminder>` 태그는 이스케이프(v2.1.292); `--debug`가 hook 명령·플러그인·결과·소요 시간 로그
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
 
 ---

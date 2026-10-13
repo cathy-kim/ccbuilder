@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.296 (2026-10-13 동기화)
+
+**새로운 기능:**
+- (v2.1.296) 서브에이전트 frontmatter·`--agents`의 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`
+- (v2.1.296) Read `allow_large`, `/plugin` 동일 이름 플러그인 hook 누락 안내, gateway `managed.policies[]` `code` 키
+- (v2.1.295) command·HTTP hook `onFailure: "block"`, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, OSC 7501, mod `$.ui.notify`
+- (v2.1.293) Claude Haiku 5.5(`claude-haiku-5-5`), `subagentStatusLine` `agentType`, `$.tool.register` `isDeferred`
+- (v2.1.292) `claude plugin install --marketplace <source>`, Agent 도구 `effort`, `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS`
+
+**Changed:**
+- MCP 도구 설명·서버 지시문 상한 2,048 → 4,096자 (v2.1.296), tool search 로드 설명 16,384자 (v2.1.295)
+- Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10/M (v2.1.296)
+- 서브에이전트 skills 프리로드 최대 32개 (v2.1.295)
+- stdio MCP·claude.ai 커넥터 프로토콜 2026-07-28 기본 협상 (v2.1.292, v2.1.295)
+- `←` 백그라운드 이동 중 시작된 턴 중단 (v2.1.296)
+
+**Breaking Changes:**
+- 없음 (Edit·NotebookEdit의 비-UTF-8 파일 편집 거부는 동작 변경)
+
+**주요 버그 수정:**
+- 관리형 PreToolUse `"continue": false`/prompt hook 차단 시 턴 미종료, PostToolUse `updatedMCPToolOutput` 미적용 (v2.1.296)
+- `BASH_ARGV0` Bash 권한 우회, UNC 경로 읽기 권한 우회(보안) (v2.1.296, v2.1.292)
+- `[1m]` 모델 context-1m beta 거부 시 요청 실패, 원격 MCP 재연결 루프 (v2.1.295)
+- `prompt`/`agent` hook 지시문형 프롬프트가 차단해야 할 것을 허용하던 문제 (v2.1.294)
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**

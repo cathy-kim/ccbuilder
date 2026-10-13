@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-13
+
+### Added
+- **Claude Code v2.1.296 sync** (v2.1.291 → v2.1.296 콘텐츠 반영)
+  - (v2.1.296) 서브에이전트 frontmatter·`--agents` 정의에 `autoCompactWindow` — 메인 대화보다 일찍 auto-compact
+  - (v2.1.296) `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`(workflow agent 단일 모델), `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`(529 백오프 최대 지연; v2.1.292 `..._BASE_DELAY_MS`와 쌍)
+  - (v2.1.296) Read 도구 `allow_large` 옵션; `/plugin`에 동일 이름 플러그인 hook 누락 안내
+  - (v2.1.296) Claude apps gateway `managed.policies[]`의 `code` 키(Claude Desktop Code 탭에도 적용)
+  - (v2.1.295) command·HTTP hook `onFailure: "block"` — 시작 실패·타임아웃·예상 외 exit code 시 동작 차단
+  - (v2.1.295) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, OSC 7501(Program Status Protocol) 지원, `/copy` picker 인용문, `claude plugin validate` README 설치 라인 안내, mod `$.ui.notify`·`Button` children
+  - (v2.1.295) gateway: 업스트림 `models` 목록, `timeouts.upstream_ttfb_ms`, `request-id` 헤더, 사용자 설정의 `forceLoginMethod: "gateway"`
+  - (v2.1.293) Claude Haiku 5.5(`claude-haiku-5-5`) 기본 Haiku 모델, `subagentStatusLine` payload `agentType`, mod `$.tool.register` `isDeferred`
+  - (v2.1.292) `claude plugin install --marketplace <source>`, Agent 도구 `effort` 파라미터, mod `prompt.autocomplete`·`$.model.complete` 프롬프트 캐싱
+
+### Changed
+- (v2.1.296) MCP 도구 설명·서버 지시문 기본 상한 2,048 → 4,096자; (v2.1.295) tool search 로드 MCP 설명 16,384자
+- (v2.1.296) `/cost`·상태줄·`--max-budget-usd`의 Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10/M 토큰
+- (v2.1.295) 서브에이전트 `skills` 필드 프리로드 최대 32개; claude.ai 커넥터·stdio MCP 기본 프로토콜 2026-07-28 협상(`MCP_PROTOCOL_NEGOTIATION=legacy`로 opt out, v2.1.292)
+- (v2.1.296) `←` 백그라운드 이동 중 시작된 턴/`!` 명령은 중단; Edit·NotebookEdit는 비-UTF-8 파일 편집 거부
+- (v2.1.294) `prompt`/`agent` hook의 지시문형 프롬프트 판정 개선; (v2.1.292) hook 출력의 `<system-reminder>` 태그 이스케이프
+
+### Fixed
+- (v2.1.296) 관리형 PreToolUse `"continue": false`·prompt hook 차단이 턴을 끝내지 않던 문제, 관리형 PostToolUse `updatedMCPToolOutput` 미적용, `UserPromptSubmit` hook 중 Esc 처리, 플러그인 SessionStart hook 중복 이름 스킵
+- (v2.1.296) `BASH_ARGV0` 할당 Bash 권한 자동 승인 수정, Workflow 도구 CRLF 스크립트 거부, `/code-review` raw JSON 출력, 시크릿 redaction 누락
+- (v2.1.295) `[1m]` 모델에서 context-1m beta 거부 시 재시도, 원격 MCP 재연결 백오프(최대 30초), `claude -p` 텍스트 출력 누락, 서브에이전트 worktree git 정보, `--tools`/`--restricted` 적용 범위
+- (v2.1.292) 보안: PreToolUse hook 승인·auto mode가 UNC 경로 파일 읽기 권한 프롬프트를 우회하던 문제
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added
