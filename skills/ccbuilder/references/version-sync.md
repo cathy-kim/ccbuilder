@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.299 (2026-10-14 동기화)
+
+**새로운 기능:**
+- (v2.1.299) Idle compaction (`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`), `CLAUDE_CODE_DISABLE_FILE_MENTIONS`
+- (v2.1.299) mod API: `$.prompt.media`, `$.session.identity()`, `Text` `size`/`weight`/`mono`/`tabular`, `Box` spacing, `session.append` `queue` door
+- (v2.1.299) `claude plugin eval --disallow-tools`, `/usage` 경고, agent view `/effort`·`/fast`
+- (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, Read `allow_large`
+- (v2.1.295) hook `onFailure: "block"`, `$.ui.notify`, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`
+
+**Changed:**
+- MCP allow 규칙·agent `tools:`가 서버 정확 이름에만 적용 (`mcp__<server>__*`) (v2.1.299)
+- `UserPromptSubmit` hook이 skill/slash command 확장 전 실행 (v2.1.299)
+- 차단 가능한 plugin hook 실패 시 거부; 비UTF-8 파일 Edit/Write 거부 (v2.1.296–299)
+- MCP 도구 설명·서버 instructions 한도 4,096자 (v2.1.296)
+
+**Breaking Changes:**
+- 없음 (위 Changed의 MCP allow 규칙·hook 실패 처리 동작 변경 참고)
+
+**주요 버그 수정:**
+- sandbox symlink/glob 우회, `--plugin-dir` 쓰기, plan mode hook 허용 쓰기 수정 (v2.1.299)
+- 게이트웨이 API 키가 Anthropic 요청에 포함되던 문제, 스케줄 작업 DST 중복 실행 (v2.1.299)
+- `/usage` 100% 초과 표시, 클라우드/Remote Control 세션 메시지·권한 응답 유실 (v2.1.299)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**

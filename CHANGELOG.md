@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-14
+
+### Added
+- **Claude Code v2.1.299 sync** (v2.1.291 → v2.1.299 콘텐츠 반영)
+  - (v2.1.299) **Idle compaction** — 200K+ 토큰 대화가 ~54분 유휴 시 1시간 prompt cache 만료 전 자동 compact; `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`
+  - (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS` — `@` 파일 멘션을 내용 대신 경로로만 전달
+  - (v2.1.299) `claude plugin eval --disallow-tools`·`disallowed_tools` 케이스 필드, `--shutdown-drain-sec`(self-hosted-runner orchestrator)
+  - (v2.1.299) mod API — `$.prompt.media`, `$.session.identity()`, `Text`의 `size`/`weight`/`mono`/`tabular`(`bold` deprecated), `Box` spacing 단계(`xs`~`xl`), `session.append`의 `queue` door, `skill.prompt` hook 메타데이터, `agent.spawn` resume 이벤트, `turn.start`가 서브에이전트·팀메이트 턴도 수신
+  - (v2.1.299) `/usage` 경고(max effort·workflow·always-on context·대형 tool result), agent view `/effort`·`/fast`, artifact watch 25개로 확대
+  - (v2.1.296) 서브에이전트 `autoCompactWindow` frontmatter, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read `allow_large`
+  - (v2.1.296) Claude apps gateway `managed.policies[]`의 `code` 키 (Desktop Code 탭 적용)
+  - (v2.1.295) command·HTTP hook `onFailure: "block"`, `$.ui.notify`, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, OSC 7501 Program Status Protocol
+
+### Changed
+- (v2.1.299) **MCP allow 규칙**은 이름 그대로의 서버에만 적용 (`mcp__a`가 `a__b`를 허용하지 않음 → `mcp__<server>__*`); agent `tools:` 목록도 동일
+- (v2.1.299) `UserPromptSubmit` hook이 skill/custom slash command 확장 전에 실행 — 차단 시 embedded shell 명령도 중지; skill front-matter hook은 호출 다음 프롬프트부터 실행
+- (v2.1.299) 차단 가능한 plugin hook이 입력/응답을 처리하지 못하면 허용 대신 거부; 중첩 28,000단계 초과 값 거부
+- (v2.1.299) 종료 시 resume 명령이 세션 이름 대신 ID 사용; 숨김·방향 제어 문자 포함 skill/command 이름은 로드 제외
+- (v2.1.299) Claude 커넥터 프록시·Anthropic 호스팅 MCP 서버 요청은 HTTP redirect 미추적; MCP 설명 4,096자 제한 해제(1st-party)
+- (v2.1.296) MCP 도구 설명·서버 instructions 기본 한도 2,048 → 4,096자; Sonnet 5.5 cache read 가격 $0.10/M
+- (v2.1.296–299) Edit/Write/NotebookEdit가 비UTF-8(Windows-1252, Shift-JIS, GBK, UTF-16BE) 파일을 UTF-8로 변환하지 않고 거부
+- 보안·안정성 수정 다수: sandbox symlink/glob 검사, `--plugin-dir` 쓰기 차단, plan mode에서 hook 허용된 쓰기 실행, managed hook·권한 규칙 mod 우회 방지, 게이트웨이 API 키 Anthropic 요청 유출, 스케줄 작업 DST 중복 실행
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

@@ -501,6 +501,15 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
+## v2.1.299 변경 사항
+
+- **allow 규칙 범위 축소**: `mcp__a`는 서버 `a`에만 적용되고 `a__b`·`a_` 서버는 허용하지 않음 — 이름에 `__`가 있으면 `mcp__<전체 정규화 이름>__*` 사용; deny/ask 규칙도 `__` 포함 서버명에 적용; agent `tools:` 목록도 동일
+- 서버명 `constructor`·`prototype`도 정상 연결, `enabledMcpjsonServers`/`disabledMcpjsonServers`에 단일 문자열 허용, 빈 `.mcp.json`은 유효로 처리
+- MCP 도구 설명·서버 instructions 기본 한도 4,096자 (v2.1.296), Anthropic 1st-party 서버는 전체 전달; tool search 경유 설명은 16,384자 (v2.1.295)
+- 정책 검사에 막힌 서버는 `claude mcp list/get`·subagent MCP에서 시작하지 않고 blocked로 표시
+- claude.ai 커넥터·클라우드 세션 커넥터는 MCP 프로토콜 2026-07-28 기본 협상 (`MCP_PROTOCOL_NEGOTIATION=legacy`로 옵트아웃); 커넥터 프록시 요청은 HTTP redirect 미추적
+- MCP OAuth 로그인·갱신·로그아웃이 `headers`/`headersHelper` 값을 전송
+
 ## 공식 문서
 
 - **MCP Reference**: https://code.claude.com/docs/en/mcp

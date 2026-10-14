@@ -55,6 +55,8 @@
 
 **terminalSequence (v2.1.141)**: Hook JSON 출력에 `terminalSequence` 필드를 포함하면 제어 터미널 없이 데스크탑 알림·창 제목 변경·벨 신호를 발송할 수 있음 (예: tmux 알림, 터미널 벨)
 
+**동작 변경 (v2.1.295–299)**: command·HTTP hook에 `onFailure: "block"` — hook이 시작 실패·타임아웃·예상 밖 exit code일 때 동작을 통과시키지 않고 차단 (v2.1.295) | `UserPromptSubmit` hook은 skill/custom slash command 확장 **전에** 실행 — 차단 시 embedded shell 명령도 중지되며, skill front-matter의 `UserPromptSubmit` hook은 호출 다음 프롬프트부터 실행 (v2.1.299) | 차단 가능한 plugin hook이 입력을 받지 못하거나 응답을 돌려주지 못하면 허용 대신 거부 (이미 실행된 도구는 결과 보류), 중첩 28,000단계 초과 값 거부 (v2.1.299) | Windows: shell 미지정 PreToolUse/PermissionRequest hook이 Git for Windows 없을 때 fail-open 대신 차단 (v2.1.299)
+
 ---
 
 ## Hook 타입 (v2.12)
