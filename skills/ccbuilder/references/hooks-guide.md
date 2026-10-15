@@ -328,6 +328,12 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **`onFailure: "block"`** (v2.1.295): command/HTTP hook이 시작 실패·타임아웃·예상 외 exit code일 때 액션을 차단 (기본은 통과)
+- **`updatedInput` 검증** (v2.1.300): PreToolUse·PermissionRequest hook의 `updatedInput`은 Claude 자체 입력처럼 검증 — 알 수 없는 키 제거, 도구가 거부하는 입력은 호출 거부
+- **UserPromptSubmit 실행 순서** (v2.1.299): 스킬·커스텀 슬래시 명령 확장 *전에* 실행 — 차단 시 내장 셸 명령도 중단; 스킬 front-matter `UserPromptSubmit` hook은 호출 다음 프롬프트부터 실행
+- **Windows** (v2.1.299): shell 미지정 PreToolUse/PermissionRequest hook이 Git for Windows 없을 때 fail-open 대신 차단
+- **SessionEnd** (v2.1.300): 백그라운드 명령 실행 중 종료해도 hook 실행; 종료 시 1.5초 후에도 남은 백그라운드 명령은 강제 종료
+- **agent hook `model`** (v2.1.300): 별칭(`haiku` 등) 해석, 서브에이전트 모델이 덮어쓰지 않음, 사용 불가 모델은 호출자 모델로 폴백
 
 ---
 

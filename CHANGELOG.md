@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-15
+
+### Added
+- **Claude Code v2.1.300 sync** (v2.1.291 → v2.1.300 콘텐츠 반영)
+  - (v2.1.300) mod API 확장 — `virtualText`(프롬프트 장식), `$.ui.view({ agentId })`, `Text`의 `dir`(RTL), `prompt.change` 훅, `agent.spawn` 훅의 workflow agent `prompt`/`model` 재작성
+  - (v2.1.300) OTel `api_request`에 `cache_creation_5m_tokens`·`cache_creation_1h_tokens`, trace span에 GenAI semantic-convention 속성(`gen_ai.provider.name` 등)
+  - (v2.1.300) Claude Platform on AWS에서 `/advisor` 지원(`CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`로 비활성화), 로컬 transcript에 API 요청 system prompt·tools·파라미터 기록, 대형 요청 gzip 압축(`CLAUDE_CODE_GZIP_REQUEST_BODIES=0`으로 해제)
+  - (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, idle compaction(200K+ 토큰, 약 54분 유휴 시; `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`), `/effort`·`/fast` 에이전트 뷰 지원, `claude plugin eval --disallow-tools`, `--shutdown-drain-sec`, `$.prompt.media`, `$.session.identity()`, `Text` `size`/`weight`/`mono`/`tabular`
+  - (v2.1.296) 서브에이전트 frontmatter `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read `allow_large` 옵션, MCP 설명 상한 2,048 → 4,096자
+  - (v2.1.295) command/HTTP hook `onFailure: "block"`, OSC 7501 Program Status Protocol, `$.ui.notify`, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_WAIT_MS`, Claude apps gateway 업스트림 `models` 목록
+  - [VSCode] `claudeCode.attachSelection` 설정; [Claude Tag] Slack Connect 채널·음성 클립·승인 카드 지원
+
+### Changed
+- (v2.1.299) **Breaking**: MCP allow 규칙은 이름이 정확히 일치하는 서버만 허용(`mcp__a`는 `a__b` 미허용); agent `tools:`는 `mcp__<whole name>__*` 형식 필요
+- (v2.1.300) hook `updatedInput` 검증(알 수 없는 키 제거, 거부 입력은 호출 거부); agent hook `model` 별칭·폴백 수정
+- (v2.1.299) `UserPromptSubmit` hook이 스킬/슬래시 명령 확장 전에 실행; Windows 가드 hook fail-closed; `turn.start` mod 훅이 서브에이전트·teammate 턴도 수신
+- (v2.1.300) 종료 시 1.5초 후 백그라운드 명령 강제 종료; `claude remote-control`의 `--sandbox`/`--no-sandbox` 제거(오류 종료, `sandbox.enabled` 설정 사용); `/sandbox` 옵션명 "Sandbox commands"
+- (v2.1.299) 종료 시 resume 명령이 세션 이름 대신 ID 사용; 스킬/명령 파일명의 숨김·방향 전환 문자 및 `<`/`>` 거부
+- 안정성·보안 수정: `--worktree` reftable 저장소/잘못된 커밋 시작 문제, sandbox symlink·glob 우회, Write/Edit 비UTF-8 파일 변환 거부, 도구 검색(`ENABLE_TOOL_SEARCH=auto`) 중간 비활성화, `forceLoginOrgUUID` 거부 토큰 잔존, 다수 cloud/Remote Control 세션 수정
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

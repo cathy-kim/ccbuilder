@@ -118,7 +118,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 
 ---
 
-## 핵심 변경 사항 (v2.1.291)
+## 핵심 변경 사항 (v2.1.300)
 
 ### MCP 확장 (v2.8 강화)
 
@@ -136,7 +136,7 @@ AskUserQuestion 도구로 다음 옵션을 제시하세요:
 | **CLAUDE_CODE_MCP_SERVER_NAME/URL** | `headersHelper` 스크립트에서 서버 이름·URL 접근 — 하나의 헬퍼로 다중 서버 처리 (v2.1.85) |
 | **MCP 도구 호출 축소** | read/search 호출 "Queried {server}" 단일 라인 표시, Ctrl+O 확장 (v2.1.81) |
 | **MCP Elicitation** | MCP 서버가 세션 중 구조화된 입력 요청 (폼 필드·URL) (v2.1.76) |
-| **MCP 컨텍스트 제한** | 도구 설명·서버 지시문 2KB 상한 — OpenAPI 서버 컨텍스트 팽창 방지 (v2.1.84) |
+| **MCP 컨텍스트 제한** | 도구 설명·서버 지시문 상한 2KB(v2.1.84) → 4,096자(v2.1.296), 첫 파티 `api.anthropic.com` MCP는 전체 전달 (v2.1.299); **Breaking**: MCP allow 규칙은 이름이 정확히 일치하는 서버만 허용 — `mcp__a`는 `a__b`·`a_` 미허용, `mcp__<server>__*` 사용; agent `tools:`도 동일 (v2.1.299); API가 MCP 도구 input schema 거부 시 해당 도구만 파라미터 없이 전송 (v2.1.300) |
 | **MCP 결과 크기 오버라이드** | `_meta["anthropic/maxResultSizeChars"]` 어노테이션 — 도구 결과 최대 500K 확장, DB 스키마 등 대용량 결과 처리 (v2.1.91) |
 | **Hook → MCP 직접 호출** | `type: "mcp_tool"` 훅으로 MCP 도구 직접 실행 (v2.1.118); 서브에이전트·SDK 재구성 시 서버 병렬 연결 (v2.1.119); MCP 도구 호출 2분 초과 시 자동 백그라운드 전환 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`로 임계값·비활성화 설정 (v2.1.212); `CLAUDE_CODE_MCP_STARTUP_WAIT_MS` — 첫 non-interactive 턴이 연결 중인 MCP 서버를 기다리는 시간 상한(`0`=대기 안 함, v2.1.274); 403 insufficient_scope 오류 시 만료 로그인 대신 누락 권한 명시 + `/mcp` 재인증 안내 (v2.1.274); 서버가 `listChanged` 미선언 상태로 list-changed 알림 전송 시에도 프롬프트·리소스 갱신 (v2.1.274) |
 

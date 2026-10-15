@@ -77,6 +77,31 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.300 (2026-10-15 동기화)
+
+**새로운 기능:**
+- (v2.1.300) mod API: `virtualText`, `$.ui.view({ agentId })`, `Text` `dir`, `prompt.change` 훅, `agent.spawn`의 workflow agent `prompt`/`model` 재작성
+- (v2.1.300) OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`, GenAI semantic-convention span 속성; `/advisor`(Claude Platform on AWS)
+- (v2.1.299) idle compaction(`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `idleCompaction`), `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, `/effort`·`/fast` 에이전트 뷰
+- (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, Read `allow_large`
+- (v2.1.295) hook `onFailure: "block"`, `$.ui.notify`, OSC 7501
+
+**Changed:**
+- hook `updatedInput` 검증, `UserPromptSubmit` hook이 스킬 확장 전 실행 (v2.1.299–300)
+- MCP 도구 설명 상한 4,096자 (v2.1.296); 종료 시 백그라운드 명령 1.5초 후 강제 종료 (v2.1.300)
+- 로컬 transcript에 API 요청 system prompt·tools 기록, 대형 요청 gzip (v2.1.300)
+
+**Breaking Changes:**
+- MCP allow 규칙 정확 일치(`mcp__a`는 `a__b` 미허용), agent `tools:` 동일 (v2.1.299)
+- `claude remote-control --sandbox/--no-sandbox` 제거 — 전달 시 오류 (v2.1.300)
+
+**주요 버그 수정:**
+- `--worktree` reftable 저장소·잘못된 커밋 시작 수정, WorktreeCreate/Remove 플러그인 hook 실행 (v2.1.300)
+- SessionEnd hook 미실행, 도구 검색 중간 비활성화, MCP 스키마 400 반복 오류 수정 (v2.1.300)
+- sandbox symlink/glob 우회, plan mode에서 hook 허용 쓰기 실행, Write/Edit 비UTF-8 변환 수정 (v2.1.299)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**
