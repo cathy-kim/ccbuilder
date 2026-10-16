@@ -421,6 +421,8 @@ MAX_MCP_OUTPUT_TOKENS=50000
 
 > **v2.1.219**: `allowedMcpServers`/`deniedMcpServers`의 `${VAR}` 항목이 settings 파일 자체의 `env` 값 대신 **시작 시 환경변수·managed-settings env**에서 해석되도록 변경.
 >
+> **Breaking (v2.1.299)**: MCP allow 규칙은 명명된 서버만 허용합니다. `mcp__a`는 더 이상 `a__b`·`a_` 서버를 허용하지 않으므로 `mcp__<server>__*`처럼 서버의 전체 정규화 이름을 쓰세요. agent `tools:` 목록도 동일하며 이름에 `__`가 있는 서버는 `mcp__<전체 이름>__*`로 표기합니다. `constructor`·`prototype`이라는 이름의 MCP 서버 연결 문제도 수정되었습니다. 또한 claude.ai 커넥터 프록시·Anthropic 호스팅 MCP 서버 요청은 HTTP 리다이렉트를 따르지 않고, `api.anthropic.com` 퍼스트파티 MCP 서버의 도구 설명·지시문은 4,096자 제한 없이 전달됩니다.
+
 > **Breaking (v2.1.259)**: `allowedMcpServers`는 이제 **사용자가 추가한 서버만** 관리합니다. 이전에는 이 목록이 `managed-mcp.json`의 literal 서버까지 필터링했지만, 업그레이드 후 그런 서버는 필터링 없이 로드됩니다. 특정 managed 서버를 차단하려면 `deniedMcpServers`를 사용하세요.
 
 ### managedMcpServers — 조직 배포 HTTP/SSE 서버 (v2.1.259 신규)

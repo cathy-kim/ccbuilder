@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-16
+
+### Added
+- **Claude Code v2.1.301 sync** (v2.1.291 → v2.1.301 콘텐츠 반영)
+  - (v2.1.301) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS` — 무인 retry 모드가 먼 사용량 한도 리셋 시 대기 대신 요청 종료
+  - (v2.1.301) vim 모드 `%` 모션, AskUserQuestion 자유 입력 vim NORMAL 지원; mod `Input` `rows`; OTel `tool_decision`에 `classifier_verdict`·`permission_mode`·`classifier_category`
+  - (v2.1.301) `fable`/`best` 별칭 이전 Fable 모델 재시도, 작은 컨텍스트 모델 전환 시 이전 모델 선요약, [VSCode] LaTeX 수식 렌더링
+  - (v2.1.300) mod `prompt.change` 훅·`virtualText`·`$.ui.view({ agentId })`·`dir` prop, `agent.spawn` 훅의 workflow agent `prompt`/`model` 재작성, OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`·GenAI 시맨틱 컨벤션 속성, `/advisor` Claude Platform on AWS
+  - (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, idle compaction(`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `idleCompaction`), `$.prompt.media`·`$.session.identity()`, `--shutdown-drain-sec`, `claude plugin eval --disallow-tools`, `/usage` 경고 추가
+  - (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read `allow_large`, Claude apps gateway `code` 정책 키
+
+### Changed
+- (v2.1.299) MCP allow 규칙이 명명된 서버만 허용(`mcp__<server>__*`), agent `tools:`도 동일
+- (v2.1.299) `UserPromptSubmit` 훅이 스킬/명령 확장 전에 실행; 스킬 frontmatter 훅은 다음 프롬프트부터
+- (v2.1.300) PreToolUse/PermissionRequest `updatedInput` 검증 강화; `claude remote-control --sandbox/--no-sandbox` 제거; gzip 요청 압축 기본(`CLAUDE_CODE_GZIP_REQUEST_BODIES=0`로 끔)
+- (v2.1.301) mod 훅 `.catch`는 훅 throw·timeout 시에만 실행; `$.env.set` resolve 형태 변경
+- (v2.1.296–301) Read가 바이너리 파일을 텍스트로 읽지 않음, Write/Edit가 비UTF-8 인코딩 파일 거부, Grep/Glob 실패 시 오류 반환
+- 갱신 파일: SKILL.md(핵심 변경 사항), hooks-guide.md, mcp-guide.md, version-sync.md
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

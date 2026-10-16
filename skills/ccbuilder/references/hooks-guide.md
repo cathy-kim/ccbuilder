@@ -16,8 +16,8 @@
 | **PreModelSwitch** | 모델 전환 요청 발생 시 (v2.1.251) | Yes (block/confirm) | `from_model`, `to_model` |
 | **PostModelSwitch** | 모델 전환 완료 후 — 주석·로깅용 (v2.1.251) | No | `from_model`, `to_model` |
 | **TaskCompleted** | 태스크 완료 | No | `task_id` |
-| **UserPromptSubmit** | 프롬프트 제출 전 | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
-| **PreToolUse** | 도구 호출 전 | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
+| **UserPromptSubmit** | 프롬프트 제출 전 — 스킬/커스텀 슬래시 명령 확장 *전*에 실행되어 차단 시 임베디드 셸 명령도 중단 (v2.1.299); 스킬 frontmatter의 자체 `UserPromptSubmit` 훅은 스킬 호출 다음 프롬프트부터 최초 실행 (v2.1.299) | No | `prompt` — 출력: `hookSpecificOutput.sessionTitle`으로 세션 제목 설정 가능 (v2.1.94) |
+| **PreToolUse** | 도구 호출 전 — `updatedInput`은 도구 입력처럼 검증: 알 수 없는 키 제거, 도구가 거부하는 입력은 호출 거부 (v2.1.300; PermissionRequest 동일); Windows에서 셸 미지정 훅은 Git for Windows 없으면 fail-open 대신 차단 (v2.1.299) | Yes (block/modify/defer) | `tool_name`, `tool_input`, `tool_use_id` |
 | **PostToolUse** | 도구 호출 후 — `duration_ms` 포함 (v2.1.119); `hookSpecificOutput.updatedToolOutput`으로 tool output 교체 가능 — 이제 모든 도구 지원 (기존 MCP 전용→전체, v2.1.121) | No | `tool_name`, `tool_result`, `duration_ms` |
 | **PostToolUseFailure** | 도구 호출 실패 후 — `duration_ms` 포함 (v2.1.119) | No | `tool_name`, `error`, `duration_ms` |
 | **PermissionRequest** | 권한 다이얼로그 | Yes (allow/deny) | `permission_type` |

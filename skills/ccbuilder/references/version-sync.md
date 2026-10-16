@@ -77,6 +77,30 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.301 (2026-10-16 동기화)
+
+**새로운 기능:**
+- (v2.1.301) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS`, vim `%` 모션, mod `Input` `rows`, OTel `tool_decision` `classifier_verdict`/`permission_mode`/`classifier_category`
+- (v2.1.300) mod `prompt.change` 훅·`virtualText`·`$.ui.view({ agentId })`, `agent.spawn` workflow agent 재작성, OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`, `/advisor` Claude Platform on AWS
+- (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, idle compaction(`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`/`idleCompaction`), `$.prompt.media`, `$.session.identity()`, `--shutdown-drain-sec`
+- (v2.1.296) 서브에이전트 `autoCompactWindow`, `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, `CLAUDE_CODE_OVERLOADED_RETRY_MAX_DELAY_MS`, Read `allow_large`
+
+**Changed:**
+- MCP allow 규칙은 명명된 서버만 허용, agent `tools:`도 동일 (v2.1.299)
+- `UserPromptSubmit` 훅이 스킬/명령 확장 전 실행 (v2.1.299)
+- `updatedInput` 검증 강화, `claude remote-control --sandbox/--no-sandbox` 제거 (v2.1.300)
+- mod 훅 `.catch` 실행 조건 축소 (v2.1.301)
+
+**Breaking Changes:**
+- MCP allow 규칙 범위 축소(`mcp__a`가 `a__b` 미허용), `--sandbox`/`--no-sandbox` 제거, Write/Edit 비UTF-8 파일 거부
+
+**주요 버그 수정:**
+- Read 바이너리 파일 텍스트 처리, Grep/Glob 실패 시 무음 "no matches" 수정 (v2.1.301)
+- fable 별칭 폴백, 모델 전환 시 요약·크레딧 소비 수정, `/rewind` 후 스킬 목록 복원 (v2.1.301)
+- 서브에이전트 resume·SendMessage·compaction 후 resume 컨텍스트 유실 수정, reftable 저장소 worktree 수정 (v2.1.299–300)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**
