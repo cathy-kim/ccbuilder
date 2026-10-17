@@ -501,6 +501,14 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 
 ---
 
+## v2.1.299–302 MCP 변경
+
+- **allow 규칙 범위 축소** (v2.1.299): `mcp__a`는 서버 `a`만 허용 — `a__b`·`a_` 서버는 불가. 이름에 `__`가 있는 서버는 `mcp__<정규화된 전체 이름>__*`로 작성 (agent `tools:`도 동일)
+- 서버 이름이 `constructor`/`prototype`이어도 정상 연결 (v2.1.299)
+- 프로토콜 2026-07-28 협상 시 `resultType`/`ttlMs`/`cacheScope` 누락 서버도 도구 표시 (v2.1.302)
+- MCP 도구 input schema를 API가 거부하면 해당 도구만 파라미터 없이 전송 (v2.1.300)
+- MCP OAuth 로그인·갱신·로그아웃에 설정된 `headers`/`headersHelper` 전달 (v2.1.299)
+
 ## 공식 문서
 
 - **MCP Reference**: https://code.claude.com/docs/en/mcp

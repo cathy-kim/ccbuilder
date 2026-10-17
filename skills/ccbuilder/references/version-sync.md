@@ -2,7 +2,7 @@
 
 > 이 스킬을 최신 Claude Code 버전과 동기화하기 위한 가이드
 
-**최종 동기화**: 2026-10-06
+**최종 동기화**: 2026-10-17
 **현재 지원 버전**: v2.1.63+ (SKILL.md v2.12.0)
 
 ---
@@ -76,6 +76,35 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 ---
 
 ## 버전별 주요 변경 사항 추적
+
+### v2.1.302 (2026-10-17 동기화)
+
+**새로운 기능:**
+- (v2.1.302) `CLAUDE_CODE_AUTO_MODE_MODEL` — 클라이언트 사이드 auto mode 분류기 모델; `/config` "Idle compaction" 행
+- (v2.1.299) idle compaction(200K+ 토큰, ~54분 유휴), `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, `claude plugin eval --disallow-tools`
+- (v2.1.300) `/advisor` Claude Platform on AWS, OTel 캐시 생성 5m/1h 토큰·GenAI 속성, mod `prompt.change` 훅
+- (v2.1.301) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS`, vim `%` 모션, OTel `tool_decision` `classifier_verdict`/`permission_mode`/`classifier_category`
+- (v2.1.301) VS Code LaTeX 수식 렌더링
+
+**Changed:**
+- fork 서브에이전트 `claude -p`·SDK·데스크탑·VS Code 기본 활성(`CLAUDE_CODE_FORK_SUBAGENT=0`) (v2.1.302)
+- 서드파티 provider/텔레메트리 off/신규 설치 `claude -p`·SDK 기본 permission mode `default` (v2.1.302)
+- prompt·agent 훅 동일 이벤트 최대 12개 동시 실행 (v2.1.302)
+- `UserPromptSubmit` 훅이 스킬/슬래시 명령 확장 전 실행 (v2.1.299)
+- MCP allow 규칙·agent `tools:` 정확한 서버명만 대상 (v2.1.299)
+- 큰 요청 gzip 압축 기본 (v2.1.300)
+
+**Breaking Changes:**
+- `claude remote-control --sandbox/--no-sandbox` 제거 — `sandbox.enabled` 사용 (v2.1.300)
+- 훅 `updatedInput` 검증 — 알 수 없는 키 제거, 도구가 거부하면 호출 거부 (v2.1.300)
+
+**주요 버그 수정:**
+- 압축 중 중단 시 "Prompt is too long", Vertex/Bedrock 전환 후 "diagnostics" 오류 (v2.1.302)
+- Read 128MB 초과 이미지 거부, 바이너리 파일 텍스트 읽기 방지 (v2.1.301–302)
+- reftable ref 저장소의 worktree·plugin 마켓플레이스·`/diff` 문제 (v2.1.300–302)
+- 훅 fail-open(Windows Git 미설치), plan mode 쓰기 허용 우회 수정 (v2.1.299)
+
+---
 
 ### v2.1.291 (2026-10-06 동기화)
 
