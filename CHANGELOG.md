@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-17
+
+### Added
+- **Claude Code v2.1.302 sync** (v2.1.291 → v2.1.302 콘텐츠 반영)
+  - (v2.1.302) `CLAUDE_CODE_AUTO_MODE_MODEL` — 클라이언트 사이드 auto mode 분류기 모델 선택; `/config` "Idle compaction" 행
+  - (v2.1.299) idle compaction — 200K+ 토큰 대화가 ~54분 유휴 시 자동 압축(`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`)
+  - (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, `claude plugin eval --disallow-tools`, agent view `/effort`·`/fast`, `/usage` 경고 확장
+  - (v2.1.300) `/advisor` Claude Platform on AWS 지원, OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`·GenAI semantic-convention 속성, mod `prompt.change` 훅·`$.ui.view({ agentId })`
+  - (v2.1.301) `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS`, vim `%` 모션, OTel `tool_decision`의 `classifier_verdict`·`permission_mode`·`classifier_category`
+  - (v2.1.301–302) VS Code LaTeX 수식 렌더링, "Get more usage" 링크, Claude Tag(Slack) 개선, Cloud sessions 안정성 수정
+
+### Changed
+- (v2.1.302) fork 서브에이전트가 `claude -p`·Agent SDK·데스크탑·VS Code에서 기본 활성(`CLAUDE_CODE_FORK_SUBAGENT=0`으로 끔); 데스크탑·VS Code는 서브에이전트를 항상 백그라운드 실행
+- (v2.1.302) 서드파티 provider/텔레메트리 off/신규 설치의 `claude -p`·SDK 기본 permission mode `default`; prompt·agent 훅 동일 이벤트 동시 실행 최대 12개; 서버 사이드 auto mode 분류기가 긴 대화를 압축 후 검사
+- (v2.1.299) `UserPromptSubmit` 훅이 스킬/슬래시 명령 확장 전에 실행; MCP allow 규칙·agent `tools:`가 이름이 정확히 일치하는 서버만 대상(`mcp__<server>__*`)
+- (v2.1.300) `claude remote-control --sandbox/--no-sandbox` 제거(`sandbox.enabled` 사용); 훅 `updatedInput` 검증 강화; 큰 요청 gzip 압축 기본(`CLAUDE_CODE_GZIP_REQUEST_BODIES=0`으로 끔)
+- (v2.1.302) `/design-sync`·`/design-login`에 standalone Claude Design 2026-12-14 종료 안내
+- 주요 버그 수정: Read 128MB 초과 이미지 거부·바이너리 파일 텍스트 읽기 방지, reftable ref 저장소 worktree/plugin 마켓플레이스 수정, 압축 중 중단 시 "Prompt is too long" 수정, Vertex/Bedrock 전환 후 "diagnostics" 오류 수정
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

@@ -380,6 +380,16 @@ exit 0
 
 ---
 
+## v2.1.299–302 훅 동작 변경
+
+| 변경 | 설명 |
+|------|------|
+| 실행 순서 | `UserPromptSubmit` 훅이 스킬/슬래시 명령 확장 전에 실행 — 차단 시 임베드 셸 명령도 중단; 스킬 frontmatter 훅은 호출 다음 프롬프트부터 (v2.1.299) |
+| `updatedInput` 검증 | PreToolUse·PermissionRequest 반환값을 도구 입력처럼 검증 — 알 수 없는 키 제거, 도구가 거부하면 호출 거부 (v2.1.300) |
+| Fail-closed | 차단 가능한 plugin hook이 입력/응답을 주고받지 못하면 통과 대신 거부; Windows에서 Git for Windows 없을 때 shell 미지정 PreToolUse/PermissionRequest 훅은 차단 (v2.1.299) |
+| 동시 실행 | prompt·agent 훅은 동일 이벤트당 최대 12개 동시 실행, 나머지는 대기 (v2.1.302) |
+| agent 훅 `model` | 별칭(`haiku` 등) 해석, 서브에이전트 모델이 덮어쓰지 않음, 불가 시 호출자 모델 폴백 (v2.1.300) |
+
 ## 공식 문서
 
 - **Hooks Reference**: https://code.claude.com/docs/en/hooks
