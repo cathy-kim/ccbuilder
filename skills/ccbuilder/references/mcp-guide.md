@@ -498,6 +498,9 @@ Tool Search 활성화: `ENABLE_TOOL_SEARCH=true`
 | Shell 인자 접근 | `$ARGUMENTS.0` | `$ARGUMENTS[0]` 또는 `$0` |
 | NPM 설치 | `npm install` | `claude install` |
 | MCP Transport | SSE | HTTP (streamable-http) |
+| MCP allow 규칙 (v2.1.299) | `mcp__a`가 `a__b`·`a_` 서버까지 허용 | 이름이 정확히 일치하는 서버만 허용; `__` 포함 서버는 `mcp__<전체 이름>__*` |
+
+> v2.1.302: 프로토콜 2026-07-28을 협상하면서 `resultType`/`ttlMs`/`cacheScope`를 생략한 서버도 도구가 정상 표시됨.
 
 ---
 

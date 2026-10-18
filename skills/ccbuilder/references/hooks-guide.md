@@ -328,6 +328,10 @@ Hook에서 MCP 도구를 직접 실행합니다:
 - **SubagentStop**: `agent_transcript_path`로 전체 transcript 접근 가능
 - **async hooks**: 백그라운드에서 실행, 결과 대기 안함
 - **SessionEnd 타임아웃** (v2.1.74): 기존 1.5초 강제 종료 → `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` 환경변수로 가변 설정 가능
+- **동시 실행 상한** (v2.1.302): prompt·agent 훅은 같은 이벤트당 최대 12개 동시 실행, 나머지는 대기
+- **`updatedInput` 검증** (v2.1.300): PreToolUse·PermissionRequest 훅의 `updatedInput`은 도구 입력과 동일하게 검증 — 알 수 없는 키 제거, 도구가 거부하는 입력은 호출 거부
+- **UserPromptSubmit 순서** (v2.1.299): 스킬·커스텀 슬래시 명령 확장 전에 실행 — 프롬프트를 차단하면 임베디드 셸 명령도 실행되지 않음
+- **agent 훅 `model`** (v2.1.300): `haiku` 같은 alias 해석, 사용 불가 시 호출자 모델로 폴백 (허용 처리 안 함)
 
 ---
 
