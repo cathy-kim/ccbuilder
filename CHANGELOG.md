@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.59.0] - 2026-10-18
+
+### Added
+- **Claude Code v2.1.302 sync** (v2.1.291 → v2.1.302 콘텐츠 반영)
+  - (v2.1.302) `CLAUDE_CODE_AUTO_MODE_MODEL` — 클라이언트 사이드 auto mode 분류기 모델 지정
+  - (v2.1.302) `/config` "Idle compaction" 행, 서버 사이드 auto mode 분류기가 긴 대화를 compact 후 검사, Read 128MB 초과 이미지 거부, 플러그인 로딩 FS 호출 감소
+  - (v2.1.299) idle compaction(200K+ 토큰, ~54분 유휴) — `CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`
+  - (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, `claude plugin eval --disallow-tools`, `/usage` 경고
+  - (v2.1.300) mod `prompt.change` 훅·`$.ui.view({ agentId })`·`virtualText`, OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`, GenAI semantic-convention span 속성
+  - (v2.1.301) vim `%` 모션, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS`, OTel `tool_decision`의 `classifier_verdict`·`permission_mode`·`classifier_category`, mod `Input` `rows`
+  - (v2.1.301) `fable`/`best` 별칭이 최신 Fable 미사용 시 이전 Fable로 재시도
+
+### Changed
+- (v2.1.302) fork 서브에이전트가 `claude -p`·Agent SDK·데스크탑·VS Code에서 기본 활성(`CLAUDE_CODE_FORK_SUBAGENT=0`으로 끔), 데스크탑·VS Code 서브에이전트 항상 백그라운드
+- (v2.1.302) prompt·agent 훅 이벤트당 동시 최대 12개; `claude -p`·SDK permission mode 미지정 시 일부 환경에서 `default` 모드
+- (v2.1.299) MCP allow 규칙·agent `tools:`는 서버 이름 정확 일치만 대상(`mcp__<server>__*`); `UserPromptSubmit` 훅이 스킬 확장 전에 실행
+- (v2.1.300) 훅 `updatedInput` 검증 강화, 큰 요청 gzip 기본(`CLAUDE_CODE_GZIP_REQUEST_BODIES=0`), `turn.start` mod 훅이 서브에이전트 턴도 수신
+- (v2.1.300) **Breaking**: `claude remote-control --sandbox/--no-sandbox` 제거 — `sandbox.enabled` 설정 사용
+
+### Fixed
+- 컴팩션 중 중지 시 "Prompt is too long", Vertex/Bedrock 전환 후 요청 실패, reftable 환경의 마켓플레이스·worktree·git fetch 문제, MCP 프로토콜 2026-07-28 필드 누락 서버, Read의 바이너리/UTF-16 파일 처리
+
+---
+
 ## [2.58.0] - 2026-10-06
 
 ### Added

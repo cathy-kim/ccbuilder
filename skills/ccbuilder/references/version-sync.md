@@ -77,6 +77,38 @@ cp SKILL.md releases/v$(date +%Y%m%d)_SKILL.md
 
 ## 버전별 주요 변경 사항 추적
 
+### v2.1.302 (2026-10-18 동기화)
+
+**새로운 기능:**
+- (v2.1.302) `CLAUDE_CODE_AUTO_MODE_MODEL` — 클라이언트 사이드 auto mode 분류기 모델 지정(서버 사이드 auto mode는 영향 없음)
+- (v2.1.302) `/config` "Idle compaction" 행, idle compaction 알림에 끄는 방법 안내; 서버 사이드 auto mode 분류기가 너무 긴 대화를 compact 후 검사
+- (v2.1.299) idle compaction — 200K+ 토큰 대화 ~54분 유휴 시 자동 compact(`CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS`, `"idleCompaction": false`)
+- (v2.1.299) `CLAUDE_CODE_DISABLE_FILE_MENTIONS`, `claude plugin eval --disallow-tools`, `/usage` 경고(max effort·workflow·always-on context·큰 tool result)
+- (v2.1.300) mod `prompt.change` 훅·`$.ui.view({ agentId })`·`virtualText`, OTel `cache_creation_5m_tokens`/`cache_creation_1h_tokens`, GenAI semantic-convention span 속성, `/advisor` Claude Platform on AWS 지원
+- (v2.1.301) vim `%` 모션, `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS`, OTel `tool_decision`에 `classifier_verdict`·`permission_mode`·`classifier_category`, mod `Input` `rows`
+- (v2.1.302) 플러그인 command·agent 파일 로딩 FS 호출 감소(다수 플러그인 시작 속도 개선), Read 도구 128MB 초과 이미지 거부
+
+**Changed:**
+- fork 서브에이전트가 `claude -p`·Agent SDK·데스크탑·VS Code에서도 기본 활성(`CLAUDE_CODE_FORK_SUBAGENT=0`으로 끔); 데스크탑·VS Code는 서브에이전트 항상 백그라운드 (v2.1.302)
+- prompt·agent 훅 같은 이벤트당 동시 최대 12개 (v2.1.302)
+- `claude -p`·SDK permission mode 미지정 시 서드파티 프로바이더·텔레메트리 off·신규 설치에서 `default` 모드 (v2.1.302)
+- MCP allow 규칙(`mcp__a`)·agent `tools:`는 이름이 정확히 일치하는 서버만 대상, `__` 포함 서버는 `mcp__<전체 이름>__*` (v2.1.299)
+- `UserPromptSubmit` 훅이 스킬·커스텀 슬래시 명령 확장 전에 실행 (v2.1.299)
+- PreToolUse·PermissionRequest 훅 `updatedInput`이 도구 입력처럼 검증 — 알 수 없는 키 제거, 거부 시 호출 차단 (v2.1.300)
+- 큰 요청 gzip 압축 기본(`CLAUDE_CODE_GZIP_REQUEST_BODIES=0`으로 끔) (v2.1.300)
+
+**Breaking Changes:**
+- `claude remote-control --sandbox/--no-sandbox` 제거 — 전달 시 오류, `sandbox.enabled` 설정 사용 (v2.1.300)
+
+**주요 버그 수정:**
+- 컴팩션 중 턴 중지 시 "Prompt is too long" 오류, Vertex/Bedrock 전환 후 "diagnostics: Extra inputs" 오류 수정 (v2.1.302)
+- reftable ref 형식에서 마켓플레이스 재클론·`--worktree`·git fetch 실패 수정 (v2.1.300–302)
+- 훅: 차단 가능한 동작을 훅이 처리하지 못하면 통과 대신 거부, Windows Git 미설치 시 PreToolUse·PermissionRequest 훅 fail-open 수정 (v2.1.299)
+- Read가 UTF-16LE BOM 파일·바이너리 파일(.xlsm, .parquet 등)을 잘못 읽던 문제, Write의 인코딩 무단 변환 수정 (v2.1.299–301)
+- MCP 프로토콜 2026-07-28 협상 시 `resultType`/`ttlMs`/`cacheScope` 누락 서버 도구 미표시 수정 (v2.1.302)
+
+---
+
 ### v2.1.291 (2026-10-06 동기화)
 
 **새로운 기능:**
